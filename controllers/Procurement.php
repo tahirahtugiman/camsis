@@ -1,0 +1,385 @@
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+class Procurement extends CI_Controller {
+	public function index(){
+		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
+		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
+		$this ->load->view("head");
+		$this ->load->view("left");
+		if ($this->input->get('pro') == 'mrin'){
+			$data['mrintype']= $this->input->get('tab') != '' ? $this->input->get('tab') : 0;
+			$this->load->model('display_model');
+			$data['record']= $this->display_model->mrinlist($data['month'],$data['year'],$data['mrintype']);
+			$data['user'] = $this->display_model->user_class($this->session->userdata('v_UserName'));
+			$data['status'] = $this->display_model->status_table();
+			//print_r($data['status']);
+			//exit();
+			$this ->load->view("Content_mrin",$data);
+		}elseif ($this->input->get('pro') == 'approved'){ 
+			$this->load->model('display_model');
+			$data['record'] = $this->display_model->mrindet($this->input->get('mrinno'));
+			$data['itemrec'] = $this->display_model->itemdet($this->input->get('mrinno'));
+			$data['comrec'] = $this->display_model->comrec($this->input->get('mrinno'));
+			$data['attrec'] = $this->display_model->attrec($this->input->get('mrinno'));
+			$data['user'] = $this->display_model->user_class($this->session->userdata('v_UserName'));
+			//print_r($data['record']);
+			//exit();
+			$this ->load->view("Content_mrin_procure",$data);
+		}elseif ($this->input->get('pro') == 'pending'){ 
+			$this->load->model('display_model');
+			$data['record'] = $this->display_model->mrindet($this->input->get('mrinno'));
+			$data['itemrec'] = $this->display_model->itemdet($this->input->get('mrinno'));
+			$data['comrec'] = $this->display_model->comrec($this->input->get('mrinno'));
+			$data['attrec'] = $this->display_model->attrec($this->input->get('mrinno'));
+			$data['user'] = $this->display_model->user_class($this->session->userdata('v_UserName'));
+			$this ->load->view("Content_mrin_procure",$data);
+		}elseif ($this->input->get('pro') == 'new'){
+			$this->load->model('get_model');
+			$this->load->model('update_model');
+			$data['run_no'] = $this->get_model->run_no();
+			$update_data = array('Run_no' => $data['run_no'][0]->Run_no + 1,
+								 'time_stamp' => date("Y-m-d H:i:s"));
+			$this->update_model->uprun_no($update_data);
+			$data['runningno'] = 'temp'.$data['run_no'][0]->Run_no;
+			//print_r($data['run_no']);
+			//exit();
+			$this ->load->view("Content_mrin_new",$data);
+		}elseif ($this->input->get('pro') == 'edit'){
+			$this->load->model('display_model');
+			$this->load->model('get_model');
+			$data['record'] = $this->display_model->mrindetedit($this->input->get('mrinno'));
+			$data['recordcom'] = $this->get_model->get_components($this->input->get('mrinno'));
+			$data['recordatt'] = $this->get_model->get_attachments($this->input->get('mrinno'));
+			$data['recordis'] = $this->get_model->get_items($this->input->get('mrinno'));
+			$data['user'] = $this->display_model->user_class($this->session->userdata('v_UserName'));
+			//print_r($data['record']);
+			//exit();
+			$this ->load->view("Content_mrin_new",$data);
+		}
+		
+	}
+	public function asset3_comm_new(){
+		$this->load->model('get_model');
+		if ($this->input->get('tag') == 'component'){
+			$data['componentdet'] = $this->get_model->component_det($this->input->get('mrinno'),$this->input->get('id'));
+		}
+		else{
+			$data['attachmentdet'] = $this->get_model->attachment_det($this->input->get('mrinno'),$this->input->get('id'));
+		}
+
+		if ($this->input->get('MC') == '1'){
+			if ($this->input->get('tag') == 'component'){
+				$data['comp_details'] = $this->get_model->comprunno();
+			}
+			else{
+				$data['attc_details'] = $this->get_model->attcrunno();
+			}
+
+			if ($_FILES){
+				$config['upload_path']          = 'C:/xampp/htdocs/fms/uploadmrinfiles';
+	            $config['allowed_types']        = 'jpg|jpeg|gif|tif|png|doc|docx|xls|xlsx|pdf';
+	            $config['max_size']             = '1000';
+	            $config['max_width']            = 'auto';
+	            $config['max_height']           = 'auto';
+	            $ext = explode(".",$_FILES["image_file"]['name']);
+
+	            if ($this->input->get('tag') == 'component'){
+	            	$new_name = 'comm_'.$data['comp_details'][0]->component_no.'.'.$ext[1];
+	            }
+				else{
+					$new_name = 'attach_'.$data['attc_details'][0]->Attachment_no.'.'.$ext[1];
+				}
+
+				$config['file_name'] = $new_name;
+
+	            $this->load->library('upload', $config);
+
+	            if ( ! $this->upload->do_upload('image_file'))
+	            {
+	                    $data['error'] = array($this->upload->display_errors());
+	            }
+	            else
+	            {
+
+	                    $data['upload_data'] = $this->upload->data();
+	                    
+	                    if ($this->input->get('tag') == 'component'){
+		                    $data['upload_data']['asset_no'] = $this->input->get('mrinno');
+		                    $data['upload_data']['component_name'] = $this->input->post('att_name');
+		                    $data['upload_data']['com_id'] = $data['upload_data']['file_name'];
+		                    $data['upload_data']['user_id'] = $this->session->userdata('v_UserName');
+		                }
+		                else{
+		                	$data['upload_data']['asset_no'] = $this->input->get('mrinno');
+		                    $data['upload_data']['Doc_name'] = $this->input->post('att_name');
+		                    $data['upload_data']['doc_id'] = $data['upload_data']['file_name'];
+		                    $data['upload_data']['user_id'] = $this->session->userdata('v_UserName');
+		                }
+
+	                    if ($this->input->get('id') == ''){
+	                    	$this->load->model('insert_model');
+		                    if ($this->input->get('tag') == 'component'){
+								$insert_data = array('asset_no' => $data['upload_data']['asset_no'],
+													 'component_name' => $data['upload_data']['component_name'],
+													 'com_id' => $data['upload_data']['com_id'],
+													 'com_path' => $data['upload_data']['file_path'],
+													 'flag' => 'I',
+													 'Date_time_stamp' => date("Y-m-d H:i:s"),
+													 'user_id' => $data['upload_data']['user_id']);
+
+								$data['insertid'] = $this->insert_model->component_details($insert_data);
+							}
+			                else{
+			                	$insert_data = array('asset_no' => $data['upload_data']['asset_no'],
+													 'Doc_name' => $data['upload_data']['Doc_name'],
+													 'doc_id' => $data['upload_data']['doc_id'],
+													 'doc_path' => $data['upload_data']['file_path'],
+													 'flag' => 'I',
+													 'Date_time_stamp' => date("Y-m-d H:i:s"),
+													 'user_id' => $data['upload_data']['user_id']);
+
+								$data['insertid'] = $this->insert_model->attachment_details($insert_data);
+			                }
+						}
+						else{
+							$this->load->model('update_model');
+							if ($this->input->get('tag') == 'component'){
+								$insert_data = array(//'asset_no' => $data['upload_data']['asset_no'],
+													 'component_name' => $data['upload_data']['component_name'],
+													 'com_id' => $data['upload_data']['com_id'],
+													 'com_path' => $data['upload_data']['file_path'],
+													 'flag' => 'U',
+													 'Date_time_stamp' => date("Y-m-d H:i:s"),
+													 'user_id' => $data['upload_data']['user_id']);
+
+								$this->update_model->update_delete_comm($insert_data,$this->input->get('mrinno'),$this->input->get('id'));
+							}
+			                else{
+			                	$insert_data = array(//'asset_no' => $data['upload_data']['asset_no'],
+												 'Doc_name' => $data['upload_data']['Doc_name'],
+												 'doc_id' => $data['upload_data']['doc_id'],
+												 'doc_path' => $data['upload_data']['file_path'],
+												 'flag' => 'U',
+												 'Date_time_stamp' => date("Y-m-d H:i:s"),
+												 'user_id' => $data['upload_data']['user_id']);
+
+								$this->update_model->update_delete_attc($insert_data,$this->input->get('mrinno'),$this->input->get('id'));
+			                }
+						}
+
+						//$this->load->model('get_model');
+				        //$data['comp_details'] = $this->get_model->comprunno();
+
+						$this->load->model('update_model');
+						if ($this->input->get('tag') == 'component'){
+					        $update_data = array('component_no' => $data['comp_details'][0]->component_no + 1,
+					        					 'date_time_stamp' => date("Y-m-d H:i:s"),
+					        					 'user_id' => $this->session->userdata('v_UserName'));
+					        $this->update_model->up_comrunno($update_data);
+					    }
+			            else{
+			            	$update_data = array('Attachment_no' => $data['attc_details'][0]->Attachment_no + 1,
+					        					 'date_time_stamp' => date("Y-m-d H:i:s"),
+					        					 'user_id' => $this->session->userdata('v_UserName'));
+					        $this->update_model->up_attrunno($update_data);
+			            }
+	            }
+	        }
+		}
+		else{
+			$data['upload_data'] = NULL;
+			$data['insertid'] = '';
+		}
+		$this ->load->view("head");
+		$this ->load->view("asset3_comm_new",$data);
+	}
+	public function e_pr(){
+		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
+		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
+		$this ->load->view("head");
+		$this ->load->view("left");
+		$this->load->model('display_model');
+		if ($this->input->get('pr') == 'pending'){ 
+		$data['record'] = $this->display_model->prdet($this->input->get('mrinno'));
+		$data['itemrec'] = $this->display_model->itemprdet($this->input->get('mrinno'));
+		$data['comrec'] = $this->display_model->comrec($this->input->get('mrinno'));
+		$data['attrec'] = $this->display_model->attrec($this->input->get('mrinno'));
+		$this ->load->view("Content_mrin_procure",$data);
+		}elseif ($this->input->get('pr') == 'approved'){ 
+		$data['record'] = $this->display_model->prdet($this->input->get('mrinno'));
+		$data['itemrec'] = $this->display_model->itemprdet($this->input->get('mrinno'));
+		$data['comrec'] = $this->display_model->comrec($this->input->get('mrinno'));
+		$data['attrec'] = $this->display_model->attrec($this->input->get('mrinno'));
+		$this ->load->view("Content_mrin_procure",$data);
+		}else{
+		$data['tab']= ($this->input->get('tab') != '') ? $this->input->get('tab') : 0;	
+		if ($data['tab'] != 2){
+			$data['record'] = $this->display_model->prlist($data['month'],$data['year'],$this->input->get('tab'));
+		}
+		else{
+			$data['record'] = $this->display_model->polist($data['month'],$data['year']);
+		}
+		//print_r($data['record']);
+		//exit();
+		$this ->load->view("asset3_e_pr", $data);
+		}
+	}
+	public function e_po_print(){
+		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
+		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
+		$this ->load->view("headprinter");
+		$this ->load->view("e_po_print", $data);
+	}
+	public function report(){
+		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
+		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
+		$this ->load->view("head");
+		$this ->load->view("left");
+		if ($this->input->get('pr') == 'pending'){ 
+		$this ->load->view("Content_mrin_procure",$data);
+		}elseif ($this->input->get('pr') == 'approved'){ 
+		$this ->load->view("Content_mrin_procure",$data);
+		}else{
+		$this ->load->view("asset3_report_pro", $data);
+		}
+	}
+	public function pr_report(){
+		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
+		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
+		$this ->load->view("headprinter");
+		if ($this->input->get('pr') == 'rs'){ 
+		$this ->load->view("Content_rs_report_print",$data);
+		}elseif ($this->input->get('pr') == 'vc'){ 
+		$this ->load->view("Content_vc_report_print",$data);
+		}elseif ($this->input->get('pr') == 'vr'){ 
+		$this ->load->view("Content_vr_report_print",$data);
+		}
+	}
+	public function e_request(){
+		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
+		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
+		$this ->load->view("head");
+		$this ->load->view("left");
+		$this ->load->view("Content_e_request",$data);
+	}
+	public function po_follow_up2(){
+		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
+		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
+		$this ->load->view("head");
+		$this ->load->view("left");
+		if  ($this->input->get('po') == 'update') {
+		$this ->load->view("Content_po_follow_up2_update",$data);
+		}elseif ($this->input->get('po') == 'confirm'){ 
+		$this ->load->view("Content_po_follow_up2_update",$data);
+		}else{
+		$this ->load->view("Content_po_follow_up2",$data);
+		}
+	}
+	public function assetdetailname(){
+		$this->load->model("display_model");
+		$data['records'] = $this->display_model->list_personel();
+		$this ->load->view("head");
+		$this ->load->view("content_detail_name",$data);
+	}
+	public function pro_catalog(){
+		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
+		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
+		$this->load->model('display_model');
+		$data['record'] = $this->display_model->stock_asset();
+		$this ->load->view("head");
+		$this ->load->view("left");
+		$this ->load->view("Content_pro_catalog",$data);
+	}
+	
+public function update_delete(){
+		$this->load->model('display_model');
+		$data['record'] = $this->display_model->vendor_update($this->input->get('code'),$this->input->get('vid'));
+		//print_r($data['record']);
+		//exit();
+		$this ->load->view("head");
+		//if ($this->input->get('tab') == 'Confirm'){
+
+		//}else{
+		$this ->load->view("content_update_delete_vendor",$data);
+		//}
+	}
+	public function Release_note(){
+		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
+		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
+		$this ->load->view("head");
+		$this ->load->view("left");
+		if  ($this->input->get('pro') == 'new') {
+		$this ->load->view("Content_Release_note_newedit",$data);
+		}elseif ($this->input->get('pro') == 'edit'){ 
+		$this ->load->view("Content_Release_note_newedit",$data);
+		}else{
+		$this ->load->view("Content_Release_note",$data);
+		}
+	}
+	public function report_progress(){
+		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
+		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
+		$this ->load->view("headprinter");
+		$this ->load->view("content_report_progress",$data);
+	}
+	
+	public function update_delete_comm(){
+		$this->load->model('update_model');
+		if ($this->input->get('act') == 'delete'){
+			$update_data = array('flag' => 'D',
+								 'Date_time_stamp' => date("Y-m-d H:i:s"),
+								 'user_id' => $this->session->userdata('v_UserName'));
+		}
+		else if ($this->input->get('act') == 'update'){
+			if ($this->input->get('tag') == 'component'){
+				$update_data = array('component_name' => $this->input->post('att_name'),
+									 'flag' => 'U',
+									 'Date_time_stamp' => date("Y-m-d H:i:s"),
+									 'user_id' => $this->session->userdata('v_UserName'));
+			} else {
+				$update_data = array('Doc_name' => $this->input->post('att_name'),
+									 'flag' => 'U',
+									 'Date_time_stamp' => date("Y-m-d H:i:s"),
+									 'user_id' => $this->session->userdata('v_UserName'));
+			}
+		}
+
+		if ($this->input->get('tag') == 'component'){
+			$this->update_model->update_delete_comm($update_data,$this->input->get('mrinno'),$this->input->get('id'));
+		}
+		else{
+			$this->update_model->update_delete_attc($update_data,$this->input->get('mrinno'),$this->input->get('id'));
+		}
+
+		$this ->load->view("asset3_comm_new");
+	}
+	
+	public function pop_item(){
+		$this->load->model('get_model');
+		$data['codecat'] = $this->get_model->get_codecat();
+		$data['codec'] = $this->input->get('codecat') <> '' ? $this->input->get('codecat') : '';
+		$data['record'] = $this->get_model->get_itemdet($data['codec']);
+		
+		$this ->load->view("head");
+		$this ->load->view("content_pop_item",$data);
+	}
+	
+	public function pop_price(){
+		$this->load->model('get_model');
+		$data['record'] = $this->get_model->get_priceven($this->input->get('itemcode'));
+		//print_r($data['record']);
+		//exit();
+		$this ->load->view("head");
+		$this ->load->view("content_pop_price",$data);
+	}
+	public function e_pr_print(){
+		$this->load->model('display_model');
+		$data['record'] = $this->display_model->prdet($this->input->get('mrinno'));
+		$data['itemrec'] = $this->display_model->itemprdet($this->input->get('mrinno'));
+		//print_r($data['record']);
+		//exit();
+		$this ->load->view("headprinter");
+		$this ->load->view("Content_e_pr_print",$data);
+	}
+	
+}
+?>
