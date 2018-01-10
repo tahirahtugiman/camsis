@@ -473,7 +473,7 @@ $this->db->where('pmis2_sa_userdept.v_actionflag <> ', 'D');
 $this->db->group_by('pmis2_sa_userdept.v_userdeptdesc, pmis2_egm_assetlocation.v_UserDeptCode');
 $query = $this->db->get('pmis2_egm_assetlocation');
 //echo "laalla".$query->DWRate;
-echo $this->db->last_query();
+//echo $this->db->last_query();
 //exit();
 return $query->result();
 
