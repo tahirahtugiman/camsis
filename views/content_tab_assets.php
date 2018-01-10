@@ -22,7 +22,7 @@
 	<div class="box2">
 		<div class="small-box <?php echo $autocolor[2];?>">
 			<div class="inner2" >
-				<p>SCHEDULE OF BI-WEEKLY ROUTINE JOINT INSPECTION</p>
+				<p>SCHEDULE OF WEEKLY ROUTINE JOINT INSPECTION</p>
 			</div>
 			<div class="icon"><i class="icon-file-text2"></i></div>
 			<?php echo anchor ('sowr_joint_inspection','<span class="ui-left_web">More Info <i class="icon-arrow-right"></i></span>','class="small-box-footer"'); ?>
