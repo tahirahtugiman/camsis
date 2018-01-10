@@ -2,16 +2,16 @@
 class ppm_gen_ctrl extends CI_Controller {
 	
   function index()
-  { //echo "ini first";
-	  $nilaiwk = $_GET["wk"];
+  { //echo $_GET["wk"];
+		$nilaiwk = $_GET["wk"];
 		$nilaiy = $_GET["y"];
 		$nilaiact = $_GET["act"];
 		$nilaim = $_GET["m"];
 		$nilaid = $_GET["d"];
 		$ndue = 6;
 		$data['year'] = $this ->get_year();
-		$data['y']= ($this->input->get('y') <> 0) ? $this->input->get('y') : 'NA';	
-		$data['wk']= ($this->input->get('wk') <> 0) ?  $this->input->get('wk') : 'NA';
+		$data['y']= ($this->input->get('y') <> 0) ? $this->input->get('y') : '';	
+		$data['wk']= ($this->input->get('wk') <> 0) ?  $this->input->get('wk') : '';
 		//$data['tajuk1'] = $nilaiy.' PPM WEEK '.$nilaiwk.' <br />(30 DEC 2013 - 05 JAN 2014)';
 		$data['tajuk1'] = $nilaiy.' PPM WEEK '.$nilaiwk;
 		//echo('nilai week : '.$nilaiwk.'</br>');
@@ -126,6 +126,7 @@ class ppm_gen_ctrl extends CI_Controller {
 	{
 	 	if (isset($_REQUEST['y'])) {
 			 $theyear =  $_REQUEST["y"];
+			 
 		} else {
 			 $theyear = date("Y");
 		}
@@ -133,7 +134,17 @@ class ppm_gen_ctrl extends CI_Controller {
 			$byear = $theyear - 1;
 			
 			if (isset($_REQUEST['wk'])) {
-			 $thewk =  $_REQUEST["wk"];
+			//echo 'sini';
+			if ($_REQUEST['wk'] > 51){
+			 $thewk =  0;
+			 $theyear = $_REQUEST["y"] +1;
+			}elseif ($_REQUEST['wk'] == 0){
+			$thewk =  '53' -1;
+			$theyear = $_REQUEST["y"] -1;
+			}else{
+			 $thewk =  $_REQUEST['wk'];
+			}
+			
 		} else {
 			 $thewk = date("Y");
 		}
