@@ -464,12 +464,14 @@ return $query->result();
 
 function get_poploclistb()
 {
+$ignore = array('CP','CA','FES','LH','ME','SE','SRV','TCR','WS');
 $this->db->distinct();
 $this->db->select('pmis2_sa_userdept.v_userdeptdesc, pmis2_egm_assetlocation.v_UserDeptCode, count(pmis2_egm_assetlocation.v_UserDeptCode) as Totalloc');
 $this->db->join('pmis2_sa_userdept','pmis2_sa_userdept.v_hospitalcode = pmis2_egm_assetlocation.v_hospitalcode AND pmis2_sa_userdept.v_userdeptcode = pmis2_egm_assetlocation.v_UserDeptCode');
 $this->db->where('pmis2_egm_assetlocation.v_hospitalcode = ', $this->session->userdata('hosp_code'));
 $this->db->where('pmis2_egm_assetlocation.v_actionflag <> ', 'D');
 $this->db->where('pmis2_sa_userdept.v_actionflag <> ', 'D');
+$this->db->where_not_in('pmis2_egm_assetlocation.v_UserDeptCode', $ignore);
 $this->db->group_by('pmis2_sa_userdept.v_userdeptdesc, pmis2_egm_assetlocation.v_UserDeptCode');
 $query = $this->db->get('pmis2_egm_assetlocation');
 //echo "laalla".$query->DWRate;
