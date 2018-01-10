@@ -19,7 +19,7 @@
 							<td align="center"><b>IIUM HOSPITAL</b> </td>
 						</tr>
 						<tr>
-							<td align="center"><b>SCHEDULE OF WEEKLY ROUTINE JOINT INSPECTION </b></td>
+							<td align="center"><b>SCHEDULE OF BI-WEEKLY ROUTINE JOINT INSPECTION </b></td>
 						</tr>
 					</table>
 				</td>
@@ -57,13 +57,17 @@
 		</div>
 	<table class="tftable2" border="1" style="text-align:center;" align="center">
 		<tr>
-			<th>Day</th>
-			<th>Code</th>
-			<th>User Deparment</th>
-			<th>Start <br/> Time</th>
-			<th>IIum Representative</th>
-			<th>designation</th>
-			<th>Advance Pact sdn bhd</th>
+			<th rowspan="2">No</th>
+			<th rowspan="2">Code</th>
+			<th rowspan="2">User Deparment</th>
+			<th rowspan="2">Day</th>
+			<th colspan="2">Date</th>
+			<th rowspan="2">Penmedic</th>
+			<th rowspan="2">Advance Pact sdn bhd</th>
+		</tr>
+		<tr>
+			<th>Week2</th>
+			<th>Week4</th>
 		</tr>
 		<?php } ?>
 		<!--18lines-->
@@ -79,9 +83,11 @@
 			<td></td>
 			<td></td>
 			<td></td>
+			<td></td>
 			<?php } ?>
 			<?php endforeach; ?>
 			<?php } else { ?>
+			<td></td>
 			<td></td>
 			<td></td>
 			<td></td>
