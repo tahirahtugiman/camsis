@@ -39,7 +39,8 @@ class sowr_joint_inspection extends CI_Controller {
     		$data['deptcode'][] = $data['sn'][0];
     		$data['schdata'][] = array('dept'=>$data['sn'][0],
     								   'Occurs'=>$r->Occurs,
-    								   'Daily_freq_time_1'=>$r->Daily_freq_time_1,
+    								   //'Daily_freq_time_1'=>$r->Daily_freq_time_1,
+											 'Daily_freq_time_1'=>$r->Monthly_days,
     								   'Duration_start_date'=>$r->Duration_start_date,
     								   'Duration_end_date'=>$r->Duration_end_date
     								   );
