@@ -7961,6 +7961,14 @@ public function pop_fail(){
 		$this ->load->view("Content_report_A2", $data);
 		}
 }
-	
+	public function new_item (){
+		$this ->load->view("head");
+		$this ->load->view("left");
+		if($this->input->get('p') == 'confirm'){
+		$this ->load->view("content_new_item_confirm");
+		}else{
+		$this ->load->view("content_new_item");
+		}
+	}
 }
 ?>
