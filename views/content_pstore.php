@@ -1,7 +1,7 @@
 <div class="ui-middle-screen">
 	<div class="main-box">
 		<?php if (!in_array("contentcontroller/store_item_new", $chkers)) { ?>
-		<div class="box2">
+		<div class="box3">
 			<?php $autocolor = array('bg-purple', 'bg-red', 'bg-yellow', 'bg-aqua', 'bg-light-blue'); shuffle($autocolor); ?>
 			<div class="small-box <?php echo $autocolor[0];?>">
 				<div class="inner2" >
@@ -13,7 +13,7 @@
 		</div>
 		<?php  } ?>
 		<?php if (!in_array("contentcontroller/Report_Part", $chkers)) { ?>
-		<div class="box2">
+		<div class="box3">
 			<div class="small-box <?php echo $autocolor[1];?>">
 				<div class="inner2" >
 					<p>Report Part</p>
@@ -24,7 +24,7 @@
 		</div>
 		<?php  } ?>
 		<?php if (!in_array("contentcontroller/vendor_reg", $chkers)) { ?>
-		<div class="box2">
+		<div class="box3">
 			<div class="small-box <?php echo $autocolor[2];?>">
 				<div class="inner2" >
 					<p>Vendor Reg</p>
@@ -35,13 +35,24 @@
 		</div>
 		<?php  } ?>
 		<?php if (!in_array("contentcontroller/vendor_reg_update", $chkers)) { ?>
-		<div class="box2">
+		<div class="box3">
 			<div class="small-box <?php echo $autocolor[3];?>">
 				<div class="inner2" >
 					<p>Vendor Reg Update</p>
 				</div>
 				<div class="icon"><i class="icon-file-text2"></i></div>
 				<?php echo anchor ('contentcontroller/vendor_reg_update','<span class="ui-left_web">More Info <i class="icon-arrow-right"></i></span>','class="small-box-footer"'); ?>
+			</div>
+		</div>
+		<?php  } ?>
+		<?php if (!in_array("contentcontroller/new_item", $chkers)) { ?>
+		<div class="box3">
+			<div class="small-box <?php echo $autocolor[4];?>">
+				<div class="inner2" >
+					<p>New Item</p>
+				</div>
+				<div class="icon"><i class="icon-file-text2"></i></div>
+				<?php echo anchor ('contentcontroller/new_item','<span class="ui-left_web">More Info <i class="icon-arrow-right"></i></span>','class="small-box-footer"'); ?>
 			</div>
 		</div>
 		<?php  } ?>

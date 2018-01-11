@@ -126,6 +126,8 @@ class ppm_gen_ctrl extends CI_Controller {
 	{
 	 	if (isset($_REQUEST['y'])) {
 			 $theyear =  $_REQUEST["y"];
+			 $thefyear = $_REQUEST["y"];
+			 $thebyear = $_REQUEST["y"];
 		} else {
 			 $theyear = date("Y");
 		}
@@ -133,21 +135,44 @@ class ppm_gen_ctrl extends CI_Controller {
 			$byear = $theyear - 1;
 			
 			if (isset($_REQUEST['wk'])) {
-			 $thewk =  $_REQUEST["wk"];
-		} else {
-			 $thewk = date("Y");
-		}
+			 //$thewk =  $_REQUEST["wk"];
+			 //echo 'sini';
+			if ($_REQUEST['wk'] > 52){
+ 		  $thewk =  $_REQUEST['wk'];
+			$fwk = 1;
+			$bwk = $thewk-1;
+			$thefyear = $_REQUEST["y"] +1;
+			}
+			elseif ($_REQUEST['wk'] == 1){
+			$thewk =  $_REQUEST['wk'];
+			$thebyear = $_REQUEST["y"]-1 ;
+			$fwk = $thewk + 1;
+			$bwk = 53;
+			}
+			else{
+			$thefyear = $_REQUEST["y"];
+			$thebyear = $_REQUEST["y"];
+			$thewk =  $_REQUEST['wk'];
 			$fwk = $thewk + 1;
 			$bwk = $thewk - 1;
+			}
+		} else {
+			 $thewk = date("Y");
+			 
+		}
+			//$fwk = $thewk + 1;
+			//$bwk = $thewk - 1;
 			
 	  $year_data = array( 
 		
 		'theyear'=>$theyear,
+		'thebyear'=>$thebyear,
+		'thefyear'=>$thefyear,
 		'fyear'=>$theyear + 1,
 		'byear'=>$theyear - 1,
 		'thewk'=>$thewk,
-		'fwk'=>$thewk + 1,
-		'bwk'=>$thewk - 1
+		'fwk'=>$fwk,
+		'bwk'=>$bwk
 		);
 	return $year_data;
 	}

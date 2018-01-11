@@ -18,7 +18,7 @@
 			<tr>
 				<td class="td-assest">Documentation Details :</td>
 				<?php if($act == 'take') { ?>
-				<td> <input type="text" id="n_doc_det" name="n_doc_det" value="<?php echo set_value('n_doc_det'); ?>" class="form-control-button2 n_user_d" readonly> <span class="icon-windows" onclick="pop_requests(this)" value=""></span></td>
+				<td> <input type="text" id="n_doc_det" name="n_doc_det" value="<?php echo set_value('n_doc_det'); ?>" class="form-control-button2 n_user_d" > <span class="icon-windows" onclick="pop_requests(this)" value=""></span></td>
 				<?php } else { ?>
 				<td> <input type="text" id="n_doc_det" name="n_doc_det" value="<?php echo set_value('n_doc_det'); ?>" class="form-control-button2 n_user_d" ></td>
 				<?php } ?>

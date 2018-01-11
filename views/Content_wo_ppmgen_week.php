@@ -10,12 +10,12 @@
 							<a href="?wk=<?php echo $year['thewk']; ?>&y=<?php echo $year['byear']; ?>&d=1&m=1&act="><img src="<?php echo base_url(); ?>images/arrow-left2.png" alt="" class="ui-img-icon" style="padding-top:4px; padding-left:4px;"/>
 							</td>
 							<td width="3%">
-							<a href="?wk=<?php echo $year['bwk']; ?>&y=<?php echo $year['theyear']; ?>&d=1&m=1&act="><img src="<?php echo base_url(); ?>images/arrow-left.png" alt="" class="ui-img-icon" style="padding-top:4px; padding-left:4px;"/>
+							<a href="?wk=<?php echo $year['bwk']; ?>&y=<?php echo $year['thebyear']; ?>&d=1&m=1&act="><img src="<?php echo base_url(); ?>images/arrow-left.png" alt="" class="ui-img-icon" style="padding-top:4px; padding-left:4px;"/>
 							</td>
 							<td width="88%" align="center"><?= $y?> PPM WEEK <?= $wk?> <!--(09 FEB 2015 -15 FEB 2015) -->
 							</td>
 							<td width="3%">
-							<a href="?wk=<?php echo $year['fwk']; ?>&y=<?php echo $year['theyear']; ?>&d=1&m=1&act="><img src="<?php echo base_url(); ?>images/arrow-right.png" alt="" class="ui-img-icon" style="padding-top:4px; padding-left:4px;"/>
+							<a href="?wk=<?php echo $year['fwk']; ?>&y=<?php echo $year['thefyear']; ?>&d=1&m=1&act="><img src="<?php echo base_url(); ?>images/arrow-right.png" alt="" class="ui-img-icon" style="padding-top:4px; padding-left:4px;"/>
 							</td>
 							<td width="3%">
 							<a href="?wk=<?php echo $year['thewk']; ?>&y=<?php echo $year['fyear']; ?>&d=1&m=1&act="><img src="<?php echo base_url(); ?>images/arrow-right2.png" alt="" class="ui-img-icon" style="padding-top:4px; padding-left:4px;"/>
