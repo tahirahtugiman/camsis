@@ -7961,12 +7961,8 @@ public function pop_fail(){
 		$this ->load->view("Content_report_A2", $data);
 		}
 }
-<<<<<<< HEAD
 
 public function new_item (){
-=======
-	public function new_item (){
->>>>>>> origin/master
 		$this ->load->view("head");
 		$this ->load->view("left");
 		if($this->input->get('p') == 'confirm'){
@@ -7974,11 +7970,7 @@ public function new_item (){
 		}else{
 		$this ->load->view("content_new_item");
 		}
-<<<<<<< HEAD
 }
 	
-=======
-	}
->>>>>>> origin/master
 }
 ?>
