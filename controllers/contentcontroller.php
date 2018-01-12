@@ -3879,14 +3879,14 @@ class Contentcontroller extends CI_Controller {
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
 		$data['ppmsum'] = $this->display_model->sumppm($data['month'],$data['year'],$this->input->get('grp'));
 		$data['reqtype'] = 'A2';
-		$data['rqsum'] = $this->display_model->sumrq($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'));
+		//$data['rqsum'] = $this->display_model->sumrq($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'));
                 if ($this->session->userdata('usersess') == 'FES') {
 		$data['ppmcivil'] = $this->display_model->sumppm($data['month'],$data['year'],$this->input->get('grp'),"IIUM C");
 		$data['ppmmech'] = $this->display_model->sumppm($data['month'],$data['year'],$this->input->get('grp'),"IIUM M");
 		$data['ppmelec'] = $this->display_model->sumppm($data['month'],$data['year'],$this->input->get('grp'),"IIUM E");
-		$data['rqcivil'] = $this->display_model->sumrq($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'),"IIUM C");
-		$data['rqmech'] = $this->display_model->sumrq($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'),"IIUM M");
-		$data['rqelec'] = $this->display_model->sumrq($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'),"IIUM E");
+		//$data['rqcivil'] = $this->display_model->sumrq($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'),"IIUM C");
+		//$data['rqmech'] = $this->display_model->sumrq($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'),"IIUM M");
+		//$data['rqelec'] = $this->display_model->sumrq($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'),"IIUM E");
 		}
 		//$data['rqsum'] = $this->display_model->sumrq($data['month'],$data['year']);
 		//$data['complntsum'] = $this->display_model->sumcomplnt($data['month'],$data['year']);
