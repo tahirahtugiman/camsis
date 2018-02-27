@@ -516,7 +516,7 @@
 			</tr>
 			<?php  } ?>
 			
-			<?php  } ?>
+			<?php  } ?><!--fes reports-->
 			<?php  if ($this->session->userdata('usersess') == 'FES') {?>
 			<?php if (!in_array("contentcontroller/report_fdreport", $chkers)) { ?>
 			<tr class="<?php  $number++; echo evenodd($number); ?>">
@@ -525,6 +525,17 @@
 				</td>
 			</tr>
 			<?php  } ?>
+			
+			<?php  } ?><!--bes reports-->
+			<?php  if ($this->session->userdata('usersess') == 'BES') {?>
+			<?php if (!in_array("contentcontroller/report_fdreport", $chkers)) { ?>
+			<tr class="<?php  $number++; echo evenodd($number); ?>">
+				<td colspan="4">
+					<?php echo anchor ('contentcontroller/report_fdreport?m='.$month.'&y='.$year.'&grp='.$this->input->get('grp'),'<img src="'. base_url() .'images/user.png" alt="" class="ui-icon"/>&nbsp;&nbsp;&nbsp;&nbsp;Bes Daily Report'); ?>
+				</td>
+			</tr>
+			<?php  } ?>
+			
 			<?php  } ?>
 			<?php  if ($this->session->userdata('usersess') == 'HKS') {?>
 			<?php if (!in_array("contentcontroller/Unsatisfactory_by_Group", $chkers)) { ?>
