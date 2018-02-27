@@ -3926,7 +3926,7 @@ ORDER BY r.D_date, r.D_time
 			return $query_result;
 	}
 	
-	function fdrepdet1($date,$reptype){
+	function fdrepdet1($date,$reptype,$v){
 		if ((strtotime($this->dater(1,date("m",strtotime($date)),date("Y",strtotime($date)))) <= strtotime($date)) && (strtotime($date) <= strtotime($this->dater(2,date("m",strtotime($date)),date("Y",strtotime($date)))))) {
 			$month = date("m",strtotime($date));
 			$year = date("Y",strtotime($date));
@@ -3946,8 +3946,13 @@ ORDER BY r.D_date, r.D_time
 			$this->db->join('pmis2_egm_sharedowntime dt',"r.V_Request_no = dt.ori_wo",'left outer');
 			$this->db->where('r.V_servicecode', $this->session->userdata('usersess'));
 			$this->db->where('r.V_actionflag <> ', 'D');
+			if ($v == 1){
+			$wotype = array('A1');
+			$this->db->where_in('r.V_request_type', $wotype);} 
+			else{
 			$wotype = array('A1', 'A2', 'A3', 'A4','A5','A6','A7','A8','A9','A10');
 			$this->db->where_in('r.V_request_type', $wotype);
+			}
 
 			if ($reptype == 1){
 				$this->db->where('DATE(r.D_date) = ',$date);
@@ -4024,7 +4029,7 @@ ORDER BY r.D_date, r.D_time
 			$this->db->group_by('r.V_Request_no');
 
 		$query = $this->db->get();
-		echo $this->db->last_query();
+		//echo $this->db->last_query();
 		//exit();
 		$query_result = $query->result();
 		return $query_result;

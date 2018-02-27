@@ -7808,6 +7808,7 @@ public function pop_fail(){
         }
 				
 	public function report_fdreport(){
+
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
 		$data['date']= ($this->input->get('jobdate') <> 0) ? $this->input->get('jobdate') : date("d-m-Y");
@@ -7917,7 +7918,7 @@ public function pop_fail(){
 		}
 
 		$this->load->model('display_model');
-		$data['record'] = $this->display_model->fdrepdet1(date("Y-m-d",strtotime($data['date'])),$this->input->get('x'));
+		$data['record'] = $this->display_model->fdrepdet1(date("Y-m-d",strtotime($data['date'])),$this->input->get('x'),$this->input->get('v'));
 
 		$this ->load->view("headprinter");
 		$this ->load->view("content_report_fdreport2",$data);		

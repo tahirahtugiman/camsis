@@ -1,12 +1,17 @@
 <?php
-
+$a = $this->session->userdata('usersess');
 if ($this->input->get('ex') == 'excel'){
 $filename = 'Fes Daily Report date='.$date.".xls";
 header('Content-type: application/ms-excel');
 header('Content-Disposition: attachment; filename='.$filename);
 }
+?>
+<?php 
 
-
+ if ($a == 'FES')
+	{
+	echo "sapik";
+	}	
 ?>
 <script>
 function doSomething(a){
@@ -32,7 +37,7 @@ function doSomething(a){
 </script>
 <?php if ($this->input->get('ex') == ''){?>
 <div id="Instruction" class="pr-printer">
-    <div class="header-pr">Fes Daily Report</div>
+    <div class="header-pr"><?php if ($a == 'FES') echo "Fes Daily Report"?><?php if ($a == 'BES') echo "Bes Daily Report"?></div>
     <button onclick="javascript:doSomething(this);" value ="3" class="btn-button btn-primary-button">PRINT</button>
     <!--<button onclick="javascript:myFunction('report_fdreport?jobdate=<?=$date?>&none=closed&ex=<?=$this->input->get('none');?>');" class="btn-button btn-primary-button">PRINT</button>-->
     <button type="cancel" class="btn-button btn-primary-button" onclick="location.href = '<?php base_url();?>Schedule?<?php echo '&m='.$this->input->get('m').'&y='.$this->input->get('y').'&grp='.$this->input->get('grp');?>';">CANCEL</button>
@@ -59,7 +64,7 @@ function doSomething(a){
 <form method="get" action="">
 	<table>
 		<tr>
-			<td colspan="5" style="font-size:12px;"><b>Fes Daily Report<br/>Date :</b> <?php if ($this->input->get('ex') == 'excel'){?><?=$date?><?php } else {?><input type="text" id="date0" name="jobdate" value="<?=$date?>" style="width:25%;" onchange="javascript: submit()" class="inputdate"/><?php } ?> <span style="font-size:7px;">*Data taken at 4:00pm</span></td>
+			<td colspan="5" style="font-size:12px;"><b><?php if ($a == 'FES') echo "Fes Daily Report"?><?php if ($a == 'BES') echo "Bes Daily Report"?><br/>Date :</b> <?php if ($this->input->get('ex') == 'excel'){?><?=$date?><?php } else {?><input type="text" id="date0" name="jobdate" value="<?=$date?>" style="width:25%;" onchange="javascript: submit()" class="inputdate"/><?php } ?> <span style="font-size:7px;">*Data taken at 4:00pm</span></td>
 		</tr>
 	</table>
 </form>	
@@ -286,7 +291,8 @@ function doSomething(a){
 		<tr style="text-align:center;">
 			<td>2.5</td>
 			<td>Outstanding > 5 Month</td>
-			<td><?=isset($recoutstanding[0]->m5_A1) ? $recoutstanding[0]->m5_A1 : 0?></td>
+			<?php $t_ddd = (isset($recoutstanding[0]->m5_A1) ? $recoutstanding[0]->m5_A1 : 0 )?>
+			<td><?= ($t_ddd > 0) ? anchor('contentcontroller/report_fdreport2?jobdate='.$date.'&x=13'.'&v=1',$t_ddd) : 0 ?></td>
 			<td><?=isset($recoutstanding[0]->m5_A2) ? $recoutstanding[0]->m5_A2 : 0?></td>
 			<td><?=isset($recoutstanding[0]->m5_A3) ? $recoutstanding[0]->m5_A3 : 0?></td>
 			<td><?=isset($recoutstanding[0]->m5_A4) ? $recoutstanding[0]->m5_A4 : 0?></td>
