@@ -21,7 +21,7 @@
 						<?php  } elseif ($service== "HKS") {?>
 						<td align="center"><b style="text-transform: uppercase;">Housekeeping Services</b></td>
 						<?php }?>
-						</tr>saya ensem-->
+						</tr>saya ensem dan pandai-->
 					</table>
 				</td>
 				<td style="padding-left:0px; width:20%;" align="center"><img src="<?php echo base_url(); ?>images/logo.png" style="width:100px; height:40px;"/></td>
