@@ -1,4 +1,5 @@
 <?php
+//this is for excel
 if ($this->input->get('ex') == 'excel'){
 $filename ="Request Work Order Summary by Year".date('F', mktime(0, 0, 0, $month, 10)) .$year.".xls";
 header('Content-type: application/ms-excel');
