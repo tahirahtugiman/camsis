@@ -1,11 +1,28 @@
 <div class="ui-middle-screen">
 <div class="div-p"></div>
+
+<div class="main-box">
+	<div class="box">
+	<?php $autocolor = array('bg-purple', 'bg-red', 'bg-yellow', 'bg-aqua', 'bg-light-blue'); shuffle($autocolor);?>
+		<div class="small-box <?php echo $autocolor[0];?>">
+			<div class="inner2" >
+				<p>New PO</p>
+			</div>
+			<div class="icon"><i class="icon-file-text2"></i></div>
+			<?php echo anchor ('Procurement/po_follow_up2?po=3&powhat=update&tab=1111','<span class="ui-left_web">Proceed <i class="icon-arrow-right"></i></span>','class="small-box-footer"'); ?>
+		</div>
+	</div>
+</div>
+
 	<div class="content-workorder">
 		<table class="ui-content-middle-menu-workorder" border="0" height="" align="center">
 <?php 
 $procument = $this->input->get('tab');
 switch ($procument) {
     case "1":
+        $tulis = "Payment Process";
+        break;
+    case "2":
         $tulis = "Completed PO";
         break;
     default:
@@ -44,32 +61,47 @@ switch ($procument) {
 						<tr class="ui-menu-color-header" style="color:white; font-size:12px;">
 							<th >&nbsp;</th>
 							<th style="text-align:left;">PO Reference No</th>
-							<th >MIRN No.</th>
-							<th >Issue Date</th>
+							<th >Payment Type</th>
+							<?php if ($procument == "1") { ?>
+							<th >Status</th> <?php }  else {?>
+							<th >Issue Date</th> 
+							<th >Status</th><?php } ?>
+							<th >Vendor</th>
 						</tr>
 						<style>
 				.ui-content-middle-menu-workorder2 tr th {padding:8px;font-size:14px;}
 				.ui-content-middle-menu-workorder2 tr td {padding:8px;font-size:14px;}
 				.ui-content-middle-menu-workorder2 tr td.td-desk a{ font-weight:bold; font-size:14px;}
 				</style>
-							<?php $numrow = 1; ?>
-							<?php if($this->input->get('tab') == 0){?>
+							<?php if ($polist) { ?>
+							<?php $numrow = 1; foreach ($polist as $row):?>
 							<tr align="center" <?= ($numrow%2==0) ?  'class="ui-color-color-color"' :  '' ?> >
 		    					<td class="td-desk"><?=$numrow++?></td>
-		    					<td class="td-desk" style="text-align:left;"><a href="<?php echo base_url();?>index.php/Procurement/po_follow_up2?pr=pen">PO/OPU-02/MKA/AGJ/G2016/0296  </a></td>
-		    					<td class="td-desk">MRIN/MKA/AGJ/00585/2016</td>
-		    					<td class="td-desk">18 Jul 2016 18/07/2016 17:42:46 </td>
+		    					<td class="td-desk" style="text-align:left;"><a href="<?php echo base_url();?>index.php/Procurement/po_follow_up2?tab=0&po=<?=isset($row->PO_No) ? $row->PO_No : ''?>"><?=isset($row->PO_No) ? $row->PO_No : ''?></a></td>
+		    					<td class="td-desk"><?=isset($row->paytype) ? $row->paytype : 'NA'?></td>
+									<?php 
+												$status_pay = array(
+													'0' => 'Processing',
+															  '1' => 'MD Auth',
+															  '2' => 'Hold',
+																'3' => 'Return'
+												
+														   );
+												if ($procument == "1") { 
+													$confim = "";
+													$js = 'id="mrtgCusName" onChange="alert(\\"Hello World\");"';
+													 
+									?>
+		    					<td class="td-desk"><?=form_dropdown('n_status_pay', $status_pay ,$row->Statusc, 'id= "' . $row->PO_No . '" class="dropdown n_wi-date2" onChange="myFunction(\'' .$row->PO_No. '\');" '.$confim.'');?></td> <?php }  else {?>
+									<td class="td-desk"><?=isset($row->PO_Date) ? $row->PO_Date : ''?></td>
+									<td class="td-desk"><?php if ($procument != "2") {echo isset($status_pay[$row->Statusc]) ? $status_pay[$row->Statusc] : '';} else {echo "Completed";}?></td> <?php } ?>
+									<td class="td-desk"><?=isset($row->vendor) ? $row->vendor : ''?></td> 
 		        			</tr>
-							<?php }elseif($this->input->get('tab') == 1){?>
-							<tr align="center" <?= ($numrow%2==0) ?  'class="ui-color-color-color"' :  '' ?> >
-		    					<td class="td-desk"><?=$numrow++?></td>
-		    					<td class="td-desk" style="text-align:left;"><a href="<?php echo base_url();?>index.php/Procurement/po_follow_up2?pr=approved">PO/OPU-02/MKA/AGJ/G2016/0294 </a></td>
-		    					<td class="td-desk">MRIN/MKA/AGJ/00584/2016 </td>
-		    					<td class="td-desk">18 Jul 2016 18/07/2016 17:30:29 </td>
-		        			</tr>
+							<?php endforeach;} else {?>
+							<tr align="center" style="height:200px; background:white;">
+								<td colspan="10" class="default-NO">NO PO FOUND FOR <?=date('F', mktime(0, 0, 0, $month, 10))?> <?=$year?></td>
 							<?php } ?>							
-								<tr align="center" style="height:200px; background:white;">
-								<td colspan="10" class="default-NO">NO <?php if($tulis == "All MRIN" ){ echo "MRIN";}else{ echo $tulis;}?> FOUND FOR <?=date('F', mktime(0, 0, 0, $month, 10))?> <?=$year?></td>
+								
 							</tr>
 				</table>
 			</td>	
@@ -82,4 +114,23 @@ switch ($procument) {
 	</div>
 </div>
 </body>
+<script>
+function myFunction(nilai) {
+		var nameValue = document.getElementById(nilai).value;
+		//var nameValue = "lalalalala";
+    //alert('lalalalallala : '+nameValue+":"+nilai+'<?php echo base_url('index.php/ajaxpo'); ?>');
+		
+		$.post("<?php echo base_url('index.php/ajaxpo'); ?>",
+        {
+          poape: nilai,
+          nilaidier: nameValue
+        },
+        function(data,status){
+            //alert("Data: " + data + "\nStatus: " + status);
+        });
+ 
+ 
+ //alert('sucess');
+}
+</script>
 </html>

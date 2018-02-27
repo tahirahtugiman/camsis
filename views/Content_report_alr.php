@@ -124,7 +124,7 @@ header('Content-Disposition: attachment; filename='.$filename);
 			<td><?= ($row->v_vendorname) ? $row->v_vendorname : 'N/A' ?></td>
 			<!--<td><?= ($row->V_PO_no) ? $row->V_PO_no : 'N/A' ?></td>
 			<td><?= ($row->V_PO_date) ? ($row->V_PO_date != '0000-00-00 00:00:00' ? date("d/m/Y",strtotime($row->V_PO_date)) : '-' ) : 'N/A' ?></td>-->
-			<td><?= ($row->N_Cost) ? printf("$%01.1f", $row->N_Cost) : 'N/A' ?></td>
+			<td><?= ($row->N_Cost) ? printf("RM%01.1f", $row->N_Cost) : 'N/A' ?></td>
 			<!--<td><?= ($row->V_File_Ref_no) ? $row->V_File_Ref_no : 'N/A' ?></td>-->
 			<td><?= ($row->V_Depreciation) ? $row->V_Depreciation : 'N/A' ?></td>
 			<td><?= ($row->V_Lifespan) ? $row->V_Lifespan : 'N/A' ?></td>

@@ -220,7 +220,7 @@ function fCallitem(){
 	cell5.innerHTML = '<select name="a_rem'+rows+'" class="dropdown"><option value="" selected="selected">None</option><option value="1">Mishandling</option><option value="2">Supplementary</option><option value="3">Upgrading</option><option value="4">Re-Installation</option><option value="5">Other</option></select>'; 	
 	cell6.innerHTML = '<INPUT TYPE="text" name="startDate'+rows+'" class="form-control-button2" style=width:100px;" onChange="validDate(this)">';
 	<?php if ($this->input->get('pro') != 'edit') { ?>
-	cell7.innerHTML = '<input type="text" name="n_price'+rows+'" id="n_price'+rows+'" value="" class="form-control-button2" style=width:100px;" readonly><span class="icon-windows" style="display:inline-block; padding-left:5px;" id="itemc'+rows+'" onclick="fCallpricexx(\'n_price'+rows+'\',\'vendor'+rows+'\', this.value)" value=""></span>';
+	cell7.innerHTML = '<input type="text" name="n_price'+rows+'" id="n_price'+rows+'" value="" class="form-control-button2" style=width:100px;"><span class="icon-windows" style="display:inline-block; padding-left:5px;" id="itemc'+rows+'" onclick="fCallpricexx(\'n_price'+rows+'\',\'vendor'+rows+'\', this.value)" value=""></span>';
 	cell8.innerHTML = '<p id="vendor'+rows+'"></p><input type="hidden" id="vendori'+rows+'" name="vendor'+rows+'" value="">';
 	<?php } ?>
 }
@@ -574,7 +574,7 @@ if ($this->uri->slash_segment(1) == 'contentcontroller/') {
 	else {
 		echo "contentcontroller/pecodes";
 		
-	}?>?hosp=MKA', 'assetnumber', winProp);//change hosp to session
+	}?>?hosp=IIUM', 'assetnumber', winProp);//change hosp to session
 	Win.window.focus();
 }
 function pecodes2()

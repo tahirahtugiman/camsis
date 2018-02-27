@@ -1778,13 +1778,17 @@ function cs_exist($value1,$variable1,$value2,$variable2,$value3,$variable3,$v_In
 			
 			$query = $this->db->get('pmis2_com_indicatorparam');
 			
+			//echo "masuk Update : ".$query->num_rows();
+			//exit();
 			if($query->num_rows()>0){
 
 				$this->load->model('update_model');
-				for($i=0;$i<=(count($v_IndicatorNo)-1);$i++){
+				//for($i=0;$i<=(count($v_IndicatorNo)-1);$i++){
+				for($i=0;$i<=(count($n_indicatorval)-1);$i++){
 				$insert_data[] = array(
 						  //'v_ServiceCode' => $variable3,
-						  'v_IndicatorNo' => $v_IndicatorNo[$i],
+						  //'v_IndicatorNo' => $v_IndicatorNo[$i],
+							'v_IndicatorNo' => ($i+1),
 						  'n_Parameters' => $n_indicatorval[$i],
 						  'v_Paramval' => $n_parameter[$i],
 						  'Demerit_Point' => $n_demerit[$i],
@@ -1805,11 +1809,12 @@ function cs_exist($value1,$variable1,$value2,$variable2,$value3,$variable3,$v_In
 				//exit();
 			}
 			else{
-				for($i=0;$i<=(count($v_IndicatorNo)-1);$i++){
-
+				//for($i=0;$i<=(count($v_IndicatorNo)-1);$i++){
+				for($i=0;$i<=(count($n_indicatorval)-1);$i++){
 				$insert_data[] = array(
 						  'v_ServiceCode' => $variable3,
-						  'v_IndicatorNo' => $v_IndicatorNo[$i],
+							//'v_IndicatorNo' => $v_IndicatorNo[$i],
+						  'v_IndicatorNo' => ($i+1),
 						  'n_Parameters' => $n_indicatorval[$i],
 						  'v_Paramval' => $n_parameter[$i],
 						  'Demerit_Point' => $n_demerit[$i],
@@ -2636,6 +2641,10 @@ function tbl_pr_apprv($insert_data){
 
 function tbl_po_mirn($insert_data){
 	$this->db->insert('tbl_po_mirn',$insert_data);
+}
+
+function tbl_po($insert_data){
+	$this->db->insert('tbl_po',$insert_data);
 }
 
 }

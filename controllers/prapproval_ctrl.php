@@ -58,9 +58,39 @@ class prapproval_ctrl extends CI_Controller{
 			$update_prno = array('pr_next_no' => $data['newpr'][0]->pr_next_no + 1,
 								 'userid' => $this->session->userdata('v_UserName'));
 			$this->update_model->updatepr($update_prno,date('Y'));
+			
+			////////po no inc.
+			$insert_pr = array('SM_Comen' => $this->input->post('n_remark'),
+							   'SM_Status' => $this->input->post('n_options'),
+							   'vendor_rmk' => $this->input->post('n_remark'),
+							   'Apprv_By' => $this->session->userdata('v_UserName'),
+							   'DT_Apprv' => date("Y-m-d H:i:s"));
+			$this->update_model->tbl_pr_u($insert_pr,$this->input->post('prno'));
+
+			$data['newpo'] = $this->get_model->nextponumber();
+			
+			$data['itemrec'] = $this->display_model->itemprdet($this->input->get('mrinno'));
+
+			$insert_po = array('MIRN_No' => $this->input->post('mrinno'),
+							   'PO_No' => $data['newpo'][0]->pono,
+							   'Vendor_No' => $data['itemrec'][0]->ApprvRmk1x);
+			$this->insert_model->tbl_po_mirn($insert_po);
+
+			$update_pono = array('po_next_no' => $data['newpo'][0]->po_next_no + 1,
+								 'userid' => $this->session->userdata('v_UserName'));
+			$this->update_model->updatepo($update_pono,date('Y'));
+			////////po no inc.
+			
+			////////po no tbl_po inc.
+			$insert_tbl_po = array('PO_No' => $data['newpo'][0]->pono,
+							   'PO_Date' => date("Y-m-d"),
+								 'visit' => '1');
+			$this->insert_model->tbl_po($insert_tbl_po);
+			////////po no tbl_po inc.
+			
 		}
 		else {
-
+		  
 			$insert_pr = array('SM_Comen' => $this->input->post('n_remark'),
 							   'SM_Status' => $this->input->post('n_options'),
 							   'vendor_rmk' => $this->input->post('ven_ref'),

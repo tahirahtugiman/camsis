@@ -78,6 +78,19 @@ if ($this->input->get('parent') == 'woresponse' OR $this->input->get('parent') =
         }
       </script>';
   }
+	else if ($this->input->get('v') == 'q' && $this->input->get('r') == '1' ){
+  echo  '<script type="text/javascript">
+        function Setworkorder(a_number,t_number,s_number,h_no,m_no) {
+          var trate = (h_no * s_number) + (m_no * s_number / 60);
+          var r1 = trate.toFixed(2);
+          if (window.opener != null && !window.opener.closed) {
+          var anumber = window.opener.document.getElementById("n_receipient");
+          anumber.value =  t_number;
+          }
+          window.close();
+        }
+      </script>';
+  }
   else if ($this->input->get('v') == 'r' && $this->input->get('r') == '2' ){
   echo  '<script type="text/javascript">
         function Setworkorder(a_number,t_number,s_number,h_no,m_no) {

@@ -2033,8 +2033,8 @@ return $query->result();
 			$this->db->select('s.V_Request_no,s.V_Asset_no,s.D_date,s.D_time,s.V_requestor,s.V_phone_no,s.V_User_dept_code,s.V_Location_code,s.V_summary,s.V_priority_code,s.V_request_status');
 			$this->db->select('s.v_closeddate,s.v_closedtime,s.V_MohDesg,a.V_Asset_no,a.V_Tag_no,a.V_Serial_no,a.V_Asset_name,a.V_Manufacturer,a.V_Brandname,a.V_Model_no,b.V_PO_date,b.N_Cost');//,DATEDIFF(%m,b.D_commission,CURDATE()) AS Ages
 			$this->db->from('pmis2_egm_service_request s');
-			$this->db->join('pmis2_egm_assetregistration a','s.V_hospitalcode = a.V_Hospitalcode AND s.V_Asset_no = a.V_Asset_no');
-			$this->db->join('pmis2_egm_assetreg_general b','a.V_Hospitalcode = b.V_Hospital_code AND a.V_Asset_no = b.V_Asset_no');
+			$this->db->join('pmis2_egm_assetregistration a','s.V_hospitalcode = a.V_Hospitalcode AND s.V_Asset_no = a.V_Asset_no', 'left outer');
+			$this->db->join('pmis2_egm_assetreg_general b','a.V_Hospitalcode = b.V_Hospital_code AND a.V_Asset_no = b.V_Asset_no', 'left outer');
 			$this->db->where('s.V_actionflag <>','D');
 			$this->db->where('s.V_servicecode',$this->session->userdata('usersess'));
 			$this->db->where('s.V_hospitalcode',$hosp);
@@ -2745,6 +2745,30 @@ function rpt_rsls2($month,$year, $stat = "apo2",$expiring,$grpsel){
 			$query_result = $query->result();
 			return $query_result;
 		}
+		
+		function keyindicatorprev($servcode,$month,$year){ 
+		$themonth = 0;
+		$theyear = 0;
+		
+		if ($month == 1) {
+		$themonth = 12;
+		$theyear = $year-1;
+		} else {
+		$themonth = $month;
+		$theyear = $year;
+		}
+		
+			$this->db->from('pmis2_com_indicatorparam');
+			$this->db->where('v_ServiceCode',$servcode);
+			$this->db->where('v_Month',$themonth);
+			$this->db->where('v_Year',$theyear);
+			$query = $this->db->get();
+			//echo $this->db->last_query();
+			//exit();
+			$query_result = $query->result();
+			return $query_result;
+		}
+		
 		function keyindlist($servcode){ 
 			$this->db->select('v_ServiceCode,v_IndicatorNo,v_IndicatorName,n_Weightage');
 			$this->db->from('pmis2_com_indicator');
@@ -4290,14 +4314,14 @@ function status_table(){
 		
 function prlist($month,$year,$tab=0){
 	$this->db->select('a.MaterialReqID, a.DocReferenceNo, a.DateCreated, b.ZoneName, c.name, d.status, e.PR_No');
-	$this->db->from('tbl_PR_MIRN e');
+	$this->db->from('tbl_pr_mirn e');
 	if ($tab == 1){
 	$this->db->join('tbl_pr p','p.PRNo = e.PR_No');
 	}
-	$this->db->join('tbl_MaterialReq a','e.MIRN_No = a.DocReferenceNo');
-	$this->db->join('tbl_Zone b','a.ZoneID = b.ZoneID');
-	$this->db->join('tbl_User c','a.RequestUserID = c.UserID');
-	$this->db->join('tbl_Status d','a.ApprStatusID = d.StatusID');
+	$this->db->join('tbl_materialreq a','e.MIRN_No = a.DocReferenceNo');
+	$this->db->join('tbl_zone b','a.ZoneID = b.ZoneID');
+	$this->db->join('tbl_user c','a.RequestUserID = c.UserID');
+	$this->db->join('tbl_status d','a.ApprStatusID = d.StatusID');
 	$this->db->where('MONTH(a.datecreated)',$month);
 	$this->db->where('YEAR(a.datecreated)',$year);
 	if ($tab == 0){	
@@ -4315,7 +4339,7 @@ function prlist($month,$year,$tab=0){
 	return $query_result;
 }
 function prdet($mrinno){
-		$this->db->select('m.*,s.V_Asset_no,u.Name,a.V_Asset_name,a.V_Model_no,a.V_Brandname,(YEAR(NOW()) - YEAR(b.D_commission)) AS Age,IFNULL(b.N_Cost, 0) AS N_Cost,p.PR_No',FALSE);
+		$this->db->select('m.*,s.V_Asset_no,u.Name,a.V_Asset_name,a.V_Model_no,a.V_Brandname,(YEAR(NOW()) - YEAR(b.D_commission)) AS Age,IFNULL(b.N_Cost, 0) AS N_Cost,p.PR_No, s.V_Request_no, a.V_User_Dept_code',FALSE);
 		$this->db->from('tbl_materialreq m');
 		$this->db->join('tbl_pr_mirn p','m.DocReferenceNo = p.MIRN_No');
 		$this->db->join('pmis2_egm_service_request s','m.WorkOfOrder = s.V_Request_no','left');
@@ -4359,10 +4383,10 @@ function printpr($prno){
 function polist($month,$year){
 	$this->db->select('a.MaterialReqID, a.DocReferenceNo, a.DateCreated, b.ZoneName, c.name, d.status, e.PO_No');
 	$this->db->from('tbl_po_mirn e');
-	$this->db->join('tbl_MaterialReq a','e.MIRN_No = a.DocReferenceNo');
-	$this->db->join('tbl_Zone b','a.ZoneID = b.ZoneID');
-	$this->db->join('tbl_User c','a.RequestUserID = c.UserID');
-	$this->db->join('tbl_Status d','a.ApprStatusID = d.StatusID');
+	$this->db->join('tbl_materialreq a','e.MIRN_No = a.DocReferenceNo');
+	$this->db->join('tbl_zone b','a.ZoneID = b.ZoneID');
+	$this->db->join('tbl_user c','a.RequestUserID = c.UserID');
+	$this->db->join('tbl_status d','a.ApprStatusID = d.StatusID');
 	$this->db->where('MONTH(a.datecreated)',$month);
 	$this->db->where('YEAR(a.datecreated)',$year);
 	$this->db->where('a.apprstatusidxx','4');
@@ -4372,7 +4396,191 @@ function polist($month,$year){
 	$query_result = $query->result();
 	return $query_result;
 }
+
+function pohosp($hosp){
+	$this->db->select('b.Name, c.v_HospitalName, c.v_HospitalAdd1, c.v_HospitalAdd2, c.v_HospitalAdd3, c.v_hosp_postcode, c.v_teleno, c.v_head_of_bems, c.v_head_of_lls, c.v_contractor_ph');
+	$this->db->from('pmis2_sa_hospital c');
+	$this->db->join('tbl_hosp_rep a','c.v_HospitalCode = a.Hosp_code');
+	$this->db->join('tbl_user b','a.Rep = b.Login');
+	$this->db->where('a.Hosp_code',$hosp);
+	$query = $this->db->get();
+	//echo $this->db->last_query();
+	//exit();
+	$query_result = $query->result();
+	return $query_result;
+}
 		
+function findvencd($mri){
+	$this->db->select('b.Vendor, IFNULL(b.actual_vendor,b.Vendor) AS actual_vendor', FALSE);
+	$this->db->from('tbl_mirn_comp a');
+	$this->db->join('tbl_vendor b','a.ApprvRmk1 = b.Id');
+	$this->db->where('a.MIRNcode ',$mri);
+	$this->db->where('a.ItemCode ','GST-A00001');
+	$query = $this->db->get();
+	//echo $this->db->last_query();
+	//exit();
+	$query_result = $query->result();
+	return $query_result;
+}
+
+function findven($vencd){
+	$this->db->select('SELECT VENDOR_NAME, ADDRESS, ADDRESS2, ADDRESS3, TELEPHONE_NO, FAX_NO, CONTACT_PERSON ');
+	$this->db->from('tbl_vendor_info');
+	$this->db->where('VENDOR_CODE ',$vencd);
+	$query = $this->db->get();
+	//echo $this->db->last_query();
+	//exit();
+	$query_result = $query->result();
+	return $query_result;
+}
+
+function podet($pono){
+	$this->db->select('PO_Date ');
+	$this->db->from('tbl_po');
+	$this->db->where('PO_No ',$pono);
+	$query = $this->db->get();
+	//echo $this->db->last_query();
+	//exit();
+	$query_result = $query->result();
+	return $query_result;
+}
+
+function getthepo($whichone,$month,$year){
+	//$this->db->select("CONCAT('PO/',".$this->db->escape(date('m').date('y')).",'/',RIGHT(CONCAT('0000',CAST(po_next_no AS char)), 5)) AS pono,po_next_no",FALSE);
+	//echo "<br> sdkkfjslkdfjl : ".$whichone."<br>";
+	$this->db->select("IFNULL(a.Statusc,'0') AS Statusc, a.PO_No, b.MIRN_No, a.PO_Date, a.vendor, a.paytype", FALSE);
+	$this->db->from('tbl_po a');
+	$this->db->join('tbl_po_mirn b','a.PO_No = b.PO_No', 'left outer');
+	$this->db->where('MONTH(a.PO_Date)', $month );
+	$this->db->where('YEAR(a.PO_Date)', $year );
+	$this->db->where('a.visit = 1', null, false);
+	if ($whichone == 0) {
+	$this->db->where('a.Date_Completedc IS NULL', null, false);
+	$this->db->where('a.Date_Completed IS NULL', null, false);
+	$this->db->or_where("(a.Date_Completedc IS NOT NULL AND paytype = 'COD' AND closingdtcc is null AND MONTH(a.PO_Date) = ".$month." AND YEAR(a.PO_Date) = ".$year." AND a.visit = 1)", NULL, FALSE);
+	} elseif ($whichone == 1) {
+	$this->db->where('a.Date_Completedc IS NULL', null, false);
+	$this->db->where('a.Date_Completed IS NOT NULL', null, false);
+	} else {
+	$this->db->where('a.Date_Completedc IS NOT NULL', null, false);
+	$this->db->where('a.paytype !=', 'COD');
+	$this->db->or_where("(a.Date_Completedc IS NOT NULL AND paytype = 'COD' AND closingdtcc is not null AND MONTH(a.PO_Date) = ".$month." AND YEAR(a.PO_Date) = ".$year." AND a.visit = 1)", NULL, FALSE);
+	}
+	$this->db->group_by('a.PO_No, b.MIRN_No, a.PO_Date'); 
+	//$this->db->where('a.Date_Completedc',date('Y'));
+	$query = $this->db->get();
+	//echo $this->db->last_query();
+	//exit();
+	return $query->result();
+}
+
+function getpofollow($whatpo,$visitwhat){
+	//$this->db->select("CONCAT('PO/',".$this->db->escape(date('m').date('y')).",'/',RIGHT(CONCAT('0000',CAST(po_next_no AS char)), 5)) AS pono,po_next_no",FALSE);
+	//echo "<br> sdkkfjslkdfjl : ".$whichone."<br>";
+	$this->db->select("*");
+	$this->db->from('tbl_po');
+	$this->db->where('PO_No', $whatpo);
+	$this->db->where('visit', $visitwhat);
+	$query = $this->db->get();
+	//echo $this->db->last_query();
+	//exit();
+	return $query->result();
+}
+
+function sumrq_a2($month,$year,$reqtype,$grpsel,$bystak="")
+{
+	
+	if ($this->session->userdata('usersess') == "FES") {
+	$dn = 180;
+	$de = 30;
+	} elseif ($this->session->userdata('usersess') == "BES") {
+	$dn = 120;
+	$de = 30;
+	} else {
+	$dn = 15;
+	$de = 5;
+	}
+
+                if ($bystak == "IIUM C") {
+	$this->db->where('left(a.v_tag_no,6)', 'IIUM C');
+	//$bystak = " AND left(a.v_tag_no,6) = 'IIUM C'"; 
+	}
+	elseif ($bystak == "IIUM M") {
+	$this->db->where('left(a.v_tag_no,6)', 'IIUM M');
+	//$bystak = " AND left(a.v_tag_no,6) = 'IIUM M'"; 
+	}
+	elseif ($bystak == "IIUM E") {
+	$this->db->where('left(a.v_tag_no,6)', 'IIUM E');
+	//$bystak = " AND left(a.v_tag_no,6) = 'IIUM E'"; 
+	}
+
+	$this->db->select("COUNT(*) as total,SUM(CASE WHEN sr.v_request_status <> 'C' THEN 1 ELSE 0 END) AS notcomp,SUM(CASE WHEN sr.v_request_status = 'C' THEN 1 ELSE 0 END) AS comp,SUM(CASE WHEN (TIMESTAMPDIFF(MINUTE,sr.d_date,IFNULL(sr.v_respondate,NOW())) <= $dn AND sr.V_priority_code = 'Normal') OR (TIMESTAMPDIFF(MINUTE,sr.d_date,IFNULL(sr.v_respondate,NOW())) <= $de AND sr.V_priority_code = 'Emergency') THEN 1 ELSE 0 END) AS resp,SUM(CASE WHEN (TIMESTAMPDIFF(MINUTE,sr.d_date,IFNULL(sr.v_respondate,NOW())) > $dn AND sr.V_priority_code = 'Normal') OR (TIMESTAMPDIFF(MINUTE,sr.d_date,IFNULL(sr.v_respondate,NOW())) > $de AND sr.V_priority_code = 'Emergency') THEN 1 ELSE 0 END) AS resplate");
+	
+	$this->db->from('pmis2_egm_service_request sr');
+	$this->db->join('pmis2_egm_assetregistration a','sr.V_Asset_no = a.V_Asset_no AND sr.V_hospitalcode = a.V_Hospitalcode AND a.V_Actionflag <> "D"','left outer');
+	$this->db->where('sr.v_Actionflag <> ','D');
+	//$this->db->where('a.V_Actionflag <> ','D');
+	$this->db->where('sr.v_ServiceCode = ',$this->session->userdata('usersess'));
+	if ($grpsel <> ''){
+		$this->db->where('a.v_asset_grp',$grpsel);
+	}
+	//$this->db->where("month(d_date) = ",$month);
+	//$this->db->where("year(d_date) = ",$year);
+	if ($reqtype <> ''){
+		 if ($reqtype == 'F') {
+		 //$this->db->like('sr.V_summary', 'floor');
+		 //$this->db->or_like('sr.V_summary', 'lantai');
+		 $this->db->where("(sr.V_summary LIKE '%floor%' OR sr.V_summary LIKE '%lantai%')", NULL, FALSE);
+		 } elseif ($reqtype == 'WD') {
+		 //$this->db->like('sr.V_summary', 'wall');
+		 //$this->db->or_like('sr.V_summary', 'door');
+		 //$this->db->or_like('sr.V_summary', 'dinding');
+		 //$this->db->or_like('sr.V_summary', 'pintu');
+		 $this->db->where("(sr.V_summary LIKE '%wall%' OR sr.V_summary LIKE '%door%' OR sr.V_summary LIKE '%dinding%' OR sr.V_summary LIKE '%pintu%')", NULL, FALSE);
+		 } elseif ($reqtype == 'C') {
+		 //$this->db->like('sr.V_summary', 'ceiling');
+		 //$this->db->or_like('sr.V_summary', 'siling');
+		 $this->db->where("(sr.V_summary LIKE '%ceiling%' OR sr.V_summary LIKE '%siling%')", NULL, FALSE);
+		 } elseif ($reqtype == 'W') {
+		 //$this->db->like('sr.V_summary', 'window');
+		 //$this->db->or_like('sr.V_summary', 'tingkap');
+		 $this->db->where("(sr.V_summary LIKE '%window%' OR sr.V_summary LIKE '%tingkap%')", NULL, FALSE);
+		 } elseif ($reqtype == 'FIX') {
+		 //$this->db->like('sr.V_summary', 'fixture');
+		 //$this->db->or_like('sr.V_summary', 'pemasangan');
+		 $this->db->where("(sr.V_summary LIKE '%fixture%' OR sr.V_summary LIKE '%pemasangan%')", NULL, FALSE);
+		 } elseif ($reqtype == 'FUR') {
+		 $this->db->like('sr.V_summary', 'furniture');
+		 //$this->db->or_like('sr.V_summary', 'perabot');
+		 //$this->db->or_like('sr.V_summary', 'kemasan');
+		 //$this->db->or_like('sr.V_summary', 'fitting');
+		 $this->db->where("(sr.V_summary LIKE '%furniture%' OR sr.V_summary LIKE '%perabot%' OR sr.V_summary LIKE '%kemasan%' OR sr.V_summary LIKE '%fitting%')", NULL, FALSE);
+		 } else {
+		 	 $this->db->where('sr.V_request_type',$reqtype);
+			 }
+		}
+	
+	$this->db->where('sr.d_date >=', $this->dater(1,$month,$year));
+	$this->db->where('sr.d_date <=', $this->dater(2,$month,$year).'  23:59:59');
+                if (!function_exists('toArray')) {
+	function toArray($obj)
+	{
+$obj = (array) $obj;//cast to array, optional
+return $obj['path'];
+	}
+                }
+	$idArray = array_map('toArray', $this->session->userdata('accessr'));//$this->session->userdata('v_UserName')
+	//if ((in_array("contentcontroller/Schedule(main)", $idArray)) && ($this->session->userdata('Ser_Code')=="IIUM")) {
+	if ((in_array("contentcontroller/Schedule(main)", $idArray)) && (in_array("useriium", $idArray))) {
+	$this->db->where('V_request_type <> ', 'A9');
+		}
+	$query = $this->db->get();
+	//echo $this->db->last_query();
+	//exit();
+    
+	$query_result = $query->result();
+	return $query_result;
+}
 
 }
 ?>

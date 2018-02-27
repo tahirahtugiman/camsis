@@ -560,5 +560,15 @@ function updatepo($insert_data,$year){
 	$this->db->update('tbl_po_autono',$insert_data);
 }
 
+function updatepomain($insert_data,$pono,$vis){
+	$this->db->where('PO_No',$pono);
+	$this->db->where('visit',$vis);
+	$this->db->update('tbl_po',$insert_data);
+	//echo $this->db->last_query();
+	//exit();
+}
+
+
+
 }
 ?>

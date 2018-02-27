@@ -34,7 +34,8 @@
 	<script type="text/javascript" src="<?php echo base_url(); ?>js/jquery-ui.custom.js"></script>
 	<script type="text/javascript" src="<?php echo base_url(); ?>js/modernizr.js"></script>
 	<?php 
-	$array = [['contentcontroller/acg_modulesf/'],['contentcontroller/acg/'],['contentcontroller/acg_report/']];
+	$array = [['contentcontroller/acg_modulesf/'],['contentcontroller/acg/'],['contentcontroller/acg_report/'],['customize_search_ctrl//']];
+	//echo "lkllk : ".$this->uri->slash_segment(1) .$this->uri->slash_segment(2);
 	foreach ($array as $list) {
 	if( $list[0] == $this->uri->slash_segment(1) .$this->uri->slash_segment(2)){ ?>
 	<link rel='stylesheet' type='text/css' media='all' href="<?php echo base_url(); ?>css/acg.css">

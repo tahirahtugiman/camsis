@@ -202,7 +202,7 @@ function get_assetnewtagclass($equiptype)
 
 //asal $this->db->select(" ifnull(max(MID(V_Tag_no,6,1)),0) AS nm2 ", FALSE);
 $this->db->select(" ifnull(left(v_workgroupdesc,1),0) AS nm2 ", FALSE);
-$this->db->where("V_service_code = ", $this->session->userdata('usersess'));
+$this->db->where("V_servicecode = ", $this->session->userdata('usersess'));
 $this->db->where("V_Equip_code = ", $equiptype);
 //echo $equiptype;
 //$this->db->select('pmis2_sa_asset_mapping.new_asset_type, left(pmis2_sa_moh_asset_type.type_desc, 50)');
@@ -464,7 +464,7 @@ return $query->result();
 
 function get_poploclistb()
 {
-$ignore = array('CP','CA','FES','LH','ME','SE','SRV','TCR','WS');
+$ignore = array('CP','CA','FES','LH','ME','SE','SRV','TCR','WS','BM','CH');
 $this->db->distinct();
 $this->db->select('pmis2_sa_userdept.v_userdeptdesc, pmis2_egm_assetlocation.v_UserDeptCode, count(pmis2_egm_assetlocation.v_UserDeptCode) as Totalloc');
 $this->db->join('pmis2_sa_userdept','pmis2_sa_userdept.v_hospitalcode = pmis2_egm_assetlocation.v_hospitalcode AND pmis2_sa_userdept.v_userdeptcode = pmis2_egm_assetlocation.v_UserDeptCode');
@@ -3560,7 +3560,8 @@ function licenseimage($liccd){
 }
 
 function nextmrinnumber(){
-	$this->db->select("CONCAT('MRIN/',c.ZoneCode,'/',b.HospitalCode,'/',RIGHT(CONCAT('0000',CAST(a.Counter AS char)), 5),'/',DATE_FORMAT(now(),'%y')) AS mrinno,b.ZoneID,b.HospitalID,a.DocTypeID",FALSE);
+	//$this->db->select("CONCAT('MRIN/',c.ZoneCode,'/',b.HospitalCode,'/',RIGHT(CONCAT('0000',CAST(a.Counter AS char)), 5),'/',DATE_FORMAT(now(),'%y')) AS mrinno,b.ZoneID,b.HospitalID,a.DocTypeID",FALSE);
+	$this->db->select("CONCAT('MRIN/',c.ZoneCode,'/".$this->session->userdata('usersess')."/',CONCAT(DATE_FORMAT(now(),'%m'),DATE_FORMAT(now(),'%y')),'/',RIGHT(CONCAT('0000',CAST(a.Counter AS char)), 5)) AS mrinno,b.ZoneID,b.HospitalID,a.DocTypeID",FALSE);
 	$this->db->from('tbl_autono a');
 	$this->db->join('tbl_hospital b','a.ZoneID = b.ZoneID');
 	$this->db->join('tbl_zone c','b.ZoneID = c.ZoneID');
@@ -3742,7 +3743,8 @@ function unsatisfactory_g($month,$year)
 }
 
 function nextprnumber(){
-	$this->db->select("CONCAT('PR/',RIGHT(CONCAT('0000',CAST(pr_next_no AS char)), 5),'/',DATE_FORMAT(now(),'%y')) AS prno,pr_next_no",FALSE);
+	//$this->db->select("CONCAT('PR/',RIGHT(CONCAT('0000',CAST(pr_next_no AS char)), 5),'/',DATE_FORMAT(now(),'%y')) AS prno,pr_next_no",FALSE);
+	$this->db->select("CONCAT('PR/','".$this->session->userdata('hosp_code')."','/','".$this->session->userdata('usersess')."','/',DATE_FORMAT(now(),'%m'),DATE_FORMAT(now(),'%y'),'/',RIGHT(CONCAT('0000',CAST(pr_next_no AS char)), 5)) AS prno,pr_next_no",FALSE);
 	$this->db->from('tbl_pr_autono');
 	$this->db->where('yearno',date('Y'));
 	$query = $this->db->get();
@@ -3752,7 +3754,8 @@ function nextprnumber(){
 }
 
 function nextponumber(){
-	$this->db->select("CONCAT('PO/',".$this->db->escape(date('m').date('y')).",'/',RIGHT(CONCAT('0000',CAST(po_next_no AS char)), 5)) AS pono,po_next_no",FALSE);
+	//$this->db->select("CONCAT('PO/',".$this->db->escape(date('m').date('y')).",'/',RIGHT(CONCAT('0000',CAST(po_next_no AS char)), 5)) AS pono,po_next_no",FALSE);
+	$this->db->select("CONCAT('PO/','".$this->session->userdata('hosp_code')."','/','".$this->session->userdata('usersess')."','/',DATE_FORMAT(now(),'%m'),DATE_FORMAT(now(),'%y'),'/',RIGHT(CONCAT('0000',CAST(po_next_no AS char)), 5)) AS pono,po_next_no",FALSE);
 	$this->db->from('tbl_po_autono');
 	$this->db->where('yearno',date('Y'));
 	$query = $this->db->get();
@@ -3760,6 +3763,23 @@ function nextponumber(){
 	//exit();
 	return $query->result();
 }
+
+function chkpo($pono,$visit){
+	//$this->db->select("CONCAT('PO/',".$this->db->escape(date('m').date('y')).",'/',RIGHT(CONCAT('0000',CAST(po_next_no AS char)), 5)) AS pono,po_next_no",FALSE);
+	$this->db->select("PO_Date");
+	$this->db->from('tbl_po');
+	$this->db->where('PO_No',$pono);
+	if ($visit == 3) {
+	$this->db->where('Date_Completed is NOT NULL', NULL, FALSE);
+	} else {
+	$this->db->where('visit',$visit);}
+	$query = $this->db->get();
+	//echo $this->db->last_query();
+	//exit();
+	return $query->result();
+}
+
+
 
 }
 ?>

@@ -13,10 +13,10 @@ class customize_search_ctrl extends CI_Controller{
 	$this->form_validation->set_rules('fromMonth','Period Month','trim');
 	$this->form_validation->set_rules('fromYear','Period Year','trim');
 	$this->form_validation->set_rules('n_monthly','Monthly Revenue','trim|required');
-	$this->form_validation->set_rules('v_IndicatorNo[]','Indicator No','trim|required');
-	$this->form_validation->set_rules('n_indicatorval[]','Indicator 1 Value','trim|required');
-	$this->form_validation->set_rules('n_parameter[]','Parameter 1 Value','trim|required');
-	$this->form_validation->set_rules('n_demerit[]','Demerit Point 1 Value','trim|required');
+	//$this->form_validation->set_rules('v_IndicatorNo[]','Indicator No','trim|required');
+	$this->form_validation->set_rules('n_indicatorval[]','Current Month Value','trim|required');
+	$this->form_validation->set_rules('n_parameter[]','Parameter Value','trim|required');
+	$this->form_validation->set_rules('n_demerit[]','Demerit Point Value','trim|required');
 
 	/*$this->form_validation->set_rules('n_indicatorval1','Indicator 1 Value','trim|required');
 	$this->form_validation->set_rules('n_indicatorval2','Indicator 2 Value','trim|required');
@@ -72,8 +72,14 @@ if($this->form_validation->run()==FALSE)
 			$data['keyindlist'] = $this->display_model->keyindlist($data['s_code']);
 		}
 		$data['prev'] = $this->display_model->keyindicator($data['s_code'],date('m',strtotime($data['pdate'])),date('Y',strtotime($data['pdate'])));
-		$this ->load->view("headprinter");
+		//$this ->load->view("headprinter");
+		$this ->load->view("head");
+		$this ->load->view("left");
 		$this ->load->view("Content_acg",$data);
+		
+		
+		
+		
 		}
 		
 		else
@@ -96,8 +102,7 @@ if($this->form_validation->run()==FALSE)
 		}
 	}
 	function confirmation(){
-		//echo 'masuk';
-		//exit();
+		
 	$service_code = $this->input->post('n_base');
 	$month = $this->input->post('fromMonth');
 	$year = $this->input->post('fromYear');
@@ -105,6 +110,11 @@ if($this->form_validation->run()==FALSE)
 	$n_indicatorval = $this->input->post('n_indicatorval');
 	$n_parameter = $this->input->post('n_parameter');
 	$n_demerit = $this->input->post('n_demerit');
+	
+	//print_r($v_IndicatorNo);
+	
+	//echo 'masuk saved';
+	//exit();
 	
 	$this->load->model('insert_model');
 	$this->insert_model->cs_exist('v_Month',$month,'v_Year',$year,'v_ServiceCode',$service_code,$v_IndicatorNo,$n_indicatorval,$n_parameter,$n_demerit);

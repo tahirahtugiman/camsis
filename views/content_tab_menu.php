@@ -39,12 +39,12 @@
 					echo '</div>';
 					}
 	    		}
-	    		elseif ($d == 0 and $value == 'Procurement Modules' and 'nezam' == $this->session->userdata('v_UserName')){
+	    		elseif ($d == 0 and $value == 'Procurement Modules' ){
 					if ($this->uri->slash_segment(1) .$this->uri->slash_segment(2) != 'contentcontroller/Procurement/'){
 					echo '<div class="box3">';
 			    	echo '<div class="small-box '.$e.' ">';
 			    	echo '<div class="inner">';
-					echo '<span class="wodryRX2">3 MIRN open|11 PO|1 Approval</span>';
+					echo '<span class="wodryRX2">MRIN| PO|MRIN</span>';
 			    	echo '<p>' .$value. '</p>';
 			    	echo '</div>';
 			    	echo '<div class="icon"><i class="icon-cart"></i></div>';

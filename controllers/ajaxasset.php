@@ -27,7 +27,7 @@ class ajaxasset extends CI_Controller {
 			echo '<td data-title="Model:">'.$row->V_Model_no.'</td>';
 			echo '<td data-title="Manufacturer:">'.$row->V_Manufacturer.'</td>';
 			echo '<td data-title="Serial No:">'.$row->V_Serial_no.'</td>';
-			echo '<td data-title="Purchase Cost:">$'.number_format($row->N_Cost,2).'</td>';
+			echo '<td data-title="Purchase Cost:">RM'.number_format($row->N_Cost,2).'</td>';
 			echo '</tr>';
 		}
 			echo '</table>';

@@ -139,7 +139,7 @@ $array = [
 	//end report//
 ];
 }
-//echo $this->uri->slash_segment(1) .$this->uri->slash_segment(2).'<br>';
+//echo $this->uri->slash_segment(1) .":".$this->uri->slash_segment(2).'<br>';
 foreach ($array as $list) {
 //print_r($list);
 //echo 'nilai c '.$list[2];
@@ -244,6 +244,7 @@ echo "<div class='menu-class'>
 	echo "</a></div>";
 }
 if ('Procurement/' == $this->uri->slash_segment(1)){
+//echo "dier mashuuuk";
 	if($this->input->get('pro') == 'mrin'){
 		echo "<div class='menu-class'>
 		<a href='contentcontroller/Procurement/".$this->session->userdata('usersess')."?&tab=4'><span class='icon-play2' valign='middle'></span>  $list[0]</a>
@@ -251,6 +252,10 @@ if ('Procurement/' == $this->uri->slash_segment(1)){
 	}elseif(($this->input->get('pro') == 'new') or (($this->input->get('pro') == 'pending')) ){
 		echo "<div class='menu-class'>
 		<a href='contentcontroller/Procurement/".$this->session->userdata('usersess')."?&tab=4'><span class='icon-play2' valign='middle'></span>  $list[0]</a><a href='Procurement?pro=mrin'> <span class='icon-play2' valign='middle'></span> MRIN</a>
+		</div>";
+	}elseif(($this->input->get('po') != '')){
+		echo "<div class='menu-class'>
+		<a href='../contentcontroller/Procurement/".$this->session->userdata('usersess')."?&tab=4'><span class='icon-play2' valign='middle'></span>  $list[0]</a><a href='e_request?tab=0&y=".date('Y')."&m=".date('m')."'> <span class='icon-play2' valign='middle'></span> PO Followup</a>
 		</div>";
 	}
 

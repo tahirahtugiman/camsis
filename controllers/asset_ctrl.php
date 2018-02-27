@@ -204,7 +204,8 @@ foreach ($rates->result() as $row)
 		//echo $rates
 //		exit();	
 		
-		
+		//echo "mmbmbmmbmb : " . $this->input->post('n_register_date') .":". $this->input->post('n_purchase_date') .":". $this->input->post('n_commissioned_on') ."<br>";
+		//exit();
 		$insert_dataassetreg = array(
 		'V_Asset_no'=>$RN,
 		'V_Asset_name'=>$asset_name[0]->asset_desc,
@@ -217,7 +218,8 @@ foreach ($rates->result() as $row)
 		'V_Asset_WG_code'=>$this->input->post('n_asset_workgroup'),
 		'V_User_Dept_code'=>$this->input->post('n_user_department'),
 		'V_Location_code'=>$this->input->post('n_location'),
-		'D_Register_date'=>$this->input->post('n_register_date'),
+		//'D_Register_date'=>$this->input->post('n_register_date'),
+		'D_Register_date'=>date('y-m-d',strtotime($this->input->post('n_register_date'))),
 		'V_Brandname'=>$this->input->post('n_brand'),
 		'V_Manufacturer'=>$this->input->post('n_manufacturer'),
 		'V_Model_no'=>$this->input->post('n_model'),
@@ -230,7 +232,8 @@ foreach ($rates->result() as $row)
 		'v_asset_grp'=>$this->input->post('a_group')
 	
 		);
-		
+		//print_r($insert_dataassetreg);
+		//exit();
 		$this->insert_model->ins_assetreg($insert_dataassetreg,TRUE);
 		
 		//echo $this->db->last_query()."<br>";
@@ -247,9 +250,12 @@ foreach ($rates->result() as $row)
 		'N_Cost'=>$this->input->post('n_cost'),
 		'V_File_Ref_no'=>$this->input->post('n_file_reference'),
 		'V_PO_no'=>$this->input->post('n_lpo'),
-		'V_PO_date'=>$this->input->post('n_purchase_date'),
-		'D_commission'=>$this->input->post('n_commissioned_on'),
-		'V_Wrn_end_code'=>$this->input->post('n_warranty'),
+		//'V_PO_date'=>$this->input->post('n_purchase_date'),
+		'V_PO_date'=>date('y-m-d',strtotime($this->input->post('n_purchase_date'))),
+		//'D_commission'=>$this->input->post('n_commissioned_on'),
+		'D_commission'=>date('y-m-d',strtotime($this->input->post('n_commissioned_on'))),
+		//'V_Wrn_end_code'=>$this->input->post('n_warranty'),
+		'V_Wrn_end_code'=>date('y-m-d',strtotime($this->input->post('n_warranty'))),
 		'V_TC_form_no'=>$this->input->post('n_technical_report'),
 		'v_Capacity'=>$this->input->post('n_capacity'),
 		'V_Depreciation'=>$this->input->post('n_depreciation'),

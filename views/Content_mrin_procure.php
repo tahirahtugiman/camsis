@@ -50,7 +50,7 @@
 										<?php if ($this->input->get('pr') == 'approved') { ?>
 										<tr>
 										<td style="padding-left:10px; padding-top:5px;" valign="top">MRIN Related Work Order  :</td>
-										<td valign="top">HSI/A4/B01742/15 <span class="icon-windows" onclick="fLabour(this)" value="Labour" ></span></td>
+										<td valign="top">W.O <span class="icon-windows" onclick="fLabour(this)" value="Labour" ></span></td>
 										</tr>
 										<?php } ?>										
 									</table>

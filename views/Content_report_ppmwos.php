@@ -87,10 +87,10 @@ function barchart(a,b,c,d,e,f){
 			  <td><?php if ($ppmsum[0]->resch == 0) { echo "0"; } else {echo anchor('contentcontroller/report_vols?m='.$month.'&y='.$year.'&stat=A&resch=ys&grp=&btp=1'.$this->input->get('grp'),$ppmsum[0]->resch);} ?></td>
 			  <td><?php if (($ppmsum[0]->notcomp == 0)) { echo "0"; } else {echo anchor('contentcontroller/report_vols?m='.$month.'&y='.$year.'&stat=C&resch=nt&grp=&btp=1'.$this->input->get('grp'),$ppmsum[0]->notcomp);} ?></td>
 				  <?php }else{ ?>
-				 <td><?php if (($ppmsum[0]->total == 0)) { echo "0"; } else {echo $ppmsum[0]->total+$rqsum[0]->total;} ?></td>
-			  <td><?php if (($ppmsum[0]->comp == 0)) { echo "0"; } else {echo $ppmsum[0]->comp+$rqsum[0]->comp; } ?></td>
+				 <td><?php if (($ppmsum[0]->total == 0)) { echo "0"; } else {echo $ppmsum[0]->total;} ?></td>
+			  <td><?php if (($ppmsum[0]->comp == 0)) { echo "0"; } else {echo $ppmsum[0]->comp; } ?></td>
 			  <td><?php if ($ppmsum[0]->resch == 0) { echo "0"; } else {echo $ppmsum[0]->resch;} ?></td>
-			  <td><?php if (($ppmsum[0]->notcomp == 0)) { echo "0"; } else {echo $ppmsum[0]->notcomp+$rqsum[0]->notcomp == 0;} ?></td>
+			  <td><?php if (($ppmsum[0]->notcomp == 0)) { echo "0"; } else {echo $ppmsum[0]->notcomp;} ?></td>
 				  <?php } ?>
 			 
 			</tr>

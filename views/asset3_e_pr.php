@@ -87,7 +87,7 @@ switch ($procument) {
 							<?php $numrow = 1; foreach ($record as $row): ?>
 							<tr align="center" <?= ($numrow%2==0) ?  'class="ui-color-color-color"' :  '' ?> >
 		    					<td class="td-desk"><?=$numrow++?></td>
-		    					<td class="td-desk" style="text-align:left;"><a href="<?php echo base_url();?>index.php/Procurement/e_po_print"><?=isset($row->PO_No) ? $row->PO_No : ''?></a></td>
+		    					<td class="td-desk" style="text-align:left;"><a href="<?php echo base_url();?>index.php/Procurement/e_po_print?po=<?=isset($row->PO_No) ? $row->PO_No : ''?>&mrin=<?=isset($row->DocReferenceNo) ? $row->DocReferenceNo : ''?>"><?=isset($row->PO_No) ? $row->PO_No : ''?></a></td>
 		    					<td class="td-desk"><?=isset($row->DateCreated) ? date("d-m-Y",strtotime($row->DateCreated)) : ''?></td>
 		    					<td class="td-desk"><?=isset($row->name) ? $row->name : ''?></td>
 		    					<td class="td-desk"><b><?=isset($row->DocReferenceNo) ? $row->DocReferenceNo : ''?></b></td>

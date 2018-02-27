@@ -7,6 +7,11 @@ class Procurement extends CI_Controller {
 		$this ->load->view("left");
 		if ($this->input->get('pro') == 'mrin'){
 			$data['mrintype']= $this->input->get('tab') != '' ? $this->input->get('tab') : 0;
+			if ($data['mrintype'] == 0) {
+				 $data['mrintype'] = 3;
+			} elseif ($data['mrintype'] == 3) {
+				 $data['mrintype'] = 0;
+			}
 			$this->load->model('display_model');
 			$data['record']= $this->display_model->mrinlist($data['month'],$data['year'],$data['mrintype']);
 			$data['user'] = $this->display_model->user_class($this->session->userdata('v_UserName'));
@@ -76,6 +81,7 @@ class Procurement extends CI_Controller {
 
 			if ($_FILES){
 				$config['upload_path']          = 'C:/xampp/htdocs/fms/uploadmrinfiles';
+				//$config['upload_path']          = '/var/www/vhosts/camsis2.advancepact.com/httpdocs/uploadmrinfiles';
 	            $config['allowed_types']        = 'jpg|jpeg|gif|tif|png|doc|docx|xls|xlsx|pdf';
 	            $config['max_size']             = '1000';
 	            $config['max_width']            = 'auto';
@@ -224,6 +230,60 @@ class Procurement extends CI_Controller {
 		}
 	}
 	public function e_po_print(){
+	  $this->load->model('display_model');
+		$data['record'] = $this->display_model->prdet($this->input->get('mrin'));
+		$data['itemrec'] = $this->display_model->itemprdet($this->input->get('mrin'));
+		$data['vencd'] = $this->display_model->findvencd($this->input->get('mrin'));
+		$data['veninfo'] = $this->display_model->findvencd((isset($data['vencd'][0]->Vendor)) ? $data['vencd'][0]->Vendor : 'noval');
+		$data['podetail'] = $this->display_model->podet($this->input->get('po'));
+		$favcolor = "red";
+		$hospapa = "";
+	  $hoswakil = "";
+		//echo "bnbnn :".$this->input->get('mrin')."<br>";
+		$hospapa = substr(substr($this->input->get('mrin'),0,8),-3);
+		//echo "lalalala :".$hospapa."bababab";
+		switch ($hospapa) {
+    	case "HSA" :
+			case "HSI" :
+			case "PER" :
+			case "KTG" :
+			case "MER" :
+			case "MKJ" :
+			case "SGT" :
+			case "TGK" :
+			case "MUR" :
+			case "KLN" :
+			case "BPH" :
+			case "PON" :
+			case "KUL" :
+       $hospapa = "HSA";
+			 $hoswakil = "Norhayati bt Yunos";
+       break;
+    	case "MKA" :
+			case "AGJ" :
+			case "JAS" :
+			case "TMP" :
+       $hospapa = "MKA";
+			 $hoswakil = "NurAisyah bt Sulaiman";
+       break;
+    	case "JLB" :
+			case "JMP" :
+			case "PDX" :
+			case "KPL" :
+			case "SBN" :
+       $hoswakil = "Muhamad Fazuan Bin Yuosoff";
+			 $hospapa = "SBN";
+			 break;
+    	case "IIU":
+       $hoswakil = "Wakil IIUM";
+			 $hospapa = "IIUM";
+			 break;
+    	default:
+			//echo "pegi def";
+       $hospapa = "IIUM";
+		}
+		$data['hospdet'] = $this->display_model->pohosp($hospapa);
+		//echo "nilai ".$hoswakil.$hospapa."abis";
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
 		$this ->load->view("headprinter");
@@ -255,25 +315,176 @@ class Procurement extends CI_Controller {
 		}
 	}
 	public function e_request(){
+	  //echo "lalalalalalla masuk";
+	  $whattab = ($this->input->get('tab')) ? $this->input->get('tab') : '0';
+		//echo "okokookookokoo masuk";
+		//echo "ghghghg : " . $whattab;
+	  $this->load->model('display_model');
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
+		$data['polist'] = $this->display_model->getthepo($whattab,$data['month'], $data['year']);
 		$this ->load->view("head");
 		$this ->load->view("left");
 		$this ->load->view("Content_e_request",$data);
 	}
 	public function po_follow_up2(){
+	  $this->load->model('display_model');
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
+		$data['pono']= $this->input->get('po');
+		$data['whattab']= ($this->input->get('tab') <> 0) ? $this->input->get('tab') : '0';	
+		//if ($data['whattab']==3) { $data['whattab'] = 0; }
+		//$data['whattab']= $data['whattab'] + 1;
+		$data['pofollow'] = $this->display_model->getpofollow($data['pono'],($data['whattab'] == '3') ? 1 : $data['whattab']+1);
+		//print_r($data['pofollow']);
 		$this ->load->view("head");
 		$this ->load->view("left");
-		if  ($this->input->get('po') == 'update') {
+		if  ($this->input->get('powhat') == 'update') {
+		//print_r($data);
 		$this ->load->view("Content_po_follow_up2_update",$data);
-		}elseif ($this->input->get('po') == 'confirm'){ 
-		$this ->load->view("Content_po_follow_up2_update",$data);
+		}elseif ($this->input->get('powhat') == 'confirm'){ 
+		
+		// load libraries for URL and form processing
+    $this->load->helper(array('form', 'url'));
+    // load library for form validation
+    $this->load->library('form_validation');
+		
+	  //$this->load->model('get_model');
+		//$data['chk'] = $this->get_model->chkpo($this->input->post('n_pono'),"1");
+        //validation rule
+		//echo "sblm dier masuk cni laaaa".$this->input->get('po');		
+		if ($this->input->get('po')=="3") {		
+		//echo "dier masuk cni laaaa";
+		$this->form_validation->set_rules('n_pono','PO No.',"is_unique[tbl_po.PO_No]|required");		
+    $this->form_validation->set_message('is_unique', 'The PO No. '.$this->input->post('n_pono').' is already taken');
+		$this->form_validation->set_rules('n_podt','PO Date','required');
+		}
+		//if($this->form_validation->run()==FALSE)
+		//{echo "okokokokokoko";}
+		//echo $this->db->last_query();
+		//echo validation_errors();
+		//exit();
+		if($this->form_validation->run()==FALSE)
+		{$this ->load->view("Content_po_follow_up2_update"); }
+		else
+		{$this ->load->view("Content_po_follow_up2_update");}
 		}else{
+		$fgf = (($data['whattab'] == '0')||($data['whattab'] == '3')) ? 1 : $data['whattab'];
+		//echo "nmnmnmn : ".$data['whattab']."::".$fgf;
+		$this->load->model("get_model");
+	  $data['chk'] = $this->get_model->chkpo($this->input->get('po'),(($data['whattab'] == '0')||($data['whattab'] == '3')) ? 1 : $data['whattab']);
+		//print_r($data);
 		$this ->load->view("Content_po_follow_up2",$data);
 		}
 	}
+	public function po_follow_upsv(){
+	//echo "nilai ::".$this->input->post('n_partsrm');
+	$visitwhat = "0";
+	$visitwhat = $this->input->get('tab') + 1;
+	$statuswhat = "N";
+	if ($this->input->post('n_completeddt') != "") {
+	$statuswhat = "C";
+	} 
+	$closingdt = (($this->input->post('n_codcdt')) != '') ? date('y-m-d',strtotime($this->input->post('n_codcdt'))) : NULL;
+	$subdt = (($this->input->post('n_completeddt')) != '') ? date('y-m-d',strtotime($this->input->post('n_completeddt'))) : NULL;
+	$dt1 = (($this->input->post('n_dodt')) != '') ? date('y-m-d',strtotime($this->input->post('n_dodt'))) : NULL;
+	$dt2 = (($this->input->post('n_invdt')) != '') ? date('y-m-d',strtotime($this->input->post('n_invdt'))) : NULL;
+	$dt3 = (($this->input->post('n_mddt')) != '') ? date('y-m-d',strtotime($this->input->post('n_mddt'))) : NULL;
+	//echo "nilai post : ".$this->input->post('n_codcdt')."nilai nktest : ".$nktest;
+	//exit();
+	if ($visitwhat == 4) {
+		 			$insert_data = array(
+					'Date_Completedc'=>date('y-m-d',strtotime($this->input->post('n_completeddt'))),
+					'User_Closedc'=>$this->session->userdata('v_UserName'));
+		$this->load->model('update_model');	
+		$this->update_model->updatepomain($insert_data,$this->input->get('po'),'1');
+	//echo "masuk nk save";
+	//exit();
+	} else {
+	$this->load->model("get_model");
+	$data['chk'] = $this->get_model->chkpo($this->input->get('po'),$visitwhat);
+//print_r($data['chk']);
+//exit();
+		if ($data['chk']){
+	
+	  $insert_data = array(
+					'Status'=>$statuswhat,
+					'Date_Completed'=>$subdt,
+					'User_Closed'=>$this->session->userdata('v_UserName'),
+					'Invoice_No'=>$this->input->post('n_inv'),
+					'parts_rm'=>$this->input->post('n_partsrm'),
+					'labor_rm'=>$this->input->post('n_labourm'),
+					'cs_rm'=>$this->input->post('n_ctrlstorerm'),
+					'cost_rm'=>$this->input->post('n_costrm'),
+					'do_no'=>$this->input->post('n_do'),
+					'do_date'=>$dt1,
+					'invoice_date'=>$dt2,
+					'status_set'=>$this->input->post('n_status_list'),
+					'visit'=>$visitwhat,
+					'recipient_code'=>$this->input->post('n_receipient'),
+					'gst_rm'=>$this->input->post('n_gstrm'),
+					
+					'totalcost'=>$this->input->post('n_totalrm'),
+					'md_appdt'=>$dt3,
+					'dept'=>$this->input->post('n_dept'),
+					//'closingdtcc'=>(!($this->input->post('n_codcdt'))) ? date('y-m-d',strtotime($this->input->post('n_codcdt'))) : NULL,
+					'closingdtcc'=>$closingdt,
+					'vendor'=>$this->input->post('n_vendor'),
+					'paytype'=>$this->input->post('n_paytype')
+		);
+		$this->load->model('update_model');	
+		$this->update_model->updatepomain($insert_data,$this->input->get('po'),$visitwhat);
+		} else {
+					 
+					
+					if ($this->input->get('tab') == "1111") {
+					$visitwhat = "1";
+					$a=$this->input->post('n_pono');
+					$b=date('y-m-d',strtotime($this->input->post('n_podt')));
+					} else {
+		 		  $a=$this->input->get('po');
+					$b=$data['chk'][0]->PO_Date;
+					}
+		
+		 $insert_data = array(
+		      
+		 		  'PO_No'=>$a,
+					'PO_Date'=>$b,
+					'Status'=>$statuswhat,
+					'Date_Completed'=>$subdt,
+					'User_Closed'=>$this->session->userdata('v_UserName'),
+					'Invoice_No'=>$this->input->post('n_inv'),
+					'parts_rm'=>$this->input->post('n_partsrm'),
+					'labor_rm'=>$this->input->post('n_labourm'),
+					'cs_rm'=>$this->input->post('n_ctrlstorerm'),
+					'cost_rm'=>$this->input->post('n_costrm'),
+					'do_no'=>$this->input->post('n_do'),
+					'do_date'=>$dt1,
+					'invoice_date'=>$dt2,
+					'status_set'=>$this->input->post('n_status_list'),
+					'visit'=>$visitwhat,
+					'recipient_code'=>$this->input->post('n_receipient'),
+					'gst_rm'=>$this->input->post('n_gstrm'),
+					
+					'totalcost'=>$this->input->post('n_totalrm'),
+					'md_appdt'=>$dt3,
+					'dept'=>$this->input->post('n_dept'),
+					'closingdtcc'=>$closingdt,
+					'vendor'=>$this->input->post('n_vendor'),
+					'paytype'=>$this->input->post('n_paytype')
+		);
+		$this->load->model('insert_model');	
+		$this->insert_model->tbl_po($insert_data);
+		
+		}
+		}//closed 4
+		//echo $this->db->last_query();
+		//exit();
+		if ($this->input->get('tab') == "1111") {
+		redirect('Procurement/po_follow_up2?tab=0&po='.$a); } else {
+		redirect('Procurement/po_follow_up2?tab=0&po='.$this->input->get('po'));}	
+	}
+	
 	public function assetdetailname(){
 		$this->load->model("display_model");
 		$data['records'] = $this->display_model->list_personel();
@@ -380,6 +591,8 @@ public function update_delete(){
 		$this ->load->view("headprinter");
 		$this ->load->view("Content_e_pr_print",$data);
 	}
+	
+	
 	
 }
 ?>

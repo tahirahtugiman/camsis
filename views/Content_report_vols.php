@@ -144,37 +144,7 @@ header('Content-Disposition: attachment; filename='.$filename);
 			<th>S</th>
 			<th>P</th>
 		</tr>
-		<?php $numrow = 1; foreach($recordrq as $row):?>
-<?php echo ($numrow%2==0) ? '<tr class="ui-color-color-color">' : '<tr>'; ?>
-	    					
-    		<td><?= $numrow ?></td>
-			<td><?= ($row->D_date) ?  date("d/m/Y",strtotime($row->D_date)) : 'N/A' ?></td>
-			<td><?=($row->V_Request_no) ? anchor ('contentcontroller/AssetRegis?wrk_ord='.$row->V_Request_no.'&assetno='.$row->V_Asset_no.'&m='.$this->input->get('m').'&y='.$this->input->get('y').'&stat='.$this->input->get('stat').'&resch=fbfb&state='.$this->input->get('state'),''.$row->V_Request_no.'' ) : 'N/A' ?></td>
-			
-			<td><?=(($row->V_Asset_no) && $row->V_Asset_no != 'N/A') ? anchor ('contentcontroller/AssetRegis?tab=Maintenance&assetno='.$row->V_Asset_no.'&state='.$this->input->get('state'),''.$row->v_tag_no.'' ) : 'N/A' ?></td>			
-			<td><?= ($row->V_Asset_name) ? $row->V_Asset_name : 'N/A' ?></td>
-			<td><?= ($row->V_User_dept_code) ? $row->V_User_dept_code : 'N/A' ?></td>
-			<td><?= 'N/A' ?></td>
-			<td><?= ($row->V_request_status) ? $row->V_request_status : 'N/A' ?></td>
-			<td><?= 'N/A' ?></td>
-			<td><?= 'N/A' ?></td>
-			
-			
-			<td><?= ($row->v_closeddate) ? date("d/m/Y",strtotime($row->v_closeddate)) : 'N/A' ?></td>
-			<td><?= ($row->v_ActionTaken) ? $row->v_ActionTaken : 'N/A' ?></td>
-			<td><?= ($row->d_Date) ? date("d/m/Y",strtotime($row->d_Date)) : 'N/A' ?></td>
-			<td><?= 'N/A' ?></td>
-			
-			<td><?= ($row->v_UserDeptDesc) ? $row->v_location_name.' ('.$row->v_location_code.')' : 'N/A' ?></td>
-			<?php if ($this->input->get('broughtfwd') != '') { ?>
-			<td><?= ($row->V_Asset_WG_code) ? $row->V_Asset_WG_code : 'N/A' ?></td>
-			<?php } else { ?>
-			<td><?= ($row->v_asset_grp) ? $row->v_asset_grp : 'N/A' ?></td>
-			<?php } ?>
-  
-	        			</tr>
-								<?php $numrow++; ?>
-								<?php endforeach;?>
+		<?php $numrow = 1; ?>
 								<?php $numrowx = $numrow;?>
 								<?php foreach($record as $row):?>
 								<?php echo ($numrow%2==0) ? '<tr class="ui-color-color-color">' : '<tr>'; ?>

@@ -16,6 +16,7 @@
 		<table class="ui-content-middle-menu-workorder" border="0" height="" align="center">
 <?php 
 $procument = $this->input->get('tab');
+
 switch ($procument) {
     case "1":
         $tulis = "Approved MRIN";
@@ -24,11 +25,14 @@ switch ($procument) {
         $tulis = "Rejected, Returned MRIN";
         break;
 	case "3":
-        $tulis = "Pending MRIN";
+        $tulis = "All MRIN";
         break;
     default:
-        $tulis = "All MRIN";
-} ?>
+        $tulis = "Pending MRIN";
+} 
+
+
+?>
 			<?php include 'content_pro_tab.php';?>
 			<tr class="ui-color-desk desk2">
 				<td colspan="4" class="t-header" style="color:black; height:40px; padding-left:10px;"><b><?= $tulis ?></b> <?=date('F', mktime(0, 0, 0, $month, 10))?> <?=$year?> <u>[Imaging Asset Only]</u></td>
@@ -87,13 +91,15 @@ switch ($procument) {
 							else if ($user[0]->class_id == 2){
 								if ($row->ApprStatusID == 6){
 									$pro = 'pending';
+									//$pro = 'approved';
 								}
 								else {
 									$pro = 'approved';
+									//$pro = 'pending';
 								}
 							}
 							else if ($user[0]->class_id == 3){
-								if ($row->ApprStatusIDx == 6 || $row->ApprStatusIDx == 128 || $row->ApprStatusIDx == NULL){
+								if ($row->ApprStatusID == 4 && ($row->ApprStatusIDx == 6 || $row->ApprStatusIDx == 128 || $row->ApprStatusIDx == NULL)){
 									$pro = 'pending';
 								}
 								else {
@@ -119,6 +125,7 @@ switch ($procument) {
 		    					<td class="td-desk"><?=isset($row->V_Asset_no) ? $row->V_Asset_no : ''?></td>
 		    					<?php foreach($status as $stat){ ?>
 		    					<?php
+									$s_Proc = "";
 		    					if ($row->ApprStatusID == $stat->StatusID){
 		    						$s_AM = $stat->Status;
 		    					}

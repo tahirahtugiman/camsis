@@ -133,19 +133,24 @@
 							<td align="center"><?=isset($acg->v_Paramval) ? $acg->v_Paramval : ''?></td>
 							<td align="center"><?=isset($acg->n_Parameters) ? number_format($acg->n_Parameters,2) : ''?></td>
 							<?php $indno = 'ind'.$row->v_IndicatorNo?>
-							<td align="center"><?=isset($acgreport[0]->$indno) ? $acgreport[0]->$indno : ''?></td>
+							<td align="center"><?=isset($acg->Demerit_Point) ? $acg->Demerit_Point : ''?></td>
+							<!--<td align="center"><?=isset($acgreport[0]->$indno) ? $acgreport[0]->$indno : ''?></td>-->
 							<?php
 							$Parameter = isset($acg->v_Paramval) ? $acg->v_Paramval : 0;
 							$MonValue = isset($acg->n_Parameters) ? $acg->n_Parameters : 0;
-							$DemeritPoint = isset($acgreport[0]->$indno) ? $acgreport[0]->$indno : 0;
-
+							$DemeritPoint = isset($acg->Demerit_Point) ? $acg->Demerit_Point : 0;
+							//$DemeritPoint = isset($acgreport[0]->$indno) ? $acgreport[0]->$indno : 0;
+							if ($DemeritPoint != 0) {
 							$DeductionVal = ($MonValue / $Parameter) * $DemeritPoint;
-							$DeductionPer = ($DeductionVal / $MonValue) * 100;
+							$DeductionPer = ($DeductionVal / $MonValue) * 100; } else {
+							$DeductionVal = 0;
+							$DeductionPer = 0;}
 
 							$T_Parameter += $Parameter;
 							$T_MonVal += $MonValue;
 							$T_DeductionVal += $DeductionVal;
-							$T_DeductionPer += $DeductionPer;
+							//$T_DeductionPer += $DeductionPer;
+							$T_DeductionPer = ($T_DeductionVal / $T_MonVal) * 100;
 							?> 
 							<?php } ?>
 							<?php endforeach; ?>
@@ -153,7 +158,8 @@
 							<td align="center"></td>
 							<td align="center"></td>
 							<?php $indno = 'ind'.$row->v_IndicatorNo?>
-							<td align="center"><?=isset($acgreport[0]->$indno) ? $acgreport[0]->$indno : ''?></td>
+							<!--<td align="center"><?=isset($acgreport[0]->$indno) ? $acgreport[0]->$indno : ''?></td>-->
+							<td align="center"><?=isset($acg->Demerit_Point) ? $acg->Demerit_Point : ''?></td>
 							<?php } ?>
 							<td align="center"><?=number_format($DeductionVal,2)?></td>
 							<td align="center"><?=number_format($DeductionPer,2).'%'?></td>

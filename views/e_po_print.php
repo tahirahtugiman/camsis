@@ -135,20 +135,20 @@ img{
 			<?php include 'content_headprint.php';?>
 <div class="h1-po-qp">QP 018<br />QF-019</div>
 <div class="h1-po">purchase order</div>
-<div class="h1-po-no">Purchase Order No : PO/OPU-02/NSN/SBN/G2016/0362</div>
-	<div class="info-po">
+<div class="h1-po-no">Purchase Order No : <?=($this->input->get('po') <> '') ? $this->input->get('po') : ''?></div>
+	<div class="info-po"><?=(isset($veninfo[0]->VENDOR_NAME)) ? $veninfo[0]->VENDOR_NAME : ''?>
 	<table class="tbl-info-po">
 		<tr>
 			<td valign="top">To :</td>
-			<td><b>GAGASAN PETIR (M) SDN BHD</b><br />NO. 2310, TINGKAT 1,<br/>JALAN SJ 10/1, TAMAN SEREMBAN JAYA,<br/>70450 SEREMBAN, NEGERI SEMBILAN.<br/>&nbsp;</td>
+			<td><b><?=(isset($veninfo[0]->VENDOR_NAME)) ? $veninfo[0]->VENDOR_NAME : ''?></b><br /><?=(isset($veninfo[0]->ADDRESS)) ? $veninfo[0]->ADDRESS : '' ?><br/><?=(isset($veninfo[0]->ADDRESS2))  ? $veninfo[0]->ADDRESS2 : '' ?><br/><?=(isset($veninfo[0]->ADDRESS3)) ? $veninfo[0]->ADDRESS3 : ''?><br/>&nbsp;</td>
 		</tr>
 		<tr>
 			<td>Tel : </td>
-			<td>06 - 679 4799</td>
+			<td><?=(isset($veninfo[0]->TELEPHONE_NO)) ? $veninfo[0]->TELEPHONE_NO : ''?></td>
 		</tr>
 		<tr>
 			<td>Fax : </td>
-			<td>06 - 679 4828</td>
+			<td><?=(isset($veninfo[0]->FAX_NO)) ? $veninfo[0]->FAX_NO : ''?></td>
 		</tr>
 		<tr>
 		</tr>
@@ -159,19 +159,79 @@ img{
 	<table class="tbl-info-pr">
 		<tr>
 			<td align="right" style="width:40px;"><b>Po Date</b> </td>
-			<td>15 Syawal 1437 / 21 Jul 2016</td>
+			<?php 
+			$da = new DateTime($podetail[0]->PO_Date);
+			$das = $da->format('j M Y');
+			$dayy = $da->format('j');
+			$mon = $da->format('m');
+			$yr = $da->format('Y');
+			
+			
+			function intPart($float)
+{
+    if ($float < -0.0000001)
+        return ceil($float - 0.0000001);
+    else
+        return floor($float + 0.0000001);
+}
+			
+			function Greg2Hijri($day, $month, $year, $string = false)
+{
+    $day   = (int) $day;
+    $month = (int) $month;
+    $year  = (int) $year;
+
+    if (($year > 1582) or (($year == 1582) and ($month > 10)) or (($year == 1582) and ($month == 10) and ($day > 14)))
+    {
+        $jd = intPart((1461*($year+4800+intPart(($month-14)/12)))/4)+intPart((367*($month-2-12*(intPart(($month-14)/12))))/12)-
+        intPart( (3* (intPart(  ($year+4900+    intPart( ($month-14)/12)     )/100)    )   ) /4)+$day-32075;
+    }
+    else
+    {
+        $jd = 367*$year-intPart((7*($year+5001+intPart(($month-9)/7)))/4)+intPart((275*$month)/9)+$day+1729777;
+    }
+
+    $l = $jd-1948440+10632;
+    $n = intPart(($l-1)/10631);
+    $l = $l-10631*$n+354;
+    $j = (intPart((10985-$l)/5316))*(intPart((50*$l)/17719))+(intPart($l/5670))*(intPart((43*$l)/15238));
+    $l = $l-(intPart((30-$j)/15))*(intPart((17719*$j)/50))-(intPart($j/16))*(intPart((15238*$j)/43))+29;
+    
+    $month = intPart((24*$l)/709);
+    $day   = $l-intPart((709*$month)/24);
+    $year  = 30*$n+$j-30;
+    
+    $date = array();
+    $date['year']  = $year;
+    $date['month'] = $month;
+    $date['day']   = $day;
+
+		$bulanda = array();
+		$bulanda = array("kosong", "Muharram", "Safar", "RabiulAwwal", "Rabiuthani", "JumadiulAwwal", "Jumadiuthani", "Rajab", "Shaban", "Ramadan", "Shawwal", "ZhulQada", "ZhulHijja");
+		
+    if (!$string)
+        return $date;
+    else
+        //return     "{$year}-{$month}-{$day}";
+				return "$day $bulanda[$month] $year";
+}
+			$arabla = Greg2Hijri($dayy,$mon,$yr,"true");
+			//echo "lkajsdk:".print_r($arabla).$arabla[day]." ".$arabla[month]." ".$arabla[year];
+			//echo "lkajsdk:".$arabla;
+			 ?>
+			<td><?=$arabla?> / <?=$das?></td>
 		</tr>
 		<tr>
 			<td align="right"><b>Your Ref.</b> </td>
-			<td>GP/16-0301</td>
+			<td></td>
 		</tr>
 		<tr>
 			<td align="right"><b>PR No.</b> </td>
-			<td>PR/2184/16</td>
+			<td>N/A</td>
 		</tr>
 		<tr>
 			<td align="right"><b>MRIN No.</b> </td>
-			<td>MRIN/N9/SBN/00599/2016</td>
+			<td><?=($this->input->get('mrin') <> '') ? $this->input->get('mrin') : ''?></td>
 		</tr>
 		<tr>
 			<td align="right"><b>Page.</b> </td>
@@ -186,20 +246,20 @@ img{
 		<td><b>DELIVERY ADDRESS : ADVANCE PACT SDN BHD</b></td>
 	</tr>
 	<tr>
-		<td class="bold">Asset No : BEHDU01-0034</td>
-		<td>Hospital Tuanku Ja'afar</td>
+		<td class="bold">Asset No : <?=(isset($record[0]->V_Asset_no)) ? $record[0]->V_Asset_no :''?></td>
+		<td><?=$hospdet[0]->v_HospitalName?></td>
 	</tr>
 	<tr>
-		<td class="bold">Equipment : HEMODIALYSIS UNITS</td>
-		<td> Jalan Dr. Muthu, Seremban</td>
+		<td class="bold">Equipment : <?=(isset($record[0]->V_Asset_name)) ? $record[0]->V_Asset_name :''?></td>
+		<td><?=$hospdet[0]->v_HospitalAdd1?> <?=$hospdet[0]->v_HospitalAdd2?></td>
 	</tr>
 	<tr>
-		<td class="bold">department : HDU </td>
-		<td>Negeri Sembilan&nbsp;70300</td>
+		<td class="bold">department : <?=(isset($record[0]->V_User_Dept_code)) ? $record[0]->V_User_Dept_code :''?> </td>
+		<td><?=$hospdet[0]->v_HospitalAdd3?> <?=$hospdet[0]->v_hosp_postcode?></td>
 	</tr>
 	<tr>
-		<td class="bold">work order no : SBN/AP/B00005/16 </td>
-		<td><b><i>ATTN: <i>Shariza Noor binti Mokhtar / 06 - 765 2015/2016</i></b></td>
+		<td class="bold">work order no : <?=(isset($record[0]->V_Request_no)) ? $record[0]->V_Request_no :''?> </td>
+		<td><b><i>ATTN: <i><?=$hospdet[0]->v_head_of_bems?> / <?=$hospdet[0]->v_teleno?></i></b></td>
 	</tr>
 	</table>
 
@@ -217,7 +277,7 @@ img{
 	</tr>
 	<tr >
 		<td></td>
-		<td style="text-align:left;"><b><u>Hemodialysis Units</u></b><br /><b><u>Model : Fresenius 4008S</u></b> </td>
+		<td style="text-align:left;"><b><u><?=$record[0]->V_Asset_name?></u></b><br /><b><u>Model : <?=$record[0]->V_Model_no?></u></b> </td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -230,16 +290,24 @@ img{
 					
 				<tr style="height:20px;vertical-align:top; border-top:hidden;">
 					<td>1</td>
-					<td style="text-align:left;">DIASAFE PLUS FILTER<br /> P/N : </td>
+					<td style="text-align:left;"><?=$itemrec[0]->ItemName?><br /> P/N : </td>
 					<td>UNIT</td>
-					<td >10</td>
-					<td align="right">305.00</td>
-					<td align="right">3,050.00</td>
+					<td ><?=$itemrec[0]->QtyReqfx?></td>
+					<?php  
+					$howmanyunit = floatval($itemrec[0]->QtyReqfx);
+					$perunit = floatval($itemrec[0]->Unit_Costx);
+					$totalcost = $perunit*$howmanyunit;
+					$gstcost = $totalcost*.06;
+					$totalwgst = $gstcost+$totalcost;
+					//echo "qwqwqw".$itemrec[0]->Unit_Costx."iuiuiu".$perunit;
+					?>
+					<td align="right"><?=number_format($perunit,2)?></td>
+					<td align="right"><?=number_format($totalcost,2)?></td>
 					
 				
 					<td align="right">6%</td>
-					<td align="right">183.00</td>
-					<td align="right">3,233.00</td>
+					<td align="right"><?=number_format($gstcost,2)?></td>
+					<td align="right"><?=number_format($totalwgst,2)?></td>
 				
 				</tr>
 
@@ -271,7 +339,7 @@ img{
 	<tr>
 		<td colspan="6" style="text-align:left; padding-left:5px; text-transform: none; height:40px;"><i>Please notify us immediately (refer PO acceptance form) if this order cannot</i><br /><i>be shipped or completed on before 14 days from the last date of signatory</i></td>
 		<td colspan="2">TOTAL PRICE <br /> AFTER GST</td>
-		<td align="right">3,233.00</td>
+		<td align="right"><?=number_format($totalwgst,2)?></td>
 	</tr>
 </table>
 <table class="tbl-info-tc">

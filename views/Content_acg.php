@@ -4,7 +4,7 @@
 		<div Class="main-cs">
 	<div Class="form-cs">
 	
-	<span style="color:red;"><?php echo validation_errors(); ?>
+<span style="color:red;"><?php echo validation_errors(); ?>	
 <form action="" method="POST">
 		 <fieldset>
 		  <legend>Form >> Customize Search</legend>
@@ -70,7 +70,11 @@
 		  	</tr>
 		  	<tr>
 		  		<td>Monthly Revenue <span style="color:red;">*</span></td>
+					<?php if ($keyindicator) {?>
 		  		<td> : <input type="text" name="n_monthly" value="<?php echo set_value("n_monthly",isset($keyindicator[0]->n_Revenue) ? $keyindicator[0]->n_Revenue : '')?>" onkeyup="myFunction_cdm()" id="cdm_disableMe"/>
+					<?php } else { ?>
+					<td> : <input type="text" name="n_monthly" value="<?php echo set_value("n_monthly",isset($prev[0]->n_Revenue) ? number_format($prev[0]->n_Revenue,2) : 'N/A')?>" onkeyup="myFunction_cdm()" id="cdm_disableMe"/>
+					<?php } ?>
 		  		</td>
 					<script>
 					function myFunction_cdm() {
@@ -122,25 +126,20 @@
 		  					<td align="center"><input type="text" name="n_demerit[]" value="<?php echo set_value("n_demerit[]",isset($row->Demerit_Point) ? $row->Demerit_Point : '')?>"/></td>
 		  				</tr>
 		  				<?php endforeach; ?>
-		  				<?php } else { ?>
+		  				<?php } else { $nilaikire = 0; ?>
 		  				<?php foreach ($keyindlist as $row): ?>
-						<tr>
+							<tr>
 		  					<td align="center"><?=isset($row->v_IndicatorNo) ? $row->v_IndicatorNo : ''?><input type="hidden" name="v_IndicatorNo[]" value="<?php echo set_value("v_IndicatorNo[]",isset($row->v_IndicatorNo) ? $row->v_IndicatorNo : '')?>"/></td>
 		  					<td><?=isset($row->v_IndicatorName) ? $row->v_IndicatorName : ''?></td>
-		  					<?php if ($prev) { ?>
-		  					<?php foreach ($prev as $list): ?>
-		  					<?php if ($list->v_IndicatorNo == $row->v_IndicatorNo){ ?>
-		  					<td align="right"><?= isset($list->n_Parameters) ? number_format($list->n_Parameters,2) : 'N/A' ?></td>
-		  					<?php } ?>
-		  					<?php endforeach; ?>
-		  					<?php } else { ?>
-		  					<td align="right"></td>
-		  					<?php } ?>
-		  					<td align="center"><input type="text" name="n_indicatorval[]" value="<?php echo set_value("n_indicatorval[]")?>"/></td>
+		  					<!--bn-->
+								<?php //echo print_r($prev[$nilaikire]->n_Parameters.", ");?>
+								<td align="right"><?=isset($prev[$nilaikire]->n_Parameters) ? $prev[$nilaikire]->n_Parameters : ''?></td>
+								<!--bn-->
+		  					<td align="center"><input type="text" name="n_indicatorval[]" value="<?php echo set_value("n_indicatorval[]",isset($prev[$nilaikire]->n_Parameters) ? $prev[$nilaikire]->n_Parameters : '')?>"/></td>
 		  					<td align="center"><input type="text" name="n_parameter[]" value="<?php echo set_value("n_parameter[]")?>"/></td>
 		  					<td align="center"><input type="text" name="n_demerit[]" value="<?php echo set_value("n_demerit[]")?>"/></td>
 		  				</tr>
-		  				<?php endforeach; ?>
+		  				<?php $nilaikire++; endforeach; ?>
 		  				<?php } ?>
 		  				<!--<tr>
 		  					<td align="center">1</td>

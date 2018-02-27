@@ -5741,6 +5741,8 @@ class Contentcontroller extends CI_Controller {
 			$data['keyindlist'] = $this->display_model->keyindlist($data['s_code']);
 		}
 		$data['prev'] = $this->display_model->keyindicator($data['s_code'],date('m',strtotime($data['pdate'])),date('Y',strtotime($data['pdate'])));
+		//$data['prev'] = $this->display_model->keyindicatorprev($data['s_code'],date('m',strtotime($data['pdate'])),date('Y',strtotime($data['pdate'])));
+		//print_r($data['keyindlist']);
 		$this ->load->view("head");
 		$this ->load->view("left");
 		$this ->load->view("Content_acg",$data);
@@ -7971,6 +7973,26 @@ public function new_item (){
 		$this ->load->view("content_new_item");
 		}
 }
+
+public function report_reqwosbya2(){
+		  $this->load->model("display_model");
+		$data['records'] = $this->display_model->list_hospinfo();
+		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
+		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
+		$data['reqtype']=  'A2';
+		//$data['ppmsum'] = $this->display_model->sumppm($data['month'],$data['year']);
+		$data['rqsum'] = $this->display_model->sumrq_a2($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'));
+		//$data['complntsum'] = $this->display_model->sumcomplnt($data['month'],$data['year']);
+		
+
+                if ($this->session->userdata('usersess') == 'FES') {
+		$data['rqcivil'] = $this->display_model->sumrq_a2($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'),"IIUM C");
+		$data['rqmech'] = $this->display_model->sumrq_a2($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'),"IIUM M");
+		$data['rqelec'] = $this->display_model->sumrq_a2($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'),"IIUM E");
+		}
+		$this ->load->view("headprinter");
+		$this ->load->view("Content_report_reqwosbya2", $data);
+	}
 	
 }
 ?>

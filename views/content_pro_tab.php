@@ -1,12 +1,12 @@
 <tr class="ui-left_web">
 	<?= ($this->input->get('tab') == '0') ? '<td class="ui-highlight" align="center" colspan="0" style=" height:30px; width:25%;">' : '<td class="ui-content-menu-desk-color" align="center" colspan="0" style=" height:30px; width:25%;">'?>
-	<?php echo anchor ('Procurement?pro=mrin&tab=0'.'&y='.$year.'&m='.$month, 'All MRIN'); ?></td>
+	<?php echo anchor ('Procurement?pro=mrin&tab=0'.'&y='.$year.'&m='.$month, 'Pending MRIN'); ?></td>
 	<?= ($this->input->get('tab') == '1') ? '<td class="ui-highlight" align="center" colspan="0" style="height:30px; width:25%;">' : '<td class="ui-content-menu-desk-color" align="center" colspan="0" style="width:25%;">'?>
 	<?php echo anchor ('Procurement?pro=mrin&tab=1'.'&y='.$year.'&m='.$month, 'Approved MRIN'); ?></td>
 	<?= ($this->input->get('tab') == '2') ? '<td class="ui-highlight" align="center" colspan="0" style="width:25%;">' : '<td class="ui-content-menu-desk-color" align="center" colspan="0" style="width:25%;">'?>
 	<?php echo anchor ('Procurement?pro=mrin&tab=2'.'&y='.$year.'&m='.$month, 'Rejected, Returned MRIN'); ?></td>
 	<?= ($this->input->get('tab') == '3') ? '<td class="ui-highlight" align="center" colspan="0" style="width:25%;">' : '<td class="ui-content-menu-desk-color" align="center" colspan="0" style="width:25%;">'?>
-	<?php echo anchor ('Procurement?pro=mrin&tab=3'.'&y='.$year.'&m='.$month, 'Pending MRIN'); ?></td>
+	<?php echo anchor ('Procurement?pro=mrin&tab=3'.'&y='.$year.'&m='.$month, 'All MRIN'); ?></td>
 </tr>
 <tr class="ui-middle-color">
 	<td class="ui-left_mobile">

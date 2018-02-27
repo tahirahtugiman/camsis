@@ -1,8 +1,8 @@
 <?php $array = [
-	['SHIPMENT / INVOICE & DO One',base_url().'index.php/Procurement/po_follow_up2?pr='.$this->input->get('pr').'&tab=0'],
-	['SHIPMENT / INVOICE & DO Two',base_url().'index.php/Procurement/po_follow_up2?pr='.$this->input->get('pr').'&tab=1'],
-	['SHIPMENT / INVOICE & DO Three',base_url().'index.php/Procurement/po_follow_up2?pr='.$this->input->get('pr').'&tab=2'],
-	['Payment',base_url().'index.php/Procurement/po_follow_up2?pr='.$this->input->get('pr').'&tab=3']
+	['SHIPMENT / INVOICE & DO One',base_url().'index.php/Procurement/po_follow_up2?po='.$this->input->get('po').'&tab=0'],
+	['SHIPMENT / INVOICE & DO Two',base_url().'index.php/Procurement/po_follow_up2?po='.$this->input->get('po').'&tab=1'],
+	['SHIPMENT / INVOICE & DO Three',base_url().'index.php/Procurement/po_follow_up2?po='.$this->input->get('po').'&tab=2'],
+	['Payment',base_url().'index.php/Procurement/po_follow_up2?po='.$this->input->get('po').'&tab=3']
 ]?>
 
 <?php 
@@ -13,24 +13,24 @@ switch ($tabber) {
         $tulis = "SHIPMENT / INVOICE & DO One";
 		$tulis1 = "SHIPMENT / INVOICE & DO One";
 		$left = "";
-		$right = base_url().'index.php/Procurement/po_follow_up2?pr='.$this->input->get('pr').'&tab=1';
+		$right = base_url().'index.php/Procurement/po_follow_up2?po='.$this->input->get('po').'&tab=1';
         break;
     case "1":
         $tulis = "SHIPMENT / INVOICE & DO Two";
 		$tulis1 = "SHIPMENT / INVOICE & DO Two";
-		$left = base_url().'index.php/Procurement/po_follow_up2?pr='.$this->input->get('pr').'&tab=0&parent=assets';
-		$right = base_url().'index.php/Procurement/po_follow_up2?pr='.$this->input->get('pr').'&tab=2';
+		$left = base_url().'index.php/Procurement/po_follow_up2?po='.$this->input->get('po').'&tab=0&parent=assets';
+		$right = base_url().'index.php/Procurement/po_follow_up2?po='.$this->input->get('po').'&tab=2';
         break;
     case "2":
         $tulis = "SHIPMENT / INVOICE & DO Three";
 		$tulis1 = "SHIPMENT / INVOICE & DO Three";
-		$left = base_url().'index.php/Procurement/po_follow_up2?pr='.$this->input->get('pr').'&tab=1';;
-		$right = base_url().'index.php/Procurement/po_follow_up2?pr='.$this->input->get('pr').'&tab=3';
+		$left = base_url().'index.php/Procurement/po_follow_up2?po='.$this->input->get('po').'&tab=1';;
+		$right = base_url().'index.php/Procurement/po_follow_up2?po='.$this->input->get('po').'&tab=3';
         break;
     case "3":
         $tulis = "Payment";
 		$tulis1 = "Payment";
-		$left = base_url().'index.php/Procurement/po_follow_up2?pr='.$this->input->get('pr').'&tab=2';
+		$left = base_url().'index.php/Procurement/po_follow_up2?po='.$this->input->get('po').'&tab=2';
 		//$right = base_url().'index.php/Procurement/po_follow_up2?pr='.$this->input->get('pr').'&tab=4';
         break;
 }?>

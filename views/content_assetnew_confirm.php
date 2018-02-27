@@ -310,7 +310,8 @@
 <?php echo form_hidden('n_manufacturer',$this->input->post('n_manufacturer'));?>
 <?php echo form_hidden('n_model',$this->input->post('n_model'));?>
 <?php echo form_hidden('n_request_number',$this->input->post('n_request_number'));?>
-<?php echo form_hidden('n_serial_number',$this->input->post('n_serial_number'));?>
+<?php echo form_hidden('n_serial',$this->input->post('n_serial'));?>
+<?php echo form_hidden('n_tnc_request',$this->input->post('n_tnc_request'));?>
 <?php echo form_hidden('n_remarks',$this->input->post('n_remarks'));?>
 <?php echo form_hidden('n_make',$this->input->post('n_make'));?>
 <?php echo form_hidden('n_chasis_no',$this->input->post('n_chasis_no'));?>

@@ -8,6 +8,7 @@ $array = [
 	['contentcontroller/report_cwos/'],
 	['contentcontroller/report_reswos/'],
 	['contentcontroller/report_sls/'],
+	['contentcontroller/report_reqwosbya2/'],
 	]
 
 ?>
@@ -56,6 +57,8 @@ if($list[0] == $this->uri->slash_segment(1) .$this->uri->slash_segment(2)){ ?>
 				text: 'Response Time'
 			<?php }elseif ($this->uri->slash_segment(1) .$this->uri->slash_segment(2) == 'contentcontroller/report_sls/') {?>
 				text: 'Statutory & Lisense'
+			<?php }elseif ($this->uri->slash_segment(1) .$this->uri->slash_segment(2) == 'contentcontroller/report_reqwosbya2/') {?>
+				text: 'A2'
 			<?php } ?>
             }
         },
@@ -143,6 +146,21 @@ if($list[0] == $this->uri->slash_segment(1) .$this->uri->slash_segment(2)){ ?>
             name: 'Total Expired',
             data: [<?php if ($licsatsum[0]->licsat+$satsum[0]->licsat == 0){ echo '0';}else{echo $licsatsum[0]->licsat+$satsum[0]->licsat;}?>],
             stack: '2'
+        }]
+		<?php } elseif ($this->uri->slash_segment(1) .$this->uri->slash_segment(2) == 'contentcontroller/report_reqwosbya2/') {?>
+		series: [{
+            name: 'Total Work Order Request',
+            data: [<?php if ($rqsum[0]->total == 0){ echo '0';}else{echo $rqsum[0]->total;}?>],
+            stack: '1'
+        }, {
+            name: 'Total Completed',
+            data: [<?php if ($rqsum[0]->comp == 0){ echo '0';}else{echo $rqsum[0]->comp;}?>],
+            stack: '2'
+        }
+		, {
+            name: 'Total Outstanding',
+            data: [<?php if ($rqsum[0]->notcomp == 0){ echo '0';}else{echo $rqsum[0]->notcomp;}?>],
+            stack: '3'
         }]
 		<?php } ?>
     });

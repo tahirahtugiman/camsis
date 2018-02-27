@@ -19,7 +19,6 @@ header('Content-Disposition: attachment; filename='.$filename);
 <?php if (($this->input->get('ex') == '') or ($this->input->get('none') == 'closed')){?>
 <?php include 'content_headprint.php';?>
 <?php } ?>
-
 <div class="m-div">
 	<table class="rport-header">
 		<tr>
@@ -98,6 +97,7 @@ header('Content-Disposition: attachment; filename='.$filename);
 		</tr>
 	</table>
 </div>
+
 <?php if (($this->input->get('ex') == '') or ($this->input->get('none') == 'closed')){?>
 <?php include 'content_footerprint.php';?>
 <?php } ?>
