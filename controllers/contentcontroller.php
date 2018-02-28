@@ -7820,8 +7820,9 @@ public function pop_fail(){
 			$year = date("Y",strtotime("-1 month",strtotime($data['date'])));
 		}
 		$this->load->model('display_model');
-		$data['record'] = $this->display_model->fdreport(date("Y-m-d",strtotime($data['date'])));
-		$data['recoutstanding'] = $this->display_model->recoutstanding($month,$year);
+		$data['record'] = $this->display_model->fdreport(date("Y-m-d",strtotime($data['date'])));	
+	    $data['recoutstanding'] = $this->display_model->recoutstanding($month,$year);
+
 		$data['recppm'] = $this->display_model->recppm($month,$year);
 		$data['reccompday'] = $this->display_model->reccompday(date("Y-m-d",strtotime($data['date'])));
 		$data['fdr_mi'] = $this->display_model->fdr_mi(date("Y-m-d",strtotime($data['date'])));

@@ -45,6 +45,9 @@ switch ($x) {
 	case "14":
 		$tulis = "Outstanding 2 Month";
 		break;
+		case "15":
+		$tulis = "Total Out Standing";
+		break;
 	default:
 $tulis = "";	
 		break;
@@ -58,6 +61,7 @@ header('Content-Disposition: attachment; filename='.$filename);
 
 
 ?>
+
 <?php if ($this->input->get('ex') == ''){?>
 <?php include 'content_btp.php';?>
 <div id="Instruction" class="pr-printer">

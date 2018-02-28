@@ -136,7 +136,8 @@ function doSomething(a){
 		<tr style="text-align:center;">
 			<td>1.4</td>
 			<td>Accumulated outstanding</td>
-			<td><?=isset($record[0]->ao_A1) ? $record[0]->ao_A1 : 0 ?></td>
+			<?php $a0a1 = (isset($record[0]->ao_A1) ? $record[0]->ao_A1 : 0 )?>
+			<td><?= ($a0a1 > 0) ? anchor('contentcontroller/report_fdreport2?jobdate='.$date.'&x=4'.'&v=1',$a0a1) : 0 ?></td>
 			<td><?=isset($record[0]->ao_A2) ? $record[0]->ao_A2 : 0 ?></td>
 			<td><?=isset($record[0]->ao_A3) ? $record[0]->ao_A3 : 0 ?></td>
 			<td><?=isset($record[0]->ao_A4) ? $record[0]->ao_A4 : 0 ?></td>
@@ -201,7 +202,7 @@ function doSomething(a){
 			<td>1.8</td>
 			<td>Total of the month</td>
 			<?php $t_A1 = (isset($record[0]->ao_A1) ? $record[0]->ao_A1 : 0) + (isset($record[0]->ac_A1) ? $record[0]->ac_A1 : 0) ?>
-			<td><?= $t_A1 ?></td>
+			<td><?= ($t_A1 > 0) ? anchor('contentcontroller/report_fdreport2?jobdate='.$date.'&x=8'.'&v=1',$t_A1) : 0 ?></td>
 			<?php $t_A2 = (isset($record[0]->ao_A2) ? $record[0]->ao_A2 : 0) + (isset($record[0]->ac_A2) ? $record[0]->ac_A2 : 0) ?>
 			<td><?= $t_A2 ?></td>
 			<?php $t_A3 = (isset($record[0]->ao_A3) ? $record[0]->ao_A3 : 0) + (isset($record[0]->ac_A3) ? $record[0]->ac_A3 : 0) ?>
@@ -227,6 +228,7 @@ function doSomething(a){
 			<td rowspan="6">2.0 Outstanding Previous Month </td>
 			<td>2.1</td>
 			<td>Outstanding 1 Month</td>
+			
 			<td><?=isset($recoutstanding[0]->m1_A1) ? $recoutstanding[0]->m1_A1 : 0?></td>
 			<td><?=isset($recoutstanding[0]->m1_A2) ? $recoutstanding[0]->m1_A2 : 0?></td>
 			<td><?=isset($recoutstanding[0]->m1_A3) ? $recoutstanding[0]->m1_A3 : 0?></td>
@@ -288,16 +290,22 @@ function doSomething(a){
 			<?php $t_o4 = (isset($recoutstanding[0]->m4_A1) ? $recoutstanding[0]->m4_A1 : 0) + (isset($recoutstanding[0]->m4_A2) ? $recoutstanding[0]->m4_A2 : 0) + (isset($recoutstanding[0]->m4_A3) ? $recoutstanding[0]->m4_A3 : 0) + (isset($recoutstanding[0]->m4_A4) ? $recoutstanding[0]->m4_A4 : 0) + (isset($recoutstanding[0]->m4_A5) ? $recoutstanding[0]->m4_A5 : 0) + (isset($recoutstanding[0]->m4_A6) ? $recoutstanding[0]->m4_A6 : 0) + (isset($recoutstanding[0]->m4_A7) ? $recoutstanding[0]->m4_A7 : 0) + (isset($recoutstanding[0]->m4_A8) ? $recoutstanding[0]->m4_A8 : 0) + (isset($recoutstanding[0]->m4_A9) ? $recoutstanding[0]->m4_A9 : 0) + (isset($recoutstanding[0]->m4_A10) ? $recoutstanding[0]->m4_A10 : 0) ?>
 			<td><?= ($t_o4 > 0) ? anchor('contentcontroller/report_fdreport2?jobdate='.$date.'&x=12',$t_o4) : 0 ?></td>
 		</tr>
+		
+		<!--baru edit -->
 		<tr style="text-align:center;">
 			<td>2.5</td>
 			<td>Outstanding > 5 Month</td>
 			<?php $t_ddd = (isset($recoutstanding[0]->m5_A1) ? $recoutstanding[0]->m5_A1 : 0 )?>
 			<td><?= ($t_ddd > 0) ? anchor('contentcontroller/report_fdreport2?jobdate='.$date.'&x=13'.'&v=1',$t_ddd) : 0 ?></td>
 			<td><?=isset($recoutstanding[0]->m5_A2) ? $recoutstanding[0]->m5_A2 : 0?></td>
-			<td><?=isset($recoutstanding[0]->m5_A3) ? $recoutstanding[0]->m5_A3 : 0?></td>
-			<td><?=isset($recoutstanding[0]->m5_A4) ? $recoutstanding[0]->m5_A4 : 0?></td>
-			<td><?=isset($recoutstanding[0]->m5_A5) ? $recoutstanding[0]->m5_A5 : 0?></td>
-			<td><?=isset($recoutstanding[0]->m5_A6) ? $recoutstanding[0]->m5_A6 : 0?></td>
+			<?php $m5a3 = (isset($recoutstanding[0]->m5_A3) ? $recoutstanding[0]->m5_A3 : 0 )?>		
+			<td><?= ($m5a3 > 0) ? anchor('contentcontroller/report_fdreport2?jobdate='.$date.'&x=13'.'&v=3',$m5a3) : 0 ?></td>
+			<?php $m5a4 = (isset($recoutstanding[0]->m5_A4) ? $recoutstanding[0]->m5_A4 : 0 )?>	
+			<td><?= ($m5a4 > 0) ? anchor('contentcontroller/report_fdreport2?jobdate='.$date.'&x=13'.'&v=4',$m5a4) : 0 ?></td>
+			<?php $m5a5 = (isset($recoutstanding[0]->m5_A5) ? $recoutstanding[0]->m5_A5 : 0 )?>	
+			<td><?= ($m5a5 > 0) ? anchor('contentcontroller/report_fdreport2?jobdate='.$date.'&x=13'.'&v=5',$m5a5) : 0 ?></td>
+			<?php $m5a6 = (isset($recoutstanding[0]->m5_A6) ? $recoutstanding[0]->m5_A6 : 0 )?>	
+			<td><?= ($m5a6 > 0) ? anchor('contentcontroller/report_fdreport2?jobdate='.$date.'&x=13'.'&v=6',$m5a6) : 0 ?></td>
 			<td><?=isset($recoutstanding[0]->m5_A7) ? $recoutstanding[0]->m5_A7 : 0?></td>
 			<td><?=isset($recoutstanding[0]->m5_A8) ? $recoutstanding[0]->m5_A8 : 0?></td>
 			<td><?=isset($recoutstanding[0]->m5_A9) ? $recoutstanding[0]->m5_A9 : 0?></td>
@@ -309,17 +317,17 @@ function doSomething(a){
 			<td>2.6</td>
 			<td>Total Out Standing</td>
 			<?php $to_A1 = (isset($recoutstanding[0]->m1_A1) ? $recoutstanding[0]->m1_A1 : 0) + (isset($recoutstanding[0]->m2_A1) ? $recoutstanding[0]->m2_A1 : 0) + (isset($recoutstanding[0]->m3_A1) ? $recoutstanding[0]->m3_A1 : 0) + (isset($recoutstanding[0]->m4_A1) ? $recoutstanding[0]->m4_A1 : 0) + (isset($recoutstanding[0]->m5_A1) ? $recoutstanding[0]->m5_A1 : 0)?>
-			<td><?=$to_A1?></td>
+			<td><?= ($to_A1 > 0) ? anchor('contentcontroller/report_fdreport2?jobdate='.$date.'&x=15'.'&v=1',$to_A1) : 0 ?></td>
 			<?php $to_A2 = (isset($recoutstanding[0]->m1_A2) ? $recoutstanding[0]->m1_A2 : 0) + (isset($recoutstanding[0]->m2_A2) ? $recoutstanding[0]->m2_A2 : 0) + (isset($recoutstanding[0]->m3_A2) ? $recoutstanding[0]->m3_A2 : 0) + (isset($recoutstanding[0]->m4_A2) ? $recoutstanding[0]->m4_A2 : 0) + (isset($recoutstanding[0]->m5_A2) ? $recoutstanding[0]->m5_A2 : 0)?>
 			<td><?=$to_A2?></td>
 			<?php $to_A3 = (isset($recoutstanding[0]->m1_A3) ? $recoutstanding[0]->m1_A3 : 0) + (isset($recoutstanding[0]->m2_A3) ? $recoutstanding[0]->m2_A3 : 0) + (isset($recoutstanding[0]->m3_A3) ? $recoutstanding[0]->m3_A3 : 0) + (isset($recoutstanding[0]->m4_A3) ? $recoutstanding[0]->m4_A3 : 0) + (isset($recoutstanding[0]->m5_A3) ? $recoutstanding[0]->m5_A3 : 0)?>
-			<td><?=$to_A3?></td>
+			<td><?= ($to_A3 > 0) ? anchor('contentcontroller/report_fdreport2?jobdate='.$date.'&x=15'.'&v=3',$to_A3) : 0 ?></td>
 			<?php $to_A4 = (isset($recoutstanding[0]->m1_A4) ? $recoutstanding[0]->m1_A4 : 0) + (isset($recoutstanding[0]->m2_A4) ? $recoutstanding[0]->m2_A4 : 0) + (isset($recoutstanding[0]->m3_A4) ? $recoutstanding[0]->m3_A4 : 0) + (isset($recoutstanding[0]->m4_A4) ? $recoutstanding[0]->m4_A4 : 0) + (isset($recoutstanding[0]->m5_A4) ? $recoutstanding[0]->m5_A4 : 0)?>
-			<td><?=$to_A4?></td>
+			<td><?= ($to_A4 > 0) ? anchor('contentcontroller/report_fdreport2?jobdate='.$date.'&x=15'.'&v=4',$to_A4) : 0 ?></td>
 			<?php $to_A5 = (isset($recoutstanding[0]->m1_A5) ? $recoutstanding[0]->m1_A5 : 0) + (isset($recoutstanding[0]->m2_A5) ? $recoutstanding[0]->m2_A5 : 0) + (isset($recoutstanding[0]->m3_A5) ? $recoutstanding[0]->m3_A5 : 0) + (isset($recoutstanding[0]->m4_A5) ? $recoutstanding[0]->m4_A5 : 0) + (isset($recoutstanding[0]->m5_A5) ? $recoutstanding[0]->m5_A5 : 0)?>
-			<td><?=$to_A5?></td>
+			<td><?= ($to_A5 > 0) ? anchor('contentcontroller/report_fdreport2?jobdate='.$date.'&x=15'.'&v=5',$to_A5) : 0 ?></td>
 			<?php $to_A6 = (isset($recoutstanding[0]->m1_A6) ? $recoutstanding[0]->m1_A6 : 0) + (isset($recoutstanding[0]->m2_A6) ? $recoutstanding[0]->m2_A6 : 0) + (isset($recoutstanding[0]->m3_A6) ? $recoutstanding[0]->m3_A6 : 0) + (isset($recoutstanding[0]->m4_A6) ? $recoutstanding[0]->m4_A6 : 0) + (isset($recoutstanding[0]->m5_A6) ? $recoutstanding[0]->m5_A6 : 0)?>
-			<td><?=$to_A6?></td>
+			<td><?= ($to_A6 > 0) ? anchor('contentcontroller/report_fdreport2?jobdate='.$date.'&x=15'.'&v=6',$to_A6) : 0 ?></td>
 			<?php $to_A7 = (isset($recoutstanding[0]->m1_A7) ? $recoutstanding[0]->m1_A7 : 0) + (isset($recoutstanding[0]->m2_A7) ? $recoutstanding[0]->m2_A7 : 0) + (isset($recoutstanding[0]->m3_A7) ? $recoutstanding[0]->m3_A7 : 0) + (isset($recoutstanding[0]->m4_A7) ? $recoutstanding[0]->m4_A7 : 0) + (isset($recoutstanding[0]->m5_A7) ? $recoutstanding[0]->m5_A7 : 0)?>
 			<td><?=$to_A7?></td>
 			<?php $to_A8 = (isset($recoutstanding[0]->m1_A8) ? $recoutstanding[0]->m1_A8 : 0) + (isset($recoutstanding[0]->m2_A8) ? $recoutstanding[0]->m2_A8 : 0) + (isset($recoutstanding[0]->m3_A8) ? $recoutstanding[0]->m3_A8 : 0) + (isset($recoutstanding[0]->m4_A8) ? $recoutstanding[0]->m4_A8 : 0) + (isset($recoutstanding[0]->m5_A8) ? $recoutstanding[0]->m5_A8 : 0)?>
