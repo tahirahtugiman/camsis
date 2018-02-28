@@ -6,13 +6,7 @@ header('Content-type: application/ms-excel');
 header('Content-Disposition: attachment; filename='.$filename);
 }
 ?>
-<?php 
 
- if ($a == 'FES')
-	{
-	echo "sapik";
-	}	
-?>
 <script>
 function doSomething(a){
 	var p = a.getAttribute('value');
