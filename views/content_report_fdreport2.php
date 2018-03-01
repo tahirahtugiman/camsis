@@ -42,10 +42,8 @@ switch ($x) {
 	case "13":
 		$tulis = "Outstanding > 5 Month";
 		break;
-	case "14":
-		$tulis = "Outstanding 2 Month";
-		break;
-		case "15":
+
+		case "14":
 		$tulis = "Total Out Standing";
 		break;
 	default:
