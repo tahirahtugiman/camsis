@@ -3949,7 +3949,11 @@ ORDER BY r.D_date, r.D_time
 			if ($v == 1){
 			$wotype = array('A1');
 			$this->db->where_in('r.V_request_type', $wotype);
-			} 
+			}
+            if ($v == 2){
+			$wotype = array('A2');
+			$this->db->where_in('r.V_request_type', $wotype);
+			} 			
 			else if ($v == 3){
 		    $wotype = array('A3');
 			$this->db->where_in('r.V_request_type', $wotype);
@@ -3963,14 +3967,23 @@ ORDER BY r.D_date, r.D_time
 			}else if ($v == 6){
 		    $wotype = array('A6');
 			$this->db->where_in('r.V_request_type', $wotype);
+			}else if ($v == 7){
+		    $wotype = array('A7');
+			$this->db->where_in('r.V_request_type', $wotype);
+			}else if ($v == 8){
+		    $wotype = array('A8');
+			$this->db->where_in('r.V_request_type', $wotype);
+			}else if ($v == 9){
+		    $wotype = array('A9');
+			$this->db->where_in('r.V_request_type', $wotype);
+			}else if ($v == 10){
+		    $wotype = array('A10');
+			$this->db->where_in('r.V_request_type', $wotype);
 			}else{
 			$wotype = array('A1', 'A2', 'A3', 'A4','A5','A6','A7','A8','A9','A10');
 			$this->db->where_in('r.V_request_type', $wotype);
 			}
-			  
-			
-			
-
+	
 			if ($reptype == 1){
 				$this->db->where('DATE(r.D_date) = ',$date);
 			}
@@ -4042,7 +4055,7 @@ ORDER BY r.D_date, r.D_time
 			}
 			else if ($reptype == 15){
 			    $this->db->where('r.v_request_status <>','C');
-				$this->db->where("TIMESTAMPDIFF(MONTH, CASE WHEN r.d_date BETWEEN concat(concat(year(r.d_date),'-'),concat(month(r.d_date)),'-08 23:59:59') AND DATE_ADD(concat(concat(year(r.d_date),'-'),concat(month(r.d_date)),'-09 23:59:59'), INTERVAL 1 MONTH) THEN concat(concat(year(r.d_date),'-'),concat(month(r.d_date)),'-08 23:59:59') ELSE DATE_SUB(concat(concat(year(r.d_date),'-'),concat(month(r.d_date)),'-08 23:59:59'), INTERVAL 1 MONTH) end,  DATE_ADD(concat(concat(year(now()),'-'),concat(month(now())),'-09 00:00:00'), INTERVAL 1 MONTH)) > ","5", false);
+				$this->db->where("TIMESTAMPDIFF(MONTH, CASE WHEN r.d_date BETWEEN concat(concat(year(r.d_date),'-'),concat(month(r.d_date)),'-08 23:59:59') AND DATE_ADD(concat(concat(year(r.d_date),'-'),concat(month(r.d_date)),'-09 23:59:59'), INTERVAL 1 MONTH) THEN concat(concat(year(r.d_date),'-'),concat(month(r.d_date)),'-08 23:59:59') ELSE DATE_SUB(concat(concat(year(r.d_date),'-'),concat(month(r.d_date)),'-08 23:59:59'), INTERVAL 1 MONTH) end,  DATE_ADD(concat(concat(year(now()),'-'),concat(month(now())),'-09 00:00:00'), INTERVAL 1 MONTH)) > ","0", false);
 				$this->db->where('r.d_date <=', $this->dater(2,$month,$year).'  23:59:59');
 			
 			}
