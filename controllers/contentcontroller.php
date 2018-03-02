@@ -7822,7 +7822,12 @@ public function pop_fail(){
 		$this->load->model('display_model');
 		$data['record'] = $this->display_model->fdreport(date("Y-m-d",strtotime($data['date'])));	
 	    $data['recoutstanding'] = $this->display_model->recoutstanding($month,$year);
-
+ /*            foreach ($data['record'] as $k => $v){
+		print "<pre>";
+		print_r(
+		 $v
+		);
+		} */
 		$data['recppm'] = $this->display_model->recppm($month,$year);
 		$data['reccompday'] = $this->display_model->reccompday(date("Y-m-d",strtotime($data['date'])));
 		$data['fdr_mi'] = $this->display_model->fdr_mi(date("Y-m-d",strtotime($data['date'])));
@@ -7847,6 +7852,7 @@ public function pop_fail(){
 		$this ->load->view("content_report_fdreport_pdf",$data);
 		}else{
 		$this ->load->view("content_report_fdreport",$data);
+		
 		}		
 	}
 	
