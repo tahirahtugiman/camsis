@@ -159,6 +159,15 @@ class Contentcontroller extends CI_Controller {
 		//echo $url;
 		//exit ();
 			redirect($url, 'refresh');
+	 }elseif (in_array("contentcontroller/PO(main)", $idArray)) {
+	 
+	 //echo "ade";
+	 $url =site_url('Procurement/e_request');
+			 
+		//echo $url;
+		//exit ();
+			redirect($url, 'refresh');
+	 
 	 }
 		 
 		$this ->load->view("head");
@@ -7808,7 +7817,6 @@ public function pop_fail(){
         }
 				
 	public function report_fdreport(){
-
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
 		$data['date']= ($this->input->get('jobdate') <> 0) ? $this->input->get('jobdate') : date("d-m-Y");
@@ -7820,14 +7828,8 @@ public function pop_fail(){
 			$year = date("Y",strtotime("-1 month",strtotime($data['date'])));
 		}
 		$this->load->model('display_model');
-		$data['record'] = $this->display_model->fdreport(date("Y-m-d",strtotime($data['date'])));	
-	    $data['recoutstanding'] = $this->display_model->recoutstanding($month,$year);
- /*            foreach ($data['record'] as $k => $v){
-		print "<pre>";
-		print_r(
-		 $v
-		);
-		} */
+		$data['record'] = $this->display_model->fdreport(date("Y-m-d",strtotime($data['date'])));
+		$data['recoutstanding'] = $this->display_model->recoutstanding($month,$year);
 		$data['recppm'] = $this->display_model->recppm($month,$year);
 		$data['reccompday'] = $this->display_model->reccompday(date("Y-m-d",strtotime($data['date'])));
 		$data['fdr_mi'] = $this->display_model->fdr_mi(date("Y-m-d",strtotime($data['date'])));
@@ -7852,7 +7854,6 @@ public function pop_fail(){
 		$this ->load->view("content_report_fdreport_pdf",$data);
 		}else{
 		$this ->load->view("content_report_fdreport",$data);
-		
 		}		
 	}
 	
@@ -7902,8 +7903,8 @@ public function pop_fail(){
 	  	$this->load->model("display_model");
 		$data['records'] = $this->display_model->list_hospinfo();
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
-		//$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
-		$data['month']= ($data['year'] == date('Y')) ? date("m") : 11;
+		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
+		//$data['month']= ($data['year'] == date('Y')) ? date("m") : 11;
 		$data['reqtype']= $this->input->get('req') ? $this->input->get('req') : 'A1';
 		$data['grpsel']= $this->input->get('grp') ? $this->input->get('grp') : '';
 		$data['record'] = $this->display_model->rpt_volu_y($data['month'],$data['year'],$this->input->get('stat'),$data['reqtype'],$this->input->get('broughtfwd'),$data['grpsel'],$pilape);

@@ -322,7 +322,15 @@ class Procurement extends CI_Controller {
 	  $this->load->model('display_model');
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
+		$data['udept'] = $this->display_model->getuserpodept();
+		//print_r($data['udept']);
+		//echo "nilainya : ".$data['udept'][0]->dept;
+		//exit();
+		if ($data['udept'] == 'NONE') {
 		$data['polist'] = $this->display_model->getthepo($whattab,$data['month'], $data['year']);
+		} else {
+		$data['polist'] = $this->display_model->getthepo($whattab,$data['month'], $data['year'],$data['udept'][0]->dept);
+		}
 		$this ->load->view("head");
 		$this ->load->view("left");
 		$this ->load->view("Content_e_request",$data);

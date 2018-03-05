@@ -1,11 +1,7 @@
 <?php
 $a = $this->session->userdata('usersess');
 if ($this->input->get('ex') == 'excel'){
-if ($a == 'FES'){
 $filename = 'Fes Daily Report date='.$date.".xls";
-} else if($a == 'BES'){
-$filename = 'Bes Daily Report date='.$date.".xls";
-}
 header('Content-type: application/ms-excel');
 header('Content-Disposition: attachment; filename='.$filename);
 }
@@ -535,7 +531,7 @@ function doSomething(a){
 			<td valign="top" colspan="2"><hr color="black" size="1Px"></td>
 		</tr>
 		<tr>
-			<td colspan="5"><?php if ($a == 'FES') echo "Fes Daily Report"?><?php if ($a == 'BES') echo "Bes Daily Report"?> <?=date('F', mktime(0, 0, 0, $month, 10))?> <?=$year?><br><i>Computer Generated - CAMSIS</i></td>
+			<td colspan="5">Fes Daily Report <?=date('F', mktime(0, 0, 0, $month, 10))?> <?=$year?><br><i>Computer Generated - CAMSIS</i></td>
 		</tr>
 	</table>
 </div>
