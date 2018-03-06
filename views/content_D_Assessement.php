@@ -4,6 +4,7 @@
 		<button onclick="javascript:myFunction('D_Assessement?sev=<?=$this->input->get('sev')?>&mth=<?=$this->input->get('mth')?>&yr=<?=$this->input->get('yr')?>');" class="btn-button btn-primary-button">PRINT</button>
 		<button type="cancel" class="btn-button btn-primary-button" onclick="location.href = '<?php base_url();?>acg_report?tabIndex=1';">CANCEL</button>
 	</div>
+	<div class=Section1> 
 	<div class="">
 		<table class="tbl-wo" >
 			<tr>
@@ -69,7 +70,7 @@
 						<?php }?>
 			</tr>
 		</table>
-		<table class="tftable tbl-size" border="" style="text-align:center; width:90%; margin:0 auto; background:white;">
+		<table id="adtable" class="tftable tbl-size" border="" style="text-align:center; width:90%; margin:0 auto; background:white;">
 		<tr>
 			<th>No</th>
 			<th>Key Deduction Indicators</th>
@@ -162,7 +163,7 @@
 		</tr>
 		
 	</table>
-	<table class="tbl-wo"  align="center" style=" margin:10 auto; width:90%;" frame="box" >
+	<table id="tblwo" class="tbl-wo"  align="center" style=" margin:10 auto; width:90%;" frame="box" >
 			<tr >
 				<td style="width:20%; padding-left:5px;border-right:1px solid black;" colspan="2">Prepared by : AdvancePact Sdn. Bhd.</td>
 				<td style="width:20%; padding-left:5px;border-right:1px solid black;" colspan="2">Checked By : Peninsular Medical Sdn. Bhd.</td>
@@ -239,7 +240,7 @@
 				<td style="padding-left:5px;border-right:1px solid black;" colspan="2">&nbsp</td>
 			</tr>
 		</table>
-	</div>
+	</div></div>
 	<div class="StartNewPage" id="breakpage"><span id="pagebreak">Page Break</span></div>
 	</body>
 </html>

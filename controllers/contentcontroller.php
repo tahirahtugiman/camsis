@@ -6386,43 +6386,54 @@ class Contentcontroller extends CI_Controller {
 			$data['totalind11pg'] += $rec->v_IndicatorNo11;
 
 			foreach ($data['acgparam'] as $acg){
+			
 				if ($acg->v_IndicatorNo == 1){
-					$data['totalparam1pg'] += $rec->v_IndicatorNo1 * ($acg->n_Revenue / $acg->v_Paramval);
+				   if ($acg->v_Paramval != 0) {
+					$data['totalparam1pg'] += $rec->v_IndicatorNo1 * ($acg->n_Revenue / $acg->v_Paramval); } 
 				}
 				if ($acg->v_IndicatorNo == 2){
-					$data['totalparam2pg'] += $rec->v_IndicatorNo2 * ($acg->n_Revenue / $acg->v_Paramval);
+				   if ($acg->v_Paramval != 0) {
+					$data['totalparam2pg'] += $rec->v_IndicatorNo2 * ($acg->n_Revenue / $acg->v_Paramval); }
 				}
 				if ($acg->v_IndicatorNo == 3){
-					$data['totalparam3pg'] += $rec->v_IndicatorNo3 * ($acg->n_Revenue / $acg->v_Paramval);
+					 if ($acg->v_Paramval != 0) {
+					$data['totalparam3pg'] += $rec->v_IndicatorNo3 * ($acg->n_Revenue / $acg->v_Paramval); }
 				}
 				if ($acg->v_IndicatorNo == 4){
-					$data['totalparam4pg'] += $rec->v_IndicatorNo4 * ($acg->n_Revenue / $acg->v_Paramval);
+					 if ($acg->v_Paramval != 0) {
+					$data['totalparam4pg'] += $rec->v_IndicatorNo4 * ($acg->n_Revenue / $acg->v_Paramval); }
 				}
 				if ($acg->v_IndicatorNo == 5){
-					$data['totalparam5pg'] += $rec->v_IndicatorNo5 * ($acg->n_Revenue / $acg->v_Paramval);
+					 if ($acg->v_Paramval != 0) {
+					$data['totalparam5pg'] += $rec->v_IndicatorNo5 * ($acg->n_Revenue / $acg->v_Paramval); }
 				}
 				if ($acg->v_IndicatorNo == 6){
-					$data['totalparam6pg'] += $rec->v_IndicatorNo6 * ($acg->n_Revenue / $acg->v_Paramval);
+					 if ($acg->v_Paramval != 0) {
+					$data['totalparam6pg'] += $rec->v_IndicatorNo6 * ($acg->n_Revenue / $acg->v_Paramval); }
 				}
 				if ($acg->v_IndicatorNo == 7){
-					$data['totalparam7pg'] += $rec->v_IndicatorNo7 * ($acg->n_Revenue / $acg->v_Paramval);
+					 if ($acg->v_Paramval != 0) {
+					$data['totalparam7pg'] += $rec->v_IndicatorNo7 * ($acg->n_Revenue / $acg->v_Paramval); }
 				}
 				if ($acg->v_IndicatorNo == 8){
-					$data['totalparam8pg'] += $rec->v_IndicatorNo8 * ($acg->n_Revenue / $acg->v_Paramval);
+					 if ($acg->v_Paramval != 0) {
+					$data['totalparam8pg'] += $rec->v_IndicatorNo8 * ($acg->n_Revenue / $acg->v_Paramval); }
 				}
 				if ($acg->v_IndicatorNo == 9){
-					$data['totalparam9pg'] += $rec->v_IndicatorNo9 * ($acg->n_Revenue / $acg->v_Paramval);
+					 if ($acg->v_Paramval != 0) {
+					$data['totalparam9pg'] += $rec->v_IndicatorNo9 * ($acg->n_Revenue / $acg->v_Paramval); }
 				}
 				if ($acg->v_IndicatorNo == 10){
-					$data['totalparam10pg'] += $rec->v_IndicatorNo10 * ($acg->n_Revenue / $acg->v_Paramval);
+					 if ($acg->v_Paramval != 0) {
+					$data['totalparam10pg'] += $rec->v_IndicatorNo10 * ($acg->n_Revenue / $acg->v_Paramval); }
 				}
 				if ($acg->v_IndicatorNo == 11){
-					$data['totalparam11pg'] += $rec->v_IndicatorNo11 * ($acg->n_Revenue / $acg->v_Paramval);
+					 if ($acg->v_Paramval != 0) {
+					$data['totalparam11pg'] += $rec->v_IndicatorNo11 * ($acg->n_Revenue / $acg->v_Paramval); }
 				}
 			}
 		}
-//echo $data['totalparam1pg'];
-//exit();
+
 		$data['totalindpg'] = array(1 => $data['totalind1pg'],
 									2 => $data['totalind2pg'],
 									3 => $data['totalind3pg'],
@@ -6486,37 +6497,48 @@ class Contentcontroller extends CI_Controller {
 
 			foreach ($data['acgparam'] as $acg){
 				if ($acg->v_IndicatorNo == 1){
-					$data['totalparam1t'] += $rect->v_IndicatorNo1 * ($acg->n_Revenue / $acg->v_Paramval);
+					 if ($acg->v_Paramval != 0) {
+					$data['totalparam1t'] += $rect->v_IndicatorNo1 * ($acg->n_Revenue / $acg->v_Paramval); }
 				}
 				if ($acg->v_IndicatorNo == 2){
-					$data['totalparam2t'] += $rect->v_IndicatorNo2 * ($acg->n_Revenue / $acg->v_Paramval);
+					 if ($acg->v_Paramval != 0) {
+					$data['totalparam2t'] += $rect->v_IndicatorNo2 * ($acg->n_Revenue / $acg->v_Paramval); }
 				}
 				if ($acg->v_IndicatorNo == 3){
-					$data['totalparam3t'] += $rect->v_IndicatorNo3 * ($acg->n_Revenue / $acg->v_Paramval);
+					 if ($acg->v_Paramval != 0) {
+					$data['totalparam3t'] += $rect->v_IndicatorNo3 * ($acg->n_Revenue / $acg->v_Paramval); }
 				}
 				if ($acg->v_IndicatorNo == 4){
-					$data['totalparam4t'] += $rect->v_IndicatorNo4 * ($acg->n_Revenue / $acg->v_Paramval);
+					 if ($acg->v_Paramval != 0) {
+					$data['totalparam4t'] += $rect->v_IndicatorNo4 * ($acg->n_Revenue / $acg->v_Paramval); }
 				}
 				if ($acg->v_IndicatorNo == 5){
-					$data['totalparam5t'] += $rect->v_IndicatorNo5 * ($acg->n_Revenue / $acg->v_Paramval);
+					 if ($acg->v_Paramval != 0) {
+					$data['totalparam5t'] += $rect->v_IndicatorNo5 * ($acg->n_Revenue / $acg->v_Paramval); }
 				}
 				if ($acg->v_IndicatorNo == 6){
-					$data['totalparam6t'] += $rect->v_IndicatorNo6 * ($acg->n_Revenue / $acg->v_Paramval);
+					 if ($acg->v_Paramval != 0) {
+					$data['totalparam6t'] += $rect->v_IndicatorNo6 * ($acg->n_Revenue / $acg->v_Paramval); }
 				}
 				if ($acg->v_IndicatorNo == 7){
-					$data['totalparam7t'] += $rect->v_IndicatorNo7 * ($acg->n_Revenue / $acg->v_Paramval);
+					 if ($acg->v_Paramval != 0) {
+					$data['totalparam7t'] += $rect->v_IndicatorNo7 * ($acg->n_Revenue / $acg->v_Paramval); }
 				}
 				if ($acg->v_IndicatorNo == 8){
-					$data['totalparam8t'] += $rect->v_IndicatorNo8 * ($acg->n_Revenue / $acg->v_Paramval);
+					 if ($acg->v_Paramval != 0) {
+					$data['totalparam8t'] += $rect->v_IndicatorNo8 * ($acg->n_Revenue / $acg->v_Paramval); }
 				}
 				if ($acg->v_IndicatorNo == 9){
-					$data['totalparam9t'] += $rect->v_IndicatorNo9 * ($acg->n_Revenue / $acg->v_Paramval);
+					 if ($acg->v_Paramval != 0) {
+					$data['totalparam9t'] += $rect->v_IndicatorNo9 * ($acg->n_Revenue / $acg->v_Paramval); }
 				}
 				if ($acg->v_IndicatorNo == 10){
-					$data['totalparam10t'] += $rect->v_IndicatorNo10 * ($acg->n_Revenue / $acg->v_Paramval);
+					 if ($acg->v_Paramval != 0) {
+					$data['totalparam10t'] += $rect->v_IndicatorNo10 * ($acg->n_Revenue / $acg->v_Paramval); }
 				}
 				if ($acg->v_IndicatorNo == 11){
-					$data['totalparam11t'] += $rect->v_IndicatorNo11 * ($acg->n_Revenue / $acg->v_Paramval);
+					 if ($acg->v_Paramval != 0) {
+					$data['totalparam11t'] += $rect->v_IndicatorNo11 * ($acg->n_Revenue / $acg->v_Paramval); }
 				}
 			}
 		}

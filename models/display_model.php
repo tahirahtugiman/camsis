@@ -2919,7 +2919,7 @@ function rpt_rsls2($month,$year, $stat = "apo2",$expiring,$grpsel){
 			$this->db->from('acg_apb_prevcmv2 a');
 			$this->db->join('pmis2_egm_service_request r','a.v_requestno = r.V_Request_no');
 			$this->db->where('a.v_ServiceCode',$serv_code);
-			$this->db->where('a.v_Month',$month);
+			$this->db->where('a.v_Month',(string)(int)$month);
 			$this->db->where('a.v_Year',$year);
 			$query = $this->db->get();
 			//echo $this->db->last_query();
