@@ -2919,7 +2919,7 @@ function rpt_rsls2($month,$year, $stat = "apo2",$expiring,$grpsel){
 			$this->db->from('acg_apb_prevcmv2 a');
 			$this->db->join('pmis2_egm_service_request r','a.v_requestno = r.V_Request_no');
 			$this->db->where('a.v_ServiceCode',$serv_code);
-			$this->db->where('a.v_Month',$month);
+			$this->db->where('a.v_Month',(string)(int)$month);
 			$this->db->where('a.v_Year',$year);
 			$query = $this->db->get();
 			//echo $this->db->last_query();
@@ -3900,8 +3900,10 @@ ORDER BY r.D_date, r.D_time
 			//$this->db->where('YEAR(r.D_date) ', $year);
 			//$this->db->where('MONTH(r.D_date) ', $month);
 			//else{
-			$this->db->where('r.d_date >=', $this->dater(1,1,$year));
-			$this->db->where('r.d_date <=', $this->dater(2,12,$year).'  23:59:59');
+			//$this->db->where('r.d_date >=', $this->dater(1,1,$year));
+			//$this->db->where('r.d_date <=', $this->dater(2,12,$year).'  23:59:59');
+			$this->db->where('r.d_date >=', $this->dater(1,$month,$year));
+			$this->db->where('r.d_date <=', $this->dater(2,$month,$year).'  23:59:59');
 			//}
 			$this->db->where('r.V_hospitalcode',$this->session->userdata('hosp_code'));
 			if ($grpsel <> ''){
@@ -3946,6 +3948,9 @@ ORDER BY r.D_date, r.D_time
 			$this->db->join('pmis2_egm_sharedowntime dt',"r.V_Request_no = dt.ori_wo",'left outer');
 			$this->db->where('r.V_servicecode', $this->session->userdata('usersess'));
 			$this->db->where('r.V_actionflag <> ', 'D');
+			$wotype = array('A1', 'A2', 'A3', 'A4','A5','A6','A7','A8','A9','A10');
+			$this->db->where_in('r.V_request_type', $wotype);
+
 			if ($v == 1){
 			$wotype = array('A1');
 			$this->db->where_in('r.V_request_type', $wotype);
@@ -3983,7 +3988,7 @@ ORDER BY r.D_date, r.D_time
 			$wotype = array('A1', 'A2', 'A3', 'A4','A5','A6','A7','A8','A9','A10');
 			$this->db->where_in('r.V_request_type', $wotype);
 			}
-	
+			
 			if ($reptype == 1){
 				$this->db->where('DATE(r.D_date) = ',$date);
 			}
@@ -4045,7 +4050,7 @@ ORDER BY r.D_date, r.D_time
 			}
 			else if ($reptype == 13){
 				$this->db->where('r.v_request_status <>','C');
-				$this->db->where("TIMESTAMPDIFF(MONTH, CASE WHEN r.d_date BETWEEN concat(concat(year(r.d_date),'-'),concat(month(r.d_date)),'-08 23:59:59') AND DATE_ADD(concat(concat(year(r.d_date),'-'),concat(month(r.d_date)),'-09 23:59:59'), INTERVAL 1 MONTH) THEN concat(concat(year(r.d_date),'-'),concat(month(r.d_date)),'-08 23:59:59') ELSE DATE_SUB(concat(concat(year(r.d_date),'-'),concat(month(r.d_date)),'-08 23:59:59'), INTERVAL 1 MONTH) end,  DATE_ADD(concat(concat(year(now()),'-'),concat(month(now())),'-09 00:00:00'), INTERVAL 1 MONTH)) >= ","5", false);
+				$this->db->where("TIMESTAMPDIFF(MONTH, CASE WHEN r.d_date BETWEEN concat(concat(year(r.d_date),'-'),concat(month(r.d_date)),'-08 23:59:59') AND DATE_ADD(concat(concat(year(r.d_date),'-'),concat(month(r.d_date)),'-09 23:59:59'), INTERVAL 1 MONTH) THEN concat(concat(year(r.d_date),'-'),concat(month(r.d_date)),'-08 23:59:59') ELSE DATE_SUB(concat(concat(year(r.d_date),'-'),concat(month(r.d_date)),'-08 23:59:59'), INTERVAL 1 MONTH) end,  DATE_ADD(concat(concat(year(now()),'-'),concat(month(now())),'-09 00:00:00'), INTERVAL 1 MONTH)) >= ","6", false);
 				$this->db->where('r.d_date <=', $this->dater(2,$month,$year).'  23:59:59');
 			}
 			else if ($reptype == 14){
@@ -4053,8 +4058,6 @@ ORDER BY r.D_date, r.D_time
 				$this->db->where("TIMESTAMPDIFF(MONTH, CASE WHEN r.d_date BETWEEN concat(concat(year(r.d_date),'-'),concat(month(r.d_date)),'-08 23:59:59') AND DATE_ADD(concat(concat(year(r.d_date),'-'),concat(month(r.d_date)),'-09 23:59:59'), INTERVAL 1 MONTH) THEN concat(concat(year(r.d_date),'-'),concat(month(r.d_date)),'-08 23:59:59') ELSE DATE_SUB(concat(concat(year(r.d_date),'-'),concat(month(r.d_date)),'-08 23:59:59'), INTERVAL 1 MONTH) end,  DATE_ADD(concat(concat(year(now()),'-'),concat(month(now())),'-09 00:00:00'), INTERVAL 1 MONTH)) > ","0", false);
 				$this->db->where('r.d_date <=', $this->dater(2,$month,$year).'  23:59:59');
 			}
-			
-		
 			$this->db->where('r.V_servicecode', $this->session->userdata('usersess'));
 			$this->db->where('r.V_actionflag <> ', 'D');
 			$this->db->where('r.V_hospitalcode',$this->session->userdata('hosp_code'));
@@ -4150,6 +4153,32 @@ function attrec($mrinno){
 		$this->db->select('*');
 		$this->db->from('attachments_details');
 		$this->db->where('asset_no',$mrinno);
+		$this->db->where('flag <> ','D');
+		$query = $this->db->get();
+		//echo $this->db->last_query();
+		//exit();
+		$query_result = $query->result();
+		return $query_result;
+	}
+
+	
+	
+function pocomrec($pono){
+		$this->db->select('*');
+		$this->db->from('po_compodetails');
+		$this->db->where('PO_No',$pono);
+		$this->db->where('flag <> ','D');
+		$query = $this->db->get();
+		//echo $this->db->last_query();
+		//exit();
+		$query_result = $query->result();
+		return $query_result;
+	}
+
+function poattrec($pono){
+		$this->db->select('*');
+		$this->db->from('poattach_details');
+		$this->db->where('PO_No',$pono);
 		$this->db->where('flag <> ','D');
 		$query = $this->db->get();
 		//echo $this->db->last_query();
@@ -4482,7 +4511,7 @@ function podet($pono){
 	return $query_result;
 }
 
-function getthepo($whichone,$month,$year){
+function getthepo($whichone,$month,$year,$whatdept="NONE"){
 	//$this->db->select("CONCAT('PO/',".$this->db->escape(date('m').date('y')).",'/',RIGHT(CONCAT('0000',CAST(po_next_no AS char)), 5)) AS pono,po_next_no",FALSE);
 	//echo "<br> sdkkfjslkdfjl : ".$whichone."<br>";
 	$this->db->select("IFNULL(a.Statusc,'0') AS Statusc, a.PO_No, b.MIRN_No, a.PO_Date, a.vendor, a.paytype", FALSE);
@@ -4491,18 +4520,34 @@ function getthepo($whichone,$month,$year){
 	$this->db->where('MONTH(a.PO_Date)', $month );
 	$this->db->where('YEAR(a.PO_Date)', $year );
 	$this->db->where('a.visit = 1', null, false);
+	
+	
+	
 	if ($whichone == 0) {
 	$this->db->where('a.Date_Completedc IS NULL', null, false);
 	$this->db->where('a.Date_Completed IS NULL', null, false);
-	$this->db->or_where("(a.Date_Completedc IS NOT NULL AND paytype = 'COD' AND closingdtcc is null AND MONTH(a.PO_Date) = ".$month." AND YEAR(a.PO_Date) = ".$year." AND a.visit = 1)", NULL, FALSE);
+	//$this->db->or_where("(a.Date_Completedc IS NOT NULL AND paytype = 'COD' AND closingdtcc is null AND MONTH(a.PO_Date) = ".$month." AND YEAR(a.PO_Date) = ".$year." AND a.visit = 1)", NULL, FALSE);
 	} elseif ($whichone == 1) {
 	$this->db->where('a.Date_Completedc IS NULL', null, false);
 	$this->db->where('a.Date_Completed IS NOT NULL', null, false);
 	} else {
 	$this->db->where('a.Date_Completedc IS NOT NULL', null, false);
 	$this->db->where('a.paytype !=', 'COD');
-	$this->db->or_where("(a.Date_Completedc IS NOT NULL AND paytype = 'COD' AND closingdtcc is not null AND MONTH(a.PO_Date) = ".$month." AND YEAR(a.PO_Date) = ".$year." AND a.visit = 1)", NULL, FALSE);
+	//$this->db->or_where("(a.Date_Completedc IS NOT NULL AND paytype = 'COD' AND closingdtcc is not null AND MONTH(a.PO_Date) = ".$month." AND YEAR(a.PO_Date) = ".$year." AND a.visit = 1)", NULL, FALSE);
 	}
+	
+	if (($whatdept == "FD") && ($whichone == 1)) {
+	//$this->db->where('a.dept', $whatdept);
+	}elseif (($whatdept != "NONE") && ($whichone == 0)) {
+	$this->db->where('a.dept', $whatdept);
+	$this->db->or_where("(a.dept= '".$whatdept."' AND a.Date_Completedc IS NOT NULL AND paytype = 'COD' AND closingdtcc is null AND MONTH(a.PO_Date) = ".$month." AND YEAR(a.PO_Date) = ".$year." AND a.visit = 1)", NULL, FALSE);
+	}elseif (($whatdept != "NONE") && ($whichone == 2)) {
+	$this->db->where('a.dept', $whatdept);
+	$this->db->or_where("(a.dept= '".$whatdept."' AND a.Date_Completedc IS NOT NULL AND paytype = 'COD' AND closingdtcc is not null AND MONTH(a.PO_Date) = ".$month." AND YEAR(a.PO_Date) = ".$year." AND a.visit = 1)", NULL, FALSE);
+	}elseif ($whatdept != "NONE") {
+	$this->db->where('a.dept', $whatdept);
+	}
+	
 	$this->db->group_by('a.PO_No, b.MIRN_No, a.PO_Date'); 
 	//$this->db->where('a.Date_Completedc',date('Y'));
 	$query = $this->db->get();
@@ -4511,17 +4556,56 @@ function getthepo($whichone,$month,$year){
 	return $query->result();
 }
 
-function getpofollow($whatpo,$visitwhat){
+function getuserpodept(){
 	//$this->db->select("CONCAT('PO/',".$this->db->escape(date('m').date('y')).",'/',RIGHT(CONCAT('0000',CAST(po_next_no AS char)), 5)) AS pono,po_next_no",FALSE);
 	//echo "<br> sdkkfjslkdfjl : ".$whichone."<br>";
-	$this->db->select("*");
-	$this->db->from('tbl_po');
-	$this->db->where('PO_No', $whatpo);
-	$this->db->where('visit', $visitwhat);
+	$this->db->select("IFNULL(v_GroupID,'NONE') AS dept",FALSE);
+	$this->db->from('pmis2_sa_user');
+	$this->db->where('v_UserID', $this->session->userdata('v_UserName') );
 	$query = $this->db->get();
 	//echo $this->db->last_query();
 	//exit();
 	return $query->result();
+}
+
+function getpofollow($whatpo,$visitwhat){
+   $this->db->select("*");
+   $this->db->from('tbl_po');
+   $this->db->where('PO_No', $whatpo);
+	$this->db->where('visit', $visitwhat); 
+ 
+
+$query = $this->db->get();
+	/* echo $this->db->last_query();
+	exit(); */
+	return $query->result();
+
+	
+}
+function getpocom($whatpo,$visitwhat){
+$this->db->select("*");
+$this->db->from('po_compodetails');
+$this->db->where('PO_No', $whatpo);
+$this->db->where('visit', $visitwhat); 
+
+
+$query = $this->db->get();
+	/* echo $this->db->last_query();
+	exit(); */
+	return $query->result();	
+}
+function getpoat($whatpo,$visitwhat){
+ $this->db->select("*");
+$this->db->from('poattach_details');
+ $this->db->where('PO_No', $whatpo);
+$this->db->where('visit', $visitwhat); 
+
+$query = $this->db->get();
+	/* echo $this->db->last_query();
+	exit(); */
+	return $query->result();
+
+	
 }
 
 function sumrq_a2($month,$year,$reqtype,$grpsel,$bystak="")

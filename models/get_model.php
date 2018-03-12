@@ -3633,6 +3633,30 @@ function get_attachments($tempno){
 	//exit();
 	return $query->result();
 }
+function get_pocom($tempno){
+	$this->db->select('*');
+	$this->db->from('po_compodetails');
+	$this->db->where('PO_No',$tempno);
+	$this->db->where('flag <>','D');
+	$this->db->order_by('com_id','DESC');
+	$query = $this->db->get();
+	//echo $this->db->last_query();
+	//echo '<br><br>';
+	//exit();
+	return $query->result();
+}
+function get_poattached($tempno){
+	$this->db->select('*');
+	$this->db->from('poattach_details');
+	$this->db->where('PO_No',$tempno);
+	$this->db->where('flag <>','D');
+	$this->db->order_by('doc_id','DESC');
+	$query = $this->db->get();
+	//echo $this->db->last_query();
+	//echo '<br><br>';
+	//exit();
+	return $query->result();
+}
 function component_det($mrinno,$id){
 	$this->db->select('*');
 	$this->db->from('component_details');
@@ -3649,6 +3673,30 @@ function attachment_det($mrinno,$id){
 	$this->db->select('*');
 	$this->db->from('attachments_details');
 	$this->db->where('asset_no',$mrinno);
+	$this->db->where('Id',$id);
+	$this->db->where('flag <>','D');
+	$query = $this->db->get();
+	//echo $this->db->last_query();
+	//echo '<br><br>';
+	//exit();
+	return $query->result();
+}
+function po_com_det($pono,$id){
+	$this->db->select('*');
+	$this->db->from('po_compodetails');
+	$this->db->where('PO_No',$pono);
+	$this->db->where('Id',$id);
+	$this->db->where('flag <>','D');
+	$query = $this->db->get();
+	//echo $this->db->last_query();
+	//echo '<br><br>';
+	//exit();
+	return $query->result();
+}
+function poattachment_det($pono,$id){
+	$this->db->select('*');
+	$this->db->from('poattach_details');
+	$this->db->where('PO_No',$pono);
 	$this->db->where('Id',$id);
 	$this->db->where('flag <>','D');
 	$query = $this->db->get();
