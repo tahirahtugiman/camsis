@@ -5,6 +5,7 @@
 		<?php include 'content_follow_tab.php';?>			
 			<div class="ui-main-form-5">
 				<div class="middle_d2">
+				
 					<table width="100%" class="ui-content-form-reg" style="background:white;">
 						<tr class="ui-color-contents-style-1" height="30px">
 							<td colspan="2" class="ui-header-new">
@@ -13,6 +14,7 @@
 							<?php }elseif($this->input->get('tab') == 1){ ?> <b> Shipment </b> Two <span style="display:iniline-block; font-size:12px; color:red;"><?php  if (!($chk)){?>You may not update this section until you have filled in SHIPMENT / INVOICE & DO 1 information.<?php } ?></span>
 							<?php }elseif($this->input->get('tab') == 2){ ?><b>Shipment </b> Three <span style="display:iniline-block; font-size:12px; color:red;"><?php  if (!($chk)){?>You may not update this section until you have filled in SHIPMENT / INVOICE & DO 2 information.<?php } ?></span>
 							<?php }elseif($this->input->get('tab') == 3){ ?><b>Payment </b><span style="display:iniline-block; font-size:12px; color:red;"><?php  if (!($chk)){?> You may not update this section until you have filled in SHIPMENT / INVOICE & DO information<?php } ?></span>
+						
 							<?php } ?></span>
 							<span class="textmenu1" style="float:right;padding-top:0px;">
 							<?php if ($chk){
@@ -68,7 +70,43 @@
 														<tr style="height:20px;">
 															<td class="td-assest">FINANCE SUBMISSION Date</td>
 															<td><?=isset($pofollow[0]->Date_Completed) ? date("d-m-Y",strtotime($pofollow[0]->Date_Completed)) : ''?></td>
-														</tr>																												
+														</tr>
+	                                  <tr><td colspan="3" class="ui-bottom-border-color" style="font-weight: bold;">Components</td></tr>
+												
+										<tr>
+											<td style="padding-left:10px; padding-top:5px;" valign="top" class="ui-w">Components :</td>
+											<td></td>
+										</tr>
+										<style>
+											.icon{
+											 font-size:14px;
+											 margin-right:5px;
+											 margin-left:5px;
+											 color:red;
+											 display:iniline-block;
+											}
+											.icon2{
+											 font-size:14px;
+											 margin-left:5px;
+											 color:green;
+											}
+										</style>
+										<tr>
+											<td style="padding-left:10px; padding-top:5px;" valign="top" colspan="2"> 
+												<ul style="list-style-type: none;">
+													<?php if($this->input->get('tab') != 3){?>
+													
+													<?php foreach ($pocom as $com[0]): ?>
+											       <?php if (isset($com[0]->component_name)){?>
+													<li><span class="icon-play icon"></span><?=isset($com[0]->component_name) ? $com[0]->component_name : ''?><a href='<?php echo base_url()?>uploadpofiles/<?=$com[0]->com_id?>'><span class="icon-new icon2"></a></li>
+													<?php } endforeach; ?> 
+													<?php }else{ ?>
+													<li><span class="icon-play icon"></span>Root Cause, Cmis, Gambar, Wo  <span class="icon-new icon2"></li>
+													<li><span class="icon-play icon"></span>Quotation <span class="icon-new icon2"></li>
+													<?php } ?>
+												</ul>
+											</td>
+										</tr>																																										
 													</table>
 												</td>
 											</tr>
@@ -125,7 +163,7 @@
 										</table>
 									</div>
 								</div>
-							</td>
+							</td> 							
 							<?php } else { ?>
 							<td class="ui-desk-style-table">
 								<div class="ui-main-form-1">
@@ -140,19 +178,51 @@
 														<tr style="height:20px;">
 															<td class="td-assest">Payment Date</td>
 															<td><?=isset($pofollow[0]->Date_Completedc) ? date("d-m-Y",strtotime($pofollow[0]->Date_Completedc)) : ''?></td>
-														</tr>																												
+														</tr>
+														<tr>
+											<td style="padding-left:10px; padding-top:5px;" valign="top">Attachments   :</td>
+											<td></td>
+										</tr>
+										<style>
+											.icon{
+											 font-size:14px;
+											 margin-right:5px;
+											 margin-left:5px;
+											 color:red;
+											 display:iniline-block;
+											}
+											.icon2{
+											 font-size:14px;
+											 margin-left:5px;
+											 color:green;
+											}
+										</style>
+										<tr>
+											<td style="padding-left:10px; padding-top:5px;" valign="top" colspan="2"> 
+												<ul style="list-style-type: none;">
+													<?php if($this->input->get('tab') == 3){?>
+													<?php foreach ($pocat as $att[0]): ?>
+													
+													<li><span class="icon-play icon"></span><?=isset($att[0]->Doc_name) ? $att[0]->Doc_name : ''?><a href='<?php echo base_url()?>uploadfinfiles/<?=$att[0]->doc_id?>'><span class="icon-new icon2"></a></li>
+													<?php endforeach; ?> 
+													<?php }else{ ?>
+													<li><span class="icon-play icon"></span>Root Cause, Cmis, Gambar, Wo  <span class="icon-new icon2"></li>
+													<li><span class="icon-play icon"></span>Quotation <span class="icon-new icon2"></li>
+													<?php } ?>
+												</ul>
+											</td>
+										</tr>
 													</table>
 												</td>
 											</tr>
+											
 										</table>
 									</div>
 								</div>
 								
 							</td>
-							
-							
-							
-							<?php } ?>
+							<?php }  ?>
+					
 						</tr>
 					</table>
 

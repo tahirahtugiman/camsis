@@ -505,6 +505,20 @@ function update_delete_attc($insert_data,$assetno,$id){
 	//echo $this->db->last_query();
 	//exit();
 }
+function update_delpo_comm($insert_data,$pono,$id){
+	$this->db->where('PO_No',$pono);
+	$this->db->where('Id',$id);
+	$this->db->update('po_compodetails',$insert_data);
+	//echo $this->db->last_query();
+	//exit();
+}
+function update_delpo_attc($insert_data,$pono,$id){
+	$this->db->where('PO_No',$pono);
+	$this->db->where('Id',$id);
+	$this->db->update('poattach_details',$insert_data);
+	//echo $this->db->last_query();
+	//exit();
+}
 function u_commassno($insert_data,$assetno){
 	$this->db->where('asset_no',$assetno);
 	$this->db->update('component_details',$insert_data);
@@ -514,6 +528,18 @@ function u_commassno($insert_data,$assetno){
 function u_attcassno($insert_data,$assetno){
 	$this->db->where('asset_no',$assetno);
 	$this->db->update('attachments_details',$insert_data);
+	//echo $this->db->last_query();
+	//exit();
+}
+function u_pocommassno($insert_data,$pono){
+	$this->db->where('PO_No',$pono);
+	$this->db->update('po_compodetails',$insert_data);
+	//echo $this->db->last_query();
+	//exit();
+}
+function u_poattcassno($insert_data,$pono){
+	$this->db->where('PO_No',$pono);
+	$this->db->update('poattach_details',$insert_data);
 	//echo $this->db->last_query();
 	//exit();
 }

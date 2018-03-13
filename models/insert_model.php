@@ -2615,6 +2615,16 @@ function attachment_details($insert_data){
 	$id = $this->db->insert_id();
 	return $id;
 }
+function pocom_details($insert_data){
+	$this->db->insert('po_compodetails',$insert_data);
+	$id = $this->db->insert_id();
+	return $id;
+}
+function poattachment_details($insert_data){
+	$this->db->insert('poattach_details',$insert_data);
+	$id = $this->db->insert_id();
+	return $id;
+}
 function insertmrincomp_b($insert_data){
 	$this->db->insert_batch('tbl_mirn_comp',$insert_data);
 }

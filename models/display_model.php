@@ -4161,6 +4161,32 @@ function attrec($mrinno){
 		return $query_result;
 	}
 	
+	
+function pocomrec($pono){
+		$this->db->select('*');
+		$this->db->from('po_compodetails');
+		$this->db->where('PO_No',$pono);
+		$this->db->where('flag <> ','D');
+		$query = $this->db->get();
+		//echo $this->db->last_query();
+		//exit();
+		$query_result = $query->result();
+		return $query_result;
+	}
+
+function poattrec($pono){
+		$this->db->select('*');
+		$this->db->from('poattach_details');
+		$this->db->where('PO_No',$pono);
+		$this->db->where('flag <> ','D');
+		$query = $this->db->get();
+		//echo $this->db->last_query();
+		//exit();
+		$query_result = $query->result();
+		return $query_result;
+	}
+	
+	
 function mrindetedit($mrinno){
 		$this->db->select('m.*,s.*,u.Name,a.V_Asset_no,a.V_Tag_no,a.V_Serial_no,a.V_Asset_name,a.V_Manufacturer,a.V_Brandname,a.V_Model_no,b.V_PO_date,b.N_Cost');
 		$this->db->from('tbl_materialreq m');
@@ -4525,7 +4551,7 @@ function getthepo($whichone,$month,$year,$whatdept="NONE"){
 	$this->db->group_by('a.PO_No, b.MIRN_No, a.PO_Date'); 
 	//$this->db->where('a.Date_Completedc',date('Y'));
 	$query = $this->db->get();
-	echo $this->db->last_query();
+	//echo $this->db->last_query();
 	//exit();
 	return $query->result();
 }
@@ -4555,6 +4581,31 @@ function getpofollow($whatpo,$visitwhat){
 	return $query->result();
 }
 
+function getpocom($whatpo,$visitwhat){
+$this->db->select("*");
+$this->db->from('po_compodetails');
+$this->db->where('PO_No', $whatpo);
+$this->db->where('visit', $visitwhat); 
+
+
+$query = $this->db->get();
+	/* echo $this->db->last_query();
+	exit(); */
+	return $query->result();	
+}
+function getpoat($whatpo,$visitwhat){
+ $this->db->select("*");
+$this->db->from('poattach_details');
+ $this->db->where('PO_No', $whatpo);
+$this->db->where('visit', $visitwhat); 
+
+$query = $this->db->get();
+	/* echo $this->db->last_query();
+	exit(); */
+	return $query->result();
+
+	
+}
 function sumrq_a2($month,$year,$reqtype,$grpsel,$bystak="")
 {
 	

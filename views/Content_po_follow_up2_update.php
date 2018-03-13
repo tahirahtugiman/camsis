@@ -3,7 +3,11 @@
 if ($this->input->get('powhat')=="update") {
 echo form_open('Procurement/po_follow_up2?pr='.$this->input->get('pr').'&po='.$this->input->get('po').'&tab='.$this->input->get('tab').'&powhat=confirm');}
 else {
-echo form_open('Procurement/po_follow_upsv?pr='.$this->input->get('pr').'&po='.$this->input->get('po').'&tab='.$this->input->get('tab'));}?>
+echo form_open('Procurement/po_follow_upsv?pr='.$this->input->get('pr').'&po='.$this->input->get('po').'&tab='.$this->input->get('tab'));}
+
+?>
+
+
 <div class="ui-middle-screen">
 	<div class="content-workorder">
 		<div class="div-p">&nbsp;</div>
@@ -86,7 +90,41 @@ echo form_open('Procurement/po_follow_upsv?pr='.$this->input->get('pr').'&po='.$
 												<tr style="height:20px;">
 													<td class="td-assest">Payment Date</td>
 													<td><input type="text"  name="n_completeddt" value="<?=$Date_Completedc?><?=$this->input->post('n_completeddt')?>" class="form-control-button2 n_wi-date2" id="date<?php echo $numberdate++; ?>" <?=$confim?>></td>
-												</tr>																												
+												</tr>
+
+                                        <tr>
+										<td style="padding:10px;" valign="top">Attachments   :   </td>
+										<!--<td style="padding:10px;"><a href="" ><span class="icon-plus" style="font-size:12px; color:green;"></span> Add New</a></td>-->
+										<?php if ($this->input->get('po') == 3){ ?>
+										<td style="padding:10px;"><a href="javascript:void(0)" onclick="fCallLocationa('<?=$runningno?>','attachment')" value="z" ><span class="icon-plus" style="font-size:12px; color:green;" ></span> Add New </a></td>
+										<?php } else { ?>
+										<td style="padding:10px;"><a href="javascript:void(0)" onclick="fCallLocationa('<?=$runningno?>','attachment')" value="z" ><span class="icon-plus" style="font-size:12px; color:green;" ></span> Add New </a></td>
+										<?php } ?>
+									</tr>
+									<tr style="display:<?=($this->input->get('powhat')=="update" ? 'none' : 'block') ?>;" id="trcommaattachment">
+										<td style="padding-left:10px; display:block;">
+										<?php if ($this->input->get('powhat')=="update")  { ?>
+										<span style="display:inline-block;" id="spcommaattachment"></span>
+										<?php } else { ?>
+										<span style="display:inline-block;" id="spcommaattachment"></span>
+										<span id="spattachment">
+										<?php
+											foreach($recordatt as $row){
+												$extension = explode(".",$row->doc_id);
+
+												if ($extension[1] == 'docx' || $extension[1] == 'xlsx' || $extension[1] == 'pdf') {
+												echo "<span class='icon-play icon' style='font-size:15px;'></span><span style='font-size:15px; font-weight:bold;'>" .$row->Doc_name. "</span><a href=".base_url()."uploadpofiles/".$row->doc_id."><span class='icon-file-text2 icon'></a></span><a href='javascript:fCallLocatiod(\"".$row->PO_No."\",\"".$row->Id."\",\"attachment\");'><span class='icon-cross icon' style='color:red;'></span></a><a href='javascript:fCallLocatioe(\"".$row->PO_No."\",\"".$row->Id."\",\"attachment\");'><span class='icon-new icon'></span></a>";
+												echo '<br>';
+												} else {
+												echo "<span class='icon-play icon' style='font-size:15px;'></span><span style='font-size:15px; font-weight:bold;'>" .$row->Doc_name. "</span> <br/><img src=".base_url()."uploadpofiles/".$row->doc_id." style='width:50px; height:50px; padding-left:5px;' ><a href='javascript:fCallLocatiod(\"".$row->PO_No."\",\"".$row->Id."\",\"attachment\");'><span class='icon-cross icon' style='color:red;'></span></a><a href='javascript:fCallLocatioe(\"".$row->PO_No."\",\"".$row->Id."\",\"attachment\");'><span class='icon-new icon'></span></a>";
+												echo '<br>';
+												}
+											}
+										?>
+										<?php } ?>
+										</span>
+										</td>
+									</tr>												
 											</table>
 										</td>
 									</tr>
@@ -162,7 +200,47 @@ echo form_open('Procurement/po_follow_upsv?pr='.$this->input->get('pr').'&po='.$
 												<tr style="height:20px;">
 													<td class="td-assest">FINANCE SUBMISSION Date</td>
 													<td><input type="text"  name="n_completeddt" value="<?=$Date_Completed?><?=$this->input->post('n_completeddt')?>" class="form-control-button2 n_wi-date2" id="date<?php echo $numberdate++; ?>" <?=$confim?>></td>
-												</tr>																												
+												</tr><br>
+                                                <tr><td colspan="3" class="ui-bottom-border-color" style="font-weight: bold;">Components & Attachments</td></tr>
+												<tr>
+										<td style="padding:10px;  valign="top">Components  :   </td>
+										<?php if ($this->input->get('po') == 3){ ?>
+										<td style="padding:10px;"><a href="javascript:void(0)" onclick="fCallLocationa('<?=$runningno?>','component')" value="z" ><span class="icon-plus" style="font-size:12px; color:green;" ></span> Add New </a></td>
+										<?php } else { ?>
+										<td style="padding:10px;"><a href="javascript:void(0)" onclick="fCallLocationa('<?=$runningno?>','component')" value="z" ><span class="icon-plus" style="font-size:12px; color:green;" ></span> Add New </a></td>
+										<?php } ?>
+									</tr>
+                                    <tr style="display:<?=($this->input->get('powhat')=="update" ? 'none' : 'block' )?>;" id="trcommacomponent">
+									
+										<td style="padding-left:10px; display:block;">
+										<?php if ($this->input->get('powhat')=="update") { ?>
+						
+										<span style="display:inline-none;" id="spcommacomponent"></span>
+										<?php } else { ?>
+														
+										<span style="display:inline-none;" id="spcommacomponent"></span>
+								
+										<span id="spcomponent">
+										<?php
+										
+											foreach($recordcom as $row){
+												$extension = explode(".",$row->com_id);
+
+												if ($extension[1] == 'docx' || $extension[1] == 'xlsx' || $extension[1] == 'pdf') {
+												echo "<span class='icon-play icon' style='font-size:15px;'></span><span style='font-size:15px; font-weight:bold;'>" .$row->component_name. "</span><a href=".base_url()."uploadpofiles/".$row->com_id."><span class='icon-file-text2 icon'></a></span><a href='javascript:fCallLocatiod(\"".$row->PO_No."\",\"".$row->Id."\",\"component\");'><span class='icon-cross icon' style='color:red;'></span></a><a href='javascript:fCallLocatioe(\"".$row->PO_No."\",\"".$row->Id."\",\"component\");'><span class='icon-new icon'></span></a>";
+												echo '<br>';
+												} else {
+												echo "<span class='icon-play icon' style='font-size:15px;'></span><span style='font-size:15px; font-weight:bold;'>" .$row->component_name. "</span> <br/><img src=".base_url()."uploadpofiles/".$row->com_id." style='width:50px; height:50px; padding-left:5px;' ><a href='javascript:fCallLocatiod(\"".$row->PO_No."\",\"".$row->Id."\",\"component\");'><span class='icon-cross icon' style='color:red;'></span></a><a href='javascript:fCallLocatioe(\"".$row->PO_No."\",\"".$row->Id."\",\"component\");'><span class='icon-new icon'></span></a>";
+												echo '<br>';
+												}
+											}
+										?>
+										<?php } ?>
+										</span>
+										</td>
+									</tr>
+                                   
+																	
 											</table>
 										</td>
 									</tr>
@@ -273,8 +351,11 @@ echo form_open('Procurement/po_follow_upsv?pr='.$this->input->get('pr').'&po='.$
 					</td>
 				</tr>
 			</table>
+				<?php echo form_hidden('tempno',isset($runningno) ? $runningno : '') ?>
+				
 		</div>
 	</div>
+	<?php //include 'content_jv_popup.php';?>
 	<script language="JavaScript" type="text/javascript">
 function testje(a,hour)
 {
@@ -321,10 +402,60 @@ document.getElementById("n_gstrm").value = two.toFixed(2);
 
 }
 
+function fCallLocationa(pono,tag){
+	winProp = 'width=450,height=270,left=' + ((screen.width - 600) / 2) +',top=' + ((screen.height - 400) / 2) + ',menubar=no, directories=no, location=no, scrollbars=yes, statusbar=no, toolbar=no, resizable=no';
+	Win = window.open('<?php if ($this->uri->slash_segment(2) != 'e_pr/') { echo "asset3_comm_newpo";} else { echo "asset3_comm_newpo"; }?>?pono=' + pono + '&act=addnew' + '&tag=' + tag , 'Location', winProp);
+	Win.window.focus();
+	}
+	
+function fCallLocatioa(pono,tag)
+	{
+		setTimeout(function() {
+			var url		=	'<?php echo base_url ('index.php/ajaxproc') ?>?option=pono&pono='+pono+'&tag='+tag;
+	 		document.getElementById('spcomma'+tag).innerHTML = '';
+			$('#spcomma'+tag).load(url);
+	 		document.getElementById('trcomma'+tag).style.display='block';
+	 		if (tag == 'component') {
+	 		document.getElementById('spcomponent').style.display='none';
+	 		}
+	 		else {
+	 		document.getElementById('spattachment').style.display='none';
+	 		}
+		document.body.style.cursor='default';
+		} ,300);
+ 			
+	}
+	function fCallLocatioe(pono, id, tag)
+	{
+		var url		=	'<?php echo base_url ('index.php/Procurement/asset3_comm_newpo') ?>?pono='+pono+'&id='+id+'&act=update'+'&tag='+tag;
+ 		//document.getElementById('spcomma').innerHTML = '';
+		//$('#spcomma').load(url);
+ 		///document.getElementById('trcomma').style.display='block';
+		//document.body.style.cursor='default';
+		winProp = 'width=450,height=270,left=' + ((screen.width - 600) / 2) +',top=' + ((screen.height - 400) / 2) + ',menubar=no, directories=no, location=no, scrollbars=yes, statusbar=no, toolbar=no, resizable=no';
+		Win = window.open(url, 'Location', winProp);
+		Win.window.focus();
+ 			
+	}
+
+	function fCallLocatiod(pono, id, tag)
+	{
+		var url		=	'<?php echo base_url ('index.php/Procurement/asset3_comm_newpo') ?>?pono='+pono+'&id='+id+'&act=delete'+'&tag='+tag;
+ 		//document.getElementById('spcomma').innerHTML = '';
+		//$('#spcomma').load(url);
+ 		///document.getElementById('trcomma').style.display='block';
+		//document.body.style.cursor='default';
+		winProp = 'width=450,height=270,left=' + ((screen.width - 600) / 2) +',top=' + ((screen.height - 400) / 2) + ',menubar=no, directories=no, location=no, scrollbars=yes, statusbar=no, toolbar=no, resizable=no';
+		Win = window.open(url, 'Location', winProp);
+		Win.window.focus();
+ 			
+	}	
+
 </script>
 
 	<?php //echo "lklklkl : " . $this->uri->slash_segment(1). "<br>"; include 'content_jv_popup.php';?>
 </div>
+
 </form>
 
 </body>
