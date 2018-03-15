@@ -159,6 +159,15 @@ class Contentcontroller extends CI_Controller {
 		//echo $url;
 		//exit ();
 			redirect($url, 'refresh');
+	 }elseif (in_array("contentcontroller/PO(main)", $idArray)) {
+	 
+	 //echo "ade";
+	 $url =site_url('Procurement/e_request');
+			 
+		//echo $url;
+		//exit ();
+			redirect($url, 'refresh');
+	 
 	 }
 		 
 		$this ->load->view("head");
@@ -6377,43 +6386,54 @@ class Contentcontroller extends CI_Controller {
 			$data['totalind11pg'] += $rec->v_IndicatorNo11;
 
 			foreach ($data['acgparam'] as $acg){
+			
 				if ($acg->v_IndicatorNo == 1){
-					$data['totalparam1pg'] += $rec->v_IndicatorNo1 * ($acg->n_Revenue / $acg->v_Paramval);
+				   if ($acg->v_Paramval != 0) {
+					$data['totalparam1pg'] += $rec->v_IndicatorNo1 * ($acg->n_Revenue / $acg->v_Paramval); } 
 				}
 				if ($acg->v_IndicatorNo == 2){
-					$data['totalparam2pg'] += $rec->v_IndicatorNo2 * ($acg->n_Revenue / $acg->v_Paramval);
+				   if ($acg->v_Paramval != 0) {
+					$data['totalparam2pg'] += $rec->v_IndicatorNo2 * ($acg->n_Revenue / $acg->v_Paramval); }
 				}
 				if ($acg->v_IndicatorNo == 3){
-					$data['totalparam3pg'] += $rec->v_IndicatorNo3 * ($acg->n_Revenue / $acg->v_Paramval);
+					 if ($acg->v_Paramval != 0) {
+					$data['totalparam3pg'] += $rec->v_IndicatorNo3 * ($acg->n_Revenue / $acg->v_Paramval); }
 				}
 				if ($acg->v_IndicatorNo == 4){
-					$data['totalparam4pg'] += $rec->v_IndicatorNo4 * ($acg->n_Revenue / $acg->v_Paramval);
+					 if ($acg->v_Paramval != 0) {
+					$data['totalparam4pg'] += $rec->v_IndicatorNo4 * ($acg->n_Revenue / $acg->v_Paramval); }
 				}
 				if ($acg->v_IndicatorNo == 5){
-					$data['totalparam5pg'] += $rec->v_IndicatorNo5 * ($acg->n_Revenue / $acg->v_Paramval);
+					 if ($acg->v_Paramval != 0) {
+					$data['totalparam5pg'] += $rec->v_IndicatorNo5 * ($acg->n_Revenue / $acg->v_Paramval); }
 				}
 				if ($acg->v_IndicatorNo == 6){
-					$data['totalparam6pg'] += $rec->v_IndicatorNo6 * ($acg->n_Revenue / $acg->v_Paramval);
+					 if ($acg->v_Paramval != 0) {
+					$data['totalparam6pg'] += $rec->v_IndicatorNo6 * ($acg->n_Revenue / $acg->v_Paramval); }
 				}
 				if ($acg->v_IndicatorNo == 7){
-					$data['totalparam7pg'] += $rec->v_IndicatorNo7 * ($acg->n_Revenue / $acg->v_Paramval);
+					 if ($acg->v_Paramval != 0) {
+					$data['totalparam7pg'] += $rec->v_IndicatorNo7 * ($acg->n_Revenue / $acg->v_Paramval); }
 				}
 				if ($acg->v_IndicatorNo == 8){
-					$data['totalparam8pg'] += $rec->v_IndicatorNo8 * ($acg->n_Revenue / $acg->v_Paramval);
+					 if ($acg->v_Paramval != 0) {
+					$data['totalparam8pg'] += $rec->v_IndicatorNo8 * ($acg->n_Revenue / $acg->v_Paramval); }
 				}
 				if ($acg->v_IndicatorNo == 9){
-					$data['totalparam9pg'] += $rec->v_IndicatorNo9 * ($acg->n_Revenue / $acg->v_Paramval);
+					 if ($acg->v_Paramval != 0) {
+					$data['totalparam9pg'] += $rec->v_IndicatorNo9 * ($acg->n_Revenue / $acg->v_Paramval); }
 				}
 				if ($acg->v_IndicatorNo == 10){
-					$data['totalparam10pg'] += $rec->v_IndicatorNo10 * ($acg->n_Revenue / $acg->v_Paramval);
+					 if ($acg->v_Paramval != 0) {
+					$data['totalparam10pg'] += $rec->v_IndicatorNo10 * ($acg->n_Revenue / $acg->v_Paramval); }
 				}
 				if ($acg->v_IndicatorNo == 11){
-					$data['totalparam11pg'] += $rec->v_IndicatorNo11 * ($acg->n_Revenue / $acg->v_Paramval);
+					 if ($acg->v_Paramval != 0) {
+					$data['totalparam11pg'] += $rec->v_IndicatorNo11 * ($acg->n_Revenue / $acg->v_Paramval); }
 				}
 			}
 		}
-//echo $data['totalparam1pg'];
-//exit();
+
 		$data['totalindpg'] = array(1 => $data['totalind1pg'],
 									2 => $data['totalind2pg'],
 									3 => $data['totalind3pg'],
@@ -6477,37 +6497,48 @@ class Contentcontroller extends CI_Controller {
 
 			foreach ($data['acgparam'] as $acg){
 				if ($acg->v_IndicatorNo == 1){
-					$data['totalparam1t'] += $rect->v_IndicatorNo1 * ($acg->n_Revenue / $acg->v_Paramval);
+					 if ($acg->v_Paramval != 0) {
+					$data['totalparam1t'] += $rect->v_IndicatorNo1 * ($acg->n_Revenue / $acg->v_Paramval); }
 				}
 				if ($acg->v_IndicatorNo == 2){
-					$data['totalparam2t'] += $rect->v_IndicatorNo2 * ($acg->n_Revenue / $acg->v_Paramval);
+					 if ($acg->v_Paramval != 0) {
+					$data['totalparam2t'] += $rect->v_IndicatorNo2 * ($acg->n_Revenue / $acg->v_Paramval); }
 				}
 				if ($acg->v_IndicatorNo == 3){
-					$data['totalparam3t'] += $rect->v_IndicatorNo3 * ($acg->n_Revenue / $acg->v_Paramval);
+					 if ($acg->v_Paramval != 0) {
+					$data['totalparam3t'] += $rect->v_IndicatorNo3 * ($acg->n_Revenue / $acg->v_Paramval); }
 				}
 				if ($acg->v_IndicatorNo == 4){
-					$data['totalparam4t'] += $rect->v_IndicatorNo4 * ($acg->n_Revenue / $acg->v_Paramval);
+					 if ($acg->v_Paramval != 0) {
+					$data['totalparam4t'] += $rect->v_IndicatorNo4 * ($acg->n_Revenue / $acg->v_Paramval); }
 				}
 				if ($acg->v_IndicatorNo == 5){
-					$data['totalparam5t'] += $rect->v_IndicatorNo5 * ($acg->n_Revenue / $acg->v_Paramval);
+					 if ($acg->v_Paramval != 0) {
+					$data['totalparam5t'] += $rect->v_IndicatorNo5 * ($acg->n_Revenue / $acg->v_Paramval); }
 				}
 				if ($acg->v_IndicatorNo == 6){
-					$data['totalparam6t'] += $rect->v_IndicatorNo6 * ($acg->n_Revenue / $acg->v_Paramval);
+					 if ($acg->v_Paramval != 0) {
+					$data['totalparam6t'] += $rect->v_IndicatorNo6 * ($acg->n_Revenue / $acg->v_Paramval); }
 				}
 				if ($acg->v_IndicatorNo == 7){
-					$data['totalparam7t'] += $rect->v_IndicatorNo7 * ($acg->n_Revenue / $acg->v_Paramval);
+					 if ($acg->v_Paramval != 0) {
+					$data['totalparam7t'] += $rect->v_IndicatorNo7 * ($acg->n_Revenue / $acg->v_Paramval); }
 				}
 				if ($acg->v_IndicatorNo == 8){
-					$data['totalparam8t'] += $rect->v_IndicatorNo8 * ($acg->n_Revenue / $acg->v_Paramval);
+					 if ($acg->v_Paramval != 0) {
+					$data['totalparam8t'] += $rect->v_IndicatorNo8 * ($acg->n_Revenue / $acg->v_Paramval); }
 				}
 				if ($acg->v_IndicatorNo == 9){
-					$data['totalparam9t'] += $rect->v_IndicatorNo9 * ($acg->n_Revenue / $acg->v_Paramval);
+					 if ($acg->v_Paramval != 0) {
+					$data['totalparam9t'] += $rect->v_IndicatorNo9 * ($acg->n_Revenue / $acg->v_Paramval); }
 				}
 				if ($acg->v_IndicatorNo == 10){
-					$data['totalparam10t'] += $rect->v_IndicatorNo10 * ($acg->n_Revenue / $acg->v_Paramval);
+					 if ($acg->v_Paramval != 0) {
+					$data['totalparam10t'] += $rect->v_IndicatorNo10 * ($acg->n_Revenue / $acg->v_Paramval); }
 				}
 				if ($acg->v_IndicatorNo == 11){
-					$data['totalparam11t'] += $rect->v_IndicatorNo11 * ($acg->n_Revenue / $acg->v_Paramval);
+					 if ($acg->v_Paramval != 0) {
+					$data['totalparam11t'] += $rect->v_IndicatorNo11 * ($acg->n_Revenue / $acg->v_Paramval); }
 				}
 			}
 		}
@@ -7453,6 +7484,19 @@ public function visitjclosed(){
 		$this ->load->view("headprinter");
 		$this ->load->view("content_D_Assessement", $data);
 	}	
+		public function D_Mapping(){
+	    $data['month'] = ($this->input->get('mth') <> "") ? sprintf("%02d", $this->input->get('mth')) : date("m");
+		$data['year'] = ($this->input->get('yr') <> "") ? $this->input->get('yr') : date("Y");
+		$data['service'] = ($this->input->get('sev') <> "") ? $this->input->get('sev') : "BES";
+		
+		$this->load->model('display_model');
+		//$data['acgparam'] = $this->display_model->acgparam($data['service'],$data['month'],$data['year']);
+	   $data['keyindlist'] = $this->display_model->keyindlist($data['service']);
+		$data['deductmap'] = $this->display_model->deductmap($data['service'],$data['month'],$data['year']);
+
+		$this ->load->view("headprinter");
+		$this ->load->view("content_D_Mapping", $data);
+	}	
 	public function report_Incidences_Summary(){
 	
 	  $this->load->model("display_model");
@@ -7808,7 +7852,6 @@ public function pop_fail(){
         }
 				
 	public function report_fdreport(){
-
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
 		$data['date']= ($this->input->get('jobdate') <> 0) ? $this->input->get('jobdate') : date("d-m-Y");
@@ -7820,14 +7863,8 @@ public function pop_fail(){
 			$year = date("Y",strtotime("-1 month",strtotime($data['date'])));
 		}
 		$this->load->model('display_model');
-		$data['record'] = $this->display_model->fdreport(date("Y-m-d",strtotime($data['date'])));	
-	    $data['recoutstanding'] = $this->display_model->recoutstanding($month,$year);
- /*            foreach ($data['record'] as $k => $v){
-		print "<pre>";
-		print_r(
-		 $v
-		);
-		} */
+		$data['record'] = $this->display_model->fdreport(date("Y-m-d",strtotime($data['date'])));
+		$data['recoutstanding'] = $this->display_model->recoutstanding($month,$year);
 		$data['recppm'] = $this->display_model->recppm($month,$year);
 		$data['reccompday'] = $this->display_model->reccompday(date("Y-m-d",strtotime($data['date'])));
 		$data['fdr_mi'] = $this->display_model->fdr_mi(date("Y-m-d",strtotime($data['date'])));
@@ -7852,7 +7889,6 @@ public function pop_fail(){
 		$this ->load->view("content_report_fdreport_pdf",$data);
 		}else{
 		$this ->load->view("content_report_fdreport",$data);
-		
 		}		
 	}
 	
@@ -7881,7 +7917,7 @@ public function pop_fail(){
 		//$data['complntsum'] = $this->display_model->sumcomplnt($data['month'],$data['year']);
 		
 
-                if ($this->session->userdata('usersess') == 'FES') {
+        if ($this->session->userdata('usersess') == 'FES') {
 		$data['rqcivil'] = $this->display_model->sumrq_y($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'),"IIUM C");
 		$data['rqmech'] = $this->display_model->sumrq_y($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'),"IIUM M");
 		$data['rqelec'] = $this->display_model->sumrq_y($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'),"IIUM E");
@@ -7902,8 +7938,8 @@ public function pop_fail(){
 	  	$this->load->model("display_model");
 		$data['records'] = $this->display_model->list_hospinfo();
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
-		//$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
-		$data['month']= ($data['year'] == date('Y')) ? date("m") : 11;
+		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
+		//$data['month']= ($data['year'] == date('Y')) ? date("m") : 11;
 		$data['reqtype']= $this->input->get('req') ? $this->input->get('req') : 'A1';
 		$data['grpsel']= $this->input->get('grp') ? $this->input->get('grp') : '';
 		$data['record'] = $this->display_model->rpt_volu_y($data['month'],$data['year'],$this->input->get('stat'),$data['reqtype'],$this->input->get('broughtfwd'),$data['grpsel'],$pilape);
