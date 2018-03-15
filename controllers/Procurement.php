@@ -81,7 +81,7 @@ class Procurement extends CI_Controller {
 			}
 
 			if ($_FILES){
-				$config['upload_path']          = 'C:/xampp/htdocs/fms/uploadmrinfiles';
+				$config['upload_path']          = 'C:\inetpub\wwwroot\FEMSHospital_v3\uploadmrinfiles';
 				//$config['upload_path']          = '/var/www/vhosts/camsis2.advancepact.com/httpdocs/uploadmrinfiles';
 	            $config['allowed_types']        = 'jpg|jpeg|gif|tif|png|doc|docx|xls|xlsx|pdf';
 	            $config['max_size']             = '1000';
@@ -235,10 +235,10 @@ class Procurement extends CI_Controller {
 					$new_name = 'attach_'.$data['attc_details'][0]->Attachment_no.'.'.$ext[1];
 				}
 				if ($this->input->get('tag') == 'component'){
-	            	$config['upload_path']          = 'C:/xampp/htdocs/fms/uploadpofiles';
+	            	$config['upload_path']          = 'C:\inetpub\wwwroot\FEMSHospital_v3\uploadpofiles';
 	            }
 				else{
-					$config['upload_path']          = 'C:/xampp/htdocs/fms/uploadfinfiles';
+					$config['upload_path']          = 'C:\inetpub\wwwroot\FEMSHospital_v3\uploadfinfiles';
 				}
 
 				$config['file_name'] = $new_name;

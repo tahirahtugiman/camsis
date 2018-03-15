@@ -289,7 +289,8 @@
 								$parameter = isset($acg->v_Paramval) ? $acg->v_Paramval : 0;
 								$revenue = isset($acg->n_Revenue) ? $acg->n_Revenue : 0;
 
-								$tind = $indicno * ($revenue / $parameter);
+								if ($parameter != 0) {				 
+								$tind = $indicno * ($revenue / $parameter); } else {$tind=0;}
 								?>
 
 								<input type="text" id="<?=isset($row->V_Request_no) ? $row->V_Request_no : ''?>cdm<?=$num?>_disableMe2" name="cdm<?=$num?>_disableMe2" value="<?=number_format($tind,2)?>" class="responsem" size="9" readonly />

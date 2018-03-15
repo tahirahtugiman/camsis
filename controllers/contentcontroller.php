@@ -7484,7 +7484,8 @@ public function visitjclosed(){
 		$this ->load->view("headprinter");
 		$this ->load->view("content_D_Assessement", $data);
 	}	
-		public function D_Mapping(){
+	
+	public function D_Mapping(){
 	    $data['month'] = ($this->input->get('mth') <> "") ? sprintf("%02d", $this->input->get('mth')) : date("m");
 		$data['year'] = ($this->input->get('yr') <> "") ? $this->input->get('yr') : date("Y");
 		$data['service'] = ($this->input->get('sev') <> "") ? $this->input->get('sev') : "BES";
@@ -7497,6 +7498,7 @@ public function visitjclosed(){
 		$this ->load->view("headprinter");
 		$this ->load->view("content_D_Mapping", $data);
 	}	
+	
 	public function report_Incidences_Summary(){
 	
 	  $this->load->model("display_model");
@@ -7917,7 +7919,7 @@ public function pop_fail(){
 		//$data['complntsum'] = $this->display_model->sumcomplnt($data['month'],$data['year']);
 		
 
-        if ($this->session->userdata('usersess') == 'FES') {
+                if ($this->session->userdata('usersess') == 'FES') {
 		$data['rqcivil'] = $this->display_model->sumrq_y($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'),"IIUM C");
 		$data['rqmech'] = $this->display_model->sumrq_y($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'),"IIUM M");
 		$data['rqelec'] = $this->display_model->sumrq_y($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'),"IIUM E");

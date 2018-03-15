@@ -37,6 +37,8 @@ $("#date0,#date1,#date2,#date3,#date4,#date5,#date6,#date7,#date8,#date9,#date10
 			block;
 		}
 	@page {	margin:0.5cm 0.5cm 0.5cm 0.5cm; }
+
+
 	a{text-decoration: none;}
 	div.page {	position:absolute;
 				margin:6% 1% 0% 1%;
@@ -71,9 +73,11 @@ $("#date0,#date1,#date2,#date3,#date4,#date5,#date6,#date7,#date8,#date9,#date10
 }
   table.tbl-wo tr .ui-td-size{
    width: 43.6%;
+  
 }
   table.tbl-wo tr .ui-td-size2{
    width: 50%;
+
 }
 table.tbl-wo tr .td-solid3{
   border-bottom:1px solid black;
@@ -159,7 +163,7 @@ table.tbl-wo-vff tr td b{
 	font-size: 12px;
 }
 table.tablevvf {font-size: 10px;}
-	table.tftable th {font-size:8px; padding:1px;}
+	table.tftable th {font-size:1px; padding:4px;}
 	table {	border-collapse: collapse;
 			border-spacing:0px;	}
 	table.tftable td  { 	font-size:8px;  padding:1px; word-wrap: break-word;
@@ -167,8 +171,23 @@ table.tablevvf {font-size: 10px;}
 			margin-left:0px;
 			margin-right:0px;
 			margin-top:0px;
-			}		
-						
+			
+			}
+		
+ table#adtable td  { 	font-size:12px;  padding:1px; word-wrap: break-word;
+			margin-bottom:0px;
+			margin-left:0px;
+			margin-right:0px;
+			margin-top:0px;
+			height: 35px;
+			}
+			
+ table#tblwo td  { 	font-size:10px;  padding:1px; word-wrap: break-word;		
+			}
+			
+table#adtable th {font-size:11px; padding:4px;}
+
+			
 	.tb-class{
 		height: 10px;
 	}
