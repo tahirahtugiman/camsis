@@ -7484,6 +7484,21 @@ public function visitjclosed(){
 		$this ->load->view("headprinter");
 		$this ->load->view("content_D_Assessement", $data);
 	}	
+	
+	public function D_Mapping(){
+	    $data['month'] = ($this->input->get('mth') <> "") ? sprintf("%02d", $this->input->get('mth')) : date("m");
+		$data['year'] = ($this->input->get('yr') <> "") ? $this->input->get('yr') : date("Y");
+		$data['service'] = ($this->input->get('sev') <> "") ? $this->input->get('sev') : "BES";
+		
+		$this->load->model('display_model');
+		//$data['acgparam'] = $this->display_model->acgparam($data['service'],$data['month'],$data['year']);
+	   $data['keyindlist'] = $this->display_model->keyindlist($data['service']);
+		$data['deductmap'] = $this->display_model->deductmap($data['service'],$data['month'],$data['year']);
+
+		$this ->load->view("headprinter");
+		$this ->load->view("content_D_Mapping", $data);
+	}	
+	
 	public function report_Incidences_Summary(){
 	
 	  $this->load->model("display_model");

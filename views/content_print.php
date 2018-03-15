@@ -77,6 +77,16 @@ if ( 'contentcontroller/acg_report/' == $this->uri->slash_segment(1) .$this->uri
 	echo"</span>";
 	}
 }
+if ( 'contentcontroller/acg_report/' == $this->uri->slash_segment(1) .$this->uri->slash_segment(2)){
+	 if ($this->input->get('tabIndex') == 2){
+	echo "<span style='float:; padding-left:3px;'>";
+	$serv = isset($_REQUEST['n_base']) ? $_REQUEST['n_base'] : "";
+	$mon = isset($_REQUEST['fromMonth']) ? $_REQUEST['fromMonth'] : "";
+	$year = isset($_REQUEST['fromYear']) ? $_REQUEST['fromYear'] : "";
+	echo anchor ("contentcontroller/D_Mapping?sev=". $serv ."&mth=".$mon."&yr=".$year, '<button class="btn-button btn-primary-button" style="width:97%; height:33px;">Print Deduction Mapping <span class="icon-printer" style="float:right; margin-top:-4px; margin-right:20px; font-size:30px;"></span></button>');
+	echo"</span>";
+	}
+}
 ?>
 
 
