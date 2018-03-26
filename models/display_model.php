@@ -720,6 +720,80 @@ ORDER BY r.D_date, r.D_time
 			return $query_result;
 		}
 		
+		
+		
+				function dmapping2($month,$year,$service,$reqstatus){
+	if ($reqstatus == 1) {
+			$this->db->select("r.D_date,r.V_Request_no, g.V_Tag_no, r.V_summary, r.V_Location_code, r.V_requestor, r.V_request_status, r.v_closeddate, DATEDIFF(IFNULL(r.v_closeddate,'".$this->dater(3,$month,$year)."'),r.D_date) + 1 AS DiffDate ,jr.v_ActionTaken ,h.v_Location_Name, a.v_VCM_Remarks", false);
+			
+            //$this->db->select("g.V_Asset_name, e.v_location_name, r.v_location_code, r.V_hospitalcode, r.closedby, r.D_date, r.D_time, r.V_Request_no, r.V_Asset_no, r.V_summary AS ReqSummary, r.V_User_dept_code, r.V_requestor, r.V_request_status, r.v_closeddate, r.v_closedtime, w.V_Wrn_end_code, a.v_summary, g.v_tag_no, d.v_UserDeptDesc, DATEDIFF(IFNULL(r.v_closeddate,'".$this->dater(3,$month,$year)."'),r.D_date) + 1 AS DiffDate,r.V_request_type,g.v_asset_grp,jr.d_Date,jr.v_Time,jr.v_Personal1,jr.v_ActionTaken,g.V_Asset_WG_code, IFNULL(dt.ori_wo,'none') AS linker", false);
+
+			$this->db->from('pmis2_egm_service_request r');
+	         $this->db->join('acg_apb_prevcmv2 a','r.V_Request_no = a.v_requestno','left outer');//betul/
+			 $this->db->join('pmis2_egm_assetregistration g','r.v_Asset_no = g.V_Asset_no', 'left outer');
+			 $this->db->join('pmis2_egm_assetlocation h','h.V_location_code = r.V_Location_code AND h.V_Hospitalcode = r.V_hospitalcode AND h.V_Actionflag = r.V_actionflag', 'left outer');
+			$this->db->join('pmis2_emg_jobresponse jr',"r.V_Request_no = jr.v_WrkOrdNo",'left outer');
+		
+			$this->db->where('r.V_servicecode', $service);
+
+			$this->db->where('r.V_actionflag <> ', 'D');
+			$this->db->where('r.V_request_status = ', 'C');
+	         	$this->db->where('a.v_Month',(string)(int)$month);
+			$this->db->where('a.v_Year',$year);
+			
+			
+			//$this->db->where('r.d_date >=', $this->dater(1,$month,$year));
+			//$this->db->where('r.d_date <=', $this->dater(2,$month,$year).'  23:59:59');
+
+            $this->db->order_by("r.d_date,r.V_Asset_no");
+			$this->db->where('r.V_hospitalcode',$this->session->userdata('hosp_code'));
+		
+
+ 
+		} else if ($reqstatus == 2) {
+            
+			$this->db->select("a.d_StartDt,a.v_WrkOrdNo, a.v_Asset_no,a.v_Remarks AS V_summary,b.V_Location_code,jv.v_Personal1,a.v_Wrkordstatus,DATEDIFF(IFNULL(a.v_closeddate,'".$this->dater(3,$month,$year)."'),a.d_StartDt) + 1 AS DiffDate,jv.v_ActionTaken,c.v_Location_Name,a.v_closeddate,d.v_VCM_Remarks", false);			
+            $this->db->from('pmis2_egm_schconfirmmon a');	
+			$this->db->join('pmis2_egm_assetregistration b','a.v_Asset_no = b.V_Asset_no AND a.v_HospitalCode = b.V_Hospitalcode AND b.V_Actionflag = a.v_Actionflag','left');
+	        $this->db->join('pmis2_emg_jobvisit1 jv','a.v_WrkOrdNo = jv.v_WrkOrdNo AND jv.v_Actionflag = a.v_Actionflag','left');
+			$this->db->join('pmis2_egm_assetlocation c','b.V_location_code = c.V_Location_code AND c.V_Hospitalcode = a.v_HospitalCode AND c.V_Actionflag = a.v_Actionflag', 'left outer');
+			$this->db->join('acg_apb_prevcmv2 d','d.v_requestno = a.v_WrkOrdNo', 'left outer');
+		
+
+			$this->db->where('a.v_Actionflag <> ', 'D');
+			$this->db->where('a.v_Wrkordstatus = ', 'C');
+	         	$this->db->where('a.v_Month',(string)(int)$month);
+			$this->db->where('a.v_year',$year);
+			
+
+            $this->db->order_by("a.d_StartDt,a.v_WrkOrdNo");
+			$this->db->where('a.v_HospitalCode',$this->session->userdata('hosp_code'));
+
+		//exit();
+		}
+		
+           if (!function_exists('toArray')) {
+			function toArray($obj)
+			{
+    	$obj = (array) $obj;//cast to array, optional
+    	return $obj['path'];
+			}
+                        }
+			$idArray = array_map('toArray', $this->session->userdata('accessr'));
+			if ((in_array("contentcontroller/Schedule(main)", $idArray)) && (in_array("useriium", $idArray))) {
+			$this->db->where('r.V_request_type <> ', 'A9');
+	 		}
+			
+			$query = $this->db->get();
+			//echo $this->db->last_query();
+			//exit();
+			$query_result = $query->result();
+				//echo  $this->db->last_query();
+			return $query_result;
+						
+			
+		}
+		
 		function rpt_volil($month,$year,$pilih='',$grpsel){
 		/*
 		SELECT     r.V_hospitalcode, r.closedby, r.D_date, r.D_time, r.V_Request_no, r.V_Asset_no, r.V_summary AS ReqSummary, r.V_User_dept_code, r.V_requestor, 
@@ -812,6 +886,7 @@ ORDER BY r.D_date, r.D_time
 		}
 		
 		function rpt_vols($month, $year, $stat = "apo2", $resch = "resch",$grpsel, $bystak=""){
+
 		/*
 		SELECT     s.v_WrkOrdNo AS sv_wrkordno, s.v_Asset_no AS sv_asset_no, s.v_Month AS sv_month, s.v_HospitalCode AS sv_hospitalcode, 
                       s.d_DueDt AS sd_duedt, s.v_jobtype AS sv_jobtype, s.v_year AS sv_year, s.v_ServiceCode AS sv_servicecode, a.V_Tag_no AS av_tag_no, 
@@ -2918,6 +2993,22 @@ function rpt_rsls2($month,$year, $stat = "apo2",$expiring,$grpsel){
 			$this->db->select('a.*,r.D_date,r.V_summary,r.V_Asset_no,r.V_User_dept_code,r.v_closeddate,');
 			$this->db->from('acg_apb_prevcmv2 a');
 			$this->db->join('pmis2_egm_service_request r','a.v_requestno = r.V_Request_no');
+			$this->db->where('a.v_ServiceCode',$serv_code);
+			$this->db->where('a.v_Month',(string)(int)$month);
+			$this->db->where('a.v_Year',$year);
+			$query = $this->db->get();
+			//echo $this->db->last_query();
+			//exit();
+			return $query->result();
+		}
+		
+			function deductmap_sh($serv_code,$month,$year){
+			$this->db->select('a.*,b.d_StartDt,b.v_Remarks,b.v_Asset_no,b.v_closeddate,c.V_User_Dept_code, c.V_Location_code,e.v_summary,b.v_closeddate');
+			$this->db->from('acg_apb_prevcmv2 a');	
+			$this->db->join('pmis2_egm_schconfirmmon b','b.v_WrkOrdNo = a.v_requestno');
+	        $this->db->join('pmis2_egm_assetregistration c','b.v_Asset_no = c.V_Asset_no AND b.v_HospitalCode = c.V_Hospitalcode');
+			$this->db->join('pmis2_sa_userdept d',"c.V_User_Dept_code = d.v_UserDeptCode AND d.v_actionflag = b.v_Actionflag",'left');
+			$this->db->join('pmis2_egm_jobdonedet e',"e.v_Wrkordno = b.v_WrkOrdNo AND e.v_HospitalCode = b.v_HospitalCode AND e.v_actionflag = c.v_Actionflag", 'left outer');
 			$this->db->where('a.v_ServiceCode',$serv_code);
 			$this->db->where('a.v_Month',(string)(int)$month);
 			$this->db->where('a.v_Year',$year);
