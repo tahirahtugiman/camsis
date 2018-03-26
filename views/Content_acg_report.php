@@ -1,9 +1,15 @@
+
 <div class="ui-middle-screen">
 	<?php if( $this->input->get('ag') == '1'){?>
 	<?php }else{ ?>
 	<?php include 'content_menu_acg.php';?>
-	<?php } ?>
+	<?php }
+
+// echo "<p style='color:black';background-color:black;>". $this->db->last_query(). "</p>";	
+
+	?>
 	<div class="content-workorder">
+
 		<div Class="main-cs">
 			<div Class="form-cs">
 			<span style="color:red;"><?php echo validation_errors(); ?>
@@ -180,6 +186,7 @@
 						</tr>
 					</table>
 				<?php }elseif($this->input->get('tabIndex') == '2'){ ?>
+					
 					<table class="tbl-mcg">
 						<tr>
 						<form action="" method="POST" name="myform">
@@ -187,8 +194,9 @@
 								$deduction = array(
 								'1' => 'Unscheduled WO',
 								'2' => 'Scheduled WO',
-								'3' => 'Complaint',
-								'4' => 'Other activities',);
+								//'3' => 'Complaint',
+								//'4' => 'Other activities',
+								);
 							?>
 							<?php echo form_dropdown('deductiont', $deduction, set_value('deductiont') , 'id="service_code" onchange="javascript: submit()"'); ?> <br />
 							HOSPITAL : IIUM MEDICAL CENTRE PAHANG <span align="right" style="float:right;">DATE : <?=date('F', mktime(0, 0, 0, $fmonth, 10))?> <?=$fyear?></span>
@@ -212,13 +220,15 @@
 							<?php } ?>
 						</tr>
 						<?php $rnum = 1;foreach ($deductmap as $dm): ?>
-						<tr class="even">
-							<td align="center"><?=$rnum++?></td>
+					
+						    <tr class="even">
+							<?php if($t==1){ ?>
+						   	<td align="center"><?=$rnum++?></td>
 							<td align="center"><?=isset($dm->D_date) ? date('d M Y',strtotime($dm->D_date)) : '' ?></td>
 							<td align="center" style="color:blue;"><?=isset($dm->v_requestno) ? $dm->v_requestno : ''?> </td>
 							<td align="center"><?=isset($dm->V_summary) ? $dm->V_summary : ''?></td>
 							<td align="center"><?=isset($dm->V_Asset_no) ? $dm->V_Asset_no : ''?></td>
-							<td align="center"><?=isset($dm->V_User_dept_code) ? $dm->V_User_dept_code : ''?></td>
+							 <td align="center"><?=isset($dm->V_User_dept_code) ? $dm->V_User_dept_code : ''?></td>	
 							<?php for ($ind = 1;$ind <= count($keyindlist); $ind++) { ?>
 							<?php $indnom = 'v_IndicatorNo'.$ind; ?>
 							<td align="center"><?=isset($dm->$indnom) ? $dm->$indnom : ''?></td>
@@ -261,7 +271,61 @@
 
 							?>
 							<td align="center"><?=$destat?></td>
-							<td align="center"><?=isset($dm->v_VCM_Remarks) ? $dm->v_VCM_Remarks : ''?></td>
+							<td align="center"><?=isset($dm->v_VCM_Remarks) ? $dm->v_VCM_Remarks : ''?></td>		
+							
+							<?php }else { ?>
+							
+							
+						  	<td align="center"><?=$rnum++?></td>
+							<td align="center"><?=isset($dm->d_StartDt) ? date('d M Y',strtotime($dm->d_StartDt)) : '' ?></td>
+							<td align="center" style="color:blue;"><?=isset($dm->v_requestno) ? $dm->v_requestno : ''?> </td>
+							<td align="center"><?=isset($dm->v_summary) ? $dm->v_summary : ''?></td>
+							<td align="center"><?=isset($dm->v_Asset_no) ? $dm->v_Asset_no : ''?></td>
+							 <td align="center"><?=isset($dm->V_User_Dept_code) ? $dm->V_User_Dept_code : ''?></td>		
+							<?php for ($ind = 1;$ind <= count($keyindlist); $ind++) { ?>
+							<?php $indnom = 'v_IndicatorNo'.$ind; ?>
+							<td align="center"><?=isset($dm->$indnom) ? $dm->$indnom : ''?></td>
+							<?php } ?>
+							<!--<td align="center"><?=isset($dm->v_IndicatorNo1) ? $dm->v_IndicatorNo1 : ''?></td>
+							<td align="center"><?=isset($dm->v_IndicatorNo2) ? $dm->v_IndicatorNo2 : ''?></td>
+							<td align="center"><?=isset($dm->v_IndicatorNo3) ? $dm->v_IndicatorNo3 : ''?></td>
+							<td align="center"><?=isset($dm->v_IndicatorNo4) ? $dm->v_IndicatorNo4 : ''?></td>
+							<td align="center"><?=isset($dm->v_IndicatorNo5) ? $dm->v_IndicatorNo5 : ''?></td>
+							<td align="center"><?=isset($dm->v_IndicatorNo6) ? $dm->v_IndicatorNo6 : ''?></td>
+							<td align="center"><?=isset($dm->v_IndicatorNo7) ? $dm->v_IndicatorNo7 : ''?></td>
+							<td align="center"><?=isset($dm->v_IndicatorNo8) ? $dm->v_IndicatorNo8 : ''?></td>
+							<td align="center"><?=isset($dm->v_IndicatorNo9) ? $dm->v_IndicatorNo9 : ''?></td>
+							<td align="center"><?=isset($dm->v_IndicatorNo10) ? $dm->v_IndicatorNo10 : ''?></td>
+							<td align="center"><?=isset($dm->v_IndicatorNo11) ? $dm->v_IndicatorNo11 : ''?></td>-->
+							
+							<td align="center"><?=isset($dm->v_closeddate) ? date('d M Y',strtotime($dm->v_closeddate)) : '' ?></td>
+							<?php
+							$status = isset($dm->v_Status) ? $dm->v_Status : '';
+
+							switch ($status) {
+								case "1":
+							        $destat = "Agreed";
+							        break;
+							    case "2":
+							        $destat = "Disputed";
+							        break;
+							    case "3":
+							        $destat = "Valid & Closed";
+							        break;
+							    case "4":
+							        $destat = "Not Valid & Closed";
+							        break;
+							    case "5":
+							        $destat = "Validated but Disputed";
+							        break;
+							    default:
+							        $destat = "";
+							}
+
+							?>
+							<td align="center"><?=$destat?></td>
+							<td align="center"><?=isset($dm->v_VCM_Remarks) ? $dm->v_VCM_Remarks : ''?></td>	
+							<?php } ?>
 						</tr>
 						<?php endforeach; ?>
 						<!--<tr class="mark">
