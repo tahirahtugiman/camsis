@@ -1,12 +1,25 @@
-<body>
+<?php 
+if ($this->input->get('ex') == 'excel'){
+$filename ="Deduction Mapping Report - ".date('F', mktime(0, 0, 0, $month, 10)) .$year.".xls";
+header('Content-type: application/ms-excel');
+header('Content-Disposition: attachment; filename='.$filename);
+}
+?>
+
+
+<body><?php if ($this->input->get('ex') == ''){?>
 	<div id="Instruction" class="pr-printer">
 		<div class="header-pr" style="text-transform:uppercase;">Deduction Mapping Report</div>
 		<button onclick="javascript:myFunction('D_Mapping?sev=<?=$this->input->get('sev')?>&mth=<?=$this->input->get('mth')?>&yr=<?=$this->input->get('yr')?>');" class="btn-button btn-primary-button">PRINT</button>
 		<button type="cancel" class="btn-button btn-primary-button" onclick="location.href = '<?php base_url();?>acg_report?tabIndex=1';">CANCEL</button>
-	</div>
+		<?php if (($this->input->get('ex') == '') or ($this->input->get('none') == '')){?>
+	<a href="<?php echo base_url();?>index.php/contentcontroller/D_Mapping?sev=<?=$this->input->get('sev')?>&mth=<?=$this->input->get('mth')?>&yr=<?=$this->input->get('yr')?>&ex=excel&none=close" style="float:right; margin-right:40px;"><img src="<?php echo base_url();?>images/excel.png" style="width:40px; height:38px; position:absolute;" title="export to excel"></a>
+	<a href="<?php echo base_url();?>index.php/contentcontroller/D_Mapping?pdf=1&sev=<?=$this->input->get('sev')?>&mth=<?=$this->input->get('mth')?>&yr=<?=$this->input->get('yr')?>"  style="float:right; margin-right:80px;"><img src="<?php echo base_url();?>images/pdf.png" style="width:38px; height:36px; position:absolute;" title="export to pdf"></a>
+	<?php } ?>
+	</div>	<?php } ?>
 	<div class=Section1> 
-	<div class="">
-		<table class="tbl-wo" >
+	<div class=""><?php if ($this->input->get('ex') == ''){?>
+		<table class="tbl-wo" border="0" style=" margin:10 auto; width:100%;"  align="center" >
 			<tr>
 				<td style="padding-left:0px; width:20%;" align="center"><img src="<?php echo base_url(); ?>images/penmedic2.png" style="width:100px; height:30px;"/></td>
 				<td>
@@ -29,8 +42,8 @@
 			</tr>
 			
 		</table>
-		
-		<table class="tbl-wo" >
+			<?php } ?>
+		<table class="tbl-wo" border="0" >
 			<tr >
 				<td style="width:20%; padding-left:5px;">HOSPITAL  </td>
 				<td style="width:20%; padding-left:5px; text-align:left;"><?=$this->session->userdata('hosp_code')?> </td>
@@ -70,7 +83,7 @@
 						<?php }?>
 			</tr>
 		</table>
-		<table id="adtable" class="tftable tbl-size" border="" style="text-align:center; width:90%; margin:0 auto; background:white;">
+		<table id="adtable" class="tftable tbl-size"  border="1" style="text-align:center; width:90%; margin:0 auto; background:white;">
 		<tr>
 		<th rowspan="2">No</th>
 		<th rowspan="2">Request Date</th>
@@ -143,7 +156,7 @@
 						<?php endforeach; ?>
 		
 	</table>
-	<table id="tblwo" class="tbl-wo"  align="center" style=" margin:10 auto; width:90%;" frame="box" >
+	<table id="tblwo" class="tbl-wo"   border="0" align="center" style=" margin:10 auto; width:90%;" frame="box" >
 			<tr >
 				<td style="width:20%; padding-left:5px;border-right:1px solid black;" colspan="2">Prepared by : AdvancePact Sdn. Bhd.</td>
 				<td style="width:20%; padding-left:5px;border-right:1px solid black;" colspan="2">Checked By : Peninsular Medical Sdn. Bhd.</td>

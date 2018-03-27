@@ -8,15 +8,20 @@
 	['contentcontroller/report_rtlu/', 'TIME RESPONDED'],
 	['contentcontroller/assetnextppm/', 'ASSET NEXT PPM'],
 	['contentcontroller/report_fdreport/', 'Fes Daily Report'],
+    ['contentcontroller/D_Assessement/', 'D Assessement Report'],
+	 ['contentcontroller/D_Mapping/', 'D Mapping Report'],
+    ['contentcontroller/deductmapping_2/', 'D Mapping Deduction 2'],
 	['contentcontroller/report_rsls/', 'Statutory & License Summary'],
 	['contentcontroller/report_a2/', 'A2 Listing'],
 ];
+
 foreach ($array as $list) {
 	if ($list[0] == $this->uri->slash_segment(1) .$this->uri->slash_segment(2)){
     $content = ob_get_contents();
 	ob_end_clean();
-	$obj_pdf->writeHTML($content, true, false, true, false, '');
-	$obj_pdf->Output($list[1]. '('.date('F', mktime(0, 0, 0, $month, 10)).')'.$year.'.pdf' , 'I');
+    $obj_pdf->writeHTML($content, true, false, true, false, '');
+    $obj_pdf->Output($list[1]. '('.date('F', mktime(0, 0, 0, $month, 10)).')'.$year.'.pdf' , 'I');
+	//$obj_pdf->Output("filename.pdf",'D');
 	exit;
 	}
 }

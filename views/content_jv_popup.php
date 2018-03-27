@@ -428,7 +428,7 @@ function searchKeyPress(e)
 	cell5.innerHTML = '<input type="text" name="itemcode4'+rows+'" value="" class="form-control-button2" style=width:100px;">';	
 	cell6.innerHTML = '<INPUT TYPE="text" name="itemcode5'+rows+'" class="form-control-button2" style=width:100px;">';
 	
-	cell7.innerHTML = '<input type="text" name="itemcode6'+rows+'" id="itemcode6'+rows+'" value="" class="form-control-button2" style=width:100px;"><span class="icon-windows" style="display:inline-block; padding-left:5px;" id="itemc'+rows+'" onclick="fCallpricexx(\'n_price'+rows+'\',\'vendor'+rows+'\', this.value)" value=""></span>';
+	cell7.innerHTML = '<input type="text" name="itemcode6'+rows+'" id="itemcode6'+rows+'" value="" class="form-control-button2" style=width:100px;"><!--<span class="icon-windows" style="display:inline-block; padding-left:5px;" id="itemc'+rows+'" onclick="fCallpricexx(\'n_price'+rows+'\',\'vendor'+rows+'\', this.value)" value=""></span>-->';
 	cell8.innerHTML = '<p id="vendor'+rows+'"></p><span class="" style="display:inline-block; padding-left:5px;" id="itemc'+rows+'" onclick="deleteRow(this)" value=""><img class="manImg" src="<?=base_url()?>images/trash-can.jpg" height="42" width="42"></img></span>';
 	
 	

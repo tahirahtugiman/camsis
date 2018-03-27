@@ -83,7 +83,12 @@ if ( 'contentcontroller/acg_report/' == $this->uri->slash_segment(1) .$this->uri
 	$serv = isset($_REQUEST['n_base']) ? $_REQUEST['n_base'] : "";
 	$mon = isset($_REQUEST['fromMonth']) ? $_REQUEST['fromMonth'] : "";
 	$year = isset($_REQUEST['fromYear']) ? $_REQUEST['fromYear'] : "";
+	$reqstatus = isset($_POST['deductiont']) ? $data['t'] = $_POST['deductiont'] : $data['t'] = 1;
+		
 	echo anchor ("contentcontroller/D_Mapping?sev=". $serv ."&mth=".$mon."&yr=".$year, '<button class="btn-button btn-primary-button" style="width:97%; height:33px;">Print Deduction Mapping <span class="icon-printer" style="float:right; margin-top:-4px; margin-right:20px; font-size:30px;"></span></button>');
+	echo"</span>";
+		echo "<div style='height:10px;'></div><span style='float:; padding-left:3px;'>";
+	echo anchor ("contentcontroller/deductmapping_2?sev=". $serv ."&mth=".$mon."&yr=".$year."&reqstatus=".$reqstatus, '<button class="btn-button btn-primary-button" style="width:97%; height:33px;">Deduction Mapping 2 <span class="icon-printer" style="float:right; margin-top:-4px; margin-right:20px; font-size:30px;"></span></button>');
 	echo"</span>";
 	}
 }
