@@ -4,7 +4,7 @@ if ($this->input->get('parent') == 'asset' or 'contentcontroller/assetsearch/' =
 	echo "<form action=".$url = site_url('contentcontroller/assetsearch')." method='post' id='myform'>";
 	echo "<div class='search-form'>";
 	echo "<div class='form-group'>";
-	echo "<input type='text' class='form-control login-field' id='searchquestion' placeholder='Search Assets' name='searchquestion' size='22' style='height:50px;'/>"; 
+	echo "<input type='text' class='form-control login-field' autofocus='autofocus' id='searchquestion' placeholder='Search Assets' name='searchquestion' size='22' style='height:50px;'/>"; 
 	echo "<label class='login-field-icon' for='login-pass' style='margin-top:10px;'><span align='center' class='icon-search' style='color:; margin-left:-35px;' id='mylink'></span></label>";
 	echo "</div>";
 	echo "</div></form>";
@@ -36,6 +36,15 @@ elseif ($this->input->get('ppm') or 'contentcontroller/catalogppm/' == $this->ur
 	echo "</div>";
 	echo "</div></form>";
 }
+elseif ('contentcontroller/Store/' == $this->uri->slash_segment(1) .$this->uri->slash_segment(2)){
+	echo "<form action=".$url = site_url('contentcontroller/Store')." method='post' id='myform'>";
+	echo "<div class='search-form'>";
+	echo "<div class='form-group'>";
+	echo "<input type='text' class='form-control login-field' autofocus='autofocus' id='searchquestion' placeholder='Search Item Catalog' name='searchquestion' size='22' style='height:50px;'/>"; 
+	echo "<label class='login-field-icon' for='login-pass' style='margin-top:10px;'><span align='center' class='icon-search' style='color:; margin-left:-35px;' id='mylink'></span></label>";
+	echo "</div>";
+	echo "</div></form>";
+}
 ?>
 <?php $array = [['contentcontroller/assets/'],
 				['contentcontroller/assetsearch/'],
@@ -44,6 +53,7 @@ elseif ($this->input->get('ppm') or 'contentcontroller/catalogppm/' == $this->ur
 				['contentcontroller/worksearch/'],
 				['contentcontroller/ppmsearch/'],
 				['contentcontroller/catalogppm/'],
+				['contentcontroller/Store/'],
 ]?>
 <?php foreach ($array as $list) {?>
 <?php if($list[0] == $this->uri->slash_segment(1) .$this->uri->slash_segment(2)){?>

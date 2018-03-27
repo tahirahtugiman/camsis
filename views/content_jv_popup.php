@@ -1,6 +1,9 @@
 <?php if ('contentcontroller/sys_admin/' == $this->uri->slash_segment(1) .$this->uri->slash_segment(2)){ ?>
     <?php if ($this->input->get('gbl') == 2){?>
  <script>
+ 
+
+ 
  function fLabour(a)
 		{
 			//var parent = a.getAttribute('value');
@@ -351,6 +354,7 @@ if ($this->uri->slash_segment(1) == 'Procurement/') {
 			Win.window.focus();
 		}
 </script>
+
 <?php }elseif($this->input->get('pro') != '' || $this->input->get('pr') != ''){ ?>
 <script>
 function fkmrin(a)
@@ -366,9 +370,123 @@ function fCallpricexx(price,itemcode){
 	Win = window.open(url, 'Location', winProp);
 	Win.window.focus();
 }
-</script>
-		<?php } ?>		
-<?php }else{ ?>
+</script> 
+<?php } ?>
+<?php } elseif(($this->uri->slash_segment(1).$this->uri->slash_segment(2) == 'contentcontroller/bar_code/') or ( $this->uri->slash_segment(1) == 'mrinnew_ctrl/')){ ?>
+<script>
+
+function deleteRow(btn) {
+  var row = btn.parentNode.parentNode;
+  row.parentNode.removeChild(row);
+}
+
+function searchKeyPress(e)
+{
+    // look for window.event in case event isn't passed in
+    e = e || window.event;
+    if (e.keyCode == 13)
+    {//alert("lalalallazzzzzzzzzzz");
+		
+		e.preventDefault();
+		
+		var nilai = document.getElementById('n_barput').value;
+		var textcontrol = document.getElementById("n_barput");
+    textcontrol.value = "";
+		
+		
+		var oReq = new XMLHttpRequest(); //New request object
+    oReq.onload = function() {
+        //This is where you handle what to do with the response.
+        //The actual data is found on this.responseText
+        //alert(this.responseText); //Will alert: 42
+				var data = JSON.parse(this.responseText);
+				//alert(data.ItemCode)
+				//alert(data.Price);
+				//alert(data.ItemName);
+				//alert("lalalallazzzzzzzzzzz" + nilai);
+		var table = document.getElementById("myTable");
+	var rows = document.getElementById("myTable").getElementsByTagName("tr").length;
+    var row = table.insertRow(-1);
+    var cell1 = row.insertCell(0);
+    var cell2 = row.insertCell(1);
+    var cell3 = row.insertCell(2);
+    var cell4 = row.insertCell(3);
+	var cell5 = row.insertCell(4);
+	var cell6 = row.insertCell(5);
+	<?php if ($this->input->get('pro') != 'edit') { ?>
+	var cell7 = row.insertCell(6);
+	var cell8 = row.insertCell(7);
+	<?php } ?>
+    cell1.innerHTML = rows+'<input type="hidden" name="rows" value="'+rows+'"><input type="hidden" name="itemcode7'+rows+'" value="'+data.Price+'"><input type="hidden" name="itemcode8'+rows+'" value="'+data.ItemName+'"><input type="hidden" name="itemcode'+rows+'" value="'+data.ItemCode+'">';
+		cell2.innerHTML = '<p id="itemcode'+rows+' value="'+data.ItemCode+'">'+data.ItemCode+'</p>';
+		cell3.innerHTML = '<div id="itemcode2'+rows+'" style="display:inline-block; padding-right:5px;">'+data.ItemName+'</div>';
+		<?php if ($this->input->get('bcwhat') != 'add') { ?>
+		cell4.innerHTML = '<p id="itemcode3'+rows+' value="'+data.Qty+'">'+data.Qty+'</p><input type="hidden" id="itemcode3'+rows+'" name="itemcode3'+rows+'" value="'+data.Qty+'">';
+		<?php } else {?>
+		cell4.innerHTML = '<INPUT TYPE="text" name="itemcode9'+rows+'" value="" class="form-control-button2" style=width:100px;"><input type="hidden" name="itemcode3'+rows+'" value="'+data.Qty+'">';
+		<?php } ?>
+	cell5.innerHTML = '<input type="text" name="itemcode4'+rows+'" value="" class="form-control-button2" style=width:100px;">';	
+	cell6.innerHTML = '<INPUT TYPE="text" name="itemcode5'+rows+'" class="form-control-button2" style=width:100px;">';
+	
+	cell7.innerHTML = '<input type="text" name="itemcode6'+rows+'" id="itemcode6'+rows+'" value="" class="form-control-button2" style=width:100px;"><span class="icon-windows" style="display:inline-block; padding-left:5px;" id="itemc'+rows+'" onclick="fCallpricexx(\'n_price'+rows+'\',\'vendor'+rows+'\', this.value)" value=""></span>';
+	cell8.innerHTML = '<p id="vendor'+rows+'"></p><span class="" style="display:inline-block; padding-left:5px;" id="itemc'+rows+'" onclick="deleteRow(this)" value=""><img class="manImg" src="<?=base_url()?>images/trash-can.jpg" height="42" width="42"></img></span>';
+	
+	
+        //document.getElementById('btnSearch').click();
+        return false;
+    };
+    oReq.open("get", "<?php echo base_url ('index.php/ajaxjson?itemape=') ?>"+nilai, true);
+    //                               ^ Don't block the rest of the execution.
+    //                                 Don't wait until the request finishes to 
+    //                                 continue.
+    oReq.send();
+		
+		
+		//tmpt asal
+    }
+    return true;
+}
+ 
+function fCallitem(){
+
+	 e = e || window.event;
+    if (e.keyCode == 13)
+    {alert("lalalalla");
+		
+				var table = document.getElementById("myTable");
+	var rows = document.getElementById("myTable").getElementsByTagName("tr").length;
+    var row = table.insertRow(-1);
+    var cell1 = row.insertCell(0);
+    var cell2 = row.insertCell(1);
+    var cell3 = row.insertCell(2);
+    var cell4 = row.insertCell(3);
+	var cell5 = row.insertCell(4);
+	var cell6 = row.insertCell(5);
+	<?php if ($this->input->get('pro') != 'edit') { ?>
+	var cell7 = row.insertCell(6);
+	var cell8 = row.insertCell(7);
+	<?php } ?>
+    cell1.innerHTML = rows+'<input type="hidden" name="rows" value="'+rows+'">';
+    cell2.innerHTML = '<p id="itemcode'+rows+'"></p><input type="hidden" id="itemcodei'+rows+'" name="itemcode'+rows+'" value="">';
+    cell3.innerHTML = '<div id="itemname'+rows+'" style="display:inline-block; padding-right:5px;"></div><span class="icon-windows" style="display:inline-block;" onclick="fCallitemxx(\'itemname'+rows+'\',\'itemcode'+rows+'\')"></span>';
+	cell4.innerHTML = '<input type="text" name="n_qty'+rows+'" value="" class="form-control-button2" style=width:100px;">';
+	cell5.innerHTML = '<select name="a_rem'+rows+'" class="dropdown"><option value="" selected="selected">None</option><option value="1">Mishandling</option><option value="2">Supplementary</option><option value="3">Upgrading</option><option value="4">Re-Installation</option><option value="5">Other</option></select>'; 	
+	cell6.innerHTML = '<INPUT TYPE="text" name="startDate'+rows+'" class="form-control-button2" style=width:100px;" onChange="validDate(this)">';
+	<?php if ($this->input->get('pro') != 'edit') { ?>
+	cell7.innerHTML = '<input type="text" name="n_price'+rows+'" id="n_price'+rows+'" value="" class="form-control-button2" style=width:100px;"><span class="icon-windows" style="display:inline-block; padding-left:5px;" id="itemc'+rows+'" onclick="fCallpricexx(\'n_price'+rows+'\',\'vendor'+rows+'\', this.value)" value=""></span>';
+	cell8.innerHTML = '<p id="vendor'+rows+'"></p><input type="hidden" id="vendori'+rows+'" name="vendor'+rows+'" value="">';
+	<?php } ?>		
+		
+        //document.getElementById('btnSearch').click();
+        return false;
+    }
+    return true;
+				 
+				 
+	
+}
+</script> 
+<?php } else{ ?>
 <script>
 function fchecklist(a){
 var parent = a.getAttribute('value');

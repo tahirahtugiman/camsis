@@ -7,12 +7,15 @@ $procument = $this->input->get('tab');
 switch ($procument) {
     case "1":
         $tulis = "PR Generated";
+				$tulis2 = "PR Reference No";
         break;
     case "2":
         $tulis = "PO Generated";
+				$tulis2 = "PO Reference No";
         break;
     default:
         $tulis = "PR Generated";
+				$tulis2 = "MRIN Reference No";
 } ?>
 			<?php include 'content_pr_tab.php';?>
 			<tr class="ui-color-desk desk2">
@@ -46,7 +49,7 @@ switch ($procument) {
 					<table class="ui-content-middle-menu-workorder2" width="100%">
 						<tr class="ui-menu-color-header" style="color:white; font-size:12px;">
 							<th >&nbsp;</th>
-							<th style="text-align:left;">PR Reference No</th>
+							<th style="text-align:left;"><?=$tulis2?></th>
 							<th >Issue Date</th>
 							<th >Requestor</th>
 							<th >MRIN</th>

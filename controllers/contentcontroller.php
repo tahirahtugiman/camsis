@@ -5398,8 +5398,10 @@ class Contentcontroller extends CI_Controller {
 	}
 	
 	public function Store(){
+	//echo "nilai oooo : ".$this->input->post('searchquestion');
+	//exit();
 		$this->load->model('display_model');
-		$data['record'] = $this->display_model->stock_asset();
+		$data['record'] = $this->display_model->stock_asset($this->input->post('searchquestion'));
 		//$data['count'] = count($data['record']);
 
 		foreach($data['record'] as $row){
@@ -8039,6 +8041,23 @@ public function report_reqwosbya2(){
 		$this ->load->view("headprinter");
 		$this ->load->view("Content_report_reqwosbya2", $data);
 	}
+	
+public function bar_code (){
+
+		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
+		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
+		
+		$this ->load->view("head");
+		$this ->load->view("left");
+		$this ->load->view("content_stock_addplus", $data);
+		/*
+		if($this->input->get('p') == 'confirm'){
+		$this ->load->view("content_new_item_confirm");
+		}else{
+		$this ->load->view("content_new_item");
+		}
+		*/
+}
 	
 }
 ?>

@@ -2003,12 +2003,14 @@ return $query->result();
 			//exit();
 			return $query->result();
 		}
-		function stock_asset(){
+		function stock_asset($searchitem=""){
 			$this->db->select('a.Hosp_code,a.Qty,b.ItemCode,REPLACE(REPLACE(b.ItemName, CHAR(10), ""), CHAR(13), "") AS ItemName',FALSE);
 			$this->db->from('tbl_item_store_qty a');
 			$this->db->join('tbl_invitem b','a.ItemCode = b.ItemCode','inner');
 			$this->db->where('a.Hosp_code',$this->session->userdata('hosp_code'));
 			$this->db->where('b.Dept',$this->session->userdata('usersess'));
+			if ($searchitem != "") {
+			$this->db->where("b.ItemCode",$searchitem)->or_where("b.ItemName",$searchitem);}
 			$this->db->order_by("itemname");
 				//$this->db->where('a.Hosp_code','MKA');//test
 			$query = $this->db->get();
@@ -4700,6 +4702,21 @@ return $obj['path'];
 	$query_result = $query->result();
 	return $query_result;
 }
+
+ 		function stock_assetbyitem($whatitem){
+			$this->db->select('a.Hosp_code,a.Qty,b.ItemCode,REPLACE(REPLACE(b.ItemName, CHAR(10), ""), CHAR(13), "") AS ItemName, c.Price',FALSE);
+			$this->db->from('tbl_item_store_qty a');
+			$this->db->join('tbl_invitem b','a.ItemCode = b.ItemCode','inner');
+			$this->db->join('tbl_item_price_history c','a.ItemCode = c.ItemCode','inner');
+			$this->db->where('a.Hosp_code',$this->session->userdata('hosp_code'));
+			$this->db->where('a.ItemCode',$whatitem);
+			$this->db->order_by("itemname");
+				//$this->db->where('a.Hosp_code','MKA');//test
+			$query = $this->db->get();
+			//echo $this->db->last_query();
+			//exit();
+			return $query->result();
+		}
 
 }
 ?>

@@ -2,7 +2,7 @@
 	<div class="main-box">
 		<?php if (!in_array("contentcontroller/store_item_new", $chkers)) { ?>
 		<div class="box3">
-			<?php $autocolor = array('bg-purple', 'bg-red', 'bg-yellow', 'bg-aqua', 'bg-light-blue'); shuffle($autocolor); ?>
+			<?php $autocolor = array('bg-purple', 'bg-red', 'bg-yellow', 'bg-aqua', 'bg-light-blue', 'bg-orange'); shuffle($autocolor); ?>
 			<div class="small-box <?php echo $autocolor[0];?>">
 				<div class="inner2" >
 					<p>New Part</p>
@@ -56,6 +56,18 @@
 			</div>
 		</div>
 		<?php  } ?>
+		<?php if (!in_array("contentcontroller/bar_code", $chkers)) { ?>
+		<div class="box3">
+			<div class="small-box <?php echo $autocolor[5];?>">
+				<div class="inner2" >
+					<p>Bar Code</p>
+				</div>
+				<div class="icon"><i class="icon-file-text2"></i></div>
+				<?php echo anchor ('contentcontroller/bar_code','<span class="ui-left_web">More Info <i class="icon-arrow-right"></i></span>','class="small-box-footer"'); ?>
+			</div>
+		</div>
+		<?php  } ?>
+		
 	</div>
 	<div class="content-workorder">
 		<table class="ui-content-middle-menu-workorder" border="0"  width="90%" align="center" >
