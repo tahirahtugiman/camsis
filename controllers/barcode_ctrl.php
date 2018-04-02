@@ -118,7 +118,7 @@ class barcode_ctrl extends CI_Controller{
 		}
 //echo "<br>".$this->db->last_query();
 //exit();
-		redirect('contentcontroller/bar_code');
+		//redirect('contentcontroller/bar_code');
 
 	}
 	else
@@ -167,7 +167,7 @@ class barcode_ctrl extends CI_Controller{
 		$this->insert_model->store_addprice($addprice_data);
 
 		//redirect('contentcontroller/Store');	
-		redirect('contentcontroller/bar_code');
+		//redirect('contentcontroller/bar_code');
 	}
 	
 
@@ -179,7 +179,7 @@ class barcode_ctrl extends CI_Controller{
 				}
 			}
 	
-	
+	redirect('contentcontroller/bar_code');
 	
 	   
 	}

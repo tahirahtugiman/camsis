@@ -1,3 +1,5 @@
+
+<meta content="utf-8" http-equiv="encoding">
 <body>
 	<div id="Instruction" class="pr-printer">
 		<div class="header-pr">SERVICE REQUEST AND WORK ORDER</div>
@@ -80,8 +82,7 @@
 		</table>-->
 		<table class="tbl-wo" border="1" align="center" style="border: 1px solid black;">
 			<tr>
-				<td style="width:50%; padding:5px;" rowspan="0"> 
-					<table class="tbl-wo-1" border="0" align="left">
+			<td style="width:50%; padding:5px;"><table class="tbl-wo-1" border="0" align="left">
 						<tr>
 							<td class="tbl-wo-data" valign="top">Requestor</td>
 							<td style="width:35%;">: <span style="color:blue;"><?= ($woinfo[0]->V_requestor) ? $woinfo[0]->V_requestor : 'NA' ?></span></td>
@@ -100,7 +101,7 @@
 						</tr>
 						<tr>
 							<td class="tbl-wo-data">Room Code </td>
-							<td><span style="color:blue;">: <?= ($woinfo[0]->V_location_code) ? $woinfo[0]->V_location_code : 'NA' ?> (<?= ($woinfo[0]->v_Location_Name) ? $woinfo[0]->v_Location_Name : 'NA' ?>)</span></td>
+							<td  style="white-space: nowrap"><span style="color:blue; ">: <?= ($woinfo[0]->V_location_code) ? $woinfo[0]->V_location_code : 'NA' ?> (<?= ($woinfo[0]->v_Location_Name) ? $woinfo[0]->v_Location_Name : 'NA' ?>)</span></td>
 						</tr>
 						<tr>
 							<td class="tbl-wo-data">Equipment </td>
@@ -121,9 +122,8 @@
 							<td><span style="color:blue;">: <?= ($woinfo[0]->V_Serial_no) ? $woinfo[0]->V_Serial_no : 'NA' ?></span>
 							</td>
 						</tr>
-					</table>
-				</td>
-				<td style="width:50%; padding:5px;" valign="top" colspan="0"> 
+					</table></td>
+			<td style="width:50%; padding:5px;" valign="top" colspan="0"> 
 					<table class="tbl-wo-1" border="0" align="left">
 						<tr>
 							<td class="tbl-wo-data">Taken By </td>
@@ -191,10 +191,10 @@
 						<?php } ?>
 					</table>
 				</td>
-			</tr>
-			<tr>
+				</tr>
+				<tr>
 				<td colspan="2" style="padding:5px;"> 
-					<table class="tbl-wo-1" border="0" align="left">
+					<table class="tbl-wo-1" border="0" align="bottom">
 						<tr>
 							<td> Request Description :</td>
 						</tr>
@@ -214,7 +214,7 @@
 						
 					</table> 
 				</td>
-			</tr>
+				</tr>
 		</table>
 		<table class="tbl-wo-1" border="0" align="center">
 			<tr>

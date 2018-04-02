@@ -3705,7 +3705,12 @@ class Contentcontroller extends CI_Controller {
 		} elseif ($this->input->get('serv') == "civ"){
 		$pilape = "IIUM C";
 		}
+		//echo "lalalalalla : " . $this->session->userdata('v_UserName');
+		if ($this->session->userdata('v_UserName') == "mariana") {
+		$data['record'] = $this->display_model->rpt_volsmar($data['month'],$data['year'], $this->input->get('stat'), $this->input->get('resch'),$data['grpsel'],$pilape);
+		} else {
 		$data['record'] = $this->display_model->rpt_vols($data['month'],$data['year'], $this->input->get('stat'), $this->input->get('resch'),$data['grpsel'],$pilape);
+		}
 		$data['reqtype'] = 'A2';
 		$data['tag'] = '';
 		$data['cm']= '';
