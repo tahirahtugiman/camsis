@@ -139,7 +139,7 @@
 						</tr>
 						<tr>
 							<td class="tbl-wo-data">Time </td>
-							<td>: <span style="color:blue;"><?= date("h:i a", strtotime(isset($woinfo[0]->D_date) == TRUE ? $woinfo[0]->D_date : 'N/A'))?></span></td>
+							<td>: <span style="color:blue;"><?= date("H:i ", strtotime(isset($woinfo[0]->D_date) == TRUE ? $woinfo[0]->D_date : 'N/A'))?></span></td>
 						</tr>
 						<tr>
 						<td class="tbl-wo-data">Priority </td>

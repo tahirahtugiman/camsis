@@ -28,7 +28,7 @@
 								<?php $rownum = 1; foreach($wo_list as $row):?>
 									<tr  align="center" <?= ($rownum%2==0) ?  'class="tr_color"' :  '' ?>>
 										<td data-title="Type :"><?= isset($row->V_request_type) == TRUE ? $row->V_request_type : 'N/A'?></td>
-										<td data-title="Request Number :"><?= isset($row->V_Request_no) == TRUE ? $row->V_Request_no : 'N/A'?></td>
+										<td data-title="Request Number :" ><a href="workorderlist?&wrk_ord=<?=$row->V_Request_no ?>" class="a-asset-link"><?= isset($row->V_Request_no) == TRUE ? $row->V_Request_no : 'N/A'?></a></td>
 										<td data-title="Priority :"><?= isset($row->V_priority_code) == TRUE ? $row->V_priority_code : 'N/A'?></td>
 										<td data-title="Status :"><?= isset($row->V_request_status) == TRUE ? $row->V_request_status : 'N/A'?></td>
 										<td data-title="Date :"><?= isset($row->D_date) == TRUE ? date('d-m-Y',strtotime($row->D_date)) : 'N/A'?></td>
