@@ -349,6 +349,9 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("Content_workorderlist",$data);
 	}
+	
+
+	
 		public function workorderlist_update(){
 		$data['wrk_ord'] = $this->input->get('wrk_ord');
 		$this->load->model("get_model");
@@ -3003,9 +3006,7 @@ class Contentcontroller extends CI_Controller {
 
 		isset($_POST['fromMonth']) && isset($_POST['fromYear']) ? $data['fromDate'] = $_POST['fromYear'].'-'.$_POST['fromMonth'].'-01' : $data['fromDate'] = $data['fyear'].'-'.$data['fmonth'].'-01' ;
 		isset($_POST['toMonth']) && isset($_POST['toYear']) ? $data['toDate'] = $_POST['toYear'].'-'.$_POST['toMonth'].'-01' : $data['toDate'] = $data['tyear'].'-'.$data['tmonth'].'-01' ;
-         $this->load->model('get_model');
-	    $data['test'] = $this->get_model->get_checkbox();
-	
+
 		$this->load->model('display_model');
 		$data['qap3_report'] = $this->display_model->qap3_report($data['fromDate'], $data['toDate']);
 		$data['qap3_reportsiq'] = $this->display_model->qap3_reportsiq($data['fromDate'], $data['toDate']);
@@ -3634,7 +3635,6 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("Content_report_rmc", $data);
 	}
 	public function report_volu(){
-	//unschedule
 	  //echo 'nilai : '.$this->input->post('wrty-status');
                 $pilape = "";
 		if ($this->input->get('serv') == "ele"){
@@ -3677,8 +3677,6 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("Content_report_volu", $data);
 		}
 	}
-	
-
 	public function report_volc(){
 	  //echo 'nilai : '.$this->input->post('wrty-status');
 	  $this->load->model("display_model");
@@ -5403,8 +5401,10 @@ class Contentcontroller extends CI_Controller {
 	}
 	
 	public function Store(){
+	//echo "nilai oooo : ".$this->input->post('searchquestion');
+	//exit();
 		$this->load->model('display_model');
-		$data['record'] = $this->display_model->stock_asset();
+		$data['record'] = $this->display_model->stock_asset($this->input->post('searchquestion'));
 		//$data['count'] = count($data['record']);
 
 		foreach($data['record'] as $row){
@@ -6682,58 +6682,6 @@ public function assethistory(){
 		$this ->load->view("Content_acg_report",$data);
 
 	}
-	
-			public function deductmapping_2(){
-			 $data['month'] = ($this->input->get('mth') <> "") ? sprintf("%02d", $this->input->get('mth')) : date("m");
-		$data['year'] = ($this->input->get('yr') <> "") ? $this->input->get('yr') : date("Y");
-		$data['service'] = ($this->input->get('sev') <> "") ? $this->input->get('sev') : "BES";
-	    $data['reqstatus'] = $this->input->get('reqstatus') ;
-	  
-	  
-                $pilape = "";
-		if ($this->input->get('serv') == "ele"){
-		$pilape = "IIUM E";
-		} elseif ($this->input->get('serv') == "mec"){
-		$pilape = "IIUM M";
-		} elseif ($this->input->get('serv') == "civ"){
-		$pilape = "IIUM C";
-		}
-	  	$this->load->model("display_model");
-		
-		$data['records'] = $this->display_model->list_hospinfo();
-		//$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
-		//$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
-		$data['reqtype']= $this->input->get('req') ? $this->input->get('req') : '';
-		$data['grpsel']= $this->input->get('grp') ? $this->input->get('grp') : '';
-	
-	    $data['tag']= $this->input->get('tag') ? $this->input->get('tag') : '';
-		$data['cm']= $this->input->get('cm') ? $this->input->get('cm') : '';
-		$data['limab']= $this->input->get('limab') ? $this->input->get('limab') : '0';
-		$data['bfwd'] = array();
-		if ($data['tag'] == 'total')
-		{
-			$data['records'] = $this->display_model->broughtfwd($data['month'],$data['year']);
-			//$data['bfwd'] = array();
-			foreach ($data['records'] as $row){
-				if (($row->notcomp != 0) && ($row->comp != 0)){
-					$data['bfwd'][] = $row->month; 
-				}
-			}
-		}
-		$data['record'] = $this->display_model->dmapping2($data['month'],$data['year'],$data['service'],$data['reqstatus']);
-
-		//print_r($data['record']);
-		//exit();
-		//$this ->load->view("headprinter");
-		//$this ->load->view("Content_report_volu", $data);
-		if ($this->input->get('pdf') == 1){
-
-		$this ->load->view("Content_dmapping2_pdf", $data);
-		}else{
-		$this ->load->view("headprinter");
-		$this ->load->view("Content_dmapping2", $data);
-		}
-	}
 	public function spare_part(){
 	  $this->load->model('display_model');
 		$data['record'] = $this->display_model->stock_asset();
@@ -7539,10 +7487,9 @@ public function visitjclosed(){
 		$this ->load->view("content_pop_fProcedure");
 	}
 	public function D_Assessement(){
-	    $data['month'] = ($this->input->get('mth') <> "") ? sprintf("%02d", $this->input->get('mth')) : date("m");
+	  $data['month'] = ($this->input->get('mth') <> "") ? sprintf("%02d", $this->input->get('mth')) : date("m");
 		$data['year'] = ($this->input->get('yr') <> "") ? $this->input->get('yr') : date("Y");
 		$data['service'] = ($this->input->get('sev') <> "") ? $this->input->get('sev') : "BES";
-		
 		//echo "nilai serv".$data['service'].":".$this->input->get('sev');
 		//isset($_REQUEST['n_base']) ? $data['service'] = $_REQUEST['n_base'] : $data['service'] = "BES";
 		//isset($_REQUEST['fromMonth']) ? $data['fmonth'] = $_REQUEST['fromMonth'] : $data['fmonth'] = $data['month'];
@@ -7552,13 +7499,7 @@ public function visitjclosed(){
 		$data['acgparam'] = $this->display_model->acgparam($data['service'],$data['month'],$data['year']);
 		$data['keyindlist'] = $this->display_model->keyindlist($data['service']);
 		$this ->load->view("headprinter");
-		if ($this->input->get('pdf') == 1){
-
-		$this ->load->view("content_D_Assessement_pdf", $data);
-		}else{
-	      $this ->load->view("content_D_Assessement", $data);
-		}
-		
+		$this ->load->view("content_D_Assessement", $data);
 	}	
 	
 	public function D_Mapping(){
@@ -7572,13 +7513,7 @@ public function visitjclosed(){
 		$data['deductmap'] = $this->display_model->deductmap($data['service'],$data['month'],$data['year']);
 
 		$this ->load->view("headprinter");
-		if ($this->input->get('pdf') == 1){
-
-	    $this ->load->view("content_D_Mapping_pdf", $data);
-		}else{
-	    $this ->load->view("content_D_Mapping", $data);
-		}
-		
+		$this ->load->view("content_D_Mapping", $data);
 	}	
 	
 	public function report_Incidences_Summary(){
@@ -8120,6 +8055,104 @@ public function report_reqwosbya2(){
 		}
 		$this ->load->view("headprinter");
 		$this ->load->view("Content_report_reqwosbya2", $data);
+	}
+	
+public function bar_code (){
+
+		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
+		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
+		
+		$this ->load->view("head");
+		$this ->load->view("left");
+		$this ->load->view("content_stock_addplus", $data);
+		/*
+		if($this->input->get('p') == 'confirm'){
+		$this ->load->view("content_new_item_confirm");
+		}else{
+		$this ->load->view("content_new_item");
+		}
+		*/
+}
+
+public function deductmapping_2(){
+			 $data['month'] = ($this->input->get('mth') <> "") ? sprintf("%02d", $this->input->get('mth')) : date("m");
+		$data['year'] = ($this->input->get('yr') <> "") ? $this->input->get('yr') : date("Y");
+		$data['service'] = ($this->input->get('sev') <> "") ? $this->input->get('sev') : "BES";
+	    $data['reqstatus'] = $this->input->get('reqstatus') ;
+	  
+	  
+                $pilape = "";
+		if ($this->input->get('serv') == "ele"){
+		$pilape = "IIUM E";
+		} elseif ($this->input->get('serv') == "mec"){
+		$pilape = "IIUM M";
+		} elseif ($this->input->get('serv') == "civ"){
+		$pilape = "IIUM C";
+		}
+	  	$this->load->model("display_model");
+		
+		$data['records'] = $this->display_model->list_hospinfo();
+		//$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
+		//$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
+		$data['reqtype']= $this->input->get('req') ? $this->input->get('req') : '';
+		$data['grpsel']= $this->input->get('grp') ? $this->input->get('grp') : '';
+	
+	    $data['tag']= $this->input->get('tag') ? $this->input->get('tag') : '';
+		$data['cm']= $this->input->get('cm') ? $this->input->get('cm') : '';
+		$data['limab']= $this->input->get('limab') ? $this->input->get('limab') : '0';
+		$data['bfwd'] = array();
+		if ($data['tag'] == 'total')
+		{
+			$data['records'] = $this->display_model->broughtfwd($data['month'],$data['year']);
+			//$data['bfwd'] = array();
+			foreach ($data['records'] as $row){
+				if (($row->notcomp != 0) && ($row->comp != 0)){
+					$data['bfwd'][] = $row->month; 
+				}
+			}
+		}
+		$data['record'] = $this->display_model->dmapping2($data['month'],$data['year'],$data['service'],$data['reqstatus']);
+
+		//print_r($data['record']);
+		//exit();
+		//$this ->load->view("headprinter");
+		//$this ->load->view("Content_report_volu", $data);
+		if ($this->input->get('pdf') == 1){
+
+		$this ->load->view("Content_dmapping2_pdf", $data);
+		}else{
+		$this ->load->view("headprinter");
+		$this ->load->view("Content_dmapping2", $data);
+		}
+	}
+	
+			public function stockDtail(){
+   
+		$this->load->model("display_model");
+	     $data['itemd'] = $this->display_model->contentstockd($this->input->get('id'));
+		$this ->load->view("head");
+		$this ->load->view("left");
+		$this ->load->view("Content_stockDlist",$data);
+	}
+			public function stockact(){
+   
+		$this->load->model("display_model");
+	    $data['record'] = $this->display_model->stock_asset($this->input->get('id'));
+        $data['limit'] = 6; 	
+         isset($_GET['p']) ? $data['page'] = $_GET['p'] : $data['page'] = 1;
+	   $data['start'] = ($data['page'] * $data['limit']) - $data['limit'];		 
+		foreach($data['record'] as $row){
+		$data['assetl'] = $this->display_model->stock_details($row->ItemCode,$row->Hosp_code,$data['limit'],$data['start']);
+		$data['assetrec'][] = $data['assetl'];
+		}
+		$data['count'] = count($data['assetl']);
+        $data['rec'] =  $this->display_model->stock_details($row->ItemCode,$row->Hosp_code,'0','0');
+		if($data['rec'][0]->jumlah > ($data['page'] * $data['limit']) ){
+			$data['next'] = ++$data['page'];
+		}
+		$this ->load->view("head");
+		$this ->load->view("left");
+		$this ->load->view("Content_stockDact",$data);
 	}
 	
 }

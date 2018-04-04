@@ -2,7 +2,7 @@
 	<div class="main-box">
 		<?php if (!in_array("contentcontroller/store_item_new", $chkers)) { ?>
 		<div class="box3">
-			<?php $autocolor = array('bg-purple', 'bg-red', 'bg-yellow', 'bg-aqua', 'bg-light-blue'); shuffle($autocolor); ?>
+			<?php $autocolor = array('bg-purple', 'bg-red', 'bg-yellow', 'bg-aqua', 'bg-light-blue', 'bg-orange'); shuffle($autocolor); ?>
 			<div class="small-box <?php echo $autocolor[0];?>">
 				<div class="inner2" >
 					<p>New Part</p>
@@ -56,6 +56,18 @@
 			</div>
 		</div>
 		<?php  } ?>
+		<?php if (!in_array("contentcontroller/bar_code", $chkers)) { ?>
+		<div class="box3">
+			<div class="small-box <?php echo $autocolor[5];?>">
+				<div class="inner2" >
+					<p>Bar Code</p>
+				</div>
+				<div class="icon"><i class="icon-file-text2"></i></div>
+				<?php echo anchor ('contentcontroller/bar_code','<span class="ui-left_web">More Info <i class="icon-arrow-right"></i></span>','class="small-box-footer"'); ?>
+			</div>
+		</div>
+		<?php  } ?>
+		
 	</div>
 	<div class="content-workorder">
 		<table class="ui-content-middle-menu-workorder" border="0"  width="90%" align="center" >
@@ -81,7 +93,7 @@
 					<?php if($val->ItemCode == $row->ItemCode) { ?><!--&store=<?=$this->session->userdata('hosp_code')?>--> <!--originalcode-->
 					<a href="ustore?id=<?= $row->ItemCode ?>&qty=<?= $row->Qty ?>&n=<?= $row->ItemName ?>&p=<?= $val->Price ?>&act=take&store=<?=$this->session->userdata('hosp_code')?>" name="pstake" class="plus"><span class="icon-plus c-plus"></span>Take</a> 
 					<a href="ustore?id=<?= $row->ItemCode ?>&qty=<?= $row->Qty ?>&n=<?= $row->ItemName ?>&p=<?= $val->Price ?>&act=add&store=<?=$this->session->userdata('hosp_code')?>" name="psadd" class="plus"><span class="icon-plus c-plus"></span>Add</a>
-					
+					<a href="<?php echo base_url();?>index.php/contentcontroller/stockDtail?id=<?= $row->ItemCode ?>"   style="float:right; margin-right:80px;"><img src="<?php echo base_url();?>images/information.png" style="width:21px; height:21px; position:absolute;" title="information"></a>
 					
 					<span class="FieldLabel plusprice">Price RM<?= number_format($val->Price,2) ?></span>
 					<?php } ?>
