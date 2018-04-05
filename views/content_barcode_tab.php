@@ -1,3 +1,4 @@
+
 <tr class="ui-left_web">
 	<?= ($this->input->get('tab') == '0') ? '<td class="ui-highlight" align="center" colspan="0" style=" height:30px; width:25%;">' : '<td class="ui-content-menu-desk-color" align="center" colspan="0" style=" height:30px; width:25%;">'?>
 	<?php echo anchor ('contentcontroller/bar_code?tab=0'.'&bcwhat=take', 'TAKE'); ?></td>

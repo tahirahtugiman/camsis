@@ -17,7 +17,8 @@ switch ($procument) {
     default:
         $tulis = "Pending PO";
 } ?>
-		<div class="ui-main-form"><?php include 'content_barcode_tab.php';?>
+		<div class="ui-main-form">
+		<table class="ui-content-middle-menu-workorder" style="width:100%" align="center"><?php include 'content_barcode_tab.php';?></table>
 			<div class="ui-main-form-header">
 				<table align="center" height="40px" border="0">
 				

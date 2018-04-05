@@ -8128,5 +8128,35 @@ public function deductmapping_2(){
 		}
 	}
 	
+	public function stockDtail(){
+   
+		$this->load->model("display_model");
+	     $data['itemd'] = $this->display_model->contentstockd($this->input->get('id'));
+		$this ->load->view("head");
+		$this ->load->view("left");
+		$this ->load->view("Content_stockDlist",$data);
+	}
+	
+	public function stockact(){
+   
+		$this->load->model("display_model");
+	    $data['record'] = $this->display_model->stock_asset($this->input->get('id'));
+        $data['limit'] = 6; 	
+         isset($_GET['p']) ? $data['page'] = $_GET['p'] : $data['page'] = 1;
+	   $data['start'] = ($data['page'] * $data['limit']) - $data['limit'];		 
+		foreach($data['record'] as $row){
+		$data['assetl'] = $this->display_model->stock_details($row->ItemCode,$row->Hosp_code,$data['limit'],$data['start']);
+		$data['assetrec'][] = $data['assetl'];
+		}
+		$data['count'] = count($data['assetl']);
+        $data['rec'] =  $this->display_model->stock_details($row->ItemCode,$row->Hosp_code,'0','0');
+		if($data['rec'][0]->jumlah > ($data['page'] * $data['limit']) ){
+			$data['next'] = ++$data['page'];
+		}
+		$this ->load->view("head");
+		$this ->load->view("left");
+		$this ->load->view("Content_stockDact",$data);
+	}
+	
 }
 ?>

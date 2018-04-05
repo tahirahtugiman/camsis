@@ -248,7 +248,7 @@ $this->db->where('pmis2_sa_equip_code.v_EffectiveDt_to > ', date('Y-m-d H:i:s'))
 $this->db->where('pmis2_sa_equip_code.v_ActiveStatus = ', 'Y');
 $this->db->join('pmis2_sa_asset_mapping','pmis2_sa_asset_mapping.service_code = pmis2_sa_equip_code.v_ServiceCode AND pmis2_sa_asset_mapping.old_asset_type = pmis2_sa_equip_code.v_Equip_Code ');
 $this->db->join('pmis2_egm_workgroupcode','pmis2_egm_workgroupcode.v_WorkGroup = pmis2_sa_equip_code.v_workgroupno ');
-//    return $this->db->get('pmis2_sa_asset_mapping'); 
+//return $this->db->get('pmis2_sa_asset_mapping'); 
 $query = $this->db->get('pmis2_sa_equip_code');
 //echo "laalla".$query->DWRate;
 //echo $this->db->last_query();

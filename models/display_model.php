@@ -274,7 +274,7 @@
 			$this->db->where('s.V_servicecode = ',$this->session->userdata('usersess'));
 			$this->db->order_by('n_Visit ASC');
 			$query = $this->db->get();
-			echo $this->db->last_query();
+			//echo $this->db->last_query();
 			//exit();
 			$query_result = $query->result();
 			return $query_result;
@@ -2082,6 +2082,7 @@ return $query->result();
 			$this->db->join('tbl_invitem b','a.ItemCode = b.ItemCode','inner');
 			$this->db->where('a.Hosp_code',$this->session->userdata('hosp_code'));
 			$this->db->where('b.Dept',$this->session->userdata('usersess'));
+			$this->db->where('a.Action_Flag !=','D');
 			if ($searchitem != "") {
 			$this->db->where("b.ItemCode",$searchitem)->or_where("b.ItemName",$searchitem);}
 			$this->db->order_by("itemname");
@@ -4876,6 +4877,39 @@ return $obj['path'];
 				//echo  $this->db->last_query();
 			return $query_result;
 						
+			
+		}
+		
+		function contentstockd($ItemCode){
+			$this->db->select('a.Model,a.Brand,a.ItemName,a.PartNumber,a.PartDescription,a.UnitPrice,a.EquipCat,b.VENDOR_NAME');
+			$this->db->from('tbl_invitem a');
+			$this->db->join('tbl_vendor_info b','a.VendorID = b.Id','left');
+			$this->db->where('a.ItemCode',$ItemCode);	      
+			$query = $this->db->get();
+			//echo $this->db->last_query();
+			//exit();
+			$query_result = $query->result();
+			return $query_result;
+		}
+		function stock_details($ItemCode,$Hosp_code,$limit,$start){
+		if($limit != 0){
+		    $this->db->select('a.Time_Stamp,a.Qty_Before,a.Qty_Taken,a.Qty_Add,a.Last_User_Update,a.Related_WO,a.Remark,a.ItemCode');
+			$this->db->from('tbl_item_movement a');
+			$this->db->join('tbl_invitem b','a.ItemCode = b.ItemCode','inner');
+			$this->db->where('a.Store_Id',$Hosp_code);
+			$this->db->where('a.ItemCode',$ItemCode);
+		  	$this->db->limit($limit,$start);
+			}else{
+			$this->db->select('count(a.ItemCode) as jumlah');
+			$this->db->from('tbl_item_movement a');
+			$this->db->join('tbl_invitem b','a.ItemCode = b.ItemCode','inner');
+			$this->db->where('a.Store_Id',$Hosp_code);
+			$this->db->where('a.ItemCode',$ItemCode);
+			
+			}
+		    $query = $this->db->get();
+			
+			return $query->result();
 			
 		}
 

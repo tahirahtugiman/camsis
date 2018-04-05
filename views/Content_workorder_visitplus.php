@@ -1,6 +1,7 @@
 <?php echo form_open('contentcontroller/visitplusupdate?wrk_ord='.$this->input->get('wrk_ord'));?>
 <script>
 function fToggle(elementId,te) {
+
   $.get("<?php echo base_url ('index.php/ajax') ?>?wrk_ord="+te ,"",function(data){
 
     
