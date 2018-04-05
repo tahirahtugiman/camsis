@@ -67,7 +67,7 @@
 				<td colspan="11" valign="top" class="pd-bttm">
 					<table width="98%" class="ui-content-middle-menu-workorder" style="">
 						<tr class="ui-color-contents-style-1" height="30px">
-							<td colspan="2" class="ui-header-new" valign="top"><span style="float: left; margin-top:8px; font-weight: bold;">Stock Activity</span><span class="ui-left_web" style="float: left; margin-top:8px; margin-left:8px; font-weight: bold; width: 20%;"><marquee valign="bottom" direction="right" loop="40" class="marquee-color"><b>STOCK DETAILS</b></marquee></span></td>
+							<td colspan="2" class="ui-header-new" valign="top"><span style="float: left; margin-top:8px; font-weight: bold;">Stock Activity</span><span class="ui-left_web" style="float: left; margin-top:8px; margin-left:8px; font-weight: bold; width: 20%;"></span></td>
 						</tr>						
 						<tr >
 							<td class="ui-desk-style-table">
