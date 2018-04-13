@@ -884,6 +884,79 @@ ORDER BY s.d_DueDt, s.v_WrkOrdNo
 			return $query_result;
 		}
 		
+		function rpt_volsmar($month, $year, $stat = "apo2", $resch = "resch",$grpsel, $bystak=""){
+		/*
+		SELECT     s.v_WrkOrdNo AS sv_wrkordno, s.v_Asset_no AS sv_asset_no, s.v_Month AS sv_month, s.v_HospitalCode AS sv_hospitalcode, 
+                      s.d_DueDt AS sd_duedt, s.v_jobtype AS sv_jobtype, s.v_year AS sv_year, s.v_ServiceCode AS sv_servicecode, a.V_Tag_no AS av_tag_no, 
+                      a.V_User_Dept_code AS av_user_dept_code, a.V_Asset_name AS av_asset_name
+FROM         pmis2_egm_schconfirmmon s INNER JOIN
+                      pmis2_EGM_AssetRegistration a ON s.v_Asset_no = a.V_Asset_no AND s.v_HospitalCode = a.V_Hospitalcode
+WHERE     (s.v_HospitalCode = 'MKA') AND (s.v_ServiceCode = 'BEMS') AND (s.v_year = 2015) AND (s.v_Actionflag <> 'D') AND (a.V_Actionflag <> 'D') AND 
+                      (MONTH(s.d_DueDt) = 3) AND (YEAR(s.d_DueDt) = 2015)
+ORDER BY s.d_DueDt, s.v_WrkOrdNo
+		*/
+
+
+                  if ($bystak == "IIUM C") {
+		  $bystak = " AND left(a.v_tag_no,6) = 'IIUM C'"; }
+	          elseif ($bystak == "IIUM M") {
+		  $bystak = " AND left(a.v_tag_no,6) = 'IIUM M'"; }
+		  elseif ($bystak == "IIUM E") {
+		  $bystak = " AND left(a.v_tag_no,6) = 'IIUM E'"; }
+
+		  $this->db->distinct();
+			$this->db->select('a.V_Location_code, s.v_Wrkordstatus, s.v_WrkOrdNo AS sv_wrkordno, s.v_Asset_no AS sv_asset_no, s.v_Month AS sv_month, s.v_HospitalCode AS sv_hospitalcode, s.d_DueDt AS sd_duedt, s.v_jobtype AS sv_jobtype, s.v_year AS sv_year, s.v_ServiceCode AS sv_servicecode, a.V_Tag_no AS av_tag_no, a.V_User_Dept_code AS av_user_dept_code, a.V_Asset_name AS av_asset_name, b.v_stest, b.v_ptest, b.d_DateDone, CONCAT(IFNULL(s.v_Remarks,"")," ", ifnull(b.v_summary,"")) AS v_summary, b.d_last_resch_date, c.d_Date, IFNULL(s.d_Reschdt,c.d_Reschdt) AS d_Reschdt, d.v_UserDeptDesc,a.v_asset_grp', FALSE);
+			//$this->db->select('a.V_Location_code, s.v_Wrkordstatus, s.v_WrkOrdNo AS sv_wrkordno, s.v_Asset_no AS sv_asset_no, s.v_Month AS sv_month, s.v_HospitalCode AS sv_hospitalcode, s.d_DueDt AS sd_duedt, s.v_jobtype AS sv_jobtype, s.v_year AS sv_year, s.v_ServiceCode AS sv_servicecode, a.V_Tag_no AS av_tag_no, a.V_User_Dept_code AS av_user_dept_code, a.V_Asset_name AS av_asset_name, b.v_stest, b.v_ptest, b.d_DateDone, b.v_summary, b.d_last_resch_date, b.d_DateDone AS d_Date, IFNULL(s.d_Reschdt,b.d_last_resch_date) AS d_Reschdt, d.v_UserDeptDesc,a.v_asset_grp', FALSE);
+			$this->db->from('pmis2_egm_schconfirmmon s');
+			$this->db->join('pmis2_egm_assetregistration a','s.v_Asset_no = a.V_Asset_no AND s.v_HospitalCode = a.V_Hospitalcode '.$bystak);
+			$this->db->join('pmis2_egm_jobdonedet b',"b.v_Wrkordno = s.v_WrkOrdNo AND b.v_HospitalCode = s.v_HospitalCode AND b.v_actionflag <> 'D'", 'left outer');
+			//$this->db->join('pmis2_emg_jobvisit1 c',"c.v_WrkOrdNo = s.v_WrkOrdNo AND c.v_HospitalCode = s.v_HospitalCode AND c.d_reschdt IS NULL AND c.v_actionflag <> 'D'", 'left outer');
+			$this->db->join("pmis2_emg_jobvisit1 c"," c.v_WrkOrdNo = s.v_WrkOrdNo AND c.n_Visit = 1 AND c.v_HospitalCode = s.v_HospitalCode AND c.d_reschdt IS NULL AND c.v_actionflag <> 'D'", "left outer");
+			$this->db->join('pmis2_sa_userdept d',"a.V_User_Dept_code = d.v_UserDeptCode AND d.v_actionflag <> 'D' ",'left');
+			$this->db->where('s.v_ServiceCode', $this->session->userdata('usersess'));
+			$this->db->where('s.v_Actionflag <> ', 'D');
+			$this->db->where('a.V_Actionflag <> ', 'D');
+			//$this->db->where('c.n_Visit <> ', '1');
+			if ($grpsel <> ''){
+				$this->db->where('a.v_asset_grp',$grpsel);
+			}
+			//$this->db->where('s.v_wrkordstatus <> ', $stat);
+			/*
+			if ($resch == "ys") {
+			$this->db->where("s.d_reschdt IS NOT NULL", NULL, FALSE);
+			} else
+			{
+			$this->db->not_like('s.v_wrkordstatus', $stat);
+			}
+			*/
+			if (($resch == "nt") && ($stat == "A")) {
+			$this->db->where("s.v_wrkordstatus LIKE '%C%'", NULL, FALSE);
+			} elseif (($resch == "ys") && ($stat == "A"))
+			{
+			//$this->db->where("s.d_reschdt is not NULL AND s.v_wrkordstatus = 'AR'", NULL, FALSE);
+			$this->db->where("s.d_reschdt is not NULL AND s.v_wrkordstatus = 'AR' AND d_DueDt > now()", NULL, FALSE);
+			} elseif (($resch == "nt") && ($stat == "C"))
+			{
+			//$this->db->where("s.v_wrkordstatus = 'A' ", NULL, FALSE);
+			$this->db->where("(s.v_wrkordstatus = 'A' OR (s.v_wrkordstatus = 'AR' AND d_DueDt < now()))", NULL, FALSE);
+			} else
+			{
+			$this->db->not_like('s.v_wrkordstatus', $stat);
+			}
+			//$this->db->not_like('s.v_wrkordstatus', $stat);
+			//$this->db->where('s.v_year', $year);
+			//$this->db->where('YEAR(s.d_DueDt)', $year);
+			//$this->db->where('MONTH(s.d_DueDt)', $month);
+			$this->db->where('IFNULL(s.d_reschdt,s.d_DueDt) >=', $this->dater(1,$month,$year));
+			$this->db->where('IFNULL(s.d_reschdt,s.d_DueDt) <=', $this->dater(2,$month,$year));
+			$this->db->where('s.v_HospitalCode',$this->session->userdata('hosp_code'));
+			$query = $this->db->get();
+			//echo $this->db->last_query();
+			//exit();
+			$query_result = $query->result();
+			return $query_result;
+		}
+		
 		function rpt_rtlu($month,$year, $stat = "apo2",$grpsel){
 		/*
 		SELECT v_request_no, v_asset_no, d_date, d_time, v_servicecode, v_requestor, v_user_dept_code, v_summary, 
@@ -2009,6 +2082,7 @@ return $query->result();
 			$this->db->join('tbl_invitem b','a.ItemCode = b.ItemCode','inner');
 			$this->db->where('a.Hosp_code',$this->session->userdata('hosp_code'));
 			$this->db->where('b.Dept',$this->session->userdata('usersess'));
+			$this->db->where('a.Action_Flag !=','D');
 			if ($searchitem != "") {
 			$this->db->where("b.ItemCode",$searchitem)->or_where("b.ItemName",$searchitem);}
 			$this->db->order_by("itemname");
@@ -4822,6 +4896,7 @@ return $obj['path'];
 		    $this->db->select('a.Time_Stamp,a.Qty_Before,a.Qty_Taken,a.Qty_Add,a.Last_User_Update,a.Related_WO,a.Remark,a.ItemCode');
 			$this->db->from('tbl_item_movement a');
 			$this->db->join('tbl_invitem b','a.ItemCode = b.ItemCode','inner');
+			$this->db->order_by('a.Time_Stamp', 'desc');
 			$this->db->where('a.Store_Id',$Hosp_code);
 			$this->db->where('a.ItemCode',$ItemCode);
 		  	$this->db->limit($limit,$start);
