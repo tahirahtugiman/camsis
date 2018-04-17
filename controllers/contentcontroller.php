@@ -349,9 +349,6 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("Content_workorderlist",$data);
 	}
-	
-
-	
 		public function workorderlist_update(){
 		$data['wrk_ord'] = $this->input->get('wrk_ord');
 		$this->load->model("get_model");
@@ -2753,7 +2750,7 @@ class Contentcontroller extends CI_Controller {
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
 		$this->load->model("get_model");
 		$data['validPeriod'] = $this->get_model->validPeriod(date('F',mktime(0, 0, 0, $data['month'], 10)),$data['year']);
-		$data['recordsiq'] = $this->get_model->SIQsummary_siq(date('F',mktime(0, 0, 0, $data['month'], 10)),$data['year']);
+		$data['recordsiq'] = $this->get_model->SIQsummary_siq(date('F',mktime(0, 0, 0, $data['month'], 10)),$data['year']);//ni data graf
 		//$data['siq_no'] = 'SBE/'.$this->session->userdata('hosp_code').'/'.$data['year'].$data['month'];
 		$data['siq_no'] = 'SBE/MKA/201501'; //for test
 		$data['recordcar'] = $this->get_model->SIQsummary_car($data['siq_no']);
@@ -3708,7 +3705,12 @@ class Contentcontroller extends CI_Controller {
 		} elseif ($this->input->get('serv') == "civ"){
 		$pilape = "IIUM C";
 		}
+		//echo "lalalalalla : " . $this->session->userdata('v_UserName');
+		if ($this->session->userdata('v_UserName') == "mariana") {
+		$data['record'] = $this->display_model->rpt_volsmar($data['month'],$data['year'], $this->input->get('stat'), $this->input->get('resch'),$data['grpsel'],$pilape);
+		} else {
 		$data['record'] = $this->display_model->rpt_vols($data['month'],$data['year'], $this->input->get('stat'), $this->input->get('resch'),$data['grpsel'],$pilape);
+		}
 		$data['reqtype'] = 'A2';
 		$data['tag'] = '';
 		$data['cm']= '';
@@ -8126,7 +8128,7 @@ public function deductmapping_2(){
 		}
 	}
 	
-			public function stockDtail(){
+	public function stockDtail(){
    
 		$this->load->model("display_model");
 	     $data['itemd'] = $this->display_model->contentstockd($this->input->get('id'));
@@ -8134,7 +8136,8 @@ public function deductmapping_2(){
 		$this ->load->view("left");
 		$this ->load->view("Content_stockDlist",$data);
 	}
-			public function stockact(){
+	
+	public function stockact(){
    
 		$this->load->model("display_model");
 	    $data['record'] = $this->display_model->stock_asset($this->input->get('id'));
