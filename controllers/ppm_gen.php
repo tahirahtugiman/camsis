@@ -8,6 +8,8 @@ class ppm_gen extends CI_Controller {
 		//	 $theyear =  $_REQUEST["y"];
 		//}	
 		
+		$this->is_logged_in();
+		
 		$data['year'] = $this ->get_year();
 		$this->load->model('get_model');
 		$data['record'] = $this->get_model->generatedppm($data['year']['theyear']);
@@ -25,6 +27,15 @@ class ppm_gen extends CI_Controller {
     $this->load->view("head");
 		$this->load->view("left");
 		$this->load->view("content_ppm_gen", $data );
+	}
+	
+	function is_logged_in()
+	{
+		
+		$is_logged_in = $this->session->userdata('v_UserName');
+		
+		if(!isset($is_logged_in) || $is_logged_in !=TRUE)
+		redirect('logincontroller/index');
 	}
 	
 	function get_year()

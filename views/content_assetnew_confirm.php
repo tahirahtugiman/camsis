@@ -101,11 +101,11 @@
 							<td class="ui-desk-style-table">
 								<table class="ui-content-form" width="100%" border="0">
 									<tr>
-										<td style="padding-left:10px;" width="40%" valign="top">Agent : </td>
+										<td style="padding-left:10px;" width="40%" valign="top">Supplier : </td>
 										<td style="padding-left:10px;" width="60%"><input type="text" name="n_agent" value="<?php echo $this->input->post('n_agent');?>" class="form-control-button" disabled><br /><input type="text" id="n_agent2" name="n_agent2" value="<?php echo set_value('n_agent2'); ?>" class="form-control-button" style="margin-top:4px;" disabled></td>
 									</tr>
 									<tr>
-										<td style="padding-left:10px;">Supplier :   </td>
+										<td style="padding-left:10px;">Agent :   </td>
 										<td style="padding-left:10px;"><input type="text" name="n_supplier" value="<?php echo $this->input->post('n_supplier');?>" class="form-control-button" disabled></td>
 									</tr>
 									<tr>

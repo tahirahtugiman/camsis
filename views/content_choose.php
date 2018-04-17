@@ -32,9 +32,24 @@
 			<?php $urla = $this->input->get('continue') ? $this->input->get('continue') : 'contentcontroller/content'?>
 			<?php $urla = str_replace("http://localhost/tutorial/FEMSHospital_v3/index.php/","",$urla)?>
 			<?php //echo "nilai url : ".$urla." nilai continue : ".$this->input->get('continue') ?>
+
 		<div class="ui-padding">			
-			<?php foreach($service_apa as $apa){//echo $apa->v_servicecode;
-				
+		<?php if ($this->input->get('error') == 'true') { ?>
+
+<div class="alert alert-info">
+ 
+        <a href="<?php echo base_url(); ?>index.php?/logincontroller/logout" class="btn btn-xs btn-primary1 pull-right">Back to login</a>
+        <strong>Info:</strong> Sorry! No hospital assign for this user
+    </div><?php } ?>
+		<?php if ($this->session->userdata('hosp_code') == 'pilih') {?>
+			<?php foreach($service_apa2 as $apa){//echo $apa->v_hospitalcode;?>
+				<div class="kotak2">
+						<?php echo anchor ('contentcontroller/select?hc='.$apa->v_hospitalcode,'<img src="'. base_url() .'images/hospital.png" alt="" class="ui-icon-screen2"/><span class="caption">&nbsp;&nbsp;'.$apa->v_hospitalcode.'&nbsp;&nbsp;</span>'); ?>
+			   </div>
+
+			<?php };?>
+       <?php } else {?>
+	   	<?php foreach($service_apa as $apa){
 			if ($apa->v_servicecode=="BES"){?>
 					<div class="kotak">
 						<?php echo anchor ($urla."/".$apa->v_servicecode,'<img src="'. base_url() .'images/biomedical icon.png" alt="" class="ui-icon-screen"/><span class="ui-text-style">'.$apa->service_name.'</span>'); ?>
@@ -59,7 +74,8 @@
 					<div class="kotak">
 				<?php echo anchor ($urla."/".$apa->v_servicecode, '<img src="'. base_url() .'images/security icon.png" alt="" class="ui-icon-screen"/><span class="ui-text-style">'.$apa->service_name.'</span>'); ?>
 					</div><?php } 
-				};?>		
+				};?>	
+				<?php } ?>
 		</div>
 		<div align="center"> <?php echo anchor ('logincontroller/logout','<button type="submit" class="btn btn-primary" id="ui-log" style="width: 100%;"><span style="color:white; font-weight:bold; font-size:20px;">Logout</span></button>');?></div>
 	</div>

@@ -300,6 +300,7 @@
 			$this->db->join('pmis2_egm_schconfirmmon s','s.v_WrkOrdNo = v1.v_WrkOrdNo');
 			$this->db->join('pmis2_emg_jobvisit1tow vt','v1.v_WrkOrdNo = vt.v_WrkOrdNo');
 			$this->db->where('v1.v_WrkOrdNo',$wrk_ord);
+			$this->db->where('s.v_Actionflag <>','D');
 			$this->db->where('s.v_ServiceCode = ',$this->session->userdata('usersess'));
 			$query = $this->db->get();
 			//echo $this->db->last_query();
@@ -4896,6 +4897,7 @@ return $obj['path'];
 		    $this->db->select('a.Time_Stamp,a.Qty_Before,a.Qty_Taken,a.Qty_Add,a.Last_User_Update,a.Related_WO,a.Remark,a.ItemCode');
 			$this->db->from('tbl_item_movement a');
 			$this->db->join('tbl_invitem b','a.ItemCode = b.ItemCode','inner');
+			$this->db->order_by('a.Time_Stamp', 'desc');
 			$this->db->where('a.Store_Id',$Hosp_code);
 			$this->db->where('a.ItemCode',$ItemCode);
 		  	$this->db->limit($limit,$start);

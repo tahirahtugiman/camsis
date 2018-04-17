@@ -38,30 +38,30 @@ $array = [
 	['Asset', 'assets' , 'contentcontroller/assetsearch/','',''],
 	['Asset', 'contentcontroller/assets/' , 'asset//','',''],
 	// Second Asset Menu //
-	['Asset', 'assets/' , 'General Info' , 'assetupdate?asstno='.$this->input->get('assetno').'&tab=0&parent=assets', 'contentcontroller/updateReg/'],
+	['Asset', 'assets' , 'General Info' , 'assetupdate?asstno='.$this->input->get('assetno').'&tab=0&parent=assets', 'contentcontroller/updateReg/'],
 	//['Asset', 'assets/' , 'General Info' , 'assetupdate?asstno='.$this->input->get('assetno').'' , 'contentcontroller/confirmReg/'],
-	['Asset', 'assets/' , 'General Info' , 'assetupdate?asstno='.$this->input->get('assetno').'&tab=0&parent=assets' , 'contentcontroller/updatecom/'],
+	['Asset', 'assets' , 'General Info' , 'assetupdate?asstno='.$this->input->get('assetno').'&tab=0&parent=assets' , 'contentcontroller/updatecom/'],
 	//['Asset', 'assets/' , 'General Info' , 'assetupdate?asstno='.$this->input->get('assetno').'' , 'contentcontroller/confirmcom/'],
-	['Asset', 'assets/' , 'General Info' , 'assetupdate?asstno='.$this->input->get('assetno').'&tab=0&parent=assets' , 'contentcontroller/updatespec/'],
+	['Asset', 'assets' , 'General Info' , 'assetupdate?asstno='.$this->input->get('assetno').'&tab=0&parent=assets' , 'contentcontroller/updatespec/'],
 	//['Asset', 'assets/' , 'General Info' , 'assetupdate?asstno='.$this->input->get('assetno').'' , 'contentcontroller/confirmspec/'],
-	['Asset', 'assets/' , 'General Info' , 'assetupdate?asstno='.$this->input->get('assetno').'&tab=0&parent=assets' , 'contentcontroller/updateacqu/'],
+	['Asset', 'assets' , 'General Info' , 'assetupdate?asstno='.$this->input->get('assetno').'&tab=0&parent=assets' , 'contentcontroller/updateacqu/'],
 	//['Asset', 'assets/' , 'General Info' , 'assetupdate?asstno='.$this->input->get('assetno').'' , 'contentcontroller/confirmacqu/'],
-	['Asset', 'assets/' , 'General Info' , 'assetupdate?asstno='.$this->input->get('assetno').'&tab=0&parent=assets' , 'contentcontroller/updatecommissioning/'],
+	['Asset', 'assets' , 'General Info' , 'assetupdate?asstno='.$this->input->get('assetno').'&tab=0&parent=assets' , 'contentcontroller/updatecommissioning/'],
 	//['Asset', 'assets/' , 'General Info' , 'assetupdate?asstno='.$this->input->get('assetno').'' , 'contentcontroller/confirmcommissioning/'],
-	['Asset', 'assets/' , 'General Info' , 'assetupdate?asstno='.$this->input->get('assetno').'&tab=0&parent=assets' , 'contentcontroller/updatemaintenance/'],
+	['Asset', 'assets' , 'General Info' , 'assetupdate?asstno='.$this->input->get('assetno').'&tab=0&parent=assets' , 'contentcontroller/updatemaintenance/'],
 	//['Asset', 'assets/' , 'General Info' , 'assetupdate?asstno='.$this->input->get('assetno').'' , 'contentcontroller/confirmmaintenance/'],
-	['Asset', 'assets/' , 'Asset Statutory' , 'assetstatutory?asstno='.$this->input->get('assetno').'&tab=1', 'contentcontroller/assetstatutory_update/'],
+	['Asset', 'assets' , 'Asset Statutory' , 'assetstatutory?asstno='.$this->input->get('assetno').'&tab=1', 'contentcontroller/assetstatutory_update/'],
 	//['Asset', 'assets/' , 'Asset Statutory' , 'assetstatutory?asstno='.$this->input->get('assetno').'&tab=1' , 'contentcontroller/assetstatutory_update_confrim/'],
-	['Asset', 'assets/' , 'Accessories' , 'assetaccessories?asstno='.$this->input->get('assetno').'&tab=4', 'contentcontroller/Accessories_update/'],
-	['Asset', 'assets/' , 'Licenses' , 'assetlicenses?asstno='.$this->input->get('assetno').'&tab=5', 'contentcontroller/assetlicenses_update/'],
-	['Asset', 'assets/' , 'PPM Job Register' , 'assetPPMjob?asstno='.$this->input->get('asstno').'&tab=6', 'contentcontroller/assetPPMjob_update/'],
-	['Asset', 'assets/' , 'Warranty Notification' , 'assetwn?asstno='.$this->input->get('asstno').'&tab=9&parent=assets', 'contentcontroller/assetwned_update/'],
-	['Asset', 'assets/' , 'Warranty Notification' , 'assetwn?asstno='.$this->input->get('asstno').'&tab=9&parent=assets', 'contentcontroller/assetwnmt_update/'],
-	['Asset', 'assets/' , 'Warranty Notification' , 'assetwn?asstno='.$this->input->get('asstno').'&tab=9&parent=assets', 'contentcontroller/assetwnwpa_update/'],
-	['Asset', 'assets/' , 'Warranty Notification' , 'assetwn?asstno='.$this->input->get('asstno').'&tab=9&parent=assets', 'contentcontroller/assetwnwc_update/'],
-	['Asset', 'assets/' , 'Equipment Transfer' , 'assetet?asstno='.$this->input->get('asstno').'&tab=10&parent=assets', 'contentcontroller/assetet_update/'],
-	['Asset', 'assets/' , 'Equipment Transfer' , 'assetet?asstno='.$this->input->get('asstno').'&tab=10&parent=assets', 'contentcontroller/assetetrttp_update/'],
-	['Asset', 'assets/' , 'Equipment Transfer' , 'assetet?asstno='.$this->input->get('asstno').'&tab=10&parent=assets', 'contentcontroller/assetetrttpnos_update/'],
+	['Asset', 'assets' , 'Accessories' , 'assetaccessories?asstno='.$this->input->get('assetno').'&tab=4', 'contentcontroller/Accessories_update/'],
+	['Asset', 'assets' , 'Licenses' , 'assetlicenses?asstno='.$this->input->get('assetno').'&tab=5', 'contentcontroller/assetlicenses_update/'],
+	['Asset', 'assets' , 'PPM Job Register' , 'assetPPMjob?asstno='.$this->input->get('asstno').'&tab=6', 'contentcontroller/assetPPMjob_update/'],
+	['Asset', 'assets' , 'Warranty Notification' , 'assetwn?asstno='.$this->input->get('asstno').'&tab=9&parent=assets', 'contentcontroller/assetwned_update/'],
+	['Asset', 'assets' , 'Warranty Notification' , 'assetwn?asstno='.$this->input->get('asstno').'&tab=9&parent=assets', 'contentcontroller/assetwnmt_update/'],
+	['Asset', 'assets' , 'Warranty Notification' , 'assetwn?asstno='.$this->input->get('asstno').'&tab=9&parent=assets', 'contentcontroller/assetwnwpa_update/'],
+	['Asset', 'assets' , 'Warranty Notification' , 'assetwn?asstno='.$this->input->get('asstno').'&tab=9&parent=assets', 'contentcontroller/assetwnwc_update/'],
+	['Asset', 'assets' , 'Equipment Transfer' , 'assetet?asstno='.$this->input->get('asstno').'&tab=10&parent=assets', 'contentcontroller/assetet_update/'],
+	['Asset', 'assets' , 'Equipment Transfer' , 'assetet?asstno='.$this->input->get('asstno').'&tab=10&parent=assets', 'contentcontroller/assetetrttp_update/'],
+	['Asset', 'assets' , 'Equipment Transfer' , 'assetet?asstno='.$this->input->get('asstno').'&tab=10&parent=assets', 'contentcontroller/assetetrttpnos_update/'],
 	// End Asset Menu //
 	// Work Order Menu //
 	['Work Order', 'workorder?parent=wrkodr' , 'contentcontroller/worksearch/','',''],
@@ -258,6 +258,14 @@ if ('Procurement/' == $this->uri->slash_segment(1)){
 		<a href='../contentcontroller/Procurement/".$this->session->userdata('usersess')."?&tab=4'><span class='icon-play2' valign='middle'></span>  $list[0]</a><a href='e_request?tab=0&y=".date('Y')."&m=".date('m')."'> <span class='icon-play2' valign='middle'></span> PO Followup</a>
 		</div>";
 	}
+
+}
+if ('stockDtail/' == $this->uri->slash_segment(2) || 'stockact/' == $this->uri->slash_segment(2) || 'bar_code/' == $this->uri->slash_segment(2)){
+echo "<div class='menu-class'>
+		<a href='Store'> <span class='icon-play2' valign='middle'></span> Parts Catalog</a>
+		</div>";
+//echo "dier mashuuuk";
+
 
 }
 ?>

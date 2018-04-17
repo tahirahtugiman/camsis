@@ -40,6 +40,7 @@ class Contentcontroller extends CI_Controller {
 	
 		$url = $this->input->post('continue') ? $this->input->post('continue') : site_url('contentcontroller/select');
 		$data['service_apa'] = $this->loginModel->validate3();
+		$data['service_apa2'] = $this->loginModel->validateAP();	
 		$this->load->model('display_model');
 		$Uid = $this->session->userdata('v_UserName');
 		$data['records_desk'] = $this->display_model->img($Uid);
@@ -48,6 +49,20 @@ class Contentcontroller extends CI_Controller {
 		//$this->session->set_userdata('p_picture',$file);
 		$this->load->view('head');
 		$this->load->view('content_choose', $data);
+		
+		if(!empty($_GET["hc"])){
+     $this->session->set_userdata('hosp_code', $_GET["hc"]);
+    if (count($data['service_apa']) > 1){
+	  $url =site_url('contentcontroller/select');
+       
+			 }else {
+        $url =site_url('contentcontroller/content/'.$data['service_apa'][0]->v_servicecode);
+        
+				}
+	      redirect($url, 'refresh');	
+		 
+		 }
+		
 	}
 
 	function do_upload(){
