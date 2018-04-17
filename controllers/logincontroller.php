@@ -28,11 +28,10 @@ class LoginController extends CI_Controller {
 		$query = $this->loginModel->validate();
 		if($query)
 		{
-		
 			$data = array
 				('v_UserName'=>$this->input->post('name'),
 				 //'username'=>$session_data['i.file_name'],
-				'hosp_code'=>'IIUM',
+				'hosp_code'=>'pilih',
 				'is_logged_in'=>TRUE,);
 			$this->session->set_userdata($data);
 		//print_r($data);
@@ -51,18 +50,23 @@ class LoginController extends CI_Controller {
 		$query2 = $this->loginModel->validate2();
 		if($query2)
 		{
-		$data['service_apa'] = $this->loginModel->validate3();
-		
+	
+		$data['kirahospital'] = $this->loginModel->validateAP();
+		 $data['service_apa'] = $this->loginModel->validate3();
 		//$url = $this->input->post('continue') ? $this->input->post('continue') : site_url('contentcontroller/select');
-		if (count($data['service_apa']) > 1){
-			$url =site_url('contentcontroller/select?continue='.$this->input->post('continue'));
+		if (count($data['kirahospital']) > 1){
+			$url =site_url('contentcontroller/select');
 		}
 		else{
-			$url =site_url('contentcontroller/content/'.$data['service_apa'][0]->v_servicecode);
+		 $this->session->set_userdata('hosp_code', $data['kirahospital'][0]->v_hospitalcode);
+		  if (count($data['service_apa']) > 1){
+	      $url =site_url('contentcontroller/select');     
+	      }else {
+           $url =site_url('contentcontroller/content/'.$data['service_apa'][0]->v_servicecode);      
+         }
+	
 		}
-			 
-		//echo $url;
-		//exit ();
+
 			redirect($url, 'refresh');	
 			
 		}

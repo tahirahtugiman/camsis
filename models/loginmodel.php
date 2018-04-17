@@ -27,6 +27,7 @@
 		//exit;
 		if( $query->num_rows ==1)
 		{
+
 			return TRUE;
 		}
 	}	
@@ -168,7 +169,23 @@
 		$this->db->where('a.v_UserID',$this->session->userdata('v_UserName'));
 		$query = $this->db->get();
 		return $query->result();
-	}	
+	}
+
+		function validateAP()
+	{
+	    $this->db->select('*');
+		
+		$this->db->where('v_userid', $this->session->userdata('v_UserName'));
+		
+		$query = $this->db->get('pmis2_sa_userhospital');
+	
+
+	return $query->result();
+	
+		
+	}
+
+	
 	
  }
  
