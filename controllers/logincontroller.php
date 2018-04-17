@@ -57,7 +57,7 @@ class LoginController extends CI_Controller {
 		if (count($data['kirahospital']) > 1){
 			$url =site_url('contentcontroller/select');
 		}
-		else{
+		elseif (count($data['kirahospital'])== 1){
 		 $this->session->set_userdata('hosp_code', $data['kirahospital'][0]->v_hospitalcode);
 		  if (count($data['service_apa']) > 1){
 	      $url =site_url('contentcontroller/select');     
@@ -65,6 +65,9 @@ class LoginController extends CI_Controller {
            $url =site_url('contentcontroller/content/'.$data['service_apa'][0]->v_servicecode);      
          }
 	
+		}
+		else {
+	    $url =site_url('contentcontroller/select?error=true');
 		}
 
 			redirect($url, 'refresh');	

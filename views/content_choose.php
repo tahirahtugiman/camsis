@@ -34,7 +34,13 @@
 			<?php //echo "nilai url : ".$urla." nilai continue : ".$this->input->get('continue') ?>
 
 		<div class="ui-padding">			
-			
+		<?php if ($this->input->get('error') == 'true') { ?>
+
+<div class="alert alert-info">
+ 
+        <a href="<?php echo base_url(); ?>index.php?/logincontroller/logout" class="btn btn-xs btn-primary1 pull-right">Back to login</a>
+        <strong>Info:</strong> Sorry! No hospital assign for this user
+    </div><?php } ?>
 		<?php if ($this->session->userdata('hosp_code') == 'pilih') {?>
 			<?php foreach($service_apa2 as $apa){//echo $apa->v_hospitalcode;?>
 				<div class="kotak2">
