@@ -34,20 +34,36 @@ class Contentcontroller extends CI_Controller {
 			function select()
 			
 	{
+		
 
 	  $this->load->model('insert_model');
  		$this->insert_model->audit_log('login');
 	
 		$url = $this->input->post('continue') ? $this->input->post('continue') : site_url('contentcontroller/select');
-		$data['service_apa'] = $this->loginModel->validate3();
+	    $data['service_apa'] = $this->loginModel->validate3();
+
+		$data['service_apa2'] = $this->loginModel->validateAP();	
 		$this->load->model('display_model');
 		$Uid = $this->session->userdata('v_UserName');
 		$data['records_desk'] = $this->display_model->img($Uid);
-		
+	
 		//$file = $data['records_desk'][0]->file_name;
 		//$this->session->set_userdata('p_picture',$file);
 		$this->load->view('head');
 		$this->load->view('content_choose', $data);
+		
+		 if(!empty($_GET["hc"])){
+     $this->session->set_userdata('hosp_code', $_GET["hc"]);
+    if (count($data['service_apa']) > 1){
+	  $url =site_url('contentcontroller/select');
+       
+	}else {
+        $url =site_url('contentcontroller/content/'.$data['service_apa'][0]->v_servicecode);
+        
+	}
+	      redirect($url, 'refresh');	
+		 
+		 }
 	}
 
 	function do_upload(){
@@ -2750,7 +2766,7 @@ class Contentcontroller extends CI_Controller {
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
 		$this->load->model("get_model");
 		$data['validPeriod'] = $this->get_model->validPeriod(date('F',mktime(0, 0, 0, $data['month'], 10)),$data['year']);
-		$data['recordsiq'] = $this->get_model->SIQsummary_siq(date('F',mktime(0, 0, 0, $data['month'], 10)),$data['year']);//ni data graf
+		$data['recordsiq'] = $this->get_model->SIQsummary_siq(date('F',mktime(0, 0, 0, $data['month'], 10)),$data['year']);
 		//$data['siq_no'] = 'SBE/'.$this->session->userdata('hosp_code').'/'.$data['year'].$data['month'];
 		$data['siq_no'] = 'SBE/MKA/201501'; //for test
 		$data['recordcar'] = $this->get_model->SIQsummary_car($data['siq_no']);
