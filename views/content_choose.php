@@ -32,8 +32,7 @@
 			<?php $urla = $this->input->get('continue') ? $this->input->get('continue') : 'contentcontroller/content'?>
 			<?php $urla = str_replace("http://localhost/tutorial/FEMSHospital_v3/index.php/","",$urla)?>
 			<?php //echo "nilai url : ".$urla." nilai continue : ".$this->input->get('continue') ?>
-	<b><?php echo $this->session->userdata('hosp_code');?></b>
-		<b><?php echo $this->session->userdata('v_UserName');?></b>
+
 		<div class="ui-padding">			
 			
 		<?php if ($this->session->userdata('hosp_code') == 'pilih') {?>
