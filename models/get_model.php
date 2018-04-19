@@ -248,7 +248,7 @@ $this->db->where('pmis2_sa_equip_code.v_EffectiveDt_to > ', date('Y-m-d H:i:s'))
 $this->db->where('pmis2_sa_equip_code.v_ActiveStatus = ', 'Y');
 $this->db->join('pmis2_sa_asset_mapping','pmis2_sa_asset_mapping.service_code = pmis2_sa_equip_code.v_ServiceCode AND pmis2_sa_asset_mapping.old_asset_type = pmis2_sa_equip_code.v_Equip_Code ');
 $this->db->join('pmis2_egm_workgroupcode','pmis2_egm_workgroupcode.v_WorkGroup = pmis2_sa_equip_code.v_workgroupno ');
-//    return $this->db->get('pmis2_sa_asset_mapping'); 
+//return $this->db->get('pmis2_sa_asset_mapping'); 
 $query = $this->db->get('pmis2_sa_equip_code');
 //echo "laalla".$query->DWRate;
 //echo $this->db->last_query();
@@ -627,12 +627,13 @@ function get_UMDNSAsset($assetno)
 $this->db->select(" * ", FALSE);
 $this->db->join('pmis2_sa_moh_asset_type','pmis2_sa_asset_mapping.new_asset_type = pmis2_sa_moh_asset_type.asset_type');
 $this->db->where('pmis2_sa_asset_mapping.old_asset_type = ', $assetno);
+
 //$this->db->like('V_asset_no', $assetcd, 'after'); 
 //    return $this->db->get('pmis2_sa_asset_mapping'); 
 $query = $this->db->get('pmis2_sa_asset_mapping');
 //echo "laalla".$query->DWRate;
-//echo $this->db->last_query();
-//exit();
+/* echo $this->db->last_query();
+exit() */;
 return $query->result();
 
 }
@@ -1521,12 +1522,12 @@ return $query->result();
 function validPeriod($month,$year){
 $this->db->select('*');
 $this->db->from('mis_qap_siq_detail');
-//$this->db->where('hosp_code',$this->session->userdata('hosp_code'));
-	$this->db->where('hosp_code','MKA'); //for test
-//$this->db->where('siq_month',substr($month,0,3));
-	$this->db->where('siq_month','Jan'); //for test
-//$this->db->where('siq_year',$year);
-	$this->db->where('siq_year','2015'); //for test
+$this->db->where('hosp_code',$this->session->userdata('hosp_code'));
+	//$this->db->where('hosp_code','MKA'); //for test
+$this->db->where('siq_month',substr($month,0,3));
+	//$this->db->where('siq_month','Jan'); //for test
+$this->db->where('siq_year',$year);
+	//$this->db->where('siq_year','2015'); //for test
 $this->db->where('service','BES');
 $this->db->limit(1);
 $query = $this->db->get();
@@ -1537,12 +1538,12 @@ return $query->result();
 function SIQsummary_siq($month,$year) {
 $this->db->select("SUM(CASE ind_code WHEN 'BES05' THEN 1 ELSE 0 END) AS ppm_siq, SUM(CASE ind_code WHEN 'BES06' THEN 1 ELSE 0 end) AS uptime_siq",FALSE);
 $this->db->from('mis_qap_siq_detail');
-//$this->db->where('hosp_code',$this->session->userdata('hosp_code'));
-	$this->db->where('hosp_code','MKA'); //for test
-//$this->db->where('siq_month',substr($month,0,3));
-	$this->db->where('siq_month','Jan'); //for test
-//$this->db->where('siq_year',$year);
-	$this->db->where('siq_year','2015'); //for test
+$this->db->where('hosp_code',$this->session->userdata('hosp_code'));
+	//$this->db->where('hosp_code','MKA'); //for test
+ $this->db->where('siq_month',substr($month,0,3));
+	//$this->db->where('siq_month','Jan'); //for test
+$this->db->where('siq_year',$year);
+	//$this->db->where('siq_year','2015'); //for test
 $this->db->where('service','BES');
 $query = $this->db->get();
 //echo $this->db->last_query();
@@ -1566,12 +1567,12 @@ function SIQDetails($month,$year){
 $this->db->select('S.siq_no AS ssiq,S.*,C.*,Wo.equip_code');
 $this->db->from('mis_qap_siq_detail S');
 $this->db->join('mis_qap_car_header C','C.siq_no = S.siq_no','left outer');
-//$this->db->where('S.siq_month',substr($month,0,3));
-	$this->db->where('S.siq_month','Jan'); //for test
-//$this->db->where('S.siq_year',$year);
-	$this->db->where('S.siq_year','2015'); //for test
-//$this->db->where('S.hosp_code',$this->session->userdata('hosp_code'));
-	$this->db->where('S.hosp_code','MKA'); //for test
+$this->db->where('S.siq_month',substr($month,0,3));
+	//$this->db->where('S.siq_month','Jan'); //for test
+$this->db->where('S.siq_year',$year);
+	//$this->db->where('S.siq_year','2015'); //for test
+$this->db->where('S.hosp_code',$this->session->userdata('hosp_code'));
+	//$this->db->where('S.hosp_code','MKA'); //for test
 $this->db->where('S.service','BES');
 if ($this->input->get('siq') == 1) {
 $this->db->join('mis_qap_work_orders$candidate Wo','Wo.siqppm_no = S.siq_no');	
@@ -1607,13 +1608,13 @@ function qap3_asset($year,$month){
 function qap3_assetlim($year,$month,$limit,$start){
 	$this->db->select('*');
 	$this->db->from('mis_qap_inc_assets$candidate');
-	//$this->db->where('qap_period',$year.$month);
-		$this->db->where('qap_period','201502');//for test
+$this->db->where('qap_period',$year.$month);
+		//$this->db->where('qap_period','201502');//for test
 	$not_siq_status = array('Er','Ex');
 	$this->db->where_not_in('SUBSTR(IFNULL(siquptime_status,""),1,2)',$not_siq_status);
 	$this->db->where('siquptime_no IS NOT NULL',NULL);
-	//$this->db->where('hospital_code',$this->session->userdata('hosp_code'));
-		$this->db->where('hospital_code','MKA');//for test
+$this->db->where('hospital_code',$this->session->userdata('hosp_code'));
+		//$this->db->where('hospital_code','MKA');//for test
 	$this->db->order_by('uptime_pct,asset_no');
 	$this->db->limit($limit,$start);
 	$query = $this->db->get();
@@ -1624,15 +1625,15 @@ function qap3_assetlim($year,$month,$limit,$start){
 function qap3_asset_noSIQ($year,$month){
 	$this->db->select('COUNT(*) AS jumlah');
 	$this->db->from('mis_qap_inc_assets$candidate');
-	//$this->db->where('qap_period',$year.$month);
-		$this->db->where('qap_period','201502');//for test
+	$this->db->where('qap_period',$year.$month);
+		//$this->db->where('qap_period','201502');//for test
 	$not_siq_status = array('Er','Ex');
 	$this->db->where_not_in('SUBSTR(IFNULL(siquptime_status,""),1,2)',$not_siq_status);
 	$this->db->where('siquptime_no',NULL);
 	$where = '(siquptime_status IS NULL OR SUBSTR(siquptime_status,1,3) = "SIQ")';
 	$this->db->where($where);
-	//$this->db->where('hospital_code',$this->session->userdata('hosp_code'));
-		$this->db->where('hospital_code','MKA');//for test
+	$this->db->where('hospital_code',$this->session->userdata('hosp_code'));
+		//$this->db->where('hospital_code','MKA');//for test
 	$this->db->order_by('uptime_pct,asset_no');
 	$query = $this->db->get();
 	//echo $this->db->last_query();
@@ -1642,15 +1643,15 @@ function qap3_asset_noSIQ($year,$month){
 function qap3_asset_noSIQlim($year,$month,$limit,$start){
 	$this->db->select('*');
 	$this->db->from('mis_qap_inc_assets$candidate');
-	//$this->db->where('qap_period',$year.$month);
-		$this->db->where('qap_period','201502');//for test
+$this->db->where('qap_period',$year.$month);
+		//$this->db->where('qap_period','201502');//for test
 	$not_siq_status = array('Er','Ex');
 	$this->db->where_not_in('SUBSTR(IFNULL(siquptime_status,""),1,2)',$not_siq_status);
 	$this->db->where('siquptime_no',NULL);
 	$where = '(siquptime_status IS NULL OR SUBSTR(siquptime_status,1,3) = "SIQ")';
 	$this->db->where($where);
-	//$this->db->where('hospital_code',$this->session->userdata('hosp_code'));
-		$this->db->where('hospital_code','MKA');//for test
+$this->db->where('hospital_code',$this->session->userdata('hosp_code'));
+		//$this->db->where('hospital_code','MKA');//for test
 	$this->db->order_by('uptime_pct,asset_no');
 	$this->db->limit($limit,$start);
 	$query = $this->db->get();
@@ -1676,12 +1677,12 @@ function qap3_asset_Ex($year,$month){
 function qap3_asset_Exlim($year,$month,$limit,$start){
 	$this->db->select('*');
 	$this->db->from('mis_qap_inc_assets$candidate');
-	//$this->db->where('qap_period',$year.$month);
-		$this->db->where('qap_period','201502');//for test
+	$this->db->where('qap_period',$year.$month);
+		//$this->db->where('qap_period','201502');//for test
 	$not_siq_status = array('Ex');
 	$this->db->where_in('SUBSTR(siquptime_status,1,2)',$not_siq_status);
-	//$this->db->where('hospital_code',$this->session->userdata('hosp_code'));
-		$this->db->where('hospital_code','MKA');//for test
+	$this->db->where('hospital_code',$this->session->userdata('hosp_code'));
+		//$this->db->where('hospital_code','MKA');//for test
 	$this->db->order_by('asset_no');
 	$this->db->limit($limit,$start);
 	$query = $this->db->get();
@@ -1715,10 +1716,10 @@ function qap3_wolim($year,$month,$limit,$start){
 	$this->db->select('wo.*,a.trpi,a.uptime_pct');
 	$this->db->from('mis_qap_work_orders$candidate wo');
 	$this->db->join('mis_qap_inc_assets$candidate a','wo.asset_no = a.asset_no AND wo.qap_period = a.qap_period','left outer');
-	//$this->db->where('wo.qap_period',$year.$month);
-		$this->db->where('wo.qap_period','201502');//for test
-	//$this->db->where('wo.hospital_code',$this->session->userdata('hosp_code'));
-		$this->db->where('wo.hospital_code','MKA');//for test
+$this->db->where('wo.qap_period',$year.$month);
+		//$this->db->where('wo.qap_period','201502');//for test
+$this->db->where('wo.hospital_code',$this->session->userdata('hosp_code'));
+		//$this->db->where('wo.hospital_code','MKA');//for test
 	$where = '(LENGTH(wo.siquptime_no) > 0 OR LENGTH(wo.siqppm_no) > 0)';
 	$this->db->where($where);
 	if ('wo.type_code' == ''){
@@ -1738,10 +1739,10 @@ function qap3_wo_noSIQ($year,$month){
 	$this->db->select('COUNT(*) AS jumlah');
 	$this->db->from('mis_qap_work_orders$candidate wo');
 	$this->db->join('mis_qap_inc_assets$candidate a','wo.asset_no = a.asset_no AND wo.qap_period = a.qap_period','left outer');
-	//$this->db->where('wo.qap_period',$year.$month);
-		$this->db->where('wo.qap_period','201502');//for test
-	//$this->db->where('wo.hospital_code',$this->session->userdata('hosp_code'));
-		$this->db->where('wo.hospital_code','MKA');//for test
+	$this->db->where('wo.qap_period',$year.$month);
+		//$this->db->where('wo.qap_period','201502');//for test
+$this->db->where('wo.hospital_code',$this->session->userdata('hosp_code'));
+		//$this->db->where('wo.hospital_code','MKA');//for test
 	$this->db->where('wo.siqppm_no',NULL);
 	$this->db->where('wo.siquptime_no',NULL);
 	$where = '(substr(wo.siqppm_status,1,3) NOT IN ("Err","Exc") OR wo.siqppm_status IS NULL)';
@@ -1763,10 +1764,10 @@ function qap3_wo_noSIQlim($year,$month,$limit,$start){
 	$this->db->select('wo.*,a.trpi,a.uptime_pct');
 	$this->db->from('mis_qap_work_orders$candidate wo');
 	$this->db->join('mis_qap_inc_assets$candidate a','wo.asset_no = a.asset_no AND wo.qap_period = a.qap_period','left outer');
-	//$this->db->where('wo.qap_period',$year.$month);
-		$this->db->where('wo.qap_period','201502');//for test
-	//$this->db->where('wo.hospital_code',$this->session->userdata('hosp_code'));
-		$this->db->where('wo.hospital_code','MKA');//for test
+    $this->db->where('wo.qap_period',$year.$month);
+		//$this->db->where('wo.qap_period','201502');//for test
+    $this->db->where('wo.hospital_code',$this->session->userdata('hosp_code'));
+		//$this->db->where('wo.hospital_code','MKA');//for test
 	$this->db->where('wo.siqppm_no',NULL);
 	$this->db->where('wo.siquptime_no',NULL);
 	$where = '(substr(wo.siqppm_status,1,3) NOT IN ("Err","Exc") OR wo.siqppm_status IS NULL)';
@@ -1788,10 +1789,10 @@ function qap3_wo_noSIQlim($year,$month,$limit,$start){
 function qap3_wo_Exc($year,$month){
 	$this->db->select('COUNT(*) AS jumlah');
 	$this->db->from('mis_qap_work_orders$candidate');
-	//$this->db->where('qap_period',$year.$month);
-		$this->db->where('qap_period','201502');//for test
-	//$this->db->where('hospital_code',$this->session->userdata('hosp_code'));
-		$this->db->where('hospital_code','MKA');//for test
+	$this->db->where('qap_period',$year.$month);
+		//$this->db->where('qap_period','201502');//for test
+	$this->db->where('hospital_code',$this->session->userdata('hosp_code'));
+		//$this->db->where('hospital_code','MKA');//for test
 	$where = '(substr(siqppm_status,1,8)="Excluded" OR substr(siquptime_status,1,8)="Excluded")';
 	$this->db->where($where);
 	if ('type_code' == ''){
@@ -1808,10 +1809,10 @@ function qap3_wo_Exc($year,$month){
 function qap3_wo_Exclim($year,$month,$limit,$start){
 	$this->db->select('*');
 	$this->db->from('mis_qap_work_orders$candidate');
-	//$this->db->where('qap_period',$year.$month);
-		$this->db->where('qap_period','201502');//for test
-	//$this->db->where('hospital_code',$this->session->userdata('hosp_code'));
-		$this->db->where('hospital_code','MKA');//for test
+	$this->db->where('qap_period',$year.$month);
+		//$this->db->where('qap_period','201502');//for test
+	$this->db->where('hospital_code',$this->session->userdata('hosp_code'));
+		//$this->db->where('hospital_code','MKA');//for test
 	$where = '(substr(siqppm_status,1,8)="Excluded" OR substr(siquptime_status,1,8)="Excluded")';
 	$this->db->where($where);
 	if ('type_code' == ''){
@@ -1839,21 +1840,27 @@ function qap3_actionnew($carid){
 	return $query->result();
 }
 function qap3_newcarno($ssiq,$m,$y){
+   /*   $query = $this->db->query("SELECT convert(right(CAR.car_no,5), UNSIGNED INTEGER) AS B FROM fmis.mis_qap_car_header CAR INNER JOIN fmis.mis_qap_siq_detail SIQ ON SIQ.siq_no = CAR.siq_no 
+	 WHERE CAR.hosp_code = 'MKA' AND CAR.siq_no = '".$ssiq."' AND month(SIQ.siq_date) = ".$m." AND year(SIQ.siq_date) = 2018 ORDER BY CAR.car_no DESC limit 1"); */
 	$this->db->select('CAR.car_no');
 	$this->db->from('mis_qap_car_header CAR');
 	$this->db->join('mis_qap_siq_detail SIQ','CAR.siq_no = SIQ.siq_no');
 	$this->db->where('CAR.siq_no',$ssiq);
-	//$this->db->where('CAR.hosp_code',$this->session->userdata('hosp_code'));
-		$this->db->where('CAR.hosp_code','MKA');//for test
-	//$this->db->where('MONTH(SIQ.siq_date)',$m);
-		$this->db->where('MONTH(SIQ.siq_date)',1);
-	$this->db->where('YEAR(SIQ.siq_date)',$y);
+	$this->db->where('CAR.hosp_code',$this->session->userdata('hosp_code'));
+    //$this->db->where('CAR.hosp_code','MKA');//for test
+    
+	$this->db->where('MONTH(SIQ.siq_date)',$m);
+	 $this->db->where('YEAR(SIQ.siq_date)',$y);
+	//$this->db->where('MONTH(SIQ.siq_date)',01);
+	//$this->db->where('YEAR(SIQ.siq_date)',2015);
+	
 	$this->db->order_by('CAR.car_no','desc');
 	$this->db->limit(1);
 	$query = $this->db->get();
-	//echo $this->db->last_query();
-	//exit();
+ 	echo $this->db->last_query();
+	exit(); 
 	return $query->result();
+	
 }
 
 function PWMP_period(){
@@ -3827,7 +3834,40 @@ function chkpo($pono,$visit){
 	return $query->result();
 }
 
+function checksiqno($carno){
+	$this->db->select('car_no');
+	$this->db->from('mis_qap_car_header');
+	$this->db->where('car_no',$carno);
+	$this->db->limit(1);
+	$query = $this->db->get();
+/* 	echo $this->db->last_query();
+	exit(); */
+	return $query->result();
+}
 
+function qap3_newcarno2($ssiq,$m,$y){
+
+	$this->db->select('convert(right(CAR.car_no,5), UNSIGNED INTEGER) AS B',FALSE);
+	$this->db->from('mis_qap_car_header CAR');
+	$this->db->join('mis_qap_siq_detail SIQ', 'SIQ.siq_no = CAR.siq_no');
+	$this->db->where('CAR.hosp_code',$this->session->userdata('hosp_code'));
+	$this->db->where('CAR.siq_no',$ssiq);
+	
+    //$this->db->where('CAR.hosp_code','MKA');//for test
+    
+	$this->db->where('MONTH(SIQ.siq_date)',$m);
+	 $this->db->where('YEAR(SIQ.siq_date)',$y);
+	//$this->db->where('MONTH(SIQ.siq_date)',01);
+	//$this->db->where('YEAR(SIQ.siq_date)',2015);
+	
+	$this->db->order_by('CAR.car_no','desc');
+	$this->db->limit(1);
+	$query = $this->db->get();
+ /* 	echo $this->db->last_query();
+	exit();  */
+	return $query->result();
+	
+}
 
 }
 ?>

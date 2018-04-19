@@ -255,7 +255,7 @@
 				<td class="" colspan="2"></td>
 			</tr>
 			<tr class="" height="40px" style="color:white;">
-				<td class="ui-middle-color" colspan="2"><span style="float: left; margin-top:8px; font-weight: bold;">Corrective Action Reports</span><span style="float: right; padding-right:10px;"><?php echo anchor ('contentcontroller/qap3_SIQ_number_Create?ssiq='.$this->input->get('ssiq').'&m='.$this->input->get('m').'&y='.$this->input->get('y').'&siq='.$this->input->get('siq'), '<button type="button" class="btn-button btn-primary-button" style="width:100%">CREATE CHAR</button>'); ?></span></td>
+				<td class="ui-middle-color" colspan="2"><span style="float: left; margin-top:8px; font-weight: bold;">Corrective Action Reports</span><span style="float: right; padding-right:10px;"><?php echo anchor ('contentcontroller/qap3_SIQ_number_Create?ssiq='.$this->input->get('ssiq').'&m='.$this->input->get('m').'&y='.$this->input->get('y').'&siq='.$this->input->get('siq'), '<button type="button" class="btn-button btn-primary-button" style="width:100%">CREATE CAR</button>'); ?></span></td>
 			</tr>
 			<tr>
 				<td colspan="2">

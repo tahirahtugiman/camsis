@@ -34,36 +34,35 @@ class Contentcontroller extends CI_Controller {
 			function select()
 			
 	{
-		
 
 	  $this->load->model('insert_model');
  		$this->insert_model->audit_log('login');
 	
 		$url = $this->input->post('continue') ? $this->input->post('continue') : site_url('contentcontroller/select');
-	    $data['service_apa'] = $this->loginModel->validate3();
-
+		$data['service_apa'] = $this->loginModel->validate3();
 		$data['service_apa2'] = $this->loginModel->validateAP();	
 		$this->load->model('display_model');
 		$Uid = $this->session->userdata('v_UserName');
 		$data['records_desk'] = $this->display_model->img($Uid);
-	
+		
 		//$file = $data['records_desk'][0]->file_name;
 		//$this->session->set_userdata('p_picture',$file);
 		$this->load->view('head');
 		$this->load->view('content_choose', $data);
 		
-		 if(!empty($_GET["hc"])){
+		if(!empty($_GET["hc"])){
      $this->session->set_userdata('hosp_code', $_GET["hc"]);
     if (count($data['service_apa']) > 1){
 	  $url =site_url('contentcontroller/select');
        
-	}else {
+			 }else {
         $url =site_url('contentcontroller/content/'.$data['service_apa'][0]->v_servicecode);
         
-	}
+				}
 	      redirect($url, 'refresh');	
 		 
 		 }
+		
 	}
 
 	function do_upload(){
@@ -1924,7 +1923,12 @@ class Contentcontroller extends CI_Controller {
 		//echo 'nilai'.$assetn;
 		$this->load->model("get_model");
 		$data['asset_det'] = $this->get_model->get_assetdet2($data['assetn']);
-		//print_r($data['asset_det']);
+		/* 		foreach ($data['contoh'] as $k => $v){
+		print "<pre>";
+		print_r(
+		 $v
+		);
+		} */
 		$data['asset_UMDNS'] = $this->get_model->get_UMDNSAsset($data['asset_det'][0]->V_Equip_code);
 		$data['asset_vo'] = $this->get_model->get_VOStatus($data['assetn']);
 		///$data['asset_chklist'] = $this->get_model->get_chklist($data['asset_det'][0]->v_ChecklistCode);
@@ -1935,6 +1939,7 @@ class Contentcontroller extends CI_Controller {
 		//exit();
 		$data['datacount'] = count($data['asset_images']);
 		//echo '<br> nilai asset vo';
+		
 		$data['assetppm'] = $this->get_model->assetppmlist($data['assetn']);
 		$this ->load->view("head");
 		$this ->load->view("left",$data);
@@ -2767,8 +2772,8 @@ class Contentcontroller extends CI_Controller {
 		$this->load->model("get_model");
 		$data['validPeriod'] = $this->get_model->validPeriod(date('F',mktime(0, 0, 0, $data['month'], 10)),$data['year']);
 		$data['recordsiq'] = $this->get_model->SIQsummary_siq(date('F',mktime(0, 0, 0, $data['month'], 10)),$data['year']);
-		//$data['siq_no'] = 'SBE/'.$this->session->userdata('hosp_code').'/'.$data['year'].$data['month'];
-		$data['siq_no'] = 'SBE/MKA/201501'; //for test
+	    $data['siq_no'] = 'SBE/'.$this->session->userdata('hosp_code').'/'.$data['year'].$data['month'];
+		//$data['siq_no'] = 'SBE/MKA/201501'; //for test
 		$data['recordcar'] = $this->get_model->SIQsummary_car($data['siq_no']);
 		!empty($data['validPeriod']) ? $data['validPeriod'] = 'true' : $data['validPeriod'] = 'false';
 		!is_null($data['recordsiq'][0]->ppm_siq) ? $data['PPMSIQ'] = $data['recordsiq'][0]->ppm_siq : $data['PPMSIQ'] = 0;
