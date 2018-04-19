@@ -62,10 +62,13 @@ $ssiq = $this->input->post('ssiq');
 	$siq = $this->input->post('siq');
 	//create new CAR no
 	$this->load->model('get_model');
-	$data['newno'] = $this->get_model->qap3_newcarno($ssiq,$m,$y);
-
+	$data['newno'] = $this->get_model->qap3_newcarno2($ssiq,$m,$y);
+    
+	//print_r ($data['newno']);
+	//exit();
 if (!is_null($data['newno'])) {
-		$nextno = substr($data['newno'][0]->car_no,13,5) + 1;
+		//$nextno = substr($data['newno'][0]->car_no,14,5) + 1;
+		$nextno = ($data['newno'][0]->B) + 1;
 	}
 	else{
 		$nextno = 1;
@@ -76,18 +79,21 @@ if (!is_null($data['newno'])) {
 		$caryear = substr(($y + 1),2,2);
 	}
 	else{
-		$carmonth = sprintf('%02d',($m + 1));
+		$carmonth = sprintf('%02d',($m));
+		//$carmonth = sprintf('%02d',($m + 1));
 		$caryear = substr($y,2,2);
 	}
 	
-//$NewCARno = 'CAR/'.$this->session->userdata('hosp_code').'/'.$caryear.$carmonth.'/'.sprintf('%05d',($nextno));
-	$NewCARno = 'CAR/MKA/'.$caryear.$carmonth.'/'.sprintf('%05d',($nextno));//for test
+
+
+     $NewCARno = 'CAR/'.$this->session->userdata('hosp_code').'/'.$caryear.$carmonth.'/'.sprintf('%05d',($nextno));
+	//$NewCARno = 'CAR/IIUM/'.$caryear.$carmonth.'/'.sprintf('%05d',($nextno));//for test
 
 
 	$carheader_data = array(
 						'company_code' => 'Pantai',
-						//'hosp_code' => $this->session->userdata('hosp_code'),
-						'hosp_code' => 'MKA',//for test
+						'hosp_code' => $this->session->userdata('hosp_code'),
+						//'hosp_code' => 'MKA',//for test
 						'car_no' => $NewCARno,
 						'car_level' => 'H',
 						'car_date' => strlen($this->input->post('CARDate')) > 0 ? date('Y-m-d',strtotime($this->input->post('CARDate'))) : NULL,
