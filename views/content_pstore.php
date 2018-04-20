@@ -1,7 +1,7 @@
 <div class="ui-middle-screen">
 	<div class="main-box">
 		<?php if (!in_array("contentcontroller/store_item_new", $chkers)) { ?>
-		<div class="box3">
+		<div class="box5">
 			<?php $autocolor = array('bg-purple', 'bg-red', 'bg-yellow', 'bg-aqua', 'bg-light-blue', 'bg-orange'); shuffle($autocolor); ?>
 			<div class="small-box <?php echo $autocolor[0];?>">
 				<div class="inner2" >
@@ -13,7 +13,7 @@
 		</div>
 		<?php  } ?>
 		<?php if (!in_array("contentcontroller/Report_Part", $chkers)) { ?>
-		<div class="box3">
+		<div class="box5">
 			<div class="small-box <?php echo $autocolor[1];?>">
 				<div class="inner2" >
 					<p>Report Part</p>
@@ -24,7 +24,7 @@
 		</div>
 		<?php  } ?>
 		<?php if (!in_array("contentcontroller/vendor_reg", $chkers)) { ?>
-		<div class="box3">
+		<div class="box5">
 			<div class="small-box <?php echo $autocolor[2];?>">
 				<div class="inner2" >
 					<p>Vendor Reg</p>
@@ -35,7 +35,7 @@
 		</div>
 		<?php  } ?>
 		<?php if (!in_array("contentcontroller/vendor_reg_update", $chkers)) { ?>
-		<div class="box3">
+		<div class="box5">
 			<div class="small-box <?php echo $autocolor[3];?>">
 				<div class="inner2" >
 					<p>Vendor Reg Update</p>
@@ -46,7 +46,7 @@
 		</div>
 		<?php  } ?>
 		<?php if (!in_array("contentcontroller/new_item", $chkers)) { ?>
-		<div class="box3">
+		<div class="box5">
 			<div class="small-box <?php echo $autocolor[4];?>">
 				<div class="inner2" >
 					<p>New Item</p>
@@ -57,7 +57,7 @@
 		</div>
 		<?php  } ?>
 		<?php if (!in_array("contentcontroller/bar_code", $chkers)) { ?>
-		<div class="box3">
+		<div class="box5">
 			<div class="small-box <?php echo $autocolor[5];?>">
 				<div class="inner2" >
 					<p>Bar Code</p>
@@ -93,9 +93,9 @@
 					<?php if($val->ItemCode == $row->ItemCode) { ?><!--&store=<?=$this->session->userdata('hosp_code')?>--> <!--originalcode-->
 					<a href="ustore?id=<?= $row->ItemCode ?>&qty=<?= $row->Qty ?>&n=<?= $row->ItemName ?>&p=<?= $val->Price ?>&act=take&store=<?=$this->session->userdata('hosp_code')?>" name="pstake" class="plus"><span class="icon-plus c-plus"></span>Take</a> 
 					<a href="ustore?id=<?= $row->ItemCode ?>&qty=<?= $row->Qty ?>&n=<?= $row->ItemName ?>&p=<?= $val->Price ?>&act=add&store=<?=$this->session->userdata('hosp_code')?>" name="psadd" class="plus"><span class="icon-plus c-plus"></span>Add</a>
-					<a href="<?php echo base_url();?>index.php/contentcontroller/stockDtail?id=<?= $row->ItemCode ?>"   style="float:right; margin-right:80px;"><img src="<?php echo base_url();?>images/information.png" style="width:21px; height:21px; position:absolute;" title="information"></a>
+					&nbsp;<a href="<?php echo base_url();?>index.php/contentcontroller/stockDtail?id=<?= $row->ItemCode ?>"   style="float:right; margin-right:80px;"><img src="<?php echo base_url();?>images/information.png" style="width:21px; height:21px; position:absolute;" title="information"></a>
 					
-					<span class="FieldLabel plusprice">Price RM<?= number_format($val->Price,2) ?></span>
+					<!--<span class="FieldLabel plusprice">Price RM<?= number_format($val->Price,2) ?></span> -->
 					<?php } ?>
 					<?php endforeach; ?>
 					<?php endforeach; ?>
