@@ -32,19 +32,24 @@ if (!isset($_GET["login"])) { ?>
 					<img src="<?php echo base_url(); ?>images/iium.png" class="img-login"/> 
 					<span class="title-login">
 					International Islamic University Malaysia <br/>Medical Centre (IIUMMC)</span>
+
 					<?php }else{ ?>
+
 					<span class="title-login2">
 					<img src="<?php echo base_url(); ?>images/iium.png" class="img-login"/>
 					<br/>International Islamic University Malaysia <br/>Medical Centre</span>
+
 					<?php } ?>
 				</div>
 				<div class="menum2">
-				  <?php if ($this->input->get('login') == "login"){ ?> 
+				  <?php if ($this->input->get('login') == "login"){ ?>
+
 					<i>Welcome To</i><br />
 					<span><b>Computerised Asset Management Services Information System</b></span>
 					<?php }else{ ?>
 					<img src="<?php echo base_url(); ?>images/penmedic2.png" class="img-penmedic"/><br>
 					<!--<span>Concession Contractor</span>-->
+					
 					<?php } ?>
 				</div>
 			</div>
@@ -88,9 +93,12 @@ if (!isset($_GET["login"])) { ?>
 			<span style="font-size:10px; display:inline-block; margin-top:50px;">CAMSIS is a copyright product of Advance Pact Sdn Bhd. All rights reserved.</span>
 			</div>
 			<!--<span style="font-weight:bold;">PenMedic Sdn. Bhd.</span><br />-->
-			<div class="bttm-ap" style="">
+			
+			<!-- <div class="bttm-ap" style=""> -->
+			<div class="bttm-ap" style="margin-top:20px;">
 			<!--<span style="font-size:11px; display:inline-block;">Facility Management Services Contractor</span><br />-->
-			<img src="<?php echo base_url(); ?>images/logo.png" style="width: 180px; height: 70px;"/><br />
+			<!-- <img src="<?php echo base_url(); ?>images/logo.png" style="width: 180px; height: 70px;"/><br /> -->
+			<img src="<?php echo base_url(); ?>images/logo.png" style="height: 60px;"/><br />
 			<!--<span style="font-size:11px;">Copyright &copy; <?php echo date("Y"); ?>. Advance Pact Sdn Bhd 2-3A, Perdana The Place, Jalan PJU 8/5G, Bandar Damansara Perdana, 47820, Petaling Jaya, Selangor, MALAYSIA.</span><br />-->
 			</div>
 		</div>

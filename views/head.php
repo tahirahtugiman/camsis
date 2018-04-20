@@ -15,10 +15,9 @@
 	<link rel="shortcut icon" href="<?php echo base_url(); ?>images/iconcam.png" type="image/x-icon" />
 	<link rel="STYLESHEET" type="text/css" media='all' href="<?php echo base_url(); ?>css/popup-contact.css">
 	<link rel="stylesheet" type='text/css' media='all' href="<?php echo base_url(); ?>icon/style.css">
-	<link rel='stylesheet' type='text/css' media='all' href="<?php echo base_url(); ?>css/style.css"> 
+	<link rel="stylesheet" type="text/css" media="all" href="<?php echo base_url(); ?>css/style.css" />
 	<link rel='stylesheet' type='text/css' media='all' href="<?php echo base_url(); ?>css/jquery-ui-1.10.0.custom.css"> 
-	<link href="<?php echo base_url(); ?>css/style.css" rel="stylesheet" type="text/css" media="all" />
-	<link href="<?php echo base_url(); ?>css/Color-skin3.css" rel="stylesheet" type="text/css" media="all" />
+	<link rel="stylesheet" type="text/css" media="all" href="<?php echo base_url(); ?>css/Color-skin3.css" />
 	<link rel="stylesheet" type='text/css' media='all' href="<?php echo base_url(); ?>icon/style.css">
 	<script src="<?php echo base_url(); ?>js/jquery.js"></script>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />

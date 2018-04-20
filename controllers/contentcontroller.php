@@ -2766,8 +2766,8 @@ class Contentcontroller extends CI_Controller {
 		$this->load->model("get_model");
 		$data['validPeriod'] = $this->get_model->validPeriod(date('F',mktime(0, 0, 0, $data['month'], 10)),$data['year']);
 		$data['recordsiq'] = $this->get_model->SIQsummary_siq(date('F',mktime(0, 0, 0, $data['month'], 10)),$data['year']);
-		//$data['siq_no'] = 'SBE/'.$this->session->userdata('hosp_code').'/'.$data['year'].$data['month'];
-		$data['siq_no'] = 'SBE/MKA/201501'; //for test
+		$data['siq_no'] = 'SBE/'.$this->session->userdata('hosp_code').'/'.$data['year'].$data['month'];
+		//$data['siq_no'] = 'SBE/MKA/201501'; //for test
 		$data['recordcar'] = $this->get_model->SIQsummary_car($data['siq_no']);
 		!empty($data['validPeriod']) ? $data['validPeriod'] = 'true' : $data['validPeriod'] = 'false';
 		!is_null($data['recordsiq'][0]->ppm_siq) ? $data['PPMSIQ'] = $data['recordsiq'][0]->ppm_siq : $data['PPMSIQ'] = 0;

@@ -1951,14 +1951,14 @@ return $query->result();
 			$this->db->from('pmis2_egm_jobdonedet A');
 			$this->db->join('mis_qap_work_orders$candidate WO','A.v_Wrkordno = WO.work_order_no','inner join');
 			$this->db->join('mis_qap_siq_detail SIQ','SIQ.siq_no = WO.siqppm_no','left outer');
-			//$this->db->where('SIQ.siq_date >=',$fromDate);
-				$this->db->where('SIQ.siq_date >=','2013-01-01');//for test
-			//$where = '(SIQ.siq_date <= "DATE_ADD(%f,-5000,DATE_ADD(%m,DATEDIFF(%c,0,$toDate)+1,0))")';
-				$where = '(SIQ.siq_date <= "DATE_ADD(%f,-5000,DATE_ADD(%m,DATEDIFF(%c,0,2015-03-01)+1,0))")';//for test
+			$this->db->where('SIQ.siq_date >=',$fromDate);
+			//	$this->db->where('SIQ.siq_date >=','2013-01-01');//for test
+			$where = '(SIQ.siq_date <= "DATE_ADD(%f,-5000,DATE_ADD(%m,DATEDIFF(%c,0,$toDate)+1,0))")';
+			//	$where = '(SIQ.siq_date <= "DATE_ADD(%f,-5000,DATE_ADD(%m,DATEDIFF(%c,0,2015-03-01)+1,0))")';//for test
 			$this->db->where($where);
-			$this->db->where('SIQ.ind_code','BES05');
-			//$this->db->where('SIQ.hosp_code',$this->session->userdata('hosp_code'));
-				$this->db->where('SIQ.hosp_code','MKA');//for test
+			$this->db->where('SIQ.ind_code',$this->session->userdata('usersess').'05');
+			$this->db->where('SIQ.hosp_code',$this->session->userdata('hosp_code'));
+			//	$this->db->where('SIQ.hosp_code','MKA');//for test
 			$notin_qcppm = array('QC09','QC10','QC12','QC14','QC17','QC18');
 			$this->db->where_not_in('WO.qc_ppm',$notin_qcppm);
 			$this->db->where('WO.qc_ppm <>','');
@@ -2007,14 +2007,14 @@ return $query->result();
 			$this->db->select('WO.qc_ppm AS QC_Code,COUNT(WO.qc_ppm) AS Occurance');
 			$this->db->from('mis_qap_siq_detail SIQ');
 			$this->db->join('mis_qap_work_orders$candidate WO','SIQ.siq_no = WO.siqppm_no');
-			//$this->db->where('SIQ.siq_date >=',$fromDate);
-				$this->db->where('SIQ.siq_date >=','2013-01-01');//for test
-			//$where = '(SIQ.siq_date <= "DATE_ADD(%f,-5000,DATE_ADD(%m,DATEDIFF(%c,0,$toDate)+1,0))")';
-				$where = '(SIQ.siq_date <= "DATE_ADD(%f,-5000,DATE_ADD(%m,DATEDIFF(%c,0,2015-03-01)+1,0))")';//for test
+			$this->db->where('SIQ.siq_date >=',$fromDate);
+			//	$this->db->where('SIQ.siq_date >=','2013-01-01');//for test
+			$where = '(SIQ.siq_date <= "DATE_ADD(%f,-5000,DATE_ADD(%m,DATEDIFF(%c,0,$toDate)+1,0))")';
+			//	$where = '(SIQ.siq_date <= "DATE_ADD(%f,-5000,DATE_ADD(%m,DATEDIFF(%c,0,2015-03-01)+1,0))")';//for test
 			$this->db->where($where);
-			$this->db->where('SIQ.ind_code','BES05');
-			//$this->db->where('SIQ.hosp_code',$this->session->userdata('hosp_code'));
-				$this->db->where('SIQ.hosp_code','MKA');//for test
+			$this->db->where('SIQ.ind_code',$this->session->userdata('usersess').'05');
+			$this->db->where('SIQ.hosp_code',$this->session->userdata('hosp_code'));
+			//	$this->db->where('SIQ.hosp_code','MKA');//for test
 			$qcppm_notin = array('QC09','QC10','QC12','QC14','QC17','QC18');
 			$this->db->where_not_in('WO.qc_ppm',$qcppm_notin);
 			$this->db->where('WO.qc_ppm <>','');
@@ -2026,33 +2026,34 @@ return $query->result();
 			return $query->result();
 		}
 		function qap3_reportsiq($fromDate,$toDate){
-			$this->db->select('SUM(CASE ind_code WHEN "BES05" THEN 1 ELSE 0 END) AS ppm_siq,SUM(CASE ind_code WHEN "BES06" THEN 1 ELSE 0 END) AS uptime_siq');
+			$this->db->select("SUM(CASE ind_code WHEN '".$this->session->userdata('usersess')."05' THEN 1 ELSE 0 END) AS ppm_siq,SUM(CASE ind_code WHEN '".$this->session->userdata('usersess')."06' THEN 1 ELSE 0 END) AS uptime_siq");
 			$this->db->from('mis_qap_siq_detail');
-			//$this->db->where('hosp_code',$this->session->userdata('hosp_code'));
-				$this->db->where('hosp_code','MKA');//for test
-			//$this->db->where('siq_date >=',$fromDate);
-				$this->db->where('siq_date >=','2013-01-01');//for test
-			//$where = '(siq_date <= "DATE_ADD(%f,-5000,DATE_ADD(%m,DATEDIFF(%c,0,$toDate)+1,0))")';
-				$where = '(siq_date <= "DATE_ADD(%f,-5000,DATE_ADD(%m,DATEDIFF(%c,0,2015-03-01)+1,0))")';//for test
+			$this->db->where('hosp_code',$this->session->userdata('hosp_code'));
+			//	$this->db->where('hosp_code','MKA');//for test
+			$this->db->where('siq_date >=',$fromDate);
+			//	$this->db->where('siq_date >=','2013-01-01');//for test
+			$where = '(siq_date <= "DATE_ADD(%f,-5000,DATE_ADD(%m,DATEDIFF(%c,0,$toDate)+1,0))")';
+			//	$where = '(siq_date <= "DATE_ADD(%f,-5000,DATE_ADD(%m,DATEDIFF(%c,0,2015-03-01)+1,0))")';//for test
 			$this->db->where($where);
-			$this->db->where('service','BES');
+			$this->db->where('service',$this->session->userdata('usersess'));
 			$query = $this->db->get();
 			//echo $this->db->last_query();
 			//exit();
 			return $query->result();
 		}
 		function qap3reportcaro($fromDate,$toDate){
-			$this->db->select('SUM(CASE C.ind_code WHEN "BES05" THEN 1 ELSE 0 END) AS ppm_car,SUM(CASE C.ind_code WHEN "BES06" THEN 1 ELSE 0 END) AS uptime_car');
+			//$this->db->select('SUM(CASE C.ind_code WHEN "BES05" THEN 1 ELSE 0 END) AS ppm_car,SUM(CASE C.ind_code WHEN "BES06" THEN 1 ELSE 0 END) AS uptime_car');
+			$this->db->select("SUM(CASE C.ind_code WHEN '".$this->session->userdata('usersess')."05' THEN 1 ELSE 0 END) AS ppm_car,SUM(CASE C.ind_code WHEN '".$this->session->userdata('usersess')."06' THEN 1 ELSE 0 END) AS uptime_car");
 			$this->db->from('mis_qap_car_header C');
 			$this->db->join('mis_qap_siq_detail S','C.siq_no = S.siq_no');
 			$this->db->where('S.hosp_code',$this->session->userdata('hosp_code'));
-				$this->db->where('S.hosp_code','MKA');//for test
-			//$this->db->where('siq_date >=',$fromDate);
-				$this->db->where('S.siq_date >=','2013-01-01');//for test
-			//$where = '(siq_date <= "DATE_ADD(%f,-5000,DATE_ADD(%m,DATEDIFF(%c,0,$toDate)+1,0))")';
-				$where = '(S.siq_date <= "DATE_ADD(%f,-5000,DATE_ADD(%m,DATEDIFF(%c,0,2015-03-01)+1,0))")';//for test
+			//	$this->db->where('S.hosp_code','MKA');//for test
+			$this->db->where('S.siq_date >=',$fromDate);
+			//	$this->db->where('S.siq_date >=','2013-01-01');//for test
+			$where = '(S.siq_date <= "DATE_ADD(%f,-5000,DATE_ADD(%m,DATEDIFF(%c,0,$toDate)+1,0))")';
+			//	$where = '(S.siq_date <= "DATE_ADD(%f,-5000,DATE_ADD(%m,DATEDIFF(%c,0,2015-03-01)+1,0))")';//for test
 			$this->db->where($where);
-			$this->db->where('C.service','BES');
+			$this->db->where('C.service',$this->session->userdata('usersess'));
 			$this->db->where('C.status','0');
 			$query = $this->db->get();
 			//echo $this->db->last_query();
@@ -2060,17 +2061,18 @@ return $query->result();
 			return $query->result();
 		}
 		function qap3reportcarc($fromDate,$toDate){
-			$this->db->select('SUM(CASE C.ind_code WHEN "BES05" THEN 1 ELSE 0 END) AS ppm_car,SUM(CASE C.ind_code WHEN "BES06" THEN 1 ELSE 0 END) AS uptime_car');
+			//$this->db->select('SUM(CASE C.ind_code WHEN "BES05" THEN 1 ELSE 0 END) AS ppm_car,SUM(CASE C.ind_code WHEN "BES06" THEN 1 ELSE 0 END) AS uptime_car');
+			$this->db->select("SUM(CASE C.ind_code WHEN '".$this->session->userdata('usersess')."05' THEN 1 ELSE 0 END) AS ppm_car,SUM(CASE C.ind_code WHEN '".$this->session->userdata('usersess')."06' THEN 1 ELSE 0 END) AS uptime_car");
 			$this->db->from('mis_qap_car_header C');
 			$this->db->join('mis_qap_siq_detail S','C.siq_no = S.siq_no');
-			//$this->db->where('S.hosp_code',$this->session->userdata('hosp_code'));
-				$this->db->where('S.hosp_code','MKA');//for test
-			//$this->db->where('siq_date >=',$fromDate);
-				$this->db->where('S.siq_date >=','2013-01-01');//for test
-			//$where = '(siq_date <= "DATE_ADD(%f,-5000,DATE_ADD(%m,DATEDIFF(%c,0,$toDate)+1,0))")';
-				$where = '(S.siq_date <= "DATE_ADD(%f,-5000,DATE_ADD(%m,DATEDIFF(%c,0,2015-03-01)+1,0))")';//for test
+			$this->db->where('S.hosp_code',$this->session->userdata('hosp_code'));
+			//	$this->db->where('S.hosp_code','MKA');//for test
+			$this->db->where('siq_date >=',$fromDate);
+			//	$this->db->where('S.siq_date >=','2013-01-01');//for test
+			$where = '(siq_date <= "DATE_ADD(%f,-5000,DATE_ADD(%m,DATEDIFF(%c,0,$toDate)+1,0))")';
+			//	$where = '(S.siq_date <= "DATE_ADD(%f,-5000,DATE_ADD(%m,DATEDIFF(%c,0,2015-03-01)+1,0))")';//for test
 			$this->db->where($where);
-			$this->db->where('C.service','BES');
+			$this->db->where('C.service',$this->session->userdata('usersess'));
 			$this->db->where('C.status','1');
 			$query = $this->db->get();
 			//echo $this->db->last_query();
