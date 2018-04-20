@@ -2,11 +2,13 @@
 	<div class="content-workorder" align="center">
 		<table class="ui-desk-style-table3" cellpadding="4" cellspacing="0" width="90%">	
 			<tr class="ui-header-new" height="40px">
-				<td class="" colspan="7"><span style="float: left; margin-top:8px; font-weight: bold;">Licenses and Certificates</span>
-				<span style="float: right; padding-right:10px;"  onclick="javascript:myFunction('print_lac');">
-					<button type="button" class="btn-button btn-primary-button" style="width:;">PRINT</button>
-				</span>
-				<span style="float: right; padding-right:10px;" ><?php echo anchor ('contentcontroller/assetlicenses_new', '<button type="button" class="btn-button btn-primary-button" style="width:60px;">NEW</button>'); ?></span>
+				<td class="" colspan="7">
+					<span style="float: left; margin-top:8px; font-weight: bold;">Licenses and Certificates</span>
+					<span style="float: right; padding-right:10px;"  onclick="javascript:myFunction('print_lac');">
+						<button type="button" class="btn btn-primary-button btn-licenses">PRINT</button>
+					</span>
+					<span style="float: right; padding-right:10px;" ><?php echo anchor ('contentcontroller/assetlicenses_new', '<button type="button" class="btn btn-primary-button btn-licenses" style="">NEW</button>'); ?>
+					</span>
 				</td>
 			</tr>
 			<tr class="ui-color-contents-style-1">
