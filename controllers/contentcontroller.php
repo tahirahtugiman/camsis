@@ -1920,15 +1920,10 @@ class Contentcontroller extends CI_Controller {
 	}
 		public function assetupdate (){
 		$data['assetn'] = $this->input->get('asstno');
-		//echo 'nilai'.$assetn;
 		$this->load->model("get_model");
-		$data['asset_det'] = $this->get_model->get_assetdet2($data['assetn']);
-		/* 		foreach ($data['contoh'] as $k => $v){
-		print "<pre>";
-		print_r(
-		 $v
-		);
-		} */
+		$data['asset_det'] = $this->get_model->get_assetdet2($data['assetn']);//correct
+	
+	
 		$data['asset_UMDNS'] = $this->get_model->get_UMDNSAsset($data['asset_det'][0]->V_Equip_code);
 		$data['asset_vo'] = $this->get_model->get_VOStatus($data['assetn']);
 		///$data['asset_chklist'] = $this->get_model->get_chklist($data['asset_det'][0]->v_ChecklistCode);
@@ -2835,6 +2830,8 @@ class Contentcontroller extends CI_Controller {
 		$data['recordasset'] = $this->display_model->qap3_assetcodedisp($data['recordsiq'][0]->type_code);	
 		}
 		!empty($data['recordasset']) ? $data['assetcode'] = $data['recordasset'][0]->v_Equip_Code.' - '.$data['recordasset'][0]->v_Equip_Desc : $data['assetcode'] = '';
+		echo last_query();
+		exit();
 		$this ->load->view("head");
 		$this ->load->view("left");
 		$this ->load->view("content_qap3_SIQ_number_Create",$data);
@@ -3915,10 +3912,11 @@ class Contentcontroller extends CI_Controller {
 		$data['ppmsum'] = $this->display_model->sumppm($data['month'],$data['year'],$this->input->get('grp'));
 		$data['reqtype'] = 'A2';
 		//$data['rqsum'] = $this->display_model->sumrq($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'));
-                if ($this->session->userdata('usersess') == 'FES') {
+        if ($this->session->userdata('usersess') == 'FES') {
 		$data['ppmcivil'] = $this->display_model->sumppm($data['month'],$data['year'],$this->input->get('grp'),"IIUM C");
 		$data['ppmmech'] = $this->display_model->sumppm($data['month'],$data['year'],$this->input->get('grp'),"IIUM M");
 		$data['ppmelec'] = $this->display_model->sumppm($data['month'],$data['year'],$this->input->get('grp'),"IIUM E");
+		$data['reschout'] = $this->display_model->reschout($data['month'],$data['year'],$this->input->get('grp'));
 		//$data['rqcivil'] = $this->display_model->sumrq($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'),"IIUM C");
 		//$data['rqmech'] = $this->display_model->sumrq($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'),"IIUM M");
 		//$data['rqelec'] = $this->display_model->sumrq($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'),"IIUM E");
