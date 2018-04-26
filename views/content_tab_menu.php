@@ -58,7 +58,7 @@
 					echo '<div class="box3">';
 			    	echo '<div class="small-box '.$e.' ">';
 			    	echo '<div class="inner">';
-			    	//echo '<span class="">&nbsp</span>';
+			    	echo '<span class="">&nbsp</span>';
 			    	echo '<p>' .$value. '</p>';
 			    	echo '</div>';
 			    	echo '<div class="icon"><i class="icon-paste"></i></div>';
