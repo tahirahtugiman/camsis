@@ -310,6 +310,24 @@
 		</tr>
 	</table>
 	<div style="display:block;padding:10px;"></div>
+	<?php if ($this->session->userdata('usersess') == "BES") {?>
+	<table class="" style="width:100%;font-size:9px; " align="center" border="0">
+		<tr>
+			<td rowspan="5" valign="top">Submitted by :</td>
+			<td style="width:170px;text-align:left;">NUR AZILA BT AWANG MD ISA</td>
+			<td rowspan="5" style="width:2%;"></td>
+			<td rowspan="5" valign="top">Acknowledged by :</td>
+			<td valign="top" style="width:123px;text-align:left;">SALASIAH ABD AZIZ</td>
+		</tr>
+		<tr>
+			
+		</tr>
+		<tr>
+			<td style="border-bottom:1px solid black; padding-top:10px;"></td>
+			<td style="border-bottom:1px solid black; padding-top:10px;"></td>
+		</tr>
+	</table>
+	<?php } elseif ($this->session->userdata('usersess') == "FES") { ?>
 	<table class="" style="width:100%;font-size:9px; " align="center" border="0">
 		<tr>
 			<td rowspan="5" valign="top">Submitted by :</td>
@@ -332,6 +350,7 @@
 			<td style="border-bottom:1px solid black; padding-top:10px;"></td>
 		</tr>
 	</table>
+	<?php } ?>
 	</body>
 </html>
 <?php include 'pdf_footer.php'?>

@@ -499,6 +499,24 @@ function doSomething(a){
 			<td colspan="4"><?php if ($this->input->get('ex') == 'excel'){?><?=$this->input->get('v5') <> '' ? $this->input->get('v5') : (isset($fdr_mi[0]->action_by) ? $fdr_mi[0]->action_by : '') ?><?php } else {?><textarea class="xxtextareaxx" style="width:100%; height:300px;" id="textbox5"><?=$this->input->get('v5') <> '' ? $this->input->get('v5') : (isset($fdr_mi[0]->action_by) ? $fdr_mi[0]->action_by : '') ?></textarea><?php } ?></td>
 		</tr>
 	</table>
+	<?php if ($this->session->userdata('usersess') == "BES") {?>
+	<table class="" style="width:80%;font-size:12px; margin-top:10px;" align="center" border="0">
+		<tr>
+			<td rowspan="5" valign="top">Submitted by :</td>
+			<td>NUR AZILA BT AWANG MD ISA</td>
+			<td rowspan="5" valign="top">Acknowledged by :</td>
+			<td valign="top">SALASIAH ABD AZIZ</td>
+		</tr>
+		<tr>
+			
+		</tr>
+		
+		<tr>
+		  <td style="border-bottom:1px solid black; width:150px;padding-top:10px;"></td>
+			<td style="border-bottom:1px solid black; width:150px;padding-top:10px;"></td>
+		</tr>
+	</table>
+	<?php } elseif ($this->session->userdata('usersess') == "FES") { ?>
 	<table class="" style="width:80%;font-size:12px; margin-top:10px;" align="center" border="0">
 		<tr>
 			<td rowspan="5" valign="top">Submitted by :</td>
@@ -521,6 +539,7 @@ function doSomething(a){
 			<td style="border-bottom:1px solid black; width:150px;padding-top:10px;"></td>
 		</tr>
 	</table>
+	<?php } ?>
 	<?php if ($this->input->get('ex') != 'excel'){?>
 	<div id="container" class="qapgraf2"></div>
 	<?php } ?>

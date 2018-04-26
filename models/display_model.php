@@ -862,11 +862,18 @@ ORDER BY s.d_DueDt, s.v_WrkOrdNo
 			} elseif (($resch == "ys") && ($stat == "A"))
 			{
 			//$this->db->where("s.d_reschdt is not NULL AND s.v_wrkordstatus = 'AR'", NULL, FALSE);
-			$this->db->where("s.d_reschdt is not NULL AND s.v_wrkordstatus = 'AR' AND IFNULL(s.d_reschdt,d_DueDt) > now()", NULL, FALSE);
+			//$this->db->where("s.d_reschdt is not NULL AND s.v_wrkordstatus = 'AR' AND IFNULL(s.d_reschdt,d_DueDt) > now()", NULL, FALSE);
+			$this->db->where("s.d_reschdt is not NULL ", NULL, FALSE);
 			} elseif (($resch == "nt") && ($stat == "C"))
 			{
 			//$this->db->where("s.v_wrkordstatus = 'A' ", NULL, FALSE);
-			$this->db->where("(s.v_wrkordstatus = 'A' OR (s.v_wrkordstatus = 'AR' AND IFNULL(s.d_reschdt,d_DueDt) < now()))", NULL, FALSE);
+			//$this->db->where("(s.v_wrkordstatus = 'A' OR (s.v_wrkordstatus = 'AR' AND IFNULL(s.d_reschdt,d_DueDt) < now()))", NULL, FALSE);
+			$this->db->where("(s.v_wrkordstatus = 'A' OR s.v_wrkordstatus = 'AR') ", NULL, FALSE);
+			} 
+			elseif (($resch == "nt") && ($stat == "E"))
+			{
+			//$this->db->where("s.v_wrkordstatus = 'A' ", NULL, FALSE);
+			$this->db->where("s.d_reschdt is not NULL AND s.v_wrkordstatus = 'AR' ", NULL, FALSE);
 			} else
 			{
 			$this->db->not_like('s.v_wrkordstatus', $stat);
@@ -875,8 +882,13 @@ ORDER BY s.d_DueDt, s.v_WrkOrdNo
 			//$this->db->where('s.v_year', $year);
 			//$this->db->where('YEAR(s.d_DueDt)', $year);
 			//$this->db->where('MONTH(s.d_DueDt)', $month);
+			if(($resch == "nt") && ($stat == "E")){
+			$this->db->where('s.d_DueDt >=', $this->dater(1,$month,$year));
+		     $this->db->where('s.d_DueDt <=', $this->dater(2,$month,$year));
+			}else{
 			$this->db->where('IFNULL(s.d_reschdt,s.d_DueDt) >=', $this->dater(1,$month,$year));
 			$this->db->where('IFNULL(s.d_reschdt,s.d_DueDt) <=', $this->dater(2,$month,$year));
+			}
 			$this->db->where('s.v_HospitalCode',$this->session->userdata('hosp_code'));
 			$query = $this->db->get();
 			//echo $this->db->last_query();
@@ -2379,7 +2391,7 @@ return $query->result();
 			$bystak = " AND left(a.v_tag_no,6) = 'IIUM E'"; }
 
 			//$this->db->select("COUNT(*) as total, SUM(CASE WHEN sc.v_wrkordstatus = 'A'  THEN 1 ELSE 0 END) AS notcomp, SUM(CASE WHEN sc.v_wrkordstatus = 'C' OR sc.v_wrkordstatus = 'CR' THEN 1 ELSE 0 END) AS comp, SUM(CASE WHEN sc.d_reschdt is not NULL AND sc.v_wrkordstatus = 'AR' THEN 1 ELSE 0 END) AS resch");
-			$this->db->select("COUNT(*) as total, SUM(CASE WHEN sc.v_wrkordstatus = 'A'  OR (sc.v_wrkordstatus = 'AR' AND IFNULL(sc.d_reschdt,d_DueDt) < now()) THEN 1 ELSE 0 END) AS notcomp, SUM(CASE WHEN sc.v_wrkordstatus = 'C' OR sc.v_wrkordstatus = 'CR' THEN 1 ELSE 0 END) AS comp, SUM(CASE WHEN sc.d_reschdt is not NULL AND sc.v_wrkordstatus = 'AR' AND (IFNULL(sc.d_reschdt,d_DueDt) > now()) THEN 1 ELSE 0 END) AS resch", FALSE);
+			$this->db->select("COUNT(*) as total, SUM(CASE WHEN sc.v_wrkordstatus = 'A'  OR (sc.v_wrkordstatus = 'AR') THEN 1 ELSE 0 END) AS notcomp, SUM(CASE WHEN sc.v_wrkordstatus = 'C' OR sc.v_wrkordstatus = 'CR' THEN 1 ELSE 0 END) AS comp, SUM(CASE WHEN sc.d_reschdt is not NULL THEN 1 ELSE 0 END) AS resch", FALSE);
 			$this->db->from('pmis2_egm_schconfirmmon sc');
 			$this->db->join('pmis2_egm_assetregistration a','sc.v_Asset_no = a.V_Asset_no AND sc.v_HospitalCode = a.V_Hospitalcode '.$bystak,'left outer');
 			$this->db->where('sc.v_Actionflag <> ','D');
@@ -4915,6 +4927,42 @@ return $obj['path'];
 			
 			return $query->result();
 			
+		}
+		
+		function reschout($month,$year,$grpsel,$bystak = ""){
+		
+		if ($bystak == "IIUM C") {
+			$bystak = " AND left(a.v_tag_no,6) = 'IIUM C'"; }
+			elseif ($bystak == "IIUM M") {
+			$bystak = " AND left(a.v_tag_no,6) = 'IIUM M'"; }
+			elseif ($bystak == "IIUM E") {
+			$bystak = " AND left(a.v_tag_no,6) = 'IIUM E'"; }
+             		
+		    //$this->db->select("SUM(CASE WHEN sc.d_reschdt is not NULL AND sc.v_wrkordstatus = 'AR' AND (IFNULL(sc.d_reschdt, d_DueDt) > now()) THEN 1 ELSE 0 END) AS reschout",FALSE);			
+				$this->db->select("SUM(CASE WHEN sc.d_reschdt is not NULL AND sc.v_wrkordstatus = 'AR' THEN 1 ELSE 0 END) AS reschout",FALSE);			
+			$this->db->from('pmis2_egm_schconfirmmon sc');	
+			$this->db->join('pmis2_egm_assetregistration a','sc.v_Asset_no = a.V_Asset_no AND sc.v_HospitalCode = a.V_Hospitalcode '.$bystak,'left outer');
+			$this->db->where('sc.v_Actionflag <> ','D');
+			$this->db->where('a.v_Actionflag <> ','D');
+			$this->db->where('sc.v_ServiceCode = ',$this->session->userdata('usersess'));
+	       
+		
+		if ($grpsel <> ''){
+		$this->db->where('a.v_asset_grp',$grpsel);
+		}
+			
+	  $this->db->where('sc.d_DueDt >=', $this->dater(1,$month,$year));
+		$this->db->where('sc.d_DueDt <=', $this->dater(2,$month,$year));    
+		
+		$query = $this->db->get();
+		
+		$query_result = $query->result(); 
+		//echo $this->db->last_query();
+		//exit();
+		return $query_result;
+		
+		
+		
 		}
 
 }

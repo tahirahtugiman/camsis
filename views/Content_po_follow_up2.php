@@ -119,13 +119,13 @@
 											<tr >
 												<td class="ui-desk-style-table">
 													<table class="ui-content-form" width="100%" border="0">
-														<tr><td colspan="3" class="ui-bottom-border-color" style="font-weight: bold;">INVOICE & DO</td></tr>													
+														<tr><td colspan="3" class="ui-bottom-border-color" style="font-weight: bold;">INVOICE & Delivery Order</td></tr>													
 														<tr>
-															<td class="td-assest" style="width:40%;">DO :</td>
+															<td class="td-assest" style="width:40%;">Delivery Order :</td>
 															<td><?=isset($pofollow[0]->do_no) ? $pofollow[0]->do_no : ''?></td>
 														</tr>
 														<tr>
-															<td class="td-assest">DO Date :</td>
+															<td class="td-assest">Delivery Order Date :</td>
 															<td><?=isset($pofollow[0]->do_date) ? date("d-m-Y",strtotime($pofollow[0]->do_date)) : ''?></td>
 														</tr>
 														<tr>
@@ -142,7 +142,7 @@
 															<td><?=isset($pofollow[0]->dept) ? $pofollow[0]->dept : ''?></td>
 														</tr>		
 														<tr>
-															<td class="td-assest">MD APPROVAL Date :</td>
+															<td class="td-assest">APPROVAL Date :</td>
 															<td><?=isset($pofollow[0]->md_appdt) ? date("d-m-Y",strtotime($pofollow[0]->md_appdt)) : ''?></td>
 														</tr>				
 														<tr>

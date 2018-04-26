@@ -10,7 +10,7 @@
 				<td colspan="11" valign="top" class="pd-bttm">
 					<table width="98%" class="ui-content-middle-menu-workorder" style="">
 						<tr class="ui-color-contents-style-1" height="30px">
-							<td colspan="2" class="ui-header-new" valign="top"><span style="float: left; margin-top:8px; font-weight: bold;">General Information</span><span class="ui-left_web" style="float: left; margin-top:8px; margin-left:8px; font-weight: bold; width: 20%;"><marquee valign="bottom" direction="right" loop="40" class="marquee-color"><b>QAP ASSET</b></marquee></span>&nbsp;<span style="float: right; padding-right:10px;"><a href="delete_wo?wrk_ord=<?=$this->input->get('wrk_ord')?>" class="btn-button btn-primary-button" style="width: 80px; display:inline-block; text-align:center;">Delete</a>&nbsp;<input type="submit" class="btn-button btn-primary-button" style="width: 100px;" name="mysubmit" value="Update"></span></td>
+							<td colspan="2" class="ui-header-new" valign="top"><span style="float: left; margin-top:8px; font-weight: bold;">General Information</span><span class="ui-left_web" style="float: left; margin-top:8px; margin-left:8px; font-weight: bold; width: 20%;"><marquee valign="bottom" direction="right" loop="40" class="marquee-color"><b>QAP ASSET</b></marquee></span>&nbsp;<span style="float: right; padding-right:10px;"><a style="display:none;" href="delete_wo?wrk_ord=<?=$this->input->get('wrk_ord')?>" class="btn-button btn-primary-button" style="width: 80px; display:inline-block; text-align:center;">Delete</a>&nbsp;<input type="submit" class="btn-button btn-primary-button" style="width: 100px;" name="mysubmit" value="Update"></span></td>
 						</tr>
 						
 						<tr >

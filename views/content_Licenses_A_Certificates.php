@@ -99,7 +99,7 @@
 						</tr>
 						<tr <?=($numrow % 2) == 1 ? 'class="ui-color-color-color"' : 'class="bg-grey2"'?>>	
 							<td >License Category</td>
-							<td class="td-desk">: <?php echo anchor ('contentcontroller/assetlicenses_detail?liccd='.$row->v_CertificateNo,''.isset($row->v_LicenseCategoryCode) == TRUE ? $row->v_LicenseCategoryCode : 'N/A'.'' ) ?></td>
+							<td class="td-desk">: <?php echo anchor ('contentcontroller/assetlicenses_detail?liccd='.$row->id,''.isset($row->v_LicenseCategoryCode) == TRUE ? $row->v_LicenseCategoryCode : 'N/A'.'' ) ?></td>
 						</tr>
 						<tr <?=($numrow % 2) == 1 ? 'class="ui-color-color-color"' : 'class="bg-grey2"'?>>
 							<td >Identification</td>

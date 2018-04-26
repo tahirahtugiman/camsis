@@ -254,13 +254,13 @@ echo form_open('Procurement/po_follow_upsv?pr='.$this->input->get('pr').'&po='.$
 									<tr >
 										<td class="ui-desk-style-table">
 											<table class="ui-content-form" width="100%" border="0">
-												<tr><td colspan="3" class="ui-bottom-border-color" style="font-weight: bold;">INVOICE & DO</td></tr>													
+												<tr><td colspan="3" class="ui-bottom-border-color" style="font-weight: bold;">INVOICE & Delivery Order</td></tr>													
 												<tr>
-													<td class="td-assest" style="width:40%;">DO :</td>
+													<td class="td-assest" style="width:40%;">Delivery Order :</td>
 													<td><input type="text"  name="n_do" value="<?=$do_no?><?=$this->input->post('n_do')?>" class="form-control-button2 n_wi-date2" <?=$confim?>></td>
 												</tr>
 												<tr>
-													<td class="td-assest">DO Date :</td>
+													<td class="td-assest">Delivery Order Date :</td>
 													<td><input type="text"  name="n_dodt" value="<?=$do_date?><?=$this->input->post('n_dodt')?>" class="form-control-button2 n_wi-date2" id="date<?php echo $numberdate++; ?>" <?=$confim?>></td>
 												</tr>
 												<tr>
@@ -308,7 +308,7 @@ echo form_open('Procurement/po_follow_upsv?pr='.$this->input->get('pr').'&po='.$
 													</td>
 												</tr>
 											  <tr>
-													<td class="td-assest">MD APPROVAL Date</td>
+													<td class="td-assest">APPROVAL Date</td>
 													<td><input type="text"  name="n_mddt" value="<?=$md_apprdt?><?=$this->input->post('n_mddt')?>" class="form-control-button2 n_wi-date2" id="date<?php echo $numberdate++; ?>" <?=$confim?>></td>
 												</tr>		
 												<tr style="height:20px;">
