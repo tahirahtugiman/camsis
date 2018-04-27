@@ -75,7 +75,7 @@ if (!isset($_GET["login"])) { ?>
 				<?php }else{ ?>
 				<button type="cancel" name="submit" class='btn btn-primary submitcamsis' onclick="window.location.href='<?php echo base_url(); ?>index.php/LoginController/index?login=login'">ENTER TO CAMSIS</button><br>
 				<!--<button type="cancel" name="submit" class='btn btn-primary' onclick="window.location.href='<?php echo base_url(); ?>index.php?login=login'" style="width:75%;margin-top:50px;margin-left:55px;">ENTER TO CAMSIS</button><br>-->
-				Redirecting to CAMSIS in 3 seconds...
+				Redirecting to CAMSIS in <span id="countdown">3</span> seconds...
 				<?php } ?>
 			</div>
 		</div>
@@ -114,6 +114,26 @@ function myFunction() {
     document.getElementById("demo").innerHTML = x;
 }
 </script>-->
+
+
+<?php if ($this->input->get('login') != "login"){
+echo "
+<script>
+	var timeLeft = 2;
+	var elem = document.getElementById('countdown');
+	var timerId = setInterval(countdown, 1000);
+
+	function countdown() {
+		if (timeLeft == -1) {
+			clearTimeout(timerId);
+			doSomething();
+		} else {
+			elem.innerHTML = timeLeft;
+			timeLeft--;
+		}
+	}
+</script>";
+}?>
 </body>
 <?php require_once('contactform-code.php');?>
 </html>

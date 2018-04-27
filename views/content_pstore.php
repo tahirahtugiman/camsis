@@ -1,7 +1,8 @@
+<?php $i=6;?>
 <div class="ui-middle-screen">
 	<div class="main-box">
 		<?php if (!in_array("contentcontroller/store_item_new", $chkers)) { ?>
-		<div class="box5">
+		<div class="box">
 			<?php $autocolor = array('bg-purple', 'bg-red', 'bg-yellow', 'bg-aqua', 'bg-light-blue', 'bg-orange'); shuffle($autocolor); ?>
 			<div class="small-box <?php echo $autocolor[0];?>">
 				<div class="inner2" >
@@ -11,9 +12,9 @@
 				<?php echo anchor ('contentcontroller/store_item_new','<span class="ui-left_web">More Info <i class="icon-arrow-right"></i></span>','class="small-box-footer"'); ?>
 			</div>
 		</div>
-		<?php  } ?>
+		<?php  }else{ $i = $i-1; } ?>
 		<?php if (!in_array("contentcontroller/Report_Part", $chkers)) { ?>
-		<div class="box5">
+		<div class="box">
 			<div class="small-box <?php echo $autocolor[1];?>">
 				<div class="inner2" >
 					<p>Report Part</p>
@@ -22,9 +23,9 @@
 				<?php echo anchor ('contentcontroller/Report_Part','<span class="ui-left_web">More Info <i class="icon-arrow-right"></i></span>','class="small-box-footer"'); ?>
 			</div>
 		</div>
-		<?php  } ?>
+		<?php  }else{ $i = $i-1; } ?>
 		<?php if (!in_array("contentcontroller/vendor_reg", $chkers)) { ?>
-		<div class="box5">
+		<div class="box">
 			<div class="small-box <?php echo $autocolor[2];?>">
 				<div class="inner2" >
 					<p>Vendor Reg</p>
@@ -33,9 +34,9 @@
 				<?php echo anchor ('contentcontroller/vendor_reg','<span class="ui-left_web">More Info <i class="icon-arrow-right"></i></span>','class="small-box-footer"'); ?>
 			</div>
 		</div>
-		<?php  } ?>
-		<?php if (!in_array("contentcontroller/vendor_reg_update", $chkers)) { ?>
-		<div class="box5">
+		<?php  }else{ $i = $i-1; } ?>
+		<?php if (in_array("contentcontroller/vendor_reg_update", $chkers)) { ?>
+		<div class="box">
 			<div class="small-box <?php echo $autocolor[3];?>">
 				<div class="inner2" >
 					<p>Vendor Reg Update</p>
@@ -44,9 +45,9 @@
 				<?php echo anchor ('contentcontroller/vendor_reg_update','<span class="ui-left_web">More Info <i class="icon-arrow-right"></i></span>','class="small-box-footer"'); ?>
 			</div>
 		</div>
-		<?php  } ?>
+		<?php  }else{ $i = $i-1; } ?>
 		<?php if (!in_array("contentcontroller/new_item", $chkers)) { ?>
-		<div class="box5">
+		<div class="box">
 			<div class="small-box <?php echo $autocolor[4];?>">
 				<div class="inner2" >
 					<p>New Item</p>
@@ -55,9 +56,9 @@
 				<?php echo anchor ('contentcontroller/new_item','<span class="ui-left_web">More Info <i class="icon-arrow-right"></i></span>','class="small-box-footer"'); ?>
 			</div>
 		</div>
-		<?php  } ?>
+		<?php  }else{ $i = $i-1; } ?>
 		<?php if (!in_array("contentcontroller/bar_code", $chkers)) { ?>
-		<div class="box5">
+		<div class="box">
 			<div class="small-box <?php echo $autocolor[5];?>">
 				<div class="inner2" >
 					<p>Bar Code</p>
@@ -66,7 +67,7 @@
 				<?php echo anchor ('contentcontroller/bar_code','<span class="ui-left_web">More Info <i class="icon-arrow-right"></i></span>','class="small-box-footer"'); ?>
 			</div>
 		</div>
-		<?php  } ?>
+		<?php  }else{ $i = $i-1; } ?>
 		
 	</div>
 	<div class="content-workorder">
@@ -160,6 +161,10 @@
 <?php include 'content_jv_popup.php';?>
 
 <script language="javascript" type="text/javascript">
+
+	var i = "<?=$i?>";
+	$(".box").attr("class","box"+i);
+	
 	function fToggle(elementId) {
 	
 		var e = document.getElementById(elementId);
