@@ -16,6 +16,7 @@ if (!isset($_GET["login"])) { ?>
 <link rel='stylesheet' type='text/css' media='all' href="<?php echo base_url(); ?>css/style.css"> 
 <link href="<?php echo base_url(); ?>css/Color-skin3.css" rel="stylesheet" type="text/css" media="all" />
 <link rel="stylesheet" type='text/css' media='screen' href="<?php echo base_url(); ?>icon/style.css">
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>css/login.css">
 <title>Login</title>
 <!-- css3-mediaqueries.js for IE less than 9 -->
  <!--[if lt IE 9]>
