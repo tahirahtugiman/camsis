@@ -30,7 +30,7 @@ if (!isset($_GET["login"])) { ?>
 				<div class="menum"> 
 					<?php if ($this->input->get('login') == "login"){ ?>
 					
-					<img src="<?php echo base_url(); ?>images/iium.png" class="img-login"/> 
+					<img src="<?php echo base_url(); ?>images/iium.png" class="camsis2-main-logo"/> 
 					<span class="title-login">
 					International Islamic University Malaysia <br/>Medical Centre (IIUMMC)</span>
 
