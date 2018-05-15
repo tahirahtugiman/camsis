@@ -260,7 +260,7 @@ if ('Procurement/' == $this->uri->slash_segment(1)){
 	}
 
 }
-if ('stockDtail/' == $this->uri->slash_segment(2) || 'stockact/' == $this->uri->slash_segment(2) || 'bar_code/' == $this->uri->slash_segment(2)){
+if ('stockDtail/' == $this->uri->slash_segment(2) || 'stockact/' == $this->uri->slash_segment(2) || 'bar_code/' == $this->uri->slash_segment(2) || 'new_item/' == $this->uri->slash_segment(2)){
 echo "<div class='menu-class'>
 		<a href='Store'> <span class='icon-play2' valign='middle'></span> Parts Catalog</a>
 		</div>";

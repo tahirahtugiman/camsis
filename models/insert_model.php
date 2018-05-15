@@ -1501,7 +1501,9 @@ function visitplus_woexist($value,$variable,$value1,$variable1){
 						);
 				//print_r($insert_data);
 				//echo '<br><br>';
-				$this->update_model->visitplus_form($insert_data,$variable,$variable1);
+				//add if to prevent data coruption
+				if (($variable != "") && ($variable1 != "")) {
+				$this->update_model->visitplus_form($insert_data,$variable,$variable1);}
 
 				$TOWdata = array(
 						'type_of_work' => $this->input->post('n_Type_of_Work')
@@ -2655,6 +2657,12 @@ function tbl_po_mirn($insert_data){
 
 function tbl_po($insert_data){
 	$this->db->insert('tbl_po',$insert_data);
+}
+function ins_itembaru($insert_data){
+
+$this->db->insert('tbl_invitem', $insert_data);
+
+
 }
 
 }
