@@ -753,8 +753,8 @@ return $query->result();
 function licensesandcert()
 {
 
-//$this->db->select("A.v_CertificateNo, A.v_ServiceCode, A.v_AgencyCode, A.v_LicenseCategoryCode, B.v_LicenceCategoryDesc, A.v_IdentificationType, A.v_Identification, A.v_RegistrationNo, A.v_StartDate, A.v_ExpiryDate, A.v_GradeID, A.v_Remarks, A.v_hospitalcode, A.v_key, A.CMIS_Action_Flag, A.d_timestamp,A.id",FALSE);
-$this->db->select("A.v_CertificateNo, A.v_ServiceCode, A.v_AgencyCode, A.v_LicenseCategoryCode, B.v_LicenceCategoryDesc, A.v_IdentificationType, A.v_Identification, A.v_RegistrationNo, A.v_StartDate, A.v_ExpiryDate, A.v_GradeID, A.v_Remarks, A.v_hospitalcode, A.v_key, A.CMIS_Action_Flag, A.d_timestamp, MAX(A.d_timestamp),A.id",FALSE);
+$this->db->select("A.v_CertificateNo, A.v_ServiceCode, A.v_AgencyCode, A.v_LicenseCategoryCode, B.v_LicenceCategoryDesc, A.v_IdentificationType, A.v_Identification, A.v_RegistrationNo, A.v_StartDate, A.v_ExpiryDate, A.v_GradeID, A.v_Remarks, A.v_hospitalcode, A.v_key, A.CMIS_Action_Flag, A.d_timestamp,A.id",FALSE);
+//$this->db->select("A.v_CertificateNo, A.v_ServiceCode, A.v_AgencyCode, A.v_LicenseCategoryCode, B.v_LicenceCategoryDesc, A.v_IdentificationType, A.v_Identification, A.v_RegistrationNo, A.v_StartDate, A.v_ExpiryDate, A.v_GradeID, A.v_Remarks, A.v_hospitalcode, A.v_key, A.CMIS_Action_Flag, A.d_timestamp, MAX(A.d_timestamp),A.id",FALSE);
 //SELECT (case when DWRate = 999 then (case when 500 <= 2000000 then 0.0075 * 100 else 0.0050 * 100 end) else DWRate end) as DWRate, PWRate, (case when DWRate = 999 then (case when 500 <= 2000000 then (500 * 0.0075) / 12 else (500 * 0.0050) / 12 end) else (500 * ( DWRate / 100)) / 12 end) as 'FeeDW', (500 * ( PWRate / 100) / 12) as 'FeePW'
 $this->db->from('pmis2_egm_lnc_lincense_details A');
 $this->db->join('pmis2_egm_lnc_license_category_code B','A.v_LicenseCategoryCode=B.v_LicenceCategoryCode');
@@ -762,12 +762,12 @@ $this->db->where('A.v_ServiceCode =', $this->session->userdata('usersess'));
 $this->db->where('v_HospitalCode =', $this->session->userdata('hosp_code'));
 $this->db->where('A.v_ActionFlag <> ', 'D');
 $this->db->where('B.v_ActionFlag <> ', 'D');
-//$this->db->where('v_ExpiryDate IN (SELECT MAX(`v_ExpiryDate`) FROM pmis2_egm_lnc_lincense_details GROUP BY v_CertificateNo)');
+$this->db->where('A.d_timestamp IN (SELECT MAX(`d_timestamp`) FROM pmis2_egm_lnc_lincense_details GROUP BY v_CertificateNo)');
 $this->db->group_by('A.v_CertificateNo'); 
 $query = $this->db->get();
 //echo "laalla".$query->DWRate;
-/* echo $this->db->last_query();
-exit(); */
+/*  echo $this->db->last_query();
+exit();  */
 return $query->result();
 
 }
@@ -3855,6 +3855,19 @@ function qap3_newcarno2($ssiq,$m,$y){
 	exit();  */
 	return $query->result();
 	
+}
+function get_asset_list($assetno){
+/* echo "ayam";
+exit(); */
+//$this->db->select('pmis2_sa_asset_mapping.new_asset_type, left(pmis2_sa_moh_asset_type.type_desc, 50)');
+	$this->db->select('a.*, b.v_vendorname');
+			$this->db->from('tbl_invitem a');
+			$this->db->join('pmis2_sa_vendor b','a.VendorID = b.id','left');
+	        $this->db->where('Dept =', $this->session->userdata('usersess'));
+$query=$this->db->where('a.ItemCode = ', $assetno)->get();
+
+return $query->result();
+
 }
 
 }

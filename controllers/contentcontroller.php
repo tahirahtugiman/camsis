@@ -7326,6 +7326,8 @@ public function assethistory(){
 	}
 
 public function visitjclosed(){
+/* echo "ayam";
+exit(); */
 		$data['wrk_ord'] = $this->input->get('wrk_ord');
 
 		$this->load->model("display_model");
@@ -8174,9 +8176,14 @@ public function deductmapping_2(){
 		$this ->load->view("head");
 		$this ->load->view("left");
 		$this->load->model("display_model");
-      
-
-		$data['limit'] = 6; 	
+    	$this->load->model("get_model");
+		$this->load->model('update_model');
+         if (isset($_GET['edit'])){
+	
+		$data['edititem'] = $this->get_model->get_asset_list($_GET['edit']);
+	    // print_r ($data['edititem']);
+		}
+		$data['limit'] = 10; 	
         isset($_GET['pa']) ? $data['page'] = $_GET['pa'] : $data['page'] = 1;
 	    $data['start'] = ($data['page'] * $data['limit']) - $data['limit'];
 		
@@ -8212,11 +8219,7 @@ public function deductmapping_2(){
 		'EquipCat'=>$this->input->post('n_equipcat'),		
 		'Brand'=>$this->input->post('n_brand'),
 		'Model'=>$this->input->post('n_model'),
-		/* 'Brand'=>$this->input->post('n_minimum_price'),
-		'Brand'=>$this->input->post('n_maximum_price'),
-		'Brand'=>$this->input->post('n_Status'),
-		'Brand'=>$this->input->post('n_Expiry'),
-		'Brand'=>$this->input->post('n_Current'), */
+
 		'Dept'=>$this->session->userdata('usersess'),
 		'DateCreated'=>date('Y-m-d H:i:s'),
 		//'DateCreated'=>date("Y-m-d"),
@@ -8225,7 +8228,13 @@ public function deductmapping_2(){
 		);
 /* 		print_r($insert_data);
 		exit(); */
-         $this->insert_model->ins_itembaru($insert_data);
+
+		if($this->input->post('editid')){
+		 $this->load->model('update_model');
+		 $this->update_model->updateitems($insert_data,$this->input->post('editid'));
+		 }else{		
+          $this->insert_model->ins_itembaru($insert_data);
+		 }
 	/* 	 echo $this->db->last_query();
 		 exit(); */
 		 redirect('contentcontroller/new_item?itemname='.$this->input->post('n_description').'&itemcode='.$this->input->post('n_code'));

@@ -4987,7 +4987,7 @@ return $obj['path'];
 	     if($limit != 0){
 			$this->db->select('a.*, b.v_vendorname');
 			$this->db->from('tbl_invitem a');
-			$this->db->join('pmis2_sa_vendor b','a.VendorID = b.id','inner');
+			$this->db->join('pmis2_sa_vendor b','a.VendorID = b.id','left');
 	        $this->db->where('Dept =', $this->session->userdata('usersess'));
 			$this->db->order_by('DateCreated','DESC');
 			$this->db->limit($limit,$start);
@@ -4995,7 +4995,7 @@ return $obj['path'];
           }else {
 	       $this->db->select('count(a.ItemCode) as jumlah');
 		   $this->db->from('tbl_invitem a');
-		   $this->db->join('pmis2_sa_vendor b','a.VendorID = b.id','inner');
+		   $this->db->join('pmis2_sa_vendor b','a.VendorID = b.id','left');
 	       $this->db->where('Dept =', $this->session->userdata('usersess'));			
          }
 		$query = $this->db->get();

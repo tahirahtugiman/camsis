@@ -6,7 +6,7 @@
 			<div class="ui-main-form-header">
 				<table align="center" height="40px" border="0">
 					<tr>
-						<td><span style="margin-left:10px;">New Item</span></td>
+						<td><span style="margin-left:10px;"><?php if (isset($_GET['edit'])){ echo "Update Items";}else{echo "New Item";} ?></span></td>
 					</tr>
 				</table>
 			</div>
@@ -14,27 +14,27 @@
 				<div class="middle_d2">
 					<table width="100%" class="ui-content-form-reg" style="">
 						<tr class="ui-color-contents-style-1" height="30px">
-								<td colspan="2" class="ui-header-new"><b>New Item</b></td>
+								<td colspan="2" class="ui-header-new"><b><?php if (isset($_GET['edit'])){ echo "Update Items";}else{echo "New Item";} ?></b></td>
 							</tr>
 							<tr >
 								<td class="ui-desk-style-table">
 									<table class="ui-content-form" width="100%" border="0">
 										<tr>
 											<td style="padding-left:10px; padding-top:5px;" valign="top" >Item Code:</td>
-											<td style="padding-left:10px; padding-top:5px;" valign="top"> <input type="text" name="n_code" class="form-control-button2 n_wi-date2" required></td>
+											<td style="padding-left:10px; padding-top:5px;" valign="top"> <input type="text" name="n_code" value="<?= isset($edititem[0]->ItemCode) == TRUE ? $edititem[0]->ItemCode : ''?>" class="form-control-button2 n_wi-date2" required></td>
 											<td style="padding-left:10px; padding-top:5px;" valign="top">Item Name:</td>
-											<td style="padding-left:10px; padding-top:5px;" valign="top"> <input type="text" name="n_description" class="form-control-button2 n_wi-date2"></td>
+											<td style="padding-left:10px; padding-top:5px;" valign="top"> <input type="text" name="n_description" value="<?= isset($edititem[0]->ItemName) == TRUE ? $edititem[0]->ItemName : ''?>" class="form-control-button2 n_wi-date2"></td>
 										</tr>
 										<tr>
 											<td style="padding-left:10px; padding-top:5px;" valign="top" >Part No:</td>
-											<td style="padding-left:10px; padding-top:5px;" valign="top"> <input type="text" name="n_partno" class="form-control-button2 n_wi-date2"></td>
+											<td style="padding-left:10px; padding-top:5px;" valign="top"> <input type="text" name="n_partno" value="<?= isset($edititem[0]->PartNumber) == TRUE ? $edititem[0]->PartNumber : ''?>" class="form-control-button2 n_wi-date2"></td>
 											<td style="padding-left:10px; padding-top:5px;" valign="top">Part Description:</td>
-											<td style="padding-left:10px; padding-top:5px;" valign="top"> <input type="text" name="n_pdescription" class="form-control-button2 n_wi-date2"></td>
+											<td style="padding-left:10px; padding-top:5px;" valign="top"> <input type="text" name="n_pdescription" value="<?= isset($edititem[0]->PartDescription) == TRUE ? $edititem[0]->PartDescription : ''?>" class="form-control-button2 n_wi-date2"></td>
 										</tr>
 										
 										<tr>
 											<td style="padding-left:10px; padding-top:5px;" valign="top" >Unit Price:</td>
-											<td style="padding-left:10px; padding-top:5px;" valign="top"> <input type="text" name="n_unitprice" class="form-control-button2 n_wi-date2"></td>
+											<td style="padding-left:10px; padding-top:5px;" valign="top"> <input type="text" name="n_unitprice" value="<?= isset($edititem[0]->UnitPrice) == TRUE ? $edititem[0]->UnitPrice : ''?>" class="form-control-button2 n_wi-date2"></td>
 											<td style="padding-left:10px; padding-top:5px;" valign="top">Currency:</td>
 											<td style="padding-left:10px; padding-top:5px;" valign="top"> <?php 
 										$Payment = array(
@@ -272,7 +272,7 @@
             '114' => 'ZWD', 
         );
 										 ?>
-										  <?php echo form_dropdown('n_currency', $Payment, set_value('n_currency'), 'id="n_currency" class="dropdown n_wi-date2"'); ?> </td>
+										  <?php echo form_dropdown('n_currency', $Payment, isset($edititem[0]->CurrencyID) == TRUE ? $edititem[0]->CurrencyID : '', 'id="n_currency" class="dropdown n_wi-date2"'); ?> </td>
 										</tr>
 										<tr>
 											<td style="padding-left:10px; padding-top:5px;" valign="top" >Measurement:</td>
@@ -290,26 +290,26 @@
 										'8' => 'cc',
                 					 );
 										 ?>
-										  <?php echo form_dropdown('n_Unit_of_measurement', $Unit_of_measurement, set_value('n_Unit_of_measurement'), 'id="n_Unit_of_measurement" class="dropdown n_wi-date2"'); ?></td>
+										  <?php echo form_dropdown('n_Unit_of_measurement', $Unit_of_measurement, isset($edititem[0]->MeasurementID) == TRUE ? $edititem[0]->MeasurementID : '', 'id="n_Unit_of_measurement" class="dropdown n_wi-date2"'); ?></td>
 											<td style="padding-left:10px; padding-top:5px;" valign="top">Vendor:</td>
-											<td style="padding-left:10px; padding-top:5px;" valign="top"> <input type="text" name="n_vendor_name"  id="n_vendor_name" value="<?php echo set_value('n_vendor_name'); ?>" readonly class="form-control-button2 <?php if ("contentcontroller/new_item/" == $this->uri->slash_segment(1) .$this->uri->slash_segment(2)){ ?>n_wi-eq3"> <span class="icon-windows" onclick="fCallpop_vendor(this)" value="vendorid"></span><?php }else{ echo 'n_wi-date2">';} ?>
-							                <input type="hidden" name="n_vendor_code" id="n_vendor_code" >
+											<td style="padding-left:10px; padding-top:5px;" valign="top"> <input type="text" name="n_vendor_name"  id="n_vendor_name" value="<?= isset($edititem[0]->v_vendorname) == TRUE ? $edititem[0]->v_vendorname : ''?>" readonly class="form-control-button2 <?php if ("contentcontroller/new_item/" == $this->uri->slash_segment(1) .$this->uri->slash_segment(2)){ ?>n_wi-eq3"> <span class="icon-windows" onclick="fCallpop_vendor(this)" value="vendorid"></span><?php }else{ echo 'n_wi-date2">';} ?>
+							                <input type="hidden" name="n_vendor_code" value="<?= isset($edititem[0]->VendorID) == TRUE ? $edititem[0]->VendorID : ''?>" id="n_vendor_code" >
 										</tr>
 										<tr>
 											<td style="padding-left:10px; padding-top:5px;" valign="top" >Code Category:</td>
-											<td style="padding-left:10px; padding-top:5px;" valign="top"> <input type="text" name="n_codecat" class="form-control-button2 n_wi-date2"></td>
+											<td style="padding-left:10px; padding-top:5px;" valign="top"> <input type="text" name="n_codecat" value="<?= isset($edititem[0]->CodeCat) == TRUE ? $edititem[0]->CodeCat : ''?>" class="form-control-button2 n_wi-date2"></td>
 											<td style="padding-left:10px; padding-top:5px;" valign="top">Equip Category:</td>
-											<td style="padding-left:10px; padding-top:5px;" valign="top"> <input type="text" name="n_equipcat" class="form-control-button2 n_wi-date2"></td>
+											<td style="padding-left:10px; padding-top:5px;" valign="top"> <input type="text" name="n_equipcat" value="<?= isset($edititem[0]->EquipCat) == TRUE ? $edititem[0]->EquipCat : ''?>" class="form-control-button2 n_wi-date2"></td>
 										</tr>
 										<tr>
 											<td style="padding-left:10px;" valign="top">Brand :   </td>
-										  <td style="padding-left:10px; padding-top:5px;" valign="top"> <input type="text" name="n_brand" class="form-control-button2 n_wi-date2"></td>
+										  <td style="padding-left:10px; padding-top:5px;" valign="top"> <input type="text" name="n_brand" value="<?= isset($edititem[0]->Brand) == TRUE ? $edititem[0]->Brand : ''?>" class="form-control-button2 n_wi-date2"></td>
 										  <td style="padding-left:10px;" valign="top">Model :   </td>
-										  <td style="padding-left:10px; padding-top:5px;" valign="top"> <input type="text" name="n_model" class="form-control-button2 n_wi-date2"></td>
+										  <td style="padding-left:10px; padding-top:5px;" valign="top"> <input type="text" name="n_model" value="<?= isset($edititem[0]->Model) == TRUE ? $edititem[0]->Model : ''?>"  class="form-control-button2 n_wi-date2"></td>
 										</tr>
 										<tr>
 											<td style="padding-left:10px;" valign="top">Comments :   </td>
-										  <td style="padding-left:10px; padding-top:5px;" valign="top"> <input type="text" name="n_comments" class="form-control-button2 n_wi-date2"></td>
+										  <td style="padding-left:10px; padding-top:5px;" valign="top"> <input type="text" name="n_comments" value="<?= isset($edititem[0]->Comments) == TRUE ? $edititem[0]->Comments : ''?>" class="form-control-button2 n_wi-date2"></td>
 										  <td style="padding-left:10px;" valign="top">Service :   </td>
 										  <td style="padding-left:10px; padding-top:5px;" valign="top"> <input type="text" name="n_service" value="<?php echo $this->session->userdata('usersess') ?>" class="form-control-button2 n_wi-date2" readonly></td>
 										
@@ -322,15 +322,20 @@
 			</div>
 			<table align="center" height="40px" border="0" style="width:100%;" class="ui-main-form-footer">
 				<tr>
-					<td align="center"><input type="submit" class="btn-button btn-primary-button" style="width: 200px;" name="mysubmit" value="Confirm"></td>
+					<td align="center"> <?php if (isset($_GET['edit'])){ ?> <input type="button" class="btn-button btn-primary-button" style="width: 200px;" name="back" value="Back"  onclick="location.href='<?php echo site_url();?>/contentcontroller/new_item'"> <?php }?>
+					<input type="submit" class="btn-button btn-primary-button" style="width: 200px;" name="mysubmit" value="Confirm"></td>
+				
 				</tr>
 			</table>
+			<?php echo form_hidden('editid',isset($edititem[0]->InvItemID) == TRUE ? $edititem[0]->InvItemID : '') ?>
 			<?php echo form_close(); ?>
 			<?php echo form_hidden('m',$this->input->get('m')) ?>
 			<?php echo form_hidden('y',$this->input->get('y')) ?>
 			
 			<style>
-				.ui-content-middle-menu-workorder2 tr td {padding:8px;font-size:14px;}
+				.ui-content-middle-menu-workorder2 tr td {padding:8px;font-size:14px;		
+			 width:100%;
+			  }
 				.ui-menu-color-header2, .ui-color-style-2 {
     background: #0d1b23;}
 				.ui-main-form2 {
@@ -422,7 +427,7 @@
 				</tr>
 			</table>
 	<?php }?>
-					<table class="ui-content-middle-menu-workorder2 ui-left_web" width="100%" height="25px">
+					<table class="ui-content-middle-menu-workorder2 ui-left_web" >
 						<tr class="ui-menu-color-header2" style="color:white; font-weight:bold;">
 							<td width="">Item Code</td>
 							<td width="">Item Name</td>
@@ -443,7 +448,7 @@
 				<?php $numrow = 1; foreach($records as $row):?>
 					      			
 	    				<?php echo ($numrow%2==0) ? '<tr class="ui-color-color-color">' : '<tr>'; ?>
-	    					<td style="text-transform: capitalize;"><?=$row->ItemCode?></td>
+	    					<td style="text-transform: capitalize;"><a href="?edit=<?=$row->ItemCode?>" style="font-size:14px;"><?=$row->ItemCode?></a></td>
 		        			<td><?=$row->ItemName?></td>
 		        			<td><?=$row->PartNumber?></td>
 		        			<td><?=$row->PartDescription?></td>
@@ -462,7 +467,7 @@
 			    		<?php endforeach;?>
 			    		<?php }else { ?>
 						<tr align="center" style="background:white; height:200px;">
-	    					<td colspan="10"><span style="color:red; text-transform: uppercase;">NO RECORD FOUND</span>
+	    					<td colspan="13"><span style="color:red; text-transform: uppercase;">NO RECORD FOUND</span>
 							</td>
 	    				</tr>
 						<?php } ?>	 

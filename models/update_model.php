@@ -593,6 +593,13 @@ function updatepomain($insert_data,$pono,$vis){
 	//echo $this->db->last_query();
 	//exit();
 }
+function updateitems($insert_data,$item){
+	$this->db->where('InvItemID',$item);
+
+	$this->db->update('tbl_invitem',$insert_data);
+	//echo $this->db->last_query();
+	//exit();
+}
 
 
 

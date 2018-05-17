@@ -1,4 +1,5 @@
 <?php echo form_open('contentcontroller/new_item?p=save');?>
+
 <div class="ui-middle-screen">
 	<div class="content-workorder">
 		<div class="div-p">&nbsp;</div>
@@ -212,6 +213,7 @@
 					</td>
 				</tr>
 			</table>
+			<?php echo form_hidden('editid',set_value('editid')) ?>
 			<?php echo form_hidden('m',$this->input->get('m')) ?>
 			<?php echo form_hidden('y',$this->input->get('y')) ?>
 		</div>
