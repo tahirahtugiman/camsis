@@ -117,7 +117,7 @@
             $this->db->where('V_servicecode = ',$this->session->userdata('usersess'));
             $query = $this->db->get("pmis2_egm_service_request");
 						
-            
+      //echo $this->db->last_query();      
 			$query_result = $query->result();
 			return $query_result;
         }
@@ -891,7 +891,7 @@ ORDER BY s.d_DueDt, s.v_WrkOrdNo
 			}
 			$this->db->where('s.v_HospitalCode',$this->session->userdata('hosp_code'));
 			$query = $this->db->get();
-			//echo $this->db->last_query();
+			echo $this->db->last_query();
 			//exit();
 			$query_result = $query->result();
 			return $query_result;
@@ -2149,7 +2149,7 @@ return $query->result();
 				$this->db->order_by('s.V_User_dept_code','desc');
 			}
 			$query = $this->db->get();
-			//echo $this->db->last_query();
+			echo $this->db->last_query();
 			//exit();
 			return $query->result();
 		}
@@ -2408,7 +2408,7 @@ return $query->result();
 			$this->db->where('IFNULL(sc.d_reschdt,d_DueDt) <=', $this->dater(2,$month,$year));
 			$query = $this->db->get();
 			//echo "dater : ".$this->dater(1,$month,$year);
-			//echo $this->db->last_query();
+			echo $this->db->last_query();
 			//exit();
             
 			$query_result = $query->result();
@@ -4963,6 +4963,44 @@ return $obj['path'];
 		
 		
 		
+		}
+		
+		function s_item_detail($limit,$start){
+	     if($limit != 0){
+			$this->db->select('a.*, b.v_vendorname');
+			$this->db->from('tbl_invitem a');
+			$this->db->join('pmis2_sa_vendor b','a.VendorID = b.id','left');
+	        $this->db->where('Dept =', $this->session->userdata('usersess'));
+			$this->db->order_by('DateCreated','DESC');
+			$this->db->limit($limit,$start);
+	
+          }else {
+	       $this->db->select('count(a.ItemCode) as jumlah');
+		   $this->db->from('tbl_invitem a');
+		   $this->db->join('pmis2_sa_vendor b','a.VendorID = b.id','left');
+	       $this->db->where('Dept =', $this->session->userdata('usersess'));			
+         }
+		$query = $this->db->get();
+			/* echo $this->db->last_query();
+			exit(); */
+			//$this->getcurrency(query);
+			return $query->result();
+		}
+		
+				function sumpp_m($month,$year,$pecat)
+		{
+		
+			$this->db->select("*");
+			$this->db->from('freezerpt');
+			$this->db->where('v_servicecode = ',$this->session->userdata('usersess'));
+			$this->db->where('PeCat = ',$pecat);
+			$this->db->where('v_month = ',$month);
+			$this->db->where('v_year = ',$year);			
+			$query = $this->db->get();
+			$query_result = $query->result();
+		/* 	echo $this->db->last_query();
+			exit(); */
+			return $query_result;
 		}
 
 }

@@ -59,9 +59,9 @@ echo form_open('mrinnew_ctrl?pro=edit&mrinno='.$this->input->get('mrinno'));
 										<tr>
 											<td style="padding-left:10px;" valign="top">Contract :  </td>
 											<td style="padding-left:10px;" valign="top">
-											<input type="radio" id="radio-1-<?=$num++?>" name="n_Contract" class="regular-radio" value="0"<?=set_radio('n_Contract','0',TRUE)?><?=isset($record[0]->ContractStatus) && $record[0]->ContractStatus == 0 ? 'checked' : 'checked' ?>/>   
+											<input type="radio" id="radio-1-<?=$num++?>" name="n_Contract" class="regular-radio" value="0"<?=set_radio('n_Contract','0',TRUE)?><?=isset($record[0]->ContractStatus) && $record[0]->ContractStatus == 0 ? 'checked' : '' ?>/>   
 												<label for="radio-1-<?=$num2++?>"></label> Comprehensive<br>
-												<input type="radio" id="radio-1-<?=$num++?>" name="n_Contract" class="regular-radio" value="1"<?=set_radio('n_Contract','1')?><?=isset($record[0]->ContractStatus) && $record[0]->ContractStatus == 1 ? 'checked' : '' ?>/>   
+												<input type="radio" id="radio-1-<?=$num++?>" name="n_Contract" class="regular-radio" value="1"<?=set_radio('n_Contract','1')?><?=isset($record[0]->ContractStatus) && $record[0]->ContractStatus == 1 ? 'checked' : 'checked' ?>/>   
 												<label for="radio-1-<?=$num2++?>"></label> Non-Comprehensive<br>
 											</td>
 										</tr>																																		

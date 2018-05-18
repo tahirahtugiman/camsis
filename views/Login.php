@@ -16,6 +16,7 @@ if (!isset($_GET["login"])) { ?>
 <link rel='stylesheet' type='text/css' media='all' href="<?php echo base_url(); ?>css/style.css"> 
 <link href="<?php echo base_url(); ?>css/Color-skin3.css" rel="stylesheet" type="text/css" media="all" />
 <link rel="stylesheet" type='text/css' media='screen' href="<?php echo base_url(); ?>icon/style.css">
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url(); ?>css/login.css">
 <title>Login</title>
 <!-- css3-mediaqueries.js for IE less than 9 -->
  <!--[if lt IE 9]>
@@ -29,7 +30,7 @@ if (!isset($_GET["login"])) { ?>
 				<div class="menum"> 
 					<?php if ($this->input->get('login') == "login"){ ?>
 					
-					<img src="<?php echo base_url(); ?>images/iium.png" class="img-login"/> 
+					<img src="<?php echo base_url(); ?>images/iium.png" class="camsis2-main-logo"/> 
 					<span class="title-login">
 					International Islamic University Malaysia <br/>Medical Centre (IIUMMC)</span>
 
@@ -75,7 +76,7 @@ if (!isset($_GET["login"])) { ?>
 				<?php }else{ ?>
 				<button type="cancel" name="submit" class='btn btn-primary submitcamsis' onclick="window.location.href='<?php echo base_url(); ?>index.php/LoginController/index?login=login'">ENTER TO CAMSIS</button><br>
 				<!--<button type="cancel" name="submit" class='btn btn-primary' onclick="window.location.href='<?php echo base_url(); ?>index.php?login=login'" style="width:75%;margin-top:50px;margin-left:55px;">ENTER TO CAMSIS</button><br>-->
-				Redirecting to CAMSIS in 3 seconds...
+				Redirecting to CAMSIS in <span id="countdown">3</span> seconds...
 				<?php } ?>
 			</div>
 		</div>
@@ -114,6 +115,26 @@ function myFunction() {
     document.getElementById("demo").innerHTML = x;
 }
 </script>-->
+
+
+<?php if ($this->input->get('login') != "login"){
+echo "
+<script>
+	var timeLeft = 2;
+	var elem = document.getElementById('countdown');
+	var timerId = setInterval(countdown, 1000);
+
+	function countdown() {
+		if (timeLeft == -1) {
+			clearTimeout(timerId);
+			doSomething();
+		} else {
+			elem.innerHTML = timeLeft;
+			timeLeft--;
+		}
+	}
+</script>";
+}?>
 </body>
 <?php require_once('contactform-code.php');?>
 </html>

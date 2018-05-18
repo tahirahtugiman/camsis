@@ -1,6 +1,20 @@
 <?php
 class wo_visitplus_update_ctrl extends CI_Controller{
 
+	function __construct(){
+     	parent::__construct();
+		$this->is_logged_in();
+	}
+
+	function is_logged_in()
+	{
+		
+		$is_logged_in = $this->session->userdata('v_UserName');
+		
+		if(!isset($is_logged_in) || $is_logged_in !=TRUE)
+		redirect('logincontroller/index');
+	}
+
 	public function index(){
 	//latest date compare function
 	//echo "lalalalla : " . $this->input->post('wrk_ord');

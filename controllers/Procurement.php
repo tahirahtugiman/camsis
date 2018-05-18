@@ -13,8 +13,8 @@ class Procurement extends CI_Controller {
 				 $data['mrintype'] = 0;
 			}
 			$this->load->model('display_model');
-			$data['record']= $this->display_model->mrinlist($data['month'],$data['year'],$data['mrintype']);
 			$data['user'] = $this->display_model->user_class($this->session->userdata('v_UserName'));
+			$data['record']= $this->display_model->mrinlist($data['month'],$data['year'],$data['mrintype'], $data['user'][0]->class_id);
 			$data['status'] = $this->display_model->status_table();
 			//print_r($data['status']);
 			//exit();
