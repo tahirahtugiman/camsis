@@ -5005,6 +5005,22 @@ return $obj['path'];
 			return $query->result();
 		}
 		
+				function sumpp_m($month,$year,$pecat)
+		{
+		
+			$this->db->select("*");
+			$this->db->from('freezerpt');
+			$this->db->where('v_servicecode = ',$this->session->userdata('usersess'));
+			$this->db->where('PeCat = ',$pecat);
+			$this->db->where('v_month = ',$month);
+			$this->db->where('v_year = ',$year);			
+			$query = $this->db->get();
+			$query_result = $query->result();
+		/* 	echo $this->db->last_query();
+			exit(); */
+			return $query_result;
+		}
+		
 
 }
 ?>

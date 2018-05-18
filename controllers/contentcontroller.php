@@ -3911,6 +3911,11 @@ class Contentcontroller extends CI_Controller {
 		$data['ppmsum'] = $this->display_model->sumppm($data['month'],$data['year'],$this->input->get('grp'));
 		$data['reschout'] = $this->display_model->reschout($data['month'],$data['year'],$this->input->get('grp'));
 		$data['reqtype'] = 'A2';
+		$data['total'] = $this->display_model->sumpp_m($data['month'],$data['year'],'total');
+		$data['totale'] = $this->display_model->sumpp_m($data['month'],$data['year'],'totale');
+		$data['totalm'] = $this->display_model->sumpp_m($data['month'],$data['year'],'totalm');
+		$data['totalc'] = $this->display_model->sumpp_m($data['month'],$data['year'],'totalc');
+		
 		//$data['rqsum'] = $this->display_model->sumrq($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'));
                 if ($this->session->userdata('usersess') == 'FES') {
 		$data['ppmcivil'] = $this->display_model->sumppm($data['month'],$data['year'],$this->input->get('grp'),"IIUM C");
@@ -3930,6 +3935,7 @@ class Contentcontroller extends CI_Controller {
 		//$this ->load->view("Content_report_ppmsum", $data);
 		$this ->load->view("Content_report_ppmwos", $data);
 	}
+	
 	
 	public function report_reqwos(){
 	
