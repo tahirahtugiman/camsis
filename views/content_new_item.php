@@ -24,7 +24,8 @@
 											<td style="padding-left:10px; padding-top:5px;" valign="top"> <input type="text" name="n_code" value="<?= isset($edititem[0]->ItemCode) == TRUE ? $edititem[0]->ItemCode : ''?>" class="form-control-button2 n_wi-date2" required></td>
 											<td style="padding-left:10px; padding-top:5px;" valign="top">Item Name:</td>
 											<td style="padding-left:10px; padding-top:5px;" valign="top"> <input type="text" name="n_description" value="<?= isset($edititem[0]->ItemName) == TRUE ? $edititem[0]->ItemName : ''?>" class="form-control-button2 n_wi-date2"></td>
-										</tr>
+										   
+										</tr>									
 										<tr>
 											<td style="padding-left:10px; padding-top:5px;" valign="top" >Part No:</td>
 											<td style="padding-left:10px; padding-top:5px;" valign="top"> <input type="text" name="n_partno" value="<?= isset($edititem[0]->PartNumber) == TRUE ? $edititem[0]->PartNumber : ''?>" class="form-control-button2 n_wi-date2"></td>
@@ -313,7 +314,11 @@
 										  <td style="padding-left:10px;" valign="top">Service :   </td>
 										  <td style="padding-left:10px; padding-top:5px;" valign="top"> <input type="text" name="n_service" value="<?php echo $this->session->userdata('usersess') ?>" class="form-control-button2 n_wi-date2" readonly></td>
 										
-										</tr>																																			
+										</tr>
+<tr>											
+										    <td style="padding-left:10px; padding-top:5px;" valign="top">Item Location:</td>
+											<td style="padding-left:10px; padding-top:5px;" valign="top"> <input type="text" name="n_location" value="<?= isset($edititem[0]->ItemLoc) == TRUE ? $edititem[0]->ItemLoc : ''?>" class="form-control-button2 n_wi-date2"></td>
+										</tr>										
 									</table>
 								</td>
 							</tr>
@@ -334,7 +339,8 @@
 			
 			<style>
 				.ui-content-middle-menu-workorder2 tr td {padding:8px;font-size:14px;		
-			 width:100%;
+			 /*width:100%;*/
+			
 			  }
 				.ui-menu-color-header2, .ui-color-style-2 {
     background: #0d1b23;}
@@ -426,11 +432,12 @@
 					<th style="text-align:left; color:#ee4000;">The item have been registered.&nbsp;&nbsp;<span class="blinking"><font color="black">Item Name :</font><?=$this->input->get('itemname')?>&nbsp;&nbsp;<font color="black">Item Code :</font><?=$this->input->get('itemcode')?> </span></th>
 				</tr>
 			</table>
-	<?php }?>
-					<table class="ui-content-middle-menu-workorder2 ui-left_web" >
+	<?php }?><div style="overflow-x:auto;">
+					<table class="ui-content-middle-menu-workorder2 ui-left_web">
 						<tr class="ui-menu-color-header2" style="color:white; font-weight:bold;">
 							<td width="">Item Code</td>
 							<td width="">Item Name</td>
+							<td width="">Item Location</td>
 							<td width="">Part No</td>
 							<td width="">Part Description</td>
 							<td width="">Unit Price</td>
@@ -450,6 +457,7 @@
 	    				<?php echo ($numrow%2==0) ? '<tr class="ui-color-color-color">' : '<tr>'; ?>
 	    					<td style="text-transform: capitalize;"><a href="?edit=<?=$row->ItemCode?>" style="font-size:14px;"><?=$row->ItemCode?></a></td>
 		        			<td><?=$row->ItemName?></td>
+		        			<td><?=$row->ItemLoc?></td>
 		        			<td><?=$row->PartNumber?></td>
 		        			<td><?=$row->PartDescription?></td>
 		        			<td><?=$row->UnitPrice?></td>
@@ -471,7 +479,7 @@
 							</td>
 	    				</tr>
 						<?php } ?>	 
-					</table>
+					</table></div>
 					<div class="paginatediv">
 					  <ul class="paginate pag2 clearfix">
 					  	<?php if ($rec[0]->jumlah > $limit){ ?>
