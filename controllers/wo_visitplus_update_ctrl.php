@@ -19,7 +19,6 @@ class wo_visitplus_update_ctrl extends CI_Controller{
 	//latest date compare function
 	//echo "lalalalla : " . $this->input->post('wrk_ord');
 	//exit();
-	
 	//if (substr($this->input->post('wrk_ord'),0,2) != 'PP'){	
 	if ((substr($this->input->post('wrk_ord'),0,2) != 'PP') && (substr($this->input->post('wrk_ord'),0,2) != 'RI')) {	
 	$this->load->model("get_model");
@@ -53,7 +52,8 @@ class wo_visitplus_update_ctrl extends CI_Controller{
 	$this->form_validation->set_rules('n_Type_of_Work','Type of Work','trim|required');
 	$this->form_validation->set_rules('n_Action_Taken','Action Taken','trim|required');
 
-	$this->form_validation->set_rules('n_rschDate','Reschedule Date','trim');
+	//$this->form_validation->set_rules('n_rschDate','Reschedule Date','trim');
+	$this->form_validation->set_rules('n_rschDate','Reschedule Date','trim|callback_date_check2['.$this->input->post('n_rschDate').']');
 	$this->form_validation->set_rules('n_rschReason','Reason','trim');
 	$this->form_validation->set_rules('n_rschReason1','Reason1','trim');
 	$this->form_validation->set_rules('n_rschAuth','Reschedule Authorised','trim');	
@@ -293,7 +293,26 @@ class wo_visitplus_update_ctrl extends CI_Controller{
 			return TRUE;
 		}
 	}
-function confirmation(){
+
+public function date_check2($shedule = '')
+{
+if ($shedule) {
+	     if ($shedule < date("d-m-Y"))
+			 		{
+					 $this->form_validation->set_message('date_check2','Reschedule date cannot be less than current date');
+					 return FALSE;
+					 }
+					 else
+					 {
+					 return TRUE;
+					 }
+		}else
+		{
+			return TRUE;
+		}
+}
+	
+	function confirmation(){
 	$RN = $this->input->post('wrk_ord');
 	$visit = $this->input->post('visit');
 	if ($visit == ''){
