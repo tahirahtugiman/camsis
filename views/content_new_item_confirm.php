@@ -26,6 +26,7 @@
 											<td style="padding-left:10px; padding-top:5px;" valign="top">Item Name:</td>
 											<td style="padding-left:10px; padding-top:5px;" valign="top"> <input type="text" name="n_description"  value="<?php echo $this->input->post('n_description');?>" class="form-control-button2 n_wi-date2" readonly></td>
 										</tr>
+										
 										<tr>
 											<td style="padding-left:10px; padding-top:5px;" valign="top" >Part No:</td>
 											<td style="padding-left:10px; padding-top:5px;" valign="top"> <input type="text" name="n_partno" value="<?php echo $this->input->post('n_partno');?>" class="form-control-button2 n_wi-date2" readonly></td>
@@ -198,7 +199,11 @@
 										  <td style="padding-left:10px;" valign="top">Service :   </td>
 										  <td style="padding-left:10px; padding-top:5px;" valign="top"> <input type="text" name="n_service" value="<?php echo $this->session->userdata('usersess') ?>" class="form-control-button2 n_wi-date2" readonly></td>
 										
-										</tr>																																			
+										</tr>
+                                        <tr>	
+										    <td style="padding-left:10px; padding-top:5px;" valign="top">Item Location:</td>
+											<td style="padding-left:10px; padding-top:5px;" valign="top"> <input type="text" name="n_location" value="<?php echo $this->input->post('n_location');?>"" class="form-control-button2 n_wi-date2"></td>
+										</tr>										
 									</table>
 								</td>
 							</tr>

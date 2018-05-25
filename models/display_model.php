@@ -873,7 +873,8 @@ ORDER BY s.d_DueDt, s.v_WrkOrdNo
 			elseif (($resch == "nt") && ($stat == "E"))
 			{
 			//$this->db->where("s.v_wrkordstatus = 'A' ", NULL, FALSE);
-			$this->db->where("s.d_reschdt is not NULL AND s.v_wrkordstatus = 'AR' ", NULL, FALSE);
+			//$this->db->where("s.d_reschdt is not NULL AND s.v_wrkordstatus = 'AR' ", NULL, FALSE);
+			$this->db->where("s.d_reschdt is not NULL ", NULL, FALSE);
 			} else
 			{
 			$this->db->not_like('s.v_wrkordstatus', $stat);
@@ -4939,7 +4940,7 @@ return $obj['path'];
 			$bystak = " AND left(a.v_tag_no,6) = 'IIUM E'"; }
              		
 		    //$this->db->select("SUM(CASE WHEN sc.d_reschdt is not NULL AND sc.v_wrkordstatus = 'AR' AND (IFNULL(sc.d_reschdt, d_DueDt) > now()) THEN 1 ELSE 0 END) AS reschout",FALSE);			
-				$this->db->select("SUM(CASE WHEN sc.d_reschdt is not NULL AND sc.v_wrkordstatus = 'AR' THEN 1 ELSE 0 END) AS reschout",FALSE);			
+				$this->db->select("SUM(CASE WHEN sc.d_reschdt is not NULL THEN 1 ELSE 0 END) AS reschout",FALSE);			
 			$this->db->from('pmis2_egm_schconfirmmon sc');	
 			$this->db->join('pmis2_egm_assetregistration a','sc.v_Asset_no = a.V_Asset_no AND sc.v_HospitalCode = a.V_Hospitalcode '.$bystak,'left outer');
 			$this->db->where('sc.v_Actionflag <> ','D');

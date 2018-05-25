@@ -8089,6 +8089,7 @@ public function new_item (){
 
 		'ItemCode'=>$this->input->post('n_code'),
 		'ItemName'=>$this->input->post('n_description'),
+		'ItemLoc'=>$this->input->post('n_location'),
 		'PartNumber'=>$this->input->post('n_partno'),
 		'PartDescription'=>$this->input->post('n_pdescription'),
 	      'UnitPrice'=>$this->input->post('n_unitprice'),
