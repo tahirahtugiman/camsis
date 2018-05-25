@@ -27,11 +27,18 @@ class wo_visitplus_update_ctrl extends CI_Controller{
     $this->load->library('form_validation');
 	
 	//validation rule
+	// $this->form_validation->set_rules('n_rschDate', 'Business', 'trim|required');
+
+	
+
 	if ((substr($this->input->post('wrk_ord'),0,2) == 'PP') || (substr($this->input->post('wrk_ord'),0,2) == 'RI')) {	
 	$this->form_validation->set_rules('n_Visit_Date','Visit Date','trim|required');
+	
 	} else {
 	$this->form_validation->set_rules('n_Visit_Date','Visit Date','trim|required|callback_date_check['.$paramsdt.']');
+	
 	}
+	
 	$this->form_validation->set_rules('n_Shour','Start Hour','trim|required');
 	$this->form_validation->set_rules('n_Smin','Start Minutes','trim|required');
 	$this->form_validation->set_rules('n_Ehour','End Hour','trim|required');
@@ -39,7 +46,11 @@ class wo_visitplus_update_ctrl extends CI_Controller{
 	$this->form_validation->set_rules('n_Type_of_Work','Type of Work','trim|required');
 	$this->form_validation->set_rules('n_Action_Taken','Action Taken','trim|required');
 
-	$this->form_validation->set_rules('n_rschDate','Reschedule Date','trim');
+	//$this->form_validation->set_rules('n_rschDate','Reschedule Date','trim');
+	$this->form_validation->set_rules('n_rschDate','Reschedule Date','callback_date_check2['.$this->input->post('n_rschDate').']');
+
+	
+	
 	$this->form_validation->set_rules('n_rschReason','Reason','trim');
 	$this->form_validation->set_rules('n_rschReason1','Reason1','trim');
 	$this->form_validation->set_rules('n_rschAuth','Reschedule Authorised','trim');	
@@ -103,7 +114,9 @@ class wo_visitplus_update_ctrl extends CI_Controller{
 	}
 */
 	$this->form_validation->set_rules('chkbox','checkbox','trim');
-
+	
+	
+	
 	if ($this->input->post('chkbox') == 'ON') {
 		$this->form_validation->set_rules('n_performance_test','Performance Test','trim|required');
 		$this->form_validation->set_rules('n_safety_test','Safety Test','trim|required');
@@ -260,6 +273,7 @@ class wo_visitplus_update_ctrl extends CI_Controller{
 			return TRUE;
 		}
 	}
+
 	public function date_check($str = '', $params = '')
 	{
 		list($startdate,$enddate) = explode(',', $params);
@@ -272,6 +286,21 @@ class wo_visitplus_update_ctrl extends CI_Controller{
 		else if ($enddate > date("Y-m-d"))
 		{
 			$this->form_validation->set_message('date_check', 'Visit date cannot exceed current date');
+			return FALSE;
+		}
+		else
+		{
+			return TRUE;
+		}
+	}
+	
+	public function date_check2($shedule = '')
+
+	{
+
+	     if ($shedule < date("d-m-Y"))
+		{
+			$this->form_validation->set_message('date_check2','Reschedule date cannot be less than current date');
 			return FALSE;
 		}
 		else
