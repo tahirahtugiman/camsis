@@ -19,6 +19,15 @@
 										}
 				}
 				}
+		
+		 		function daterfreeze($which=1, $mon, $yr)
+				{
+				//echo "func date".$yr.".".$mon.".11";
+				//$time = strtotime($yr.".".$mon.".11");
+				//return date("Y-m-d", strtotime("+1 month", $time));
+				$time = strtotime("09-".$mon."-".$yr);
+				return date("Y-m-d", strtotime("+2 day",strtotime("+1 month", $time)));
+				}
 				
 				
 		
@@ -812,7 +821,7 @@ ORDER BY r.D_date, r.D_time
 			return $query_result;
 		}
 		
-		function rpt_vols($month, $year, $stat = "apo2", $resch = "resch",$grpsel, $bystak=""){
+		function rpt_vols($month, $year, $stat = "apo2", $resch = "resch",$grpsel, $bystak="", $fon=""){
 		/*
 		SELECT     s.v_WrkOrdNo AS sv_wrkordno, s.v_Asset_no AS sv_asset_no, s.v_Month AS sv_month, s.v_HospitalCode AS sv_hospitalcode, 
                       s.d_DueDt AS sd_duedt, s.v_jobtype AS sv_jobtype, s.v_year AS sv_year, s.v_ServiceCode AS sv_servicecode, a.V_Tag_no AS av_tag_no, 
@@ -858,7 +867,11 @@ ORDER BY s.d_DueDt, s.v_WrkOrdNo
 			}
 			*/
 			if (($resch == "nt") && ($stat == "A")) {
-			$this->db->where("s.v_wrkordstatus LIKE '%C%'", NULL, FALSE);
+				 if ($fon == "") {
+				 		$this->db->where("s.v_wrkordstatus LIKE '%C%'", NULL, FALSE);
+						} else {
+						$this->db->where("s.v_wrkordstatus LIKE '%C%' AND s.v_closeddate <= '" . $this->daterfreeze(1,$month,$year) . "' ", NULL, FALSE);
+						}
 			} elseif (($resch == "ys") && ($stat == "A"))
 			{
 			//$this->db->where("s.d_reschdt is not NULL AND s.v_wrkordstatus = 'AR'", NULL, FALSE);
@@ -868,7 +881,11 @@ ORDER BY s.d_DueDt, s.v_WrkOrdNo
 			{
 			//$this->db->where("s.v_wrkordstatus = 'A' ", NULL, FALSE);
 			//$this->db->where("(s.v_wrkordstatus = 'A' OR (s.v_wrkordstatus = 'AR' AND IFNULL(s.d_reschdt,d_DueDt) < now()))", NULL, FALSE);
-			$this->db->where("(s.v_wrkordstatus = 'A' OR s.v_wrkordstatus = 'AR') ", NULL, FALSE);
+			if ($fon == "") {
+					$this->db->where("(s.v_wrkordstatus = 'A' OR s.v_wrkordstatus = 'AR') ", NULL, FALSE);
+					} else {
+					$this->db->where("(s.v_wrkordstatus = 'A' OR s.v_wrkordstatus = 'AR') OR s.v_closeddate > '" . $this->daterfreeze(1,$month,$year) . "' ", NULL, FALSE);
+					}
 			} 
 			elseif (($resch == "nt") && ($stat == "E"))
 			{
@@ -892,7 +909,8 @@ ORDER BY s.d_DueDt, s.v_WrkOrdNo
 			}
 			$this->db->where('s.v_HospitalCode',$this->session->userdata('hosp_code'));
 			$query = $this->db->get();
-			echo $this->db->last_query();
+			//echo "dater freeze : ".$this->daterfreeze(1,$month,$year)."<br>";
+			//echo $this->db->last_query();
 			//exit();
 			$query_result = $query->result();
 			return $query_result;
@@ -2382,7 +2400,7 @@ return $query->result();
 			return $query_result;
 		}
 		
-		function sumppm($month,$year,$grpsel,$bystak = "")
+		function sumppm($month,$year,$grpsel,$bystak = "",$fon = "")
 		{
 			if ($bystak == "IIUM C") {
 			$bystak = " AND left(a.v_tag_no,6) = 'IIUM C'"; }
@@ -2392,7 +2410,12 @@ return $query->result();
 			$bystak = " AND left(a.v_tag_no,6) = 'IIUM E'"; }
 
 			//$this->db->select("COUNT(*) as total, SUM(CASE WHEN sc.v_wrkordstatus = 'A'  THEN 1 ELSE 0 END) AS notcomp, SUM(CASE WHEN sc.v_wrkordstatus = 'C' OR sc.v_wrkordstatus = 'CR' THEN 1 ELSE 0 END) AS comp, SUM(CASE WHEN sc.d_reschdt is not NULL AND sc.v_wrkordstatus = 'AR' THEN 1 ELSE 0 END) AS resch");
-			$this->db->select("COUNT(*) as total, SUM(CASE WHEN sc.v_wrkordstatus = 'A'  OR (sc.v_wrkordstatus = 'AR') THEN 1 ELSE 0 END) AS notcomp, SUM(CASE WHEN sc.v_wrkordstatus = 'C' OR sc.v_wrkordstatus = 'CR' THEN 1 ELSE 0 END) AS comp, SUM(CASE WHEN sc.d_reschdt is not NULL THEN 1 ELSE 0 END) AS resch", FALSE);
+			//$this->db->select("COUNT(*) as total, SUM(CASE WHEN sc.v_wrkordstatus = 'A'  OR (sc.v_wrkordstatus = 'AR') THEN 1 ELSE 0 END) AS notcomp, SUM(CASE WHEN (sc.v_wrkordstatus = 'C' OR sc.v_wrkordstatus = 'CR') THEN 1 ELSE 0 END) AS comp, SUM(CASE WHEN sc.d_reschdt is not NULL THEN 1 ELSE 0 END) AS resch", FALSE);
+			if ($fon == "") {
+			$this->db->select("COUNT(*) as total, SUM(CASE WHEN sc.v_wrkordstatus = 'A'  OR (sc.v_wrkordstatus = 'AR') THEN 1 ELSE 0 END) AS notcomp, SUM(CASE WHEN (sc.v_wrkordstatus = 'C' OR sc.v_wrkordstatus = 'CR') THEN 1 ELSE 0 END) AS comp, SUM(CASE WHEN sc.d_reschdt is not NULL THEN 1 ELSE 0 END) AS resch", FALSE);
+			} else {
+			$this->db->select("COUNT(*) as total, SUM(CASE WHEN (sc.v_wrkordstatus = 'A' OR sc.v_wrkordstatus = 'AR') OR ((sc.v_wrkordstatus = 'C' OR sc.v_wrkordstatus = 'CR') AND sc.v_closeddate > '" . $this->daterfreeze(1,$month,$year) . "') THEN 1 ELSE 0 END) AS notcomp, SUM(CASE WHEN (sc.v_wrkordstatus = 'C' OR sc.v_wrkordstatus = 'CR') AND sc.v_closeddate <= '" . $this->daterfreeze(1,$month,$year) . "' THEN 1 ELSE 0 END) AS comp, SUM(CASE WHEN sc.d_reschdt is not NULL THEN 1 ELSE 0 END) AS resch", FALSE);
+			}
 			$this->db->from('pmis2_egm_schconfirmmon sc');
 			$this->db->join('pmis2_egm_assetregistration a','sc.v_Asset_no = a.V_Asset_no AND sc.v_HospitalCode = a.V_Hospitalcode '.$bystak,'left outer');
 			$this->db->where('sc.v_Actionflag <> ','D');
