@@ -135,7 +135,7 @@
 														<td><b><?=isset($row->QtyReq) ? $row->QtyReq : ''?></b></td>
 														<?php } ?>
 														<?php if ($this->input->get('pro') == 'pending' && $classid == 3) { ?>
-														<td></td>
+														<td><?=isset($row->Qtys) ? $row->Qtys . '<br><a href="javascript:pop_store(\''.addslashes($row->ItemCode).'\',\''.addslashes($row->MIRNcode).'\',\''.$record[0]->WorkOfOrder.'\',\''.$row->Qtys.'\',\''.$row->QtyReq.'\');">USE STORE</a>' : 'N/A'?></td>
 														<?php } ?>
 														<?php if($this->input->get('pro') == 'pending' && ($classid == 1 || $classid == 3)){?>
 														<td><input type="text" name="n_qtyapp[qty<?=$row->Id?>]" value="<?=$classid == 1 ? (isset($row->Qty) ? $row->Qty : '') : (isset($row->QtyReq) ? $row->QtyReq : '')?>" class="form-control-button2 n_wi-date2"></td>

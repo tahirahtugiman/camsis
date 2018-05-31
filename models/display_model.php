@@ -4162,22 +4162,35 @@ ORDER BY r.D_date, r.D_time
 		return $query_result;
 	}
 	
-	function mrinlist($month,$year,$type){
-		$this->db->select('m.*,IFNULL(s.V_Asset_no,p.v_Asset_no) AS V_Asset_no,st.Status',FALSE);
+	function mrinlist($month,$year,$type,$kelas){
+	//echo "nilai kelas : " . $kelas . " type : " . $type;
+	  $inter = (int)$month;
+		$this->db->select('m.*,IFNULL(s.V_Asset_no,p.v_Asset_no) AS V_Asset_no,st.Status, IFNULL(IFNULL(IFNULL(ApprCommentsxx,ApprCommentsx),ApprComments),Comments) AS Commentsx',FALSE);
 		$this->db->from('tbl_materialreq m');
 		$this->db->join('pmis2_egm_service_request s','m.WorkOfOrder = s.V_Request_no AND s.V_actionflag <> "D"','left outer');
 		$this->db->join('pmis2_egm_schconfirmmon p','m.WorkOfOrder = p.v_WrkOrdNo AND p.v_Actionflag <> "D"','left outer');
 		$this->db->join('tbl_status st','m.ApprStatusID = st.StatusID');
-		$this->db->where('MONTH(DATE(m.DateCreated))',$month);
-		$this->db->where('YEAR(DATE(m.DateCreated))',$year);
+		//$this->db->where('MONTH(DATE(m.DateCreated))',$inter);
+		//$this->db->where('YEAR(DATE(m.DateCreated))',$year);
 		$this->db->where('service_code',$this->session->userdata('usersess'));
 		if ($type <> 0){
 			if ($type == 1){
+			$this->db->where('MONTH(DATE(m.DateCreated))',$inter);
+			$this->db->where('YEAR(DATE(m.DateCreated))',$year);
+				if ($kelas == 1) {
+				$this->db->where('m.ApprStatusID = 4');
+			 } else if ($kelas == 3) {		 	 
+				$this->db->where('m.ApprStatusIDx = 4');
+				$this->db->where('m.ApprStatusIDxx = 4');
+			 } else {
 				$this->db->where('m.ApprStatusID = 4');
 				$this->db->where('m.ApprStatusIDx = 4');
 				$this->db->where('m.ApprStatusIDxx = 4');
+			 }
 			}
 			else if ($type == 2){
+			$this->db->where('MONTH(DATE(m.DateCreated))',$inter);
+			$this->db->where('YEAR(DATE(m.DateCreated))',$year);
 				$status = array(5,107,128);
 				$this->db->where_in('m.ApprStatusID',$status);
 				//$this->db->or_where('m.ApprStatusID = 107');
@@ -4189,11 +4202,30 @@ ORDER BY r.D_date, r.D_time
 				//$this->db->or_where('m.ApprStatusIDxx = 107');
 				//$this->db->or_where('m.ApprStatusIDxx = 128');
 			}
+			else if ($type == 3){
+			 if ($kelas == 1) {
+			 	$this->db->where('m.ApprStatusID','6');
+			 } else if ($kelas == 3) {
+			 	 
+				$this->db->where('m.ApprStatusIDx','6');
+				$this->db->or_where('m.ApprStatusIDxx','6');
+			 } else {
+			 	
+				$this->db->where('m.ApprStatusID','6');
+				$this->db->or_where('m.ApprStatusIDx','6');
+				$this->db->or_where('m.ApprStatusIDxx','6');
+			 }
+			}
 			else{
+				$this->db->where('MONTH(DATE(m.DateCreated))',$inter);
+				$this->db->where('YEAR(DATE(m.DateCreated))',$year);
 				$this->db->where('m.ApprStatusID = 6');
 				$this->db->or_where('m.ApprStatusIDx = 6');
 				$this->db->or_where('m.ApprStatusIDxx = 6');
 			}	
+		} else{
+				$this->db->where('MONTH(DATE(m.DateCreated))',$inter);
+				$this->db->where('YEAR(DATE(m.DateCreated))',$year);
 		}
 		$this->db->order_by('DocReferenceNo','ASC');
 		$query = $this->db->get();
@@ -4218,10 +4250,12 @@ function mrindet($mrinno){
 	}
 	
 function itemdet($mrinno){
-		$this->db->select('a.*,b.ItemName');
+		$this->db->select('a.*,b.ItemName, IFNULL(c.Qty,0) AS Qtys', FALSE);
 		$this->db->from('tbl_mirn_comp a');
 		$this->db->join('tbl_invitem b','a.ItemCode = b.ItemCode');
+		$this->db->join('tbl_item_store_qty c',"c.ItemCode = a.ItemCode AND c.Hosp_code = '".$this->session->userdata('hosp_code')."'",'left outer');
 		$this->db->where('MIRNcode',$mrinno);
+		$this->db->where('Who_Del IS NULL', null, false);
 		$query = $this->db->get();
 		//echo $this->db->last_query();
 		//exit();

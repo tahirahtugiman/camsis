@@ -34,6 +34,11 @@ class Procurement extends CI_Controller {
 			$data['record'] = $this->display_model->mrindet($this->input->get('mrinno'));
 			$data['itemrec'] = $this->display_model->itemdet($this->input->get('mrinno'));
 			$data['comrec'] = $this->display_model->comrec($this->input->get('mrinno'));
+			print_r($data['itemrec']);
+			if (!($data['itemrec'])) {
+			//echo "ade data";
+			redirect('Procurement?pro=mrin');
+			} 
 			$data['attrec'] = $this->display_model->attrec($this->input->get('mrinno'));
 			$data['user'] = $this->display_model->user_class($this->session->userdata('v_UserName'));
 			$this ->load->view("Content_mrin_procure",$data);

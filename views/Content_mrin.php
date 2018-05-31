@@ -147,7 +147,7 @@ switch ($procument) {
 		    					<?php } ?>
 		    					<?php } ?>
 		    					<td class="td-desk"><?=isset($row->DateCreated) ? date("d M Y",strtotime($row->DateCreated)) : ''?></td>
-		    					<td class="td-desk"><?=isset($row->Comments) ? $row->Comments : ''?></td>
+		    					<td class="td-desk"><?=isset($row->Commentsx) ? $row->Commentsx : ''?></td>
 		        			</tr>
 		        			<?php endforeach; ?>
 		        			<?php } else { ?>
