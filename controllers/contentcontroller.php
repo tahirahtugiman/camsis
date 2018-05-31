@@ -8249,6 +8249,26 @@ public function deductmapping_2(){
 		$this ->load->view("content_new_item",$data);
 		}
 }
+
+
+public function print_kewpa(){
+	  $data['assetn'] = $this->input->get('asstno');
+	  	$this->load->model("get_model");
+	    $data['asset_det'] = $this->get_model->get_assetdet2($data['assetn']);
+			$data['asset_UMDNS'] = $this->get_model->get_UMDNSAsset($data['asset_det'][0]->V_Equip_code);
+		$data['assetppm'] = $this->get_model->assetppmlist($data['assetn']);
+		if ((null !==$this->input->get('pr')) and ($this->input->get('none') == 'closed')){
+		$data['print'] = $this->input->get('pr');
+		$this ->load->view("headprinter");
+		$this ->load->view("Content_print_kewpa", $data);
+
+		}else{
+		$data['print'] = 0;
+			$this ->load->view("headprinter");
+			$this ->load->view("Content_print_kewpa", $data);
+
+		}
+	}
 	
 }
 ?>
