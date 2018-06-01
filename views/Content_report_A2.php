@@ -82,7 +82,7 @@ header('Content-Disposition: attachment; filename='.$filename);
 			<th rowspan=2>UDP</th>
 			<th rowspan=2>Status</th>
 			<th colspan=2>Test</th>
-			<th rowspan=2>Visit Date</th>
+			<th rowspan=2>Complete Date</th>
 			<th rowspan=2>Remark</th>
 			<th rowspan=2>Schedule Date</th>
 			<th rowspan=2>Reschedule Date</th>
@@ -132,7 +132,7 @@ header('Content-Disposition: attachment; filename='.$filename);
 			<th rowspan=2>UDP</th>
 			<th rowspan=2>Status</th>
 			<th colspan=2>Test</th>
-			<th rowspan=2>Visit Date</th>
+			<th rowspan=2>Complete Date</th>
 			<th rowspan=2>Remark</th>
 			<th rowspan=2>Schedule Date</th>
 			<th rowspan=2>Reschedule Date</th>
@@ -346,7 +346,7 @@ if ($numrow==$numrowx OR $numrow%13==1) {
 			<th rowspan=2>UDP</th>
 			<th rowspan=2>Status</th>
 			<th colspan=2>Test</th>
-			<th rowspan=2 style="width:7%;">Visit Date</th>
+			<th rowspan=2 style="width:7%;">Complete Date</th>
 			<th rowspan=2 style="width:17%;">Remark</th>
 			<th rowspan=2 style="width:7%;">Schedule Date</th>
 			<th rowspan=2 style="width:7%;">Reschedule Date</th>
