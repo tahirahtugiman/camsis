@@ -75,17 +75,16 @@ header('Content-Disposition: attachment; filename='.$filename);
 	<table class="tftable" border="1" style="text-align:center;">
 		<tr>
 			<th rowspan=2>No</th>
-			<th rowspan=2>A2 Scheduled Date</th>
+			<th rowspan=2>Work Order Date</th>
 			<th rowspan=2>A2 Work Order</th>
 			<th rowspan=2>Asset No</th>	
 			<th rowspan=2 style="width:25%;">Equipment Name</th>
 			<th rowspan=2>UDP</th>
-			<th rowspan=2>Freq</th>
 			<th rowspan=2>Status</th>
 			<th colspan=2>Test</th>
-			<th rowspan=2>Completion Date</th>
-			<th rowspan=2>Remark</th>
 			<th rowspan=2>Visit Date</th>
+			<th rowspan=2>Remark</th>
+			<th rowspan=2>Schedule Date</th>
 			<th rowspan=2>Reschedule Date</th>
 			<th rowspan=2>Deparment (Location Code)</th>
 			<th rowspan=2>Asset Group</th>
@@ -126,17 +125,16 @@ header('Content-Disposition: attachment; filename='.$filename);
 	<table class="tftable" border="1" style="text-align:center;">
 		<tr>
 			<th rowspan=2>No</th>
-			<th rowspan=2>A2 Date</th>
+			<th rowspan=2>Work Order Date</th>
 			<th rowspan=2>A2 Work Order</th>
 			<th rowspan=2>Asset No</th>	
 			<th rowspan=2 style="width:25%;">Equipment Name</th>
 			<th rowspan=2>UDP</th>
-			<th rowspan=2>Freq</th>
 			<th rowspan=2>Status</th>
 			<th colspan=2>Test</th>
-			<th rowspan=2>Completion Date</th>
-			<th rowspan=2>Remark</th>
 			<th rowspan=2>Visit Date</th>
+			<th rowspan=2>Remark</th>
+			<th rowspan=2>Schedule Date</th>
 			<th rowspan=2>Reschedule Date</th>
 			<th rowspan=2>Deparment (Location Code)</th>
 			<th rowspan=2>Asset Group</th>
@@ -155,15 +153,14 @@ header('Content-Disposition: attachment; filename='.$filename);
 			<td><?=(($row->V_Asset_no) && $row->V_Asset_no != 'N/A') ? anchor ('contentcontroller/AssetRegis?tab=Maintenance&assetno='.$row->V_Asset_no.'&state='.$this->input->get('state'),''.$row->v_tag_no.'' ) : 'N/A' ?></td>			
 			<td><?= ($row->V_Asset_name) ? $row->V_Asset_name : 'N/A' ?></td>
 			<td><?= ($row->V_User_dept_code) ? $row->V_User_dept_code : 'N/A' ?></td>
-			<td><?= 'N/A' ?></td>
 			<td><?= ($row->V_request_status) ? $row->V_request_status : 'N/A' ?></td>
 			<td><?= 'N/A' ?></td>
 			<td><?= 'N/A' ?></td>
 			
 			
-			<td><?= ($row->v_closeddate) ? date("d/m/Y",strtotime($row->v_closeddate)) : 'N/A' ?></td>
-			<td><?= ($row->v_ActionTaken) ? $row->v_ActionTaken : 'N/A' ?></td>
 			<td><?= ($row->d_Date) ? date("d/m/Y",strtotime($row->d_Date)) : 'N/A' ?></td>
+			<td><?= ($row->v_ActionTaken) ? $row->v_ActionTaken : 'N/A' ?></td>
+			<td><?= ($row->v_closeddate) ? date("d/m/Y",strtotime($row->v_closeddate)) : 'N/A' ?></td>
 			<td><?= 'N/A' ?></td>
 			
 			<td><?= ($row->v_UserDeptDesc) ? $row->v_location_name.' ('.$row->v_location_code.')' : 'N/A' ?></td>
@@ -194,7 +191,7 @@ header('Content-Disposition: attachment; filename='.$filename);
 				<td><?= ($row->v_Wrkordstatus) ? $row->v_Wrkordstatus : 'N/A' ?></td>
 				<td><?= ($row->v_stest) ? $row->v_stest : 'N/A' ?></td>
 				<td><?= ($row->v_ptest) ? $row->v_ptest : 'N/A' ?></td>
-				<td><?= ($row->d_DateDone) ? date("d-m-Y",strtotime($row->d_DateDone)) : 'N/A' ?></td>
+				<td><?= ($row->d_Date) ? date("d-m-Y",strtotime($row->d_Date)) : 'N/A' ?></td>
 				<!--<td></td>-->
 				<td style="height: 52px;">
 				<?php if (($row->v_summary) ? $row->v_summary : 'N/A' != "N/A"){ ?>
@@ -205,7 +202,7 @@ header('Content-Disposition: attachment; filename='.$filename);
 				</div>
 				<?php }?>
 				</td>
-				<td><?= ($row->d_Date) ? date("d-m-Y",strtotime($row->d_Date)) : 'N/A' ?></td>
+				<td><?= ($row->d_DateDone) ? date("d-m-Y",strtotime($row->d_DateDone)) : 'N/A' ?></td>
 				<td><?= ($row->d_Reschdt) ? date("d-m-Y",strtotime($row->d_Reschdt)) : 'N/A' ?></td>
 				<td><?= ($row->v_UserDeptDesc) ? $row->v_UserDeptDesc.' ('.$row->V_Location_code.')' : 'N/A' ?></td>
 				<td><?= ($row->v_asset_grp) ? $row->v_asset_grp : 'N/A' ?></td>
@@ -342,17 +339,16 @@ if ($numrow==$numrowx OR $numrow%13==1) {
 	<table class="tftable tbl-go" border="1" style="text-align:center;">
 		<tr>
 			<th rowspan=2>No</th>
-			<th rowspan=2 style="width:7%;">A2 Scheduled Date</th>
+			<th rowspan=2 style="width:7%;">Work Order Date</th>
 			<th rowspan=2 style="width:12%;">A2 Work Order</th>
 			<th rowspan=2 style="width:5%;">Asset No</th>	
 			<th rowspan=2 style="width:30%;">Equipment Name</th>
 			<th rowspan=2>UDP</th>
-			<th rowspan=2>Freq</th>
 			<th rowspan=2>Status</th>
 			<th colspan=2>Test</th>
-			<th rowspan=2 style="width:7%;">Completion Date</th>
-			<th rowspan=2 style="width:17%;">Remark</th>
 			<th rowspan=2 style="width:7%;">Visit Date</th>
+			<th rowspan=2 style="width:17%;">Remark</th>
+			<th rowspan=2 style="width:7%;">Schedule Date</th>
 			<th rowspan=2 style="width:7%;">Reschedule Date</th>
 			<th rowspan=2 style="width:12%;">Deparment (Location Code)</th>
 			<th rowspan=2>Asset Group</th>
@@ -376,15 +372,14 @@ if ($numrow==$numrowx OR $numrow%13==1) {
 			<?php } ?>
 			<td><?= ($row->V_Asset_name) ? $row->V_Asset_name : 'N/A' ?></td>
 			<td><?= ($row->V_User_dept_code) ? $row->V_User_dept_code : 'N/A' ?></td>
-			<td><?= 'N/A' ?></td>
 			<td><?= ($row->V_request_status) ? $row->V_request_status : 'N/A' ?></td>
 			<td><?= 'N/A' ?></td>
 			<td><?= 'N/A' ?></td>
 			
 			
-			<td><?= ($row->v_closeddate) ? date("d/m/Y",strtotime($row->v_closeddate)) : 'N/A' ?></td>
-			<td><?= ($row->v_ActionTaken) ? $row->v_ActionTaken : 'N/A' ?></td>
 			<td><?= ($row->d_Date) ? date("d/m/Y",strtotime($row->d_Date)) : 'N/A' ?></td>
+			<td><?= ($row->v_ActionTaken) ? $row->v_ActionTaken : 'N/A' ?></td>
+			<td><?= ($row->v_closeddate) ? date("d/m/Y",strtotime($row->v_closeddate)) : 'N/A' ?></td>
 			<td><?= 'N/A' ?></td>
 			
 			<td><?= ($row->v_UserDeptDesc) ? $row->v_location_name.' ('.$row->v_location_code.')' : 'N/A' ?></td>
