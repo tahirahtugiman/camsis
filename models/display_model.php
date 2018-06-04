@@ -117,7 +117,7 @@
             $this->db->where('V_servicecode = ',$this->session->userdata('usersess'));
             $query = $this->db->get("pmis2_egm_service_request");
 						
-            
+      //echo $this->db->last_query();      
 			$query_result = $query->result();
 			return $query_result;
         }
@@ -300,6 +300,7 @@
 			$this->db->join('pmis2_egm_schconfirmmon s','s.v_WrkOrdNo = v1.v_WrkOrdNo');
 			$this->db->join('pmis2_emg_jobvisit1tow vt','v1.v_WrkOrdNo = vt.v_WrkOrdNo');
 			$this->db->where('v1.v_WrkOrdNo',$wrk_ord);
+			$this->db->where('s.v_Actionflag <>','D');
 			$this->db->where('s.v_ServiceCode = ',$this->session->userdata('usersess'));
 			$query = $this->db->get();
 			//echo $this->db->last_query();
@@ -861,11 +862,19 @@ ORDER BY s.d_DueDt, s.v_WrkOrdNo
 			} elseif (($resch == "ys") && ($stat == "A"))
 			{
 			//$this->db->where("s.d_reschdt is not NULL AND s.v_wrkordstatus = 'AR'", NULL, FALSE);
-			$this->db->where("s.d_reschdt is not NULL AND s.v_wrkordstatus = 'AR' AND IFNULL(s.d_reschdt,d_DueDt) > now()", NULL, FALSE);
+			//$this->db->where("s.d_reschdt is not NULL AND s.v_wrkordstatus = 'AR' AND IFNULL(s.d_reschdt,d_DueDt) > now()", NULL, FALSE);
+			$this->db->where("s.d_reschdt is not NULL ", NULL, FALSE);
 			} elseif (($resch == "nt") && ($stat == "C"))
 			{
 			//$this->db->where("s.v_wrkordstatus = 'A' ", NULL, FALSE);
-			$this->db->where("(s.v_wrkordstatus = 'A' OR (s.v_wrkordstatus = 'AR' AND IFNULL(s.d_reschdt,d_DueDt) < now()))", NULL, FALSE);
+			//$this->db->where("(s.v_wrkordstatus = 'A' OR (s.v_wrkordstatus = 'AR' AND IFNULL(s.d_reschdt,d_DueDt) < now()))", NULL, FALSE);
+			$this->db->where("(s.v_wrkordstatus = 'A' OR s.v_wrkordstatus = 'AR') ", NULL, FALSE);
+			} 
+			elseif (($resch == "nt") && ($stat == "E"))
+			{
+			//$this->db->where("s.v_wrkordstatus = 'A' ", NULL, FALSE);
+			//$this->db->where("s.d_reschdt is not NULL AND s.v_wrkordstatus = 'AR' ", NULL, FALSE);
+			$this->db->where("s.d_reschdt is not NULL ", NULL, FALSE);
 			} else
 			{
 			$this->db->not_like('s.v_wrkordstatus', $stat);
@@ -874,11 +883,16 @@ ORDER BY s.d_DueDt, s.v_WrkOrdNo
 			//$this->db->where('s.v_year', $year);
 			//$this->db->where('YEAR(s.d_DueDt)', $year);
 			//$this->db->where('MONTH(s.d_DueDt)', $month);
+			if(($resch == "nt") && ($stat == "E")){
+			$this->db->where('s.d_DueDt >=', $this->dater(1,$month,$year));
+		     $this->db->where('s.d_DueDt <=', $this->dater(2,$month,$year));
+			}else{
 			$this->db->where('IFNULL(s.d_reschdt,s.d_DueDt) >=', $this->dater(1,$month,$year));
 			$this->db->where('IFNULL(s.d_reschdt,s.d_DueDt) <=', $this->dater(2,$month,$year));
+			}
 			$this->db->where('s.v_HospitalCode',$this->session->userdata('hosp_code'));
 			$query = $this->db->get();
-			//echo $this->db->last_query();
+			echo $this->db->last_query();
 			//exit();
 			$query_result = $query->result();
 			return $query_result;
@@ -1950,14 +1964,14 @@ return $query->result();
 			$this->db->from('pmis2_egm_jobdonedet A');
 			$this->db->join('mis_qap_work_orders$candidate WO','A.v_Wrkordno = WO.work_order_no','inner join');
 			$this->db->join('mis_qap_siq_detail SIQ','SIQ.siq_no = WO.siqppm_no','left outer');
-			//$this->db->where('SIQ.siq_date >=',$fromDate);
-				$this->db->where('SIQ.siq_date >=','2013-01-01');//for test
-			//$where = '(SIQ.siq_date <= "DATE_ADD(%f,-5000,DATE_ADD(%m,DATEDIFF(%c,0,$toDate)+1,0))")';
-				$where = '(SIQ.siq_date <= "DATE_ADD(%f,-5000,DATE_ADD(%m,DATEDIFF(%c,0,2015-03-01)+1,0))")';//for test
+			$this->db->where('SIQ.siq_date >=',$fromDate);
+			//	$this->db->where('SIQ.siq_date >=','2013-01-01');//for test
+			$where = '(SIQ.siq_date <= "DATE_ADD(%f,-5000,DATE_ADD(%m,DATEDIFF(%c,0,$toDate)+1,0))")';
+			//	$where = '(SIQ.siq_date <= "DATE_ADD(%f,-5000,DATE_ADD(%m,DATEDIFF(%c,0,2015-03-01)+1,0))")';//for test
 			$this->db->where($where);
-			$this->db->where('SIQ.ind_code','BES05');
-			//$this->db->where('SIQ.hosp_code',$this->session->userdata('hosp_code'));
-				$this->db->where('SIQ.hosp_code','MKA');//for test
+			$this->db->where('SIQ.ind_code',$this->session->userdata('usersess').'05');
+			$this->db->where('SIQ.hosp_code',$this->session->userdata('hosp_code'));
+			//	$this->db->where('SIQ.hosp_code','MKA');//for test
 			$notin_qcppm = array('QC09','QC10','QC12','QC14','QC17','QC18');
 			$this->db->where_not_in('WO.qc_ppm',$notin_qcppm);
 			$this->db->where('WO.qc_ppm <>','');
@@ -2006,14 +2020,14 @@ return $query->result();
 			$this->db->select('WO.qc_ppm AS QC_Code,COUNT(WO.qc_ppm) AS Occurance');
 			$this->db->from('mis_qap_siq_detail SIQ');
 			$this->db->join('mis_qap_work_orders$candidate WO','SIQ.siq_no = WO.siqppm_no');
-			//$this->db->where('SIQ.siq_date >=',$fromDate);
-				$this->db->where('SIQ.siq_date >=','2013-01-01');//for test
-			//$where = '(SIQ.siq_date <= "DATE_ADD(%f,-5000,DATE_ADD(%m,DATEDIFF(%c,0,$toDate)+1,0))")';
-				$where = '(SIQ.siq_date <= "DATE_ADD(%f,-5000,DATE_ADD(%m,DATEDIFF(%c,0,2015-03-01)+1,0))")';//for test
+			$this->db->where('SIQ.siq_date >=',$fromDate);
+			//	$this->db->where('SIQ.siq_date >=','2013-01-01');//for test
+			$where = '(SIQ.siq_date <= "DATE_ADD(%f,-5000,DATE_ADD(%m,DATEDIFF(%c,0,$toDate)+1,0))")';
+			//	$where = '(SIQ.siq_date <= "DATE_ADD(%f,-5000,DATE_ADD(%m,DATEDIFF(%c,0,2015-03-01)+1,0))")';//for test
 			$this->db->where($where);
-			$this->db->where('SIQ.ind_code','BES05');
-			//$this->db->where('SIQ.hosp_code',$this->session->userdata('hosp_code'));
-				$this->db->where('SIQ.hosp_code','MKA');//for test
+			$this->db->where('SIQ.ind_code',$this->session->userdata('usersess').'05');
+			$this->db->where('SIQ.hosp_code',$this->session->userdata('hosp_code'));
+			//	$this->db->where('SIQ.hosp_code','MKA');//for test
 			$qcppm_notin = array('QC09','QC10','QC12','QC14','QC17','QC18');
 			$this->db->where_not_in('WO.qc_ppm',$qcppm_notin);
 			$this->db->where('WO.qc_ppm <>','');
@@ -2025,33 +2039,34 @@ return $query->result();
 			return $query->result();
 		}
 		function qap3_reportsiq($fromDate,$toDate){
-			$this->db->select('SUM(CASE ind_code WHEN "BES05" THEN 1 ELSE 0 END) AS ppm_siq,SUM(CASE ind_code WHEN "BES06" THEN 1 ELSE 0 END) AS uptime_siq');
+			$this->db->select("SUM(CASE ind_code WHEN '".$this->session->userdata('usersess')."05' THEN 1 ELSE 0 END) AS ppm_siq,SUM(CASE ind_code WHEN '".$this->session->userdata('usersess')."06' THEN 1 ELSE 0 END) AS uptime_siq");
 			$this->db->from('mis_qap_siq_detail');
-			//$this->db->where('hosp_code',$this->session->userdata('hosp_code'));
-				$this->db->where('hosp_code','MKA');//for test
-			//$this->db->where('siq_date >=',$fromDate);
-				$this->db->where('siq_date >=','2013-01-01');//for test
-			//$where = '(siq_date <= "DATE_ADD(%f,-5000,DATE_ADD(%m,DATEDIFF(%c,0,$toDate)+1,0))")';
-				$where = '(siq_date <= "DATE_ADD(%f,-5000,DATE_ADD(%m,DATEDIFF(%c,0,2015-03-01)+1,0))")';//for test
+			$this->db->where('hosp_code',$this->session->userdata('hosp_code'));
+			//	$this->db->where('hosp_code','MKA');//for test
+			$this->db->where('siq_date >=',$fromDate);
+			//	$this->db->where('siq_date >=','2013-01-01');//for test
+			$where = '(siq_date <= "DATE_ADD(%f,-5000,DATE_ADD(%m,DATEDIFF(%c,0,$toDate)+1,0))")';
+			//	$where = '(siq_date <= "DATE_ADD(%f,-5000,DATE_ADD(%m,DATEDIFF(%c,0,2015-03-01)+1,0))")';//for test
 			$this->db->where($where);
-			$this->db->where('service','BES');
+			$this->db->where('service',$this->session->userdata('usersess'));
 			$query = $this->db->get();
 			//echo $this->db->last_query();
 			//exit();
 			return $query->result();
 		}
 		function qap3reportcaro($fromDate,$toDate){
-			$this->db->select('SUM(CASE C.ind_code WHEN "BES05" THEN 1 ELSE 0 END) AS ppm_car,SUM(CASE C.ind_code WHEN "BES06" THEN 1 ELSE 0 END) AS uptime_car');
+			//$this->db->select('SUM(CASE C.ind_code WHEN "BES05" THEN 1 ELSE 0 END) AS ppm_car,SUM(CASE C.ind_code WHEN "BES06" THEN 1 ELSE 0 END) AS uptime_car');
+			$this->db->select("SUM(CASE C.ind_code WHEN '".$this->session->userdata('usersess')."05' THEN 1 ELSE 0 END) AS ppm_car,SUM(CASE C.ind_code WHEN '".$this->session->userdata('usersess')."06' THEN 1 ELSE 0 END) AS uptime_car");
 			$this->db->from('mis_qap_car_header C');
 			$this->db->join('mis_qap_siq_detail S','C.siq_no = S.siq_no');
 			$this->db->where('S.hosp_code',$this->session->userdata('hosp_code'));
-				$this->db->where('S.hosp_code','MKA');//for test
-			//$this->db->where('siq_date >=',$fromDate);
-				$this->db->where('S.siq_date >=','2013-01-01');//for test
-			//$where = '(siq_date <= "DATE_ADD(%f,-5000,DATE_ADD(%m,DATEDIFF(%c,0,$toDate)+1,0))")';
-				$where = '(S.siq_date <= "DATE_ADD(%f,-5000,DATE_ADD(%m,DATEDIFF(%c,0,2015-03-01)+1,0))")';//for test
+			//	$this->db->where('S.hosp_code','MKA');//for test
+			$this->db->where('S.siq_date >=',$fromDate);
+			//	$this->db->where('S.siq_date >=','2013-01-01');//for test
+			$where = '(S.siq_date <= "DATE_ADD(%f,-5000,DATE_ADD(%m,DATEDIFF(%c,0,$toDate)+1,0))")';
+			//	$where = '(S.siq_date <= "DATE_ADD(%f,-5000,DATE_ADD(%m,DATEDIFF(%c,0,2015-03-01)+1,0))")';//for test
 			$this->db->where($where);
-			$this->db->where('C.service','BES');
+			$this->db->where('C.service',$this->session->userdata('usersess'));
 			$this->db->where('C.status','0');
 			$query = $this->db->get();
 			//echo $this->db->last_query();
@@ -2059,17 +2074,18 @@ return $query->result();
 			return $query->result();
 		}
 		function qap3reportcarc($fromDate,$toDate){
-			$this->db->select('SUM(CASE C.ind_code WHEN "BES05" THEN 1 ELSE 0 END) AS ppm_car,SUM(CASE C.ind_code WHEN "BES06" THEN 1 ELSE 0 END) AS uptime_car');
+			//$this->db->select('SUM(CASE C.ind_code WHEN "BES05" THEN 1 ELSE 0 END) AS ppm_car,SUM(CASE C.ind_code WHEN "BES06" THEN 1 ELSE 0 END) AS uptime_car');
+			$this->db->select("SUM(CASE C.ind_code WHEN '".$this->session->userdata('usersess')."05' THEN 1 ELSE 0 END) AS ppm_car,SUM(CASE C.ind_code WHEN '".$this->session->userdata('usersess')."06' THEN 1 ELSE 0 END) AS uptime_car");
 			$this->db->from('mis_qap_car_header C');
 			$this->db->join('mis_qap_siq_detail S','C.siq_no = S.siq_no');
-			//$this->db->where('S.hosp_code',$this->session->userdata('hosp_code'));
-				$this->db->where('S.hosp_code','MKA');//for test
-			//$this->db->where('siq_date >=',$fromDate);
-				$this->db->where('S.siq_date >=','2013-01-01');//for test
-			//$where = '(siq_date <= "DATE_ADD(%f,-5000,DATE_ADD(%m,DATEDIFF(%c,0,$toDate)+1,0))")';
-				$where = '(S.siq_date <= "DATE_ADD(%f,-5000,DATE_ADD(%m,DATEDIFF(%c,0,2015-03-01)+1,0))")';//for test
+			$this->db->where('S.hosp_code',$this->session->userdata('hosp_code'));
+			//	$this->db->where('S.hosp_code','MKA');//for test
+			$this->db->where('siq_date >=',$fromDate);
+			//	$this->db->where('S.siq_date >=','2013-01-01');//for test
+			$where = '(siq_date <= "DATE_ADD(%f,-5000,DATE_ADD(%m,DATEDIFF(%c,0,$toDate)+1,0))")';
+			//	$where = '(S.siq_date <= "DATE_ADD(%f,-5000,DATE_ADD(%m,DATEDIFF(%c,0,2015-03-01)+1,0))")';//for test
 			$this->db->where($where);
-			$this->db->where('C.service','BES');
+			$this->db->where('C.service',$this->session->userdata('usersess'));
 			$this->db->where('C.status','1');
 			$query = $this->db->get();
 			//echo $this->db->last_query();
@@ -2134,7 +2150,7 @@ return $query->result();
 				$this->db->order_by('s.V_User_dept_code','desc');
 			}
 			$query = $this->db->get();
-			//echo $this->db->last_query();
+			echo $this->db->last_query();
 			//exit();
 			return $query->result();
 		}
@@ -2376,7 +2392,7 @@ return $query->result();
 			$bystak = " AND left(a.v_tag_no,6) = 'IIUM E'"; }
 
 			//$this->db->select("COUNT(*) as total, SUM(CASE WHEN sc.v_wrkordstatus = 'A'  THEN 1 ELSE 0 END) AS notcomp, SUM(CASE WHEN sc.v_wrkordstatus = 'C' OR sc.v_wrkordstatus = 'CR' THEN 1 ELSE 0 END) AS comp, SUM(CASE WHEN sc.d_reschdt is not NULL AND sc.v_wrkordstatus = 'AR' THEN 1 ELSE 0 END) AS resch");
-			$this->db->select("COUNT(*) as total, SUM(CASE WHEN sc.v_wrkordstatus = 'A'  OR (sc.v_wrkordstatus = 'AR' AND IFNULL(sc.d_reschdt,d_DueDt) < now()) THEN 1 ELSE 0 END) AS notcomp, SUM(CASE WHEN sc.v_wrkordstatus = 'C' OR sc.v_wrkordstatus = 'CR' THEN 1 ELSE 0 END) AS comp, SUM(CASE WHEN sc.d_reschdt is not NULL AND sc.v_wrkordstatus = 'AR' AND (IFNULL(sc.d_reschdt,d_DueDt) > now()) THEN 1 ELSE 0 END) AS resch", FALSE);
+			$this->db->select("COUNT(*) as total, SUM(CASE WHEN sc.v_wrkordstatus = 'A'  OR (sc.v_wrkordstatus = 'AR') THEN 1 ELSE 0 END) AS notcomp, SUM(CASE WHEN sc.v_wrkordstatus = 'C' OR sc.v_wrkordstatus = 'CR' THEN 1 ELSE 0 END) AS comp, SUM(CASE WHEN sc.d_reschdt is not NULL THEN 1 ELSE 0 END) AS resch", FALSE);
 			$this->db->from('pmis2_egm_schconfirmmon sc');
 			$this->db->join('pmis2_egm_assetregistration a','sc.v_Asset_no = a.V_Asset_no AND sc.v_HospitalCode = a.V_Hospitalcode '.$bystak,'left outer');
 			$this->db->where('sc.v_Actionflag <> ','D');
@@ -2393,7 +2409,7 @@ return $query->result();
 			$this->db->where('IFNULL(sc.d_reschdt,d_DueDt) <=', $this->dater(2,$month,$year));
 			$query = $this->db->get();
 			//echo "dater : ".$this->dater(1,$month,$year);
-			//echo $this->db->last_query();
+			echo $this->db->last_query();
 			//exit();
             
 			$query_result = $query->result();
@@ -4146,22 +4162,35 @@ ORDER BY r.D_date, r.D_time
 		return $query_result;
 	}
 	
-	function mrinlist($month,$year,$type){
-		$this->db->select('m.*,IFNULL(s.V_Asset_no,p.v_Asset_no) AS V_Asset_no,st.Status',FALSE);
+	function mrinlist($month,$year,$type,$kelas){
+	//echo "nilai kelas : " . $kelas . " type : " . $type;
+	  $inter = (int)$month;
+		$this->db->select('m.*,IFNULL(s.V_Asset_no,p.v_Asset_no) AS V_Asset_no,st.Status, IFNULL(IFNULL(IFNULL(ApprCommentsxx,ApprCommentsx),ApprComments),Comments) AS Commentsx',FALSE);
 		$this->db->from('tbl_materialreq m');
 		$this->db->join('pmis2_egm_service_request s','m.WorkOfOrder = s.V_Request_no AND s.V_actionflag <> "D"','left outer');
 		$this->db->join('pmis2_egm_schconfirmmon p','m.WorkOfOrder = p.v_WrkOrdNo AND p.v_Actionflag <> "D"','left outer');
 		$this->db->join('tbl_status st','m.ApprStatusID = st.StatusID');
-		$this->db->where('MONTH(DATE(m.DateCreated))',$month);
-		$this->db->where('YEAR(DATE(m.DateCreated))',$year);
+		//$this->db->where('MONTH(DATE(m.DateCreated))',$inter);
+		//$this->db->where('YEAR(DATE(m.DateCreated))',$year);
 		$this->db->where('service_code',$this->session->userdata('usersess'));
 		if ($type <> 0){
 			if ($type == 1){
+			$this->db->where('MONTH(DATE(m.DateCreated))',$inter);
+			$this->db->where('YEAR(DATE(m.DateCreated))',$year);
+				if ($kelas == 1) {
+				$this->db->where('m.ApprStatusID = 4');
+			 } else if ($kelas == 3) {		 	 
+				$this->db->where('m.ApprStatusIDx = 4');
+				$this->db->where('m.ApprStatusIDxx = 4');
+			 } else {
 				$this->db->where('m.ApprStatusID = 4');
 				$this->db->where('m.ApprStatusIDx = 4');
 				$this->db->where('m.ApprStatusIDxx = 4');
+			 }
 			}
 			else if ($type == 2){
+			$this->db->where('MONTH(DATE(m.DateCreated))',$inter);
+			$this->db->where('YEAR(DATE(m.DateCreated))',$year);
 				$status = array(5,107,128);
 				$this->db->where_in('m.ApprStatusID',$status);
 				//$this->db->or_where('m.ApprStatusID = 107');
@@ -4173,11 +4202,30 @@ ORDER BY r.D_date, r.D_time
 				//$this->db->or_where('m.ApprStatusIDxx = 107');
 				//$this->db->or_where('m.ApprStatusIDxx = 128');
 			}
+			else if ($type == 3){
+			 if ($kelas == 1) {
+			 	$this->db->where('m.ApprStatusID','6');
+			 } else if ($kelas == 3) {
+			 	 
+				$this->db->where('m.ApprStatusIDx','6');
+				$this->db->or_where('m.ApprStatusIDxx','6');
+			 } else {
+			 	
+				$this->db->where('m.ApprStatusID','6');
+				$this->db->or_where('m.ApprStatusIDx','6');
+				$this->db->or_where('m.ApprStatusIDxx','6');
+			 }
+			}
 			else{
+				$this->db->where('MONTH(DATE(m.DateCreated))',$inter);
+				$this->db->where('YEAR(DATE(m.DateCreated))',$year);
 				$this->db->where('m.ApprStatusID = 6');
 				$this->db->or_where('m.ApprStatusIDx = 6');
 				$this->db->or_where('m.ApprStatusIDxx = 6');
 			}	
+		} else{
+				$this->db->where('MONTH(DATE(m.DateCreated))',$inter);
+				$this->db->where('YEAR(DATE(m.DateCreated))',$year);
 		}
 		$this->db->order_by('DocReferenceNo','ASC');
 		$query = $this->db->get();
@@ -4202,10 +4250,12 @@ function mrindet($mrinno){
 	}
 	
 function itemdet($mrinno){
-		$this->db->select('a.*,b.ItemName');
+		$this->db->select('a.*,b.ItemName, IFNULL(c.Qty,0) AS Qtys', FALSE);
 		$this->db->from('tbl_mirn_comp a');
 		$this->db->join('tbl_invitem b','a.ItemCode = b.ItemCode');
+		$this->db->join('tbl_item_store_qty c',"c.ItemCode = a.ItemCode AND c.Hosp_code = '".$this->session->userdata('hosp_code')."'",'left outer');
 		$this->db->where('MIRNcode',$mrinno);
+		$this->db->where('Who_Del IS NULL', null, false);
 		$query = $this->db->get();
 		//echo $this->db->last_query();
 		//exit();
@@ -4896,6 +4946,7 @@ return $obj['path'];
 		    $this->db->select('a.Time_Stamp,a.Qty_Before,a.Qty_Taken,a.Qty_Add,a.Last_User_Update,a.Related_WO,a.Remark,a.ItemCode');
 			$this->db->from('tbl_item_movement a');
 			$this->db->join('tbl_invitem b','a.ItemCode = b.ItemCode','inner');
+			$this->db->order_by('a.Time_Stamp', 'desc');
 			$this->db->where('a.Store_Id',$Hosp_code);
 			$this->db->where('a.ItemCode',$ItemCode);
 		  	$this->db->limit($limit,$start);
@@ -4911,6 +4962,80 @@ return $obj['path'];
 			
 			return $query->result();
 			
+		}
+		
+		function reschout($month,$year,$grpsel,$bystak = ""){
+		
+		if ($bystak == "IIUM C") {
+			$bystak = " AND left(a.v_tag_no,6) = 'IIUM C'"; }
+			elseif ($bystak == "IIUM M") {
+			$bystak = " AND left(a.v_tag_no,6) = 'IIUM M'"; }
+			elseif ($bystak == "IIUM E") {
+			$bystak = " AND left(a.v_tag_no,6) = 'IIUM E'"; }
+             		
+		    //$this->db->select("SUM(CASE WHEN sc.d_reschdt is not NULL AND sc.v_wrkordstatus = 'AR' AND (IFNULL(sc.d_reschdt, d_DueDt) > now()) THEN 1 ELSE 0 END) AS reschout",FALSE);			
+				$this->db->select("SUM(CASE WHEN sc.d_reschdt is not NULL THEN 1 ELSE 0 END) AS reschout",FALSE);			
+			$this->db->from('pmis2_egm_schconfirmmon sc');	
+			$this->db->join('pmis2_egm_assetregistration a','sc.v_Asset_no = a.V_Asset_no AND sc.v_HospitalCode = a.V_Hospitalcode '.$bystak,'left outer');
+			$this->db->where('sc.v_Actionflag <> ','D');
+			$this->db->where('a.v_Actionflag <> ','D');
+			$this->db->where('sc.v_ServiceCode = ',$this->session->userdata('usersess'));
+	       
+		
+		if ($grpsel <> ''){
+		$this->db->where('a.v_asset_grp',$grpsel);
+		}
+			
+	  $this->db->where('sc.d_DueDt >=', $this->dater(1,$month,$year));
+		$this->db->where('sc.d_DueDt <=', $this->dater(2,$month,$year));    
+		
+		$query = $this->db->get();
+		
+		$query_result = $query->result(); 
+		//echo $this->db->last_query();
+		//exit();
+		return $query_result;
+		
+		
+		
+		}
+		
+		function s_item_detail($limit,$start){
+	     if($limit != 0){
+			$this->db->select('a.*, b.v_vendorname');
+			$this->db->from('tbl_invitem a');
+			$this->db->join('pmis2_sa_vendor b','a.VendorID = b.id','left');
+	        $this->db->where('Dept =', $this->session->userdata('usersess'));
+			$this->db->order_by('DateCreated','DESC');
+			$this->db->limit($limit,$start);
+	
+          }else {
+	       $this->db->select('count(a.ItemCode) as jumlah');
+		   $this->db->from('tbl_invitem a');
+		   $this->db->join('pmis2_sa_vendor b','a.VendorID = b.id','left');
+	       $this->db->where('Dept =', $this->session->userdata('usersess'));			
+         }
+		$query = $this->db->get();
+			/* echo $this->db->last_query();
+			exit(); */
+			//$this->getcurrency(query);
+			return $query->result();
+		}
+		
+				function sumpp_m($month,$year,$pecat)
+		{
+		
+			$this->db->select("*");
+			$this->db->from('freezerpt');
+			$this->db->where('v_servicecode = ',$this->session->userdata('usersess'));
+			$this->db->where('PeCat = ',$pecat);
+			$this->db->where('v_month = ',$month);
+			$this->db->where('v_year = ',$year);			
+			$query = $this->db->get();
+			$query_result = $query->result();
+		/* 	echo $this->db->last_query();
+			exit(); */
+			return $query_result;
 		}
 
 }
