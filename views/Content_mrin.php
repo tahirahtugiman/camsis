@@ -201,7 +201,7 @@ switch ($procument) {
 								<?php $rownum++;endforeach;?>
 							<?php }else{?>
 							<tr align="center" style="height:200px; background:white;">
-								<td colspan="2" class="default-NO"><h1>yohohoh</h1>
+								<td colspan="2" class="default-NO">
 									NO <?php if($tulis == "All MRIN" ){ echo "MRIN";}else{ echo $tulis;}?> FOUND FOR <?=date('F', mktime(0, 0, 0, $month, 10))?> <?=$year?>
 								</td>
 							</tr>
