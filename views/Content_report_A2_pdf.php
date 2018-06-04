@@ -35,7 +35,7 @@
 		</tr>
 		
 			<?php $numrow = 1; foreach($recordrq as $row):?>
-<?php echo ($numrow%2==0) ? '<tr class="ui-color-color-color">' : '<tr nobr="true">'; ?>
+<?php echo ($numrow%2==0) ? '<tr class="ui-color-color-color" nobr="true">' : '<tr nobr="true">'; ?>
 		<td><?= $numrow ?></td>
 		<td><?= ($row->D_date) ?  date("d/m/Y",strtotime($row->D_date)) : 'N/A' ?></td>
 		<td><?=($row->V_Request_no) ? $row->V_Request_no : 'N/A' ?></td>
