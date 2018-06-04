@@ -241,9 +241,11 @@ class Procurement extends CI_Controller {
 				}
 				if ($this->input->get('tag') == 'component'){
 	            	$config['upload_path']          = 'C:\inetpub\wwwroot\FEMSHospital_v3\uploadpofiles';
+								//$config['upload_path']          = '/var/www/vhosts/camsis2.advancepact.com/httpdocs/uploadpofiles';
 	            }
 				else{
-					$config['upload_path']          = 'C:\inetpub\wwwroot\FEMSHospital_v3\uploadfinfiles';
+					//$config['upload_path']          = 'C:\inetpub\wwwroot\FEMSHospital_v3\uploadfinfiles';
+					$config['upload_path']          = '/var/www/vhosts/camsis2.advancepact.com/httpdocs/uploadfinfiles';
 				}
 
 				$config['file_name'] = $new_name;
