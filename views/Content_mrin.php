@@ -35,7 +35,7 @@ switch ($procument) {
 ?>
 			<?php include 'content_pro_tab.php';?>
 			<tr class="ui-color-desk desk2">
-				<td colspan="4" class="t-header" style="color:black; height:40px; padding-left:10px;"><b><?= $tulis ?></b> <?=date('F', mktime(0, 0, 0, $month, 10))?> <?=$year?> <u>[Imaging Asset Only]</u></td>
+				<td colspan="4" class="t-header" style="color:black; height:40px; padding-left:10px;"><b><?= $tulis ?></b> <?=date('F', mktime(0, 0, 0, $month, 10))?> <?=$year?> <u><!-- [Imaging Asset Only] --></u></td>
 			</tr>
 			<tr class="ui-color-desk bg-red-blood"> 
 				<td colspan="4">
@@ -61,7 +61,7 @@ switch ($procument) {
 				</td>
 			</tr>
 			<tr class="ui-color-contents-style-1">
-				<td colspan="5" style="" valign="top" >
+				<td colspan="5" style="background-color: #fffefc;" valign="top" >
 					<table class="ui-content-middle-menu-workorder2 ui-landscape" width="100%">
 						<tr class="ui-menu-color-header" style="color:white; font-size:12px;">
 							<th >&nbsp;</th>
