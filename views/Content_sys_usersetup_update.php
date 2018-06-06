@@ -76,7 +76,7 @@
 									<tr>
 										<td style="padding-top:5px;" valign="top">User Hospital  :</td>
 										<td style="text-align:center;">
-											<select multiple id="select1" SIZE="10" style="width:300px;">
+											<select multiple id="select1" SIZE="10" style="width:300px;" ondblclick="transfer_right(this,'select')">
 												<option value="IIUM">IIUM Teaching Hospital</option>
 												<option value="KLG">Kluang</option>
 												<option value="JAS">Jasin</option>
@@ -84,13 +84,13 @@
 											</select>
 										</td>
 										<td style="width:100px; text-align:center;">
-											<INPUT TYPE="button" NAME="right" VALUE="&gt;&gt;" id="transferRight" onclick="transfer_right(this)"><BR><BR>
-											<INPUT TYPE="button" NAME="right" VALUE="All &gt;&gt;" id="transferAllRight"><BR><BR>
-											<INPUT TYPE="button" NAME="left" VALUE="&lt;&lt;" id="transferLeft"><BR><BR>
-											<INPUT TYPE="button" NAME="left" VALUE="All &lt;&lt;" id="transferAllLeft">
+											<INPUT TYPE="button" NAME="right" VALUE="&gt;&gt;" id="transferRight" onclick="transfer_right(this,'select')"><BR><BR>
+											<INPUT TYPE="button" NAME="right" VALUE="All &gt;&gt;" id="transferAllRight" onclick="transfer_rightAll(this,'select')"><BR><BR>
+											<INPUT TYPE="button" NAME="left" VALUE="&lt;&lt;" id="transferLeft" onclick="transfer_left(this,'select')"><BR><BR>
+											<INPUT TYPE="button" NAME="left" VALUE="All &lt;&lt;" id="transferAllLeft" onclick="transfer_leftAll(this,'select')">
 										</td>
 										<td style="text-align:center;">
-											<select multiple id="select2" SIZE="10" style="width:300px;"></select>
+											<select multiple id="select2" SIZE="10" style="width:300px;" ondblclick="transfer_left(this,'select')"></select>
 										</td>
 									</tr>
 									<tr>
@@ -117,8 +117,8 @@
 								<table class="ui-content-form ui-sys_admin-mobile" width="100%" border="0">
 									<tr>
 										<td style="padding-top:5px;" valign="top">User Hospital  :</td>
-										<td style="text-align:center;">
-											<select multiple id="select1" SIZE="10" style="width:300px;">
+										<td style="text-align:center;" class="select1">
+											<select multiple id="select1" SIZE="10" style="width:300px;" ondblclick="transfer_right(this,'select')">
 												<option value="IIUM">IIUM Teaching Hospital</option>
 												<option value="KLG">Kluang</option>
 												<option value="JAS">Jasin</option>
@@ -129,17 +129,17 @@
 									<tr>
 										<td></td>
 										<td style="width:100px; text-align:center;">
-											<INPUT TYPE="button" NAME="right" VALUE="&darr;" id="transferRights" onclick="transfer_right(this)"></INPUT>
-											<INPUT TYPE="button" NAME="right" VALUE="All &#x21CA;" id="transferAllRight"></INPUT>
+											<INPUT TYPE="button" NAME="right" VALUE="&darr;" id="transferRights" onclick="transfer_right(this,'select')"></INPUT>
+											<INPUT TYPE="button" NAME="right" VALUE="All &#x21CA;" id="transferAllRight" onclick="transfer_rightAll(this,'select')"></INPUT>
 											&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-											<INPUT TYPE="button" NAME="left" VALUE="&uarr;" id="transferLeft"></INPUT>
-											<INPUT TYPE="button" NAME="left" VALUE="All &#x21C8;" id="transferAllLeft"></INPUT>
+											<INPUT TYPE="button" NAME="left" VALUE="&uarr;" id="transferLeft" onclick="transfer_left(this,'select')"></INPUT>
+											<INPUT TYPE="button" NAME="left" VALUE="All &#x21C8;" id="transferAllLeft" onclick="transfer_leftAll(this,'select')"></INPUT>
 										</td>
 									</tr>
 									<tr>
 										<td></td>
 										<td style="text-align:center;">
-											<select multiple id="select2" SIZE="10" style="width:300px;"></select>
+											<select multiple id="select2" SIZE="10" style="width:300px;" ondblclick="transfer_left(this,'select')"></select>
 										</td>
 									</tr>
 									<tr>
@@ -148,7 +148,7 @@
 									<tr>
 										<td style="padding-top:5px;" valign="top">User Service  :</td>
 										<td style="text-align:center;">
-											<select multiple id="service1" SIZE="10" style="width:300px;">
+											<select multiple id="service1" SIZE="10" style="width:300px;" ondblclick="transfer_right(this,'service')">
 												<option value="BES">BIOMEDICAL ENGINEERING SERVICES</option>
 												<option value="FMS">FACILITY ENGINEERING SERVICES</option>
 												<option value="HKS">HOUSEKEEPING</option>
@@ -159,17 +159,17 @@
 									<tr>
 										<td></td>
 										<td style="width:100px; text-align:center;">
-											<INPUT TYPE="button" NAME="right" VALUE="&darr;" id="transferRights"></INPUT>
-											<INPUT TYPE="button" NAME="right" VALUE="All &#x21CA;" id="transferAllRights"></INPUT>
+											<INPUT TYPE="button" NAME="right" VALUE="&darr;" id="transferRights" onclick="transfer_right(this,'service')"></INPUT>
+											<INPUT TYPE="button" NAME="right" VALUE="All &#x21CA;" id="transferAllRights" onclick="transfer_rightAll(this,'service')"></INPUT>
 											&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-											<INPUT TYPE="button" NAME="left" VALUE="&uarr;" id="transferLefts"></INPUT>
-											<INPUT TYPE="button" NAME="left" VALUE="All &#x21C8;" id="transferAllLefts"></INPUT>
+											<INPUT TYPE="button" NAME="left" VALUE="&uarr;" id="transferLefts" onclick="transfer_left(this,'service')"></INPUT>
+											<INPUT TYPE="button" NAME="left" VALUE="All &#x21C8;" id="transferAllLefts" onclick="transfer_leftAll(this,'service')"></INPUT>
 										</td>
 									</tr>
 									<tr>
 										<td></td>
 										<td style="text-align:center;">
-											<select multiple id="service2" SIZE="10" style="width:300px;"></select>
+											<select multiple id="service2" SIZE="10" style="width:300px;" ondblclick="transfer_left(this,'service')"></select>
 										</td>
 									</tr>									
 								</table>
@@ -179,52 +179,74 @@
 				</div>
 			</div>
 <script>
-	$('#select1').dblclick(function () {
-		return !$('#select1 option:selected').remove().appendTo('#select2');
-	});
+	/*
+		$('#select1').dblclick(function () {
+			return !$('#select1 option:selected').remove().appendTo('#select2');
+		});
 
-	$('#select2').dblclick(function () {
-		return !$('#select2 option:selected').remove().appendTo('#select1');
-	});
-	// $('#transferRight').click(function () {
-	// 	return !$('#select1 option:selected').remove().appendTo('#select2');
-	// });
-	// $('#transferLeft').click(function () {
-	// 	return !$('#select2 option:selected').remove().appendTo('#select1');
-	// });
-	$('#transferAllRight').click(function () {
-		return !$('#select1 option').remove().appendTo('#select2');
-	});
-	$('#transferAllLeft').click(function () {
-		return !$('#select2 option').remove().appendTo('#select1');
-	});
-	$('#service1').dblclick(function () {
-		return !$('#service1 option:selected').remove().appendTo('#service2');
-	});
+		$('#select2').dblclick(function () {
+			return !$('#select2 option:selected').remove().appendTo('#select1');
+		});
+	*/
+	/*
+		$('#transferRight').click(function () {
+			return !$('#select1 option:selected').remove().appendTo('#select2');
+		});
+		$('#transferLeft').click(function () {
+			return !$('#select2 option:selected').remove().appendTo('#select1');
+		});
+		$('#transferAllRight').click(function () {
+			return !$('#select1 option').remove().appendTo('#select2');
+		});
+		$('#transferAllLeft').click(function () {
+			return !$('#select2 option').remove().appendTo('#select1');
+		});
+	*/
+	/*
+		$('#service1').dblclick(function () {
+			return !$('#service1 option:selected').remove().appendTo('#service2');
+		});
 
-	$('#service2').dblclick(function () {
-		return !$('#service2 option:selected').remove().appendTo('#service1');
-	});
-	$('#transferRights').click(function () {
-		return !$('#service1 option:selected').remove().appendTo('#service2');
-	});
-	$('#transferLefts').click(function () {
-		return !$('#service2 option:selected').remove().appendTo('#service1');
-	});
-	$('#transferAllRights').click(function () {
-		return !$('#service1 option').remove().appendTo('#service2');
-	});
-	$('#transferAllLefts').click(function () {
-		return !$('#service2 option').remove().appendTo('#service1');
-	});
+		$('#service2').dblclick(function () {
+			return !$('#service2 option:selected').remove().appendTo('#service1');
+		});
+		$('#transferRights').click(function () {
+			return !$('#service1 option:selected').remove().appendTo('#service2');
+		});
+		$('#transferLefts').click(function () {
+			return !$('#service2 option:selected').remove().appendTo('#service1');
+		});
+		$('#transferAllRights').click(function () {
+			return !$('#service1 option').remove().appendTo('#service2');
+		});
+		$('#transferAllLefts').click(function () {
+			return !$('#service2 option').remove().appendTo('#service1');
+		});
+	*/
 
-	function transfer_right(e){
+	function transfer_right(e,type){
 		var table	= $(e).closest("table");
-		var select1 = $(table).find("select#select2");
-		alert($(select1).attr("id"));
-		return !$(table).find('select#select1 option:selected').remove().appendTo(select1);
+		var target	= $(table).find("select#"+type+"2");
+		return !$(table).find('select#'+type+'1 option:selected').remove().appendTo(target);
 	}
 
+	function transfer_left(e,type){
+		var table	= $(e).closest("table");
+		var target	= $(table).find("select#"+type+"1");
+		return !$(table).find('select#'+type+'2 option:selected').remove().appendTo(target);
+	}
+
+	function transfer_leftAll(e,type){
+		var table	= $(e).closest("table");
+		var target	= $(table).find("select#"+type+"1");
+		return !$(table).find('select#'+type+'2 option').remove().appendTo(target);
+	}
+
+	function transfer_rightAll(e,type){
+		var table	= $(e).closest("table");
+		var target	= $(table).find("select#"+type+"2");
+		return !$(table).find('select#'+type+'1 option').remove().appendTo(target);
+	}
 
 </script>
 			<table align="center" height="40px" border="0" style="width:100%;" class="ui-main-form-footer">
