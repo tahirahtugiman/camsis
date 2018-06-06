@@ -96,7 +96,7 @@
 									<tr>
 										<td style="padding-top:5px;" valign="top">User Service  :</td>
 										<td style="text-align:center;">
-											<select multiple id="service1" SIZE="10" style="width:300px;">
+											<select multiple id="service1" SIZE="10" style="width:300px;" ondblclick="transfer_right(this,'service')">
 												<option value="BES">BIOMEDICAL ENGINEERING SERVICES</option>
 												<option value="FMS">FACILITY ENGINEERING SERVICES</option>
 												<option value="HKS">HOUSEKEEPING</option>
@@ -104,13 +104,13 @@
 											</select>
 										</td>
 										<td style="width:100px; text-align:center;">
-											<INPUT TYPE="button" NAME="right" VALUE="&gt;&gt;" id="transferRights"><BR><BR>
-											<INPUT TYPE="button" NAME="right" VALUE="All &gt;&gt;" id="transferAllRights"><BR><BR>
-											<INPUT TYPE="button" NAME="left" VALUE="&lt;&lt;" id="transferLefts"><BR><BR>
-											<INPUT TYPE="button" NAME="left" VALUE="All &lt;&lt;" id="transferAllLefts">
+											<INPUT TYPE="button" NAME="right" VALUE="&gt;&gt;" id="transferRights" onclick="transfer_right(this,'service')"><BR><BR>
+											<INPUT TYPE="button" NAME="right" VALUE="All &gt;&gt;" id="transferAllRights" onclick="transfer_rightAll(this,'service')"><BR><BR>
+											<INPUT TYPE="button" NAME="left" VALUE="&lt;&lt;" id="transferLefts" onclick="transfer_left(this,'service')"><BR><BR>
+											<INPUT TYPE="button" NAME="left" VALUE="All &lt;&lt;" id="transferAllLefts" onclick="transfer_leftAll(this,'service')">
 										</td>
 										<td style="text-align:center;">
-											<select multiple id="service2" SIZE="10" style="width:300px;"></select>
+											<select multiple id="service2" SIZE="10" style="width:300px;" ondblclick="transfer_left(this,'service')"></select>
 										</td>
 									</tr>									
 								</table>
