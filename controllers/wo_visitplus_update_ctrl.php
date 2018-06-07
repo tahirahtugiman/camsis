@@ -331,6 +331,20 @@ if ($shedule) {
 	$this->load->model('insert_model');
 	
 	$wrk_ord_test = $this->insert_model->visitplus_woexist('v_WrkOrdNo',$RN,'n_Visit',$visit);
+	if ($this->input->post('chkbox') == 'ON'){
+					//$this->insert_model->job_woexist('v_WrkOrdNo',$variable);
+					//echo "nk closed";
+					//exit();
+					
+		if (($this->session->userdata('usersess') == 'BES') && ($this->input->post('n_request_type') == 'A4')) {
+    //            if ($this->input->post('n_asset_number')){
+		//$nomasset = $this->get_model->get_assetdet2($this->input->post('n_asset_number'));
+		//$thenomasset = $nomasset[0]->V_Tag_no;
+                }
+		//echo "dpt nama : ".$thenomasset;
+		$this->send_mail_frmout('nezam@advancepact.com',$RN,$this->input->post('n_Action_Taken'));
+		}
+				}
 	if ((substr($RN,0,2) == 'PP') || (substr($RN,0,2) == 'RI')){
 	redirect('contentcontroller/visitplus?wrk_ord='.$RN. '&vppm=4');
 	}
@@ -338,6 +352,25 @@ if ($shedule) {
 	redirect('contentcontroller/visitplus?wrk_ord='.$RN. '&wo=5');
 	}
 }
+
+
+		
+		 public function send_mail_frmout($emailto, $wono="", $summary="") { 
+         $from_email = "camsis@advancepact.com"; 
+         //$to_email = $this->input->post('email'); 
+         $to_email = $emailto; 
+   
+         //Load email library 
+         $this->load->library('email'); 
+   
+         $this->email->from($from_email, 'CAMSIS System'); 
+         $this->email->to($to_email);
+         $this->email->subject('WO '.$wono.' was closed'); 
+         $this->email->message('WO '.$wono.' have been closed. Summary '.$summary); 
+   
+         //Send mail 
+         $this->email->send();
+      } 
 
 }
 ?>

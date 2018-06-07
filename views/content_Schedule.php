@@ -125,6 +125,23 @@
 				</td>
 			</tr>
 			<?php  } ?>
+			
+			
+			<?php  if (!in_array("contentcontroller/report_ppmwos", $chkers)) { ?>
+			<tr class="<?php  $number++; echo evenodd($number); ?>">
+				<td colspan="4">
+					<?php echo anchor ('contentcontroller/report_ppmwos?m='.$month.'&y='.$year.'&grp='.$this->input->get('grp').'&fon=on', '<img src="'. base_url() .'images/user.png" alt="" class="ui-icon"/>&nbsp;&nbsp;&nbsp;&nbsp;PPM Work Order Summary (Freeze)'); ?>
+				</td>
+			</tr>
+			<?php  } ?>
+			<?php  if (!in_array("contentcontroller/report_vols", $chkers)) { ?>
+			<tr class="<?php  $number++; echo evenodd($number); ?>">
+				<td colspan="4">
+					<?php echo anchor ('contentcontroller/report_vols?m='.$month.'&y='.$year.'&stat=fbfb&resch=nt&grp='.$this->input->get('grp').'&fon=on', '<img src="'. base_url() .'images/user.png" alt="" class="ui-icon"/>&nbsp;&nbsp;&nbsp;&nbsp;PPM Work Order Listing (Freeze)'); ?>
+				</td>
+			</tr>
+			<?php  } ?>
+			
 			<tr class="<?php  $number++; echo evenodd($number); ?>">
 				<td colspan="4">
 					<?php echo anchor ('contentcontroller/report_reqwos?m='.$month.'&y='.$year.'&grp='.$this->input->get('grp'), '<img src="'. base_url() .'images/user.png" alt="" class="ui-icon"/>&nbsp;&nbsp;&nbsp;&nbsp;Request Work Order Summary'); ?>

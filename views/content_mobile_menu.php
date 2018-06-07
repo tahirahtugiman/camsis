@@ -1,29 +1,38 @@
 <?php
+$test=1;
 $array = [
 	//desk Menu//
-	['contentcontroller/content/', 'WORK MODULES' , '',base_url().'index.php/contentcontroller/Central/'.$this->session->userdata('usersess')],
+	['contentcontroller/content/', 'WORK MODULES' , '',	base_url().'index.php/contentcontroller/Central/'.$this->session->userdata('usersess')],
 	['contentcontroller/Central/', 'CENTRAL FUNCTIONS' ,base_url().'index.php/contentcontroller/content/'.$this->session->userdata('usersess'),base_url().'index.php/contentcontroller/Business/'.$this->session->userdata('usersess')],
-	['Help Desk', 'PROCUREMENT MODULES' , 'bems_desk//',base_url().'index.php/contentcontroller/content/'.$this->session->userdata('usersess')],
-	['contentcontroller/Business/', 'BUSINESS INTELIGENT REPORTS' , base_url().'index.php/contentcontroller/Central/'.$this->session->userdata('usersess'),'']
-	]
+	['Help Desk', 'PROCUREMENT MODULES' , 'bems_desk//', base_url().'index.php/contentcontroller/content/'.$this->session->userdata('usersess')],
+	['contentcontroller/Business/', 'BUSINESS INTELIGENT REPORTS' , base_url().'index.php/contentcontroller/Central/'.$this->session->userdata('usersess'),''],
+];
+
+if (!in_array("contentcontroller/Procurement/", $chkers)) {
+	$array[3]=['contentcontroller/Business/', 'BUSINESS INTELIGENT REPORTS' , base_url().'index.php/contentcontroller/Central/'.$this->session->userdata('usersess'),base_url().'index.php/contentcontroller/Procurement/'.$this->session->userdata('usersess')];
+	$array[4]=['contentcontroller/Procurement/', 'MRIN' ,	base_url().'index.php/contentcontroller/Business/'.$this->session->userdata('usersess'),''];
+}else{
+	$array[3]=['contentcontroller/Business/', 'BUSINESS INTELIGENT REPORTS' , base_url().'index.php/contentcontroller/Central/'.$this->session->userdata('usersess'),''];
+}
+// echo "<pre>";var_export($array);die;
 ?>
 <?php foreach ($array as $list) {?>
-<?php if ($list[0] == $this->uri->slash_segment(1) .$this->uri->slash_segment(2)) {?>
+	<?php if ($list[0] == $this->uri->slash_segment(1) .$this->uri->slash_segment(2)) {?>
 <div class="divmenu"> 
 	<div class="divmenuleft">
-	<?php if ($list[2] == '') {?>
-	 &nbsp;
-	<?php }else{ ?>
+		<?php if ($list[2] == '') {?>
+	&nbsp;
+		<?php }else{ ?>
 	<a href="<?php echo $list[2]; ?>"><span class="icon-arrow-left"></span></a>
-	<?php } ?>
+		<?php } ?>
 	</div>
-	<?php echo $list[1]; ?>
+		<?php echo $list[1]; ?>
 	<div class="divmenuright">
-	<?php if ($list[3] == '') {?>
+		<?php if ($list[3] == '') {?>
 	 &nbsp;
-	<?php }else{ ?>
+		<?php }else{ ?>
 	<a href="<?php echo $list[3]; ?>"><span class="icon-arrow-right"></span></a>
-	<?php } ?>
+		<?php } ?>
 	</div>
 </div>
 <?php } } ?>

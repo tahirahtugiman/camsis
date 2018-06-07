@@ -16,10 +16,10 @@ function barchart(a,b,c,d,e,f){
 <?php include 'content_btp.php';?>
 <div id="Instruction" class="pr-printer">
     <div class="header-pr">PPM Work Order Summary</div>
-    <button onclick="javascript:myFunction('report_ppmwos?m=<?=$month?>&y=<?=$year?>&none=closed&ex=ex&grp=<?=$this->input->get('grp');?>');" class="btn-button btn-primary-button">PRINT</button>
+    <button onclick="javascript:myFunction('report_ppmwos?m=<?=$month?>&y=<?=$year?>&none=closed&ex=ex&grp=<?=$this->input->get('grp');?>&fon=<?=$this->input->get('fon');?>');" class="btn-button btn-primary-button">PRINT</button>
     <button type="cancel" class="btn-button btn-primary-button" onclick="location.href = '<?php echo $btp ;?>';">CANCEL</button>
 	<?php if (($this->input->get('ex') == '') or ($this->input->get('none') == '')){?>
-	<a href="<?php echo base_url();?>index.php/contentcontroller/report_ppmwos?m=<?=$month?>&y=<?=$year?>&ex=excel&none=close&grp=<?=$this->input->get('grp');?>" style="float:right; margin-right:40px;"><img src="<?php echo base_url();?>images/excel.png" style="width:40px; height:38px; position:absolute;" title="export to excel"></a>
+	<a href="<?php echo base_url();?>index.php/contentcontroller/report_ppmwos?m=<?=$month?>&y=<?=$year?>&ex=excel&none=close&grp=<?=$this->input->get('grp');?>&fon=<?=$this->input->get('fon');?>" style="float:right; margin-right:40px;"><img src="<?php echo base_url();?>images/excel.png" style="width:40px; height:38px; position:absolute;" title="export to excel"></a>
 	<?php //if($this->session->userdata('v_UserName') == 'nezam') {?>
 	<span style="float:right; margin-right:90px;" onclick="barchart(<?php if ($ppmsum[0]->total == 0) { echo "0"; } else {echo $ppmsum[0]->total; }?>,<?php if ($ppmsum[0]->comp == 0) { echo "0"; } else {echo $ppmsum[0]->comp; }?>,<?php if ($ppmsum[0]->resch == 0) { echo "0"; } else {echo $ppmsum[0]->resch; }?>,<?php if ($ppmsum[0]->notcomp == 0) { echo "0"; } else {echo $ppmsum[0]->notcomp; }?>,'<?= substr(date('M',mktime(0, 0, 0, $month, 10)),0,3)?>',<?=$year?>)"><img src="<?php echo base_url();?>images/Bar-Chart-icon.png" style="width:40px; height:38px; position:absolute;" title="Bar Chart"></span>
 	<?php //} ?>
@@ -59,6 +59,7 @@ function barchart(a,b,c,d,e,f){
 		?>
 		<?php echo form_dropdown('y', $year_list, set_value('y', isset($record[0]->Year) ? $record[0]->Year : $year) , 'style="width: 65px;" id="cs_year"'); ?>
 <input type="hidden" value="<?php echo set_value('grp', ($this->input->get('grp')) ? $this->input->get('grp') : ''); ?>" name="grp"> 
+<input type="hidden" value="<?php echo set_value('fon', ($this->input->get('fon')) ? $this->input->get('fon') : ''); ?>" name="fon"> 
 <input type="submit" value="Apply" onchange="javascript: submit()"/></center>
 </form>
 </div>
@@ -66,7 +67,7 @@ function barchart(a,b,c,d,e,f){
 <div class="m-div">
 	<table class="rport-header">
 		<tr>
-			<td colspan="5">PPM Work Order Summary <?= substr(date('M',mktime(0, 0, 0, $month, 10)),0,3).' '.$year ?> - <?php echo $this->session->userdata('usersessn');?> ( <?php if ($this->input->get('grp') == ''){echo 'ALL'; }else{ echo 'Group '.$this->input->get('grp');} ?> )</td>
+			<td colspan="5">PPM Work Order Summary <?= substr(date('M',mktime(0, 0, 0, $month, 10)),0,3).' '.$year ?> - <?php echo $this->session->userdata('usersessn');?> ( <?php if ($this->input->get('grp') == ''){echo 'ALL'; }else{ echo 'Group '.$this->input->get('grp');} ?> ) <?php if ($this->input->get('fon') == ''){echo ''; }else{ echo '(Freeze)';} ?></td>
 		</tr>
 	</table>
 	
@@ -94,10 +95,10 @@ function barchart(a,b,c,d,e,f){
 			  <?php } else { ?>
 				  <td><?php if (($ppmsum[0]->total + $reschout[0]->reschout == 0)) { echo "0"; } else {echo $ppmsum[0]->total + $reschout[0]->reschout ;} ?></td>
 				  <!--<td><?php if (($ppmsum[0]->total == 0)) { echo "0"; } else {echo anchor('contentcontroller/report_vols?m='.$month.'&y='.$year.'&stat=fbfb&resch=nt&grp=&btp=1'.$this->input->get('grp'),$ppmsum[0]->total);} ?></td>-->
-			  <td><?php if (($ppmsum[0]->comp == 0)) { echo "0"; } else {echo anchor('contentcontroller/report_vols?m='.$month.'&y='.$year.'&stat=A&resch=nt&grp=&btp=1'.$this->input->get('grp'),$ppmsum[0]->comp);} ?></td>
-			  <td><?php if ($ppmsum[0]->resch == 0) { echo "0"; } else {echo anchor('contentcontroller/report_vols?m='.$month.'&y='.$year.'&stat=A&resch=ys&grp=&btp=1'.$this->input->get('grp'),$ppmsum[0]->resch);} ?></td>
-			  <td><?php if (($reschout[0]->reschout == 0)) { echo "0"; } else {echo anchor('contentcontroller/report_vols?m='.$month.'&y='.$year.'&stat=E&resch=nt&grp=&btp=1'.$this->input->get('grp'),$reschout[0]->reschout);} ?></td>
-			  <td><?php if (($ppmsum[0]->notcomp == 0)) { echo "0"; } else {echo anchor('contentcontroller/report_vols?m='.$month.'&y='.$year.'&stat=C&resch=nt&grp=&btp=1'.$this->input->get('grp'),$ppmsum[0]->notcomp);} ?></td>		
+			  <td><?php if (($ppmsum[0]->comp == 0)) { echo "0"; } else {echo anchor('contentcontroller/report_vols?m='.$month.'&y='.$year.'&stat=A&resch=nt&btp=1&grp='.$this->input->get('grp').'&fon='.$this->input->get('fon'),$ppmsum[0]->comp);} ?></td>
+			  <td><?php if ($ppmsum[0]->resch == 0) { echo "0"; } else {echo anchor('contentcontroller/report_vols?m='.$month.'&y='.$year.'&stat=A&resch=ys&btp=1&grp='.$this->input->get('grp').'&fon='.$this->input->get('fon'),$ppmsum[0]->resch);} ?></td>
+			  <td><?php if (($reschout[0]->reschout == 0)) { echo "0"; } else {echo anchor('contentcontroller/report_vols?m='.$month.'&y='.$year.'&stat=E&resch=nt&btp=1&grp='.$this->input->get('grp').'&fon='.$this->input->get('fon'),$reschout[0]->reschout);} ?></td>
+			  <td><?php if (($ppmsum[0]->notcomp == 0)) { echo "0"; } else {echo anchor('contentcontroller/report_vols?m='.$month.'&y='.$year.'&stat=C&resch=nt&btp=1&grp='.$this->input->get('grp').'&fon='.$this->input->get('fon'),$ppmsum[0]->notcomp);} ?></td>		
 			<?php } ?>
 
 				 <?php }else{ ?>
@@ -130,10 +131,10 @@ function barchart(a,b,c,d,e,f){
 			  <td><?= isset($totale[0]->TND) == TRUE ? $totale[0]->TND : '0'?></td>
 					  <?php } else { ?>			
 			 <td><?php if (($ppmelec[0]->total + $reschoutlec[0]->reschout == 0)) { echo "0"; } else {echo $ppmelec[0]->total + $reschoutlec[0]->reschout;} ?></td>
-			  <td><?php if (($ppmelec[0]->comp == 0)) { echo "0"; } else {echo anchor('contentcontroller/report_vols?m='.$month.'&y='.$year.'&stat=A&resch=nt&grp=&btp=1'.$this->input->get('grp').'&serv=ele',$ppmelec[0]->comp);} ?></td>
-			  <td><?php if ($ppmelec[0]->resch == 0) { echo "0"; } else {echo anchor('contentcontroller/report_vols?m='.$month.'&y='.$year.'&stat=A&resch=ys&grp=&btp=1'.$this->input->get('grp').'&serv=ele',$ppmelec[0]->resch);} ?></td>
-			  <td><?php if ($reschoutlec[0]->reschout == 0) { echo "0"; } else {echo anchor('contentcontroller/report_vols?m='.$month.'&y='.$year.'&stat=E&resch=nt&grp=&btp=1'.$this->input->get('grp').'&serv=ele',$reschoutlec[0]->reschout);} ?></td>
-			  <td><?php if (($ppmelec[0]->notcomp == 0)) { echo "0"; } else {echo anchor('contentcontroller/report_vols?m='.$month.'&y='.$year.'&stat=C&resch=nt&grp=&btp=1'.$this->input->get('grp').'&serv=ele',$ppmelec[0]->notcomp);} ?></td>				
+			  <td><?php if (($ppmelec[0]->comp == 0)) { echo "0"; } else {echo anchor('contentcontroller/report_vols?m='.$month.'&y='.$year.'&stat=A&resch=nt&btp=1&grp='.$this->input->get('grp').'&serv=ele'.'&fon='.$this->input->get('fon'),$ppmelec[0]->comp);} ?></td>
+			  <td><?php if ($ppmelec[0]->resch == 0) { echo "0"; } else {echo anchor('contentcontroller/report_vols?m='.$month.'&y='.$year.'&stat=A&resch=ys&btp=1&grp='.$this->input->get('grp').'&serv=ele'.'&fon='.$this->input->get('fon'),$ppmelec[0]->resch);} ?></td>
+			  <td><?php if ($reschoutlec[0]->reschout == 0) { echo "0"; } else {echo anchor('contentcontroller/report_vols?m='.$month.'&y='.$year.'&stat=E&resch=nt&btp=1&grp='.$this->input->get('grp').'&serv=ele'.'&fon='.$this->input->get('fon'),$reschoutlec[0]->reschout);} ?></td>
+			  <td><?php if (($ppmelec[0]->notcomp == 0)) { echo "0"; } else {echo anchor('contentcontroller/report_vols?m='.$month.'&y='.$year.'&stat=C&resch=nt&btp=1&grp='.$this->input->get('grp').'&serv=ele'.'&fon='.$this->input->get('fon'),$ppmelec[0]->notcomp);} ?></td>				
 				<?php } ?>	
 				</tr>
 				<tr style="text-align:center;">
@@ -146,10 +147,10 @@ function barchart(a,b,c,d,e,f){
 			  <td><?= isset($totalm[0]->TND) == TRUE ? $totalm[0]->TND : '0'?></td>
             <?php } else { ?>				  
 			  <td><?php if (($ppmmech[0]->total + $reschoutmech[0]->reschout == 0)) { echo "0"; } else {echo $ppmmech[0]->total + $reschoutmech[0]->reschout;} ?></td>
-			  <td><?php if (($ppmmech[0]->comp == 0)) { echo "0"; } else {echo anchor('contentcontroller/report_vols?m='.$month.'&y='.$year.'&stat=A&resch=nt&grp=&btp=1'.$this->input->get('grp').'&serv=mec',$ppmmech[0]->comp);} ?></td>
-			  <td><?php if ($ppmmech[0]->resch == 0) { echo "0"; } else {echo anchor('contentcontroller/report_vols?m='.$month.'&y='.$year.'&stat=A&resch=ys&grp=&btp=1'.$this->input->get('grp').'&serv=mec',$ppmmech[0]->resch);} ?></td>
-			  <td><?php if ($reschoutmech[0]->reschout == 0) { echo "0"; } else {echo anchor('contentcontroller/report_vols?m='.$month.'&y='.$year.'&stat=E&resch=nt&grp=&btp=1'.$this->input->get('grp').'&serv=mec',$reschoutmech[0]->reschout);} ?></td>
-			  <td><?php if (($ppmmech[0]->notcomp == 0)) { echo "0"; } else {echo anchor('contentcontroller/report_vols?m='.$month.'&y='.$year.'&stat=C&resch=nt&grp=&btp=1'.$this->input->get('grp').'&serv=mec',$ppmmech[0]->notcomp);} ?></td>
+			  <td><?php if (($ppmmech[0]->comp == 0)) { echo "0"; } else {echo anchor('contentcontroller/report_vols?m='.$month.'&y='.$year.'&stat=A&resch=nt&btp=1&grp='.$this->input->get('grp').'&serv=mec'.'&fon='.$this->input->get('fon'),$ppmmech[0]->comp);} ?></td>
+			  <td><?php if ($ppmmech[0]->resch == 0) { echo "0"; } else {echo anchor('contentcontroller/report_vols?m='.$month.'&y='.$year.'&stat=A&resch=ys&btp=1&grp='.$this->input->get('grp').'&serv=mec'.'&fon='.$this->input->get('fon'),$ppmmech[0]->resch);} ?></td>
+			  <td><?php if ($reschoutmech[0]->reschout == 0) { echo "0"; } else {echo anchor('contentcontroller/report_vols?m='.$month.'&y='.$year.'&stat=E&resch=nt&btp=1&grp='.$this->input->get('grp').'&serv=mec'.'&fon='.$this->input->get('fon'),$reschoutmech[0]->reschout);} ?></td>
+			  <td><?php if (($ppmmech[0]->notcomp == 0)) { echo "0"; } else {echo anchor('contentcontroller/report_vols?m='.$month.'&y='.$year.'&stat=C&resch=nt&btp=1&grp='.$this->input->get('grp').'&serv=mec'.'&fon='.$this->input->get('fon'),$ppmmech[0]->notcomp);} ?></td>
 				<?php } ?>	
 				</tr>
 				<tr style="text-align:center;">
@@ -162,10 +163,10 @@ function barchart(a,b,c,d,e,f){
 			  <td><?= isset($totalc[0]->TND) == TRUE ? $totalc[0]->TND : '0'?></td>
 			   <?php } else { ?>	
 					<td><?php if (($ppmcivil[0]->total + $reschoutcivil[0]->reschout == 0)) { echo "0"; } else {echo $ppmcivil[0]->total + $reschoutcivil[0]->reschout;} ?></td>
-			  <td><?php if (($ppmcivil[0]->comp == 0)) { echo "0"; } else {echo anchor('contentcontroller/report_vols?m='.$month.'&y='.$year.'&stat=A&resch=nt&grp=&btp=1'.$this->input->get('grp').'&serv=civ',$ppmcivil[0]->comp);} ?></td>
-			  <td><?php if ($ppmcivil[0]->resch == 0) { echo "0"; } else {echo anchor('contentcontroller/report_vols?m='.$month.'&y='.$year.'&stat=A&resch=ys&grp=&btp=1'.$this->input->get('grp').'&serv=civ',$ppmcivil[0]->resch);} ?></td>
-			  <td><?php if ($reschoutcivil[0]->reschout == 0) { echo "0"; } else {echo anchor('contentcontroller/report_vols?m='.$month.'&y='.$year.'&stat=E&resch=nt&grp=&btp=1'.$this->input->get('grp').'&serv=civ',$reschoutcivil[0]->reschout);} ?></td>
-			 <td><?php if (($ppmcivil[0]->notcomp == 0)) { echo "0"; } else {echo anchor('contentcontroller/report_vols?m='.$month.'&y='.$year.'&stat=C&resch=nt&grp=&btp=1'.$this->input->get('grp').'&serv=civ',$ppmcivil[0]->notcomp);} ?></td>
+			  <td><?php if (($ppmcivil[0]->comp == 0)) { echo "0"; } else {echo anchor('contentcontroller/report_vols?m='.$month.'&y='.$year.'&stat=A&resch=nt&btp=1&grp='.$this->input->get('grp').'&serv=civ'.'&fon='.$this->input->get('fon'),$ppmcivil[0]->comp);} ?></td>
+			  <td><?php if ($ppmcivil[0]->resch == 0) { echo "0"; } else {echo anchor('contentcontroller/report_vols?m='.$month.'&y='.$year.'&stat=A&resch=ys&btp=1&grp='.$this->input->get('grp').'&serv=civ'.'&fon='.$this->input->get('fon'),$ppmcivil[0]->resch);} ?></td>
+			  <td><?php if ($reschoutcivil[0]->reschout == 0) { echo "0"; } else {echo anchor('contentcontroller/report_vols?m='.$month.'&y='.$year.'&stat=E&resch=nt&btp=1&grp='.$this->input->get('grp').'&serv=civ'.'&fon='.$this->input->get('fon'),$reschoutcivil[0]->reschout);} ?></td>
+			 <td><?php if (($ppmcivil[0]->notcomp == 0)) { echo "0"; } else {echo anchor('contentcontroller/report_vols?m='.$month.'&y='.$year.'&stat=C&resch=nt&btp=1&grp='.$this->input->get('grp').'&serv=civ'.'&fon='.$this->input->get('fon'),$ppmcivil[0]->notcomp);} ?></td>
 				<?php } ?>	
 				</tr>
 			<?php } ?>
