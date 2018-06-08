@@ -1,3 +1,12 @@
+<style>
+.td-desk2{
+ display: inline-block;
+    font-weight: bold;
+    font-size: 14px;
+    padding-left: 80px;
+	
+}
+</style>
 <div class="ui-middle-screen">
 <div class="div-p"></div>
 <div class="main-box">
@@ -127,27 +136,37 @@ switch ($procument) {
 		    					<?php
 									$s_Proc = "";
 		    					if ($row->ApprStatusID == $stat->StatusID){
-		    						$s_AM = $stat->Status;
+		    						$s_AM = $stat->Status;	
 		    					}
 		    					if ($row->ApprStatusIDx == $stat->StatusID){
-		    						$s_Proc = $stat->Status;
+		    					     $s_Proc = $stat->Status;
 		    					}
 		    					else if ($row->ApprStatusIDx== NULL){
-		    						$s_Proc = 'Pending';
+		    						 $s_Proc = 'Pending';
 		    					}
 		    					if ($row->ApprStatusIDxx == $stat->StatusID){
-		    						$s_Log = $stat->Status;
+		    						 $s_Log = $stat->Status;
 		    					}
 		    					else if ($row->ApprStatusIDxx== NULL){
-		    						$s_Log = 'Pending';
+		    						 $s_Log = 'Pending';
 		    					}
 		    					?>
+								
+								
 		    					<?php if ($r_status == $stat->StatusID) { ?>
-		    					<td class="td-desk"><a rel="nofollow" title="AM : <?=$s_AM?> ON <?=isset($row->DateApproval) ? date("d/m/Y H:i:s",strtotime($row->DateApproval)) : ''?> &#13;Procument : <?=$s_Proc?> ON <?=isset($row->DateApprovalx) ? date("d/m/Y H:i:s",strtotime($row->DateApprovalx)) : ''?> &#13;Logistic : <?=$s_Log?> ON <?=isset($row->DateApprovalxx) ? date("d/m/Y H:i:s",strtotime($row->DateApprovalxx)) : ''?>"><?=isset($stat->Status) ? $stat->Status : ''?></a></td>
+		    					<td class="" align="left">
+							
+								<a rel="nofollow" title="Manager : <?=$s_AM?> <?php if ($s_AM != "Pending") { ?> ON <?=isset($row->DateApproval) ? date("d/m/Y H:i:s",strtotime($row->DateApproval)) : ''?>  <?php } ?> &#13;Procument : <?=$s_Proc?> <?php if ($s_Proc != "Pending") { ?> ON <?=isset($row->DateApprovalx) ? date("d/m/Y H:i:s",strtotime($row->DateApprovalx)) : ''?> &#13; <?=isset($row->DateApprovalxx) ? date("d/m/Y H:i:s",strtotime($row->DateApprovalxx)) : ''?>  
+								<?php } ?>">
+								
+								
+								<span class="td-desk2">
+								Manager : <?=$s_AM?> <br>Procument : <?=$s_Proc?>
+								</span></a></td>
 		    					<?php } ?>
 		    					<?php } ?>
 		    					<td class="td-desk"><?=isset($row->DateCreated) ? date("d M Y",strtotime($row->DateCreated)) : ''?></td>
-		    					<td class="td-desk"><?=isset($row->Comments) ? $row->Comments : ''?></td>
+		    					<td class="td-desk"><?=isset($row->Commentsx) ? $row->Commentsx : ''?></td>
 		        			</tr>
 		        			<?php endforeach; ?>
 		        			<?php } else { ?>

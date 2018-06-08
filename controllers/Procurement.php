@@ -1,5 +1,12 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 class Procurement extends CI_Controller {
+
+ 		 function __construct(){
+     	parent::__construct();
+
+                $this->load->helper('pdf_helper');
+
+	}
 	public function index(){
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
@@ -13,8 +20,8 @@ class Procurement extends CI_Controller {
 				 $data['mrintype'] = 0;
 			}
 			$this->load->model('display_model');
-			$data['record']= $this->display_model->mrinlist($data['month'],$data['year'],$data['mrintype']);
 			$data['user'] = $this->display_model->user_class($this->session->userdata('v_UserName'));
+			$data['record']= $this->display_model->mrinlist($data['month'],$data['year'],$data['mrintype'], $data['user'][0]->class_id);
 			$data['status'] = $this->display_model->status_table();
 			//print_r($data['status']);
 			//exit();
@@ -34,6 +41,11 @@ class Procurement extends CI_Controller {
 			$data['record'] = $this->display_model->mrindet($this->input->get('mrinno'));
 			$data['itemrec'] = $this->display_model->itemdet($this->input->get('mrinno'));
 			$data['comrec'] = $this->display_model->comrec($this->input->get('mrinno'));
+			print_r($data['itemrec']);
+			if (!($data['itemrec'])) {
+			//echo "ade data";
+			redirect('Procurement?pro=mrin');
+			} 
 			$data['attrec'] = $this->display_model->attrec($this->input->get('mrinno'));
 			$data['user'] = $this->display_model->user_class($this->session->userdata('v_UserName'));
 			$this ->load->view("Content_mrin_procure",$data);
@@ -440,8 +452,14 @@ class Procurement extends CI_Controller {
 		//echo "nilai ".$hoswakil.$hospapa."abis";
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
-		$this ->load->view("headprinter");
+		   $this ->load->view("headprinter");
+		if ($this->input->get('pdf') == 1){
+		$this ->load->view("e_po_pdf", $data);
+		}else{ 
 		$this ->load->view("e_po_print", $data);
+		}
+		
+		
 	}
 	public function report(){
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
