@@ -313,18 +313,26 @@ if ($shedule) {
 }
 	
 	function confirmation(){
+	
 	$RN = $this->input->post('wrk_ord');
 	$visit = $this->input->post('visit');
+	
 	if ($visit == ''){
 		$this->load->model('get_model');
+		
 		//if(substr($RN,0,2) == 'PP')	{
 		if ((substr($RN,0,2) == 'PP') || (substr($RN,0,2) == 'RI'))	{
 		$latestvisit = $this->get_model->latestppmvisit($RN);
 		$visit = $latestvisit[0]->n_Visit + 1;
 		}
 		else{
+		
 		$latestvisit = $this->get_model->latestvisit($RN);
+		
 		$visit = $latestvisit[0]->n_Visit + 1;
+		print_r($latestvisit);
+		echo "masukxxcc ::::".$RN."::::::".$visit.$this->input->post('chkbox').$this->session->userdata('usersess').substr(substr($this->input->post('wrk_ord'),0,5),3,2);
+	//exit();
 		}
 	}
 
@@ -333,18 +341,17 @@ if ($shedule) {
 	$wrk_ord_test = $this->insert_model->visitplus_woexist('v_WrkOrdNo',$RN,'n_Visit',$visit);
 	if ($this->input->post('chkbox') == 'ON'){
 					//$this->insert_model->job_woexist('v_WrkOrdNo',$variable);
-					//echo "nk closed";
+					echo "nk closed";
 					//exit();
 					
-		if (($this->session->userdata('usersess') == 'BES') && ($this->input->post('n_request_type') == 'A4')) {
-    //            if ($this->input->post('n_asset_number')){
-		//$nomasset = $this->get_model->get_assetdet2($this->input->post('n_asset_number'));
-		//$thenomasset = $nomasset[0]->V_Tag_no;
+		if (($this->session->userdata('usersess') == 'FES') && (substr(substr($this->input->post('wrk_ord'),0,5),3,2) == 'A4')) {
+		echo "dpt nama : ".$RN.":".$this->input->post('n_Action_Taken');
+		//exit();
+		//$this->send_mail_frmout('nezam@advancepact.com',$RN,$this->input->post('n_Action_Taken'));
                 }
-		//echo "dpt nama : ".$thenomasset;
-		$this->send_mail_frmout('nezam@advancepact.com',$RN,$this->input->post('n_Action_Taken'));
+		
 		}
-				}
+	
 	if ((substr($RN,0,2) == 'PP') || (substr($RN,0,2) == 'RI')){
 	redirect('contentcontroller/visitplus?wrk_ord='.$RN. '&vppm=4');
 	}

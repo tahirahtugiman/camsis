@@ -3659,6 +3659,7 @@ class Contentcontroller extends CI_Controller {
 		}
 	  	$this->load->model("display_model");
 		$data['records'] = $this->display_model->list_hospinfo();
+		$data['fon']= ($this->input->get('fon')) ? $this->input->get('fon') : "";	
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
 		$data['reqtype']= $this->input->get('req') ? $this->input->get('req') : '';
@@ -3677,7 +3678,7 @@ class Contentcontroller extends CI_Controller {
 				}
 			}
 		}
-		$data['record'] = $this->display_model->rpt_volu($data['month'],$data['year'],$this->input->get('stat'),$data['reqtype'],$this->input->get('broughtfwd'),$data['grpsel'],$pilape,$data['tag'],$data['cm'],$data['limab'],$data['bfwd']);
+		$data['record'] = $this->display_model->rpt_volu($data['month'],$data['year'],$this->input->get('stat'),$data['reqtype'],$this->input->get('broughtfwd'),$data['grpsel'],$pilape,$data['tag'],$data['cm'],$data['limab'],$data['bfwd'],"",$data['fon']);
 
 		//print_r($data['record']);
 		//exit();
@@ -3941,18 +3942,19 @@ class Contentcontroller extends CI_Controller {
 	
 	  $this->load->model("display_model");
 		$data['records'] = $this->display_model->list_hospinfo();
+		$data['fon']= ($this->input->get('fon')) ? $this->input->get('fon') : "";	
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
 		$data['reqtype']= $this->input->get('req') ? $this->input->get('req') : '';
 		//$data['ppmsum'] = $this->display_model->sumppm($data['month'],$data['year']);
-		$data['rqsum'] = $this->display_model->sumrq($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'));
+		$data['rqsum'] = $this->display_model->sumrq($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'),"",$data['fon']);
 		//$data['complntsum'] = $this->display_model->sumcomplnt($data['month'],$data['year']);
 		
 
                 if ($this->session->userdata('usersess') == 'FES') {
-		$data['rqcivil'] = $this->display_model->sumrq($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'),"IIUM C");
-		$data['rqmech'] = $this->display_model->sumrq($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'),"IIUM M");
-		$data['rqelec'] = $this->display_model->sumrq($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'),"IIUM E");
+		$data['rqcivil'] = $this->display_model->sumrq($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'),"IIUM C",$data['fon']);
+		$data['rqmech'] = $this->display_model->sumrq($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'),"IIUM M",$data['fon']);
+		$data['rqelec'] = $this->display_model->sumrq($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'),"IIUM E",$data['fon']);
 		}
 
                 

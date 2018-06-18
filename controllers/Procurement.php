@@ -1,5 +1,13 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 class Procurement extends CI_Controller {
+
+	function __construct(){
+   parent::__construct();
+
+      $this->load->helper('pdf_helper');
+
+	}
+
 	public function index(){
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
@@ -12,6 +20,7 @@ class Procurement extends CI_Controller {
 			} elseif ($data['mrintype'] == 3) {
 				 $data['mrintype'] = 0;
 			}
+			echo "lalalal : ".$data['mrintype'];
 			$this->load->model('display_model');
 			$data['user'] = $this->display_model->user_class($this->session->userdata('v_UserName'));
 			$data['record']= $this->display_model->mrinlist($data['month'],$data['year'],$data['mrintype'], $data['user'][0]->class_id);
@@ -448,7 +457,12 @@ class Procurement extends CI_Controller {
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
 		$this ->load->view("headprinter");
+		//$this ->load->view("e_po_print", $data);
+		if ($this->input->get('pdf') == 1){
+		$this ->load->view("e_po_pdf", $data);
+		}else{ 
 		$this ->load->view("e_po_print", $data);
+		}
 	}
 	public function report(){
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	

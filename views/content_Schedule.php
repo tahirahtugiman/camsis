@@ -127,31 +127,48 @@
 			<?php  } ?>
 			
 			
-			<?php  if (!in_array("contentcontroller/report_ppmwos", $chkers)) { ?>
+			<?php  if (!in_array("contentcontroller/report_ppmwosf", $chkers)) { ?>
 			<tr class="<?php  $number++; echo evenodd($number); ?>">
 				<td colspan="4">
 					<?php echo anchor ('contentcontroller/report_ppmwos?m='.$month.'&y='.$year.'&grp='.$this->input->get('grp').'&fon=on', '<img src="'. base_url() .'images/user.png" alt="" class="ui-icon"/>&nbsp;&nbsp;&nbsp;&nbsp;PPM Work Order Summary (Freeze)'); ?>
 				</td>
 			</tr>
 			<?php  } ?>
-			<?php  if (!in_array("contentcontroller/report_vols", $chkers)) { ?>
+			<?php  if (!in_array("contentcontroller/report_volsf", $chkers)) { ?>
 			<tr class="<?php  $number++; echo evenodd($number); ?>">
 				<td colspan="4">
 					<?php echo anchor ('contentcontroller/report_vols?m='.$month.'&y='.$year.'&stat=fbfb&resch=nt&grp='.$this->input->get('grp').'&fon=on', '<img src="'. base_url() .'images/user.png" alt="" class="ui-icon"/>&nbsp;&nbsp;&nbsp;&nbsp;PPM Work Order Listing (Freeze)'); ?>
 				</td>
 			</tr>
 			<?php  } ?>
-			
+			<?php  if (!in_array("contentcontroller/report_reqwos", $chkers)) { ?>
 			<tr class="<?php  $number++; echo evenodd($number); ?>">
 				<td colspan="4">
 					<?php echo anchor ('contentcontroller/report_reqwos?m='.$month.'&y='.$year.'&grp='.$this->input->get('grp'), '<img src="'. base_url() .'images/user.png" alt="" class="ui-icon"/>&nbsp;&nbsp;&nbsp;&nbsp;Request Work Order Summary'); ?>
 				</td>
 			</tr>
+			<?php  } ?>
+			<?php  if (!in_array("contentcontroller/report_volu", $chkers)) { ?>
 			<tr class="<?php  $number++; echo evenodd($number); ?>">
 				<td colspan="4">
 					<?php echo anchor ('contentcontroller/report_volu?m='.$month.'&y='.$year.'&stat=fbfb&grp='.$this->input->get('grp'), '<img src="'. base_url() .'images/user.png" alt="" class="ui-icon"/>&nbsp;&nbsp;&nbsp;&nbsp;Request Work Order Listing'); ?>
 				</td>
 			</tr>
+			<?php  } ?>
+			<?php  if (!in_array("contentcontroller/report_reqwosf", $chkers)) { ?>
+			<tr class="<?php  $number++; echo evenodd($number); ?>">
+				<td colspan="4">
+					<?php echo anchor ('contentcontroller/report_reqwos?m='.$month.'&y='.$year.'&grp='.$this->input->get('grp').'&fon=on', '<img src="'. base_url() .'images/user.png" alt="" class="ui-icon"/>&nbsp;&nbsp;&nbsp;&nbsp;Request Work Order Summary (Freeze)'); ?>
+				</td>
+			</tr>			
+			<?php  } ?>
+			<?php  if (!in_array("contentcontroller/report_voluf", $chkers)) { ?>
+			<tr class="<?php  $number++; echo evenodd($number); ?>">
+				<td colspan="4">
+					<?php echo anchor ('contentcontroller/report_volu?m='.$month.'&y='.$year.'&stat=fbfb&grp='.$this->input->get('grp').'&fon=on', '<img src="'. base_url() .'images/user.png" alt="" class="ui-icon"/>&nbsp;&nbsp;&nbsp;&nbsp;Request Work Order Listing (Freeze)'); ?>
+				</td>
+			</tr>
+			<?php  } ?>
 			<?php  if ($this->session->userdata('usersess') == 'FES') {?>
 			<?php  if (!in_array("contentcontroller/report_reqwosbyyear", $chkers)) { ?>
 			<tr class="<?php  $number++; echo evenodd($number); ?>">

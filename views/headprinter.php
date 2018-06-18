@@ -147,7 +147,8 @@ $("#date0,#date1,#date2,#date3,#date4,#date5,#date6,#date7,#date8,#date9,#date10
 		font-size: 12px;
 	}
 	table.tablevvf {font-size: 10px;}
-	table.tftable th {font-size:1px; padding:4px;}
+	/*table.tftable th {font-size:1px; padding:4px;}*/
+	table.tftable th {font-size:8px; padding:4px;}
 	table {	border-collapse: collapse;border-spacing:0px;	}
 	table.tftable td  { 
 		font-size:8px;  
