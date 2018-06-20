@@ -44,7 +44,7 @@ switch ($procument) {
 ?>
 			<?php include 'content_pro_tab.php';?>
 			<tr class="ui-color-desk desk2">
-				<td colspan="4" class="t-header" style="color:black; height:40px; padding-left:10px;"><b><?= $tulis ?></b> <?=date('F', mktime(0, 0, 0, $month, 10))?> <?=$year?> <u>[Imaging Asset Only]</u></td>
+				<td colspan="4" class="t-header" style="color:black; height:40px; padding-left:10px;"><b><?= $tulis ?></b> <?=date('F', mktime(0, 0, 0, $month, 10))?> <?=$year?> </td>
 			</tr>
 			<tr class="ui-color-desk bg-red-blood"> 
 				<td colspan="4">
