@@ -5,16 +5,30 @@ $array = [
 	['contentcontroller/content/', 'WORK MODULES' , '',	base_url().'index.php/contentcontroller/Central/'.$this->session->userdata('usersess')],
 	['contentcontroller/Central/', 'CENTRAL FUNCTIONS' ,base_url().'index.php/contentcontroller/content/'.$this->session->userdata('usersess'),base_url().'index.php/contentcontroller/Business/'.$this->session->userdata('usersess')],
 	['Help Desk', 'PROCUREMENT MODULES' , 'bems_desk//', base_url().'index.php/contentcontroller/content/'.$this->session->userdata('usersess')],
-	['contentcontroller/Business/', 'BUSINESS INTELIGENT REPORTS' , base_url().'index.php/contentcontroller/Central/'.$this->session->userdata('usersess'),''],
+	// ['contentcontroller/Business/', 'BUSINESS INTELIGENT REPORTS' , base_url().'index.php/contentcontroller/Central/'.$this->session->userdata('usersess'),''],
 ];
 
-if (!in_array("contentcontroller/Procurement/", $chkers)) {
-	$array[3]=['contentcontroller/Business/', 'BUSINESS INTELIGENT REPORTS' , base_url().'index.php/contentcontroller/Central/'.$this->session->userdata('usersess'),base_url().'index.php/contentcontroller/Procurement/'.$this->session->userdata('usersess')];
-	$array[4]=['contentcontroller/Procurement/', 'MRIN' ,	base_url().'index.php/contentcontroller/Business/'.$this->session->userdata('usersess'),''];
-}else{
-	$array[3]=['contentcontroller/Business/', 'BUSINESS INTELIGENT REPORTS' , base_url().'index.php/contentcontroller/Central/'.$this->session->userdata('usersess'),''];
+$i = array_pop(array_keys($array));
+if( 'nezam' == $this->session->userdata('v_UserName') ){
+	$array[$i-1][2]	= base_url()."index.php/".$array[$i-2][0].$this->session->userdata('usersess');
+	$array[$i-1][3]	= base_url()."index.php/contentcontroller/sys_admin/".$this->session->userdata("usersess");
+	// $array[$i]	= ['contentcontroller/Business/', 'BUSINESS INTELIGENT REPORTS' , base_url().'index.php/contentcontroller/Central/'.$this->session->userdata('usersess'),''];
+	$array[$i]= ['contentcontroller/sys_admin/', 'System Administration' , base_url().'index.php/'.$array[$i-1][0].$this->session->userdata('usersess'), base_url()."index.php/contentcontroller/Business/".$this->session->userdata('usersess')];
+	$i=$i+1;
 }
-// echo "<pre>";var_export($array);die;
+
+$array[$i] = ['contentcontroller/Business/', 'BUSINESS INTELIGENT REPORTS' , base_url().'index.php/contentcontroller/Central/'.$this->session->userdata('usersess'),''];
+
+if (!in_array("contentcontroller/Procurement/", $chkers)) {
+	$array[$i]		= ['contentcontroller/Business/', 'BUSINESS INTELIGENT REPORTS' , base_url().'index.php/'.$array[$i-1][0].$this->session->userdata('usersess'),base_url().'index.php/contentcontroller/Procurement/'.$this->session->userdata('usersess')];
+	$array[$i-1][3] = base_url()."index.php/".$array[$i][0].$this->session->userdata('usersess');
+	$i				= $i+1;
+	$array[$i]		= ['contentcontroller/Procurement/', 'MRIN' ,	base_url().'index.php/contentcontroller/Business/'.$this->session->userdata('usersess'),''];
+}else{
+	$array[$i]		= ['contentcontroller/Business/', 'BUSINESS INTELIGENT REPORTS' , base_url().'index.php/contentcontroller/Central/'.$this->session->userdata('usersess'),''];
+	$array[$i-1][3] = base_url()."index.php/".$array[$i][0].$this->session->userdata('usersess');
+}
+
 ?>
 <?php foreach ($array as $list) {?>
 	<?php if ($list[0] == $this->uri->slash_segment(1) .$this->uri->slash_segment(2)) {?>

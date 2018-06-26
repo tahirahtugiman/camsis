@@ -71,7 +71,7 @@
 									</tr>
 									<tr>
 										<td style="padding-left:10px;" valign="top">*Remarks :  </td>
-										<td style="padding-left:10px;"><textarea class="Input" name="n_remarks"  cols="22" rows="4" ><?php echo set_value('n_remarks'); ?></textarea></td>
+										<td style="padding-left:10px;"><textarea class="form-control-button" name="n_remarks"  cols="22" rows="4" ><?php echo set_value('n_remarks'); ?></textarea></td>
 									</tr>	
 									<tr>
 										<td style="padding-left:10px;" valign="top">*Make <br />(Country of Origin) : </td>
@@ -107,19 +107,19 @@
 							<td class="ui-desk-style-table">
 								<table class="ui-content-form" width="100%" border="0">
 									<tr>
-										<td style="padding-left:10px;" width="40%" valign="top">Agent : </td>
+										<td style="padding-left:10px;" width="40%" valign="top">Supplier : </td>
 										<td style="padding-left:10px;" width="60%">
 										<input type="text" id="n_agent" name="n_agent" value="<?php echo set_value('n_agent'); ?>" class="form-control-button" style="width:75%;"> <span class="icon-windows" onclick="fCallpop_vendor(this)" value="updateacqu"></span><br />
 										<input type="text" id="n_agent2" name="n_agent2" value="<?php echo set_value('n_agent2'); ?>" class="form-control-button" style="margin-top:4px;">
 										</td>
 									</tr>
 									<tr>
-										<td style="padding-left:10px;">Supplier :   </td>
+										<td style="padding-left:10px;">Agent :   </td>
 										<td style="padding-left:10px;"><input type="text" name="n_supplier" value="<?php echo set_value('n_supplier'); ?>" class="form-control-button"></td>
 									</tr>
 									<tr>
 										<td style="padding-left:10px;">Cost :  </td>
-										<td style="padding-left:10px;">RM&nbsp;&nbsp;<input type="text" name="n_cost" value="<?php echo set_value('n_cost','0.00'); ?>" size="18" class="form-control-button2"></td>
+										<td style="padding-left:10px;">RM&nbsp;&nbsp;<input type="text" name="n_cost" value="<?php echo set_value('n_cost','0.00'); ?>" style="width:67%;" class="form-control-button"></td>
 									</tr>
 									<tr>
 										<td style="padding-left:10px;">File Reference :  </td>

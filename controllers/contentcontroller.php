@@ -1,45 +1,41 @@
 <?php 
 class Contentcontroller extends CI_Controller {
 	
-		
- 		 function __construct(){
-     	parent::__construct();
-//echo 'ade1';
-		$this->load->model('loginModel','',TRUE);
-//echo 'ade2';
-		$this->load->model('insert_model');
-                //$this->load->model('test_ler');
-//echo 'ade3';
-		$this->load->library('session');
-//echo 'ade4';	
-                $this->load->helper('pdf_helper');
-		$this->is_logged_in();
-//echo 'ade5';
-		
-		
+
+	function __construct(){
+			parent::__construct();
+		//echo 'ade1';
+			$this->load->model('loginModel','',TRUE);
+		//echo 'ade2';
+			$this->load->model('insert_model');
+		//$this->load->model('test_ler');
+		//echo 'ade3';
+			$this->load->library('session');
+		//echo 'ade4';	
+			$this->load->helper('pdf_helper');
+			$this->is_logged_in();
+		//echo 'ade5';	
 	}
 	
 	
 	
 	
-		function is_logged_in()
-	{
-		
+	function is_logged_in()
+	{		
 		$is_logged_in = $this->session->userdata('v_UserName');
 		
 		if(!isset($is_logged_in) || $is_logged_in !=TRUE)
 		redirect('logincontroller/index');
 	}
 
-			function select()
-			
+	function select()
 	{
-
-	  $this->load->model('insert_model');
- 		$this->insert_model->audit_log('login');
+		$this->load->model('insert_model');
+		$this->insert_model->audit_log('login');
 	
 		$url = $this->input->post('continue') ? $this->input->post('continue') : site_url('contentcontroller/select');
 		$data['service_apa'] = $this->loginModel->validate3();
+		$data['service_apa2'] = $this->loginModel->validateAP();	
 		$this->load->model('display_model');
 		$Uid = $this->session->userdata('v_UserName');
 		$data['records_desk'] = $this->display_model->img($Uid);
@@ -48,6 +44,16 @@ class Contentcontroller extends CI_Controller {
 		//$this->session->set_userdata('p_picture',$file);
 		$this->load->view('head');
 		$this->load->view('content_choose', $data);
+		
+		if(!empty($_GET["hc"])){
+			$this->session->set_userdata('hosp_code', $_GET["hc"]);
+			if (count($data['service_apa']) > 1){
+				$url =site_url('contentcontroller/select');
+			}else {
+				$url =site_url('contentcontroller/content/'.$data['service_apa'][0]->v_servicecode);
+			}
+			redirect($url, 'refresh');	
+		}
 	}
 
 	function do_upload(){
@@ -62,10 +68,9 @@ class Contentcontroller extends CI_Controller {
 		$this->load->library('upload', $config);
 
 		if ( ! $this->upload->do_upload())
-		
 		{
-//echo 'masuk error';
-//exit();
+			//echo 'masuk error';
+			//exit();
 			$data['error'] = array($this->upload->display_errors());
 			$data['service_apa'] = $this->loginModel->validate3();
 			$this->load->view('head');
@@ -73,15 +78,15 @@ class Contentcontroller extends CI_Controller {
 		}
 		else
 		{
-//echo 'masuk x error';
-//exit();
+			//echo 'masuk x error';
+			//exit();
 			$data = array('upload_data' => $this->upload->data());
 			$image = $data['upload_data'];
 			$Uid = $this->session->userdata('v_UserName');
 			$this->load->model('insert_model');
 			$image_test = $this->insert_model->upload($image,'v_UserID',$Uid);
 			//$file = $image['file_name'];
-		    //$this->session->set_userdata('p_picture',$file);
+			//$this->session->set_userdata('p_picture',$file);
 			$this->load->model('display_model');
 			$this->display_model->img($Uid);
 			$data['records_desk'] = $this->display_model->img($Uid);
@@ -90,38 +95,34 @@ class Contentcontroller extends CI_Controller {
 			$this->load->view('head');
 			$this->load->view('content_choose',$data);
 		}
-
-
 	}
 	
-		function select_two()
+	function select_two()
 	{
-		
 		$this->load->view('content_choose_user');
 		$this->load->view('content_head');
-		
 	}
 	
 	function toArray($obj)
-{
-    $obj = (array) $obj;//cast to array, optional
-    return $obj['path'];
-}
+	{
+		$obj = (array) $obj;//cast to array, optional
+		return $obj['path'];
+	}
 
-		public function content ($servicecode){
+	public function content ($servicecode){
 			
-	  $this->insert_model->audit_log('login service '.$servicecode);
- //echo $servicecode;
- //exit();                  
+		$this->insert_model->audit_log('login service '.$servicecode);
+		//echo $servicecode;
+		//exit();                  
      
 		//$this->session->set_userdata('usersess',$servicecode);     
-    //$data['access_apa'] = $this->loginModel->accessr($servicecode);
+		//$data['access_apa'] = $this->loginModel->accessr($servicecode);
 		//$data['servnm'] = $this->loginModel->servicename($servicecode);
 		$this->session->set_userdata('usersess',$servicecode);     
 		$data['access_apa'] = $this->loginModel->accessr($servicecode);
 		$data['servnm'] = $this->loginModel->servicename($servicecode);
 		$data['personaldet'] = $this->loginModel->personaldet();
-		
+
 		//print_r($data['personaldet']);
 		//exit();
 		$this->session->set_userdata('fullname',empty($data['personaldet'][0]->v_UserName) ? "" :  $data['personaldet'][0]->v_UserName);
@@ -129,18 +130,18 @@ class Contentcontroller extends CI_Controller {
 		//$this->session->set_userdata('Ser_Code',empty($data['personaldet'][0]->v_GroupID) ? "" :  $data['personaldet'][0]->v_GroupID );
 		$this->session->set_userdata('designation',empty($data['personaldet'][0]->v_designation) ? "" :  $data['personaldet'][0]->v_designation );
 		//$this->session->set_userdata('usersessn',empty($data['servnm'][0]->service_name) ? "" : $data['servnm'][0]->service_name);
-		
+
 		//echo 'alohabeb' . $data['servnm'][0]->service_name;
 		$this->session->set_userdata('usersessn',$data['servnm'][0]->service_name);
 		$this->load->model('display_model');
 		//echo 'jdt:'.$data['access_apa'];
 		$this->session->set_userdata('accessr',$data['access_apa']);
 		function toArray($obj)
-{
-    $obj = (array) $obj;//cast to array, optional
-    return $obj['path'];
-}
-    $idArray = array_map('toArray', $this->session->userdata('accessr'));
+		{
+			$obj = (array) $obj;//cast to array, optional
+			return $obj['path'];
+		}
+		$idArray = array_map('toArray', $this->session->userdata('accessr'));
    
 	
 		//echo "nilai id : ".print_r($idArray);
@@ -152,47 +153,44 @@ class Contentcontroller extends CI_Controller {
 		$this->session->set_userdata('p_picture',$file);  
 		
 		 
-	 if (in_array("contentcontroller/Schedule(main)", $idArray)) {
-	 //echo "ade";
-	 $url =site_url('contentcontroller/Schedule');
+		if (in_array("contentcontroller/Schedule(main)", $idArray)) {
+			//echo "ade";
+			$url =site_url('contentcontroller/Schedule');
 			 
-		//echo $url;
-		//exit ();
+			//echo $url;
+			//exit ();
 			redirect($url, 'refresh');
-	 }elseif (in_array("contentcontroller/PO(main)", $idArray)) {
-	 
-	 //echo "ade";
-	 $url =site_url('Procurement/e_request');
+		}elseif (in_array("contentcontroller/PO(main)", $idArray)) {
+	
+			//echo "ade";
+			$url =site_url('Procurement/e_request');
 			 
-		//echo $url;
-		//exit ();
+			//echo $url;
+			//exit ();
 			redirect($url, 'refresh');
-	 
-	 }
+		}
 		 
 		$this ->load->view("head");
 		$this ->load->view("left");
-		$this ->load->view("Content_Modulas", $access);
-	
-		
+		$this ->load->view("Content_Modulas", $access);		
 	}
-		public function Central(){
+
+	public function Central(){
 		function toArray($obj)
-{
-    $obj = (array) $obj;//cast to array, optional
-    return $obj['path'];
-}
-    $idArray = array_map('toArray', $this->session->userdata('accessr'));
-   
+		{
+			$obj = (array) $obj;//cast to array, optional
+			return $obj['path'];
+		}
+		$idArray = array_map('toArray', $this->session->userdata('accessr'));
+
 		//echo "nilai id : ".print_r($idArray);
 		$data['chkers'] = $idArray;
 		$this ->load->view("head");
 		$this ->load->view("left");
 		$this ->load->view("Content_Central", $data);
-		
 	}
 
-		public function desk(){
+	public function desk(){
 		//$this ->load->view("head");
 		//$this ->load->view("left");
 		//$this ->load->view("Content_desk");
@@ -207,7 +205,8 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("Content_desk",$data);
 	}
-		public function catalogppm(){
+
+	public function catalogppm(){
 		$data['ppm'] = ($this->input->get('ppm') <> 0) ? $this->input->get('ppm') : '0';	
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
@@ -217,27 +216,31 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("content_catalog_ppm",$data);
 	}	
-		public function report_workorder(){
-		$this->load->model("display_model");
-		$data['records_desk'] = $this->display_model->list_desk();
+
+	public function report_workorder(){
+		//$this->load->model("display_model");
+		//$data['records_desk'] = $this->display_model->list_desk();
 		$this ->load->view("head");
 		$this ->load->view("left");
-		$this ->load->view("content_report_workorder",$data);
+		//$this ->load->view("content_report_workorder",$data);
+		$this ->load->view("content_report_workorder");
 	}
 
-		public function desklist (){
+	public function desklist (){
 		$this->load->model("display_model");
 		$this ->load->view("head");
 		$data['records'] = $this->display_model->list_workorder();
 		$this ->load->view("left");
 		$this ->load->view("Content_desklist",$data);
 	}
-		public function deskresult(){
+		
+	public function deskresult(){
 		$this ->load->view("head");
 		$this ->load->view("left");
 		$this ->load->view("Content_deskresult");
 	}
-		public function deskupdate(){
+	
+	public function deskupdate(){
 		$this ->load->view("head");
 		$this ->load->view("left");
 		$this ->load->view("Content_deskupdate");
@@ -247,33 +250,29 @@ class Contentcontroller extends CI_Controller {
 
 	
 
-		function confirmation(){
-			
-		
+	function confirmation(){
 		//$data['service_apa'] = $this->loginModel->validate3();	
-		$RN="RQ/A4/B01714/14";	
-		
+		$RN="RQ/A4/B01714/14";
 		
 		$insert_data = array(
-		
-		'V_servicecode'=>$this->session->userdata('usersess'),
-		'V_requestor'=>$this->input->post('V_requestor'),
-		'V_request_type'=>$this->input->post('V_request_type'),
-		'D_date'=>$this->input->post('D_date'),
-		'D_time'=>$this->input->post('D_time'),
-		'V_MohDesg'=>$this->input->post('V_MohDesg'),
-		'V_priority_code'=>$this->input->post('V_priority_code'),
-		'V_summary'=>$this->input->post('V_summary'),
-		'V_details'=>$this->input->post('V_details'),
-		'V_Request_no'=>$RN,
-		'V_User_dept_code'=>$this->input->post('V_User_dept_code'),
-		'V_respon'=>$this->input->post('V_respon'),
-		'V_Asset_no'=>$this->input->post('asset_no'),
-		'v_respondate'=>$this->input->post('startdate'),
-		'v_closeddate'=>$this->input->post('enddate'),
-		'v_closedtime'=>$this->input->post('endtime'),
-		'D_timestamp'=>$this->input->post('D_timestamp')
-		//'V_requestor'=>$this->input->post('V_requestor')
+			'V_servicecode'=>$this->session->userdata('usersess'),
+			'V_requestor'=>$this->input->post('V_requestor'),
+			'V_request_type'=>$this->input->post('V_request_type'),
+			'D_date'=>$this->input->post('D_date'),
+			'D_time'=>$this->input->post('D_time'),
+			'V_MohDesg'=>$this->input->post('V_MohDesg'),
+			'V_priority_code'=>$this->input->post('V_priority_code'),
+			'V_summary'=>$this->input->post('V_summary'),
+			'V_details'=>$this->input->post('V_details'),
+			'V_Request_no'=>$RN,
+			'V_User_dept_code'=>$this->input->post('V_User_dept_code'),
+			'V_respon'=>$this->input->post('V_respon'),
+			'V_Asset_no'=>$this->input->post('asset_no'),
+			'v_respondate'=>$this->input->post('startdate'),
+			'v_closeddate'=>$this->input->post('enddate'),
+			'v_closedtime'=>$this->input->post('endtime'),
+			'D_timestamp'=>$this->input->post('D_timestamp')
+			//'V_requestor'=>$this->input->post('V_requestor')
 		);
 		$this->insert_model->create_form($insert_data,TRUE);
 		
@@ -282,25 +281,25 @@ class Contentcontroller extends CI_Controller {
 		
 		redirect('contentcontroller/workorder');
 		redirect('contentcontroller/desklist');	
-		
-		}
+	}
 			
-		public function workorder(){
+	public function workorder(){
 		$this->load->model("loginModel");
-		 if (($this->input->get('parent') == "desk") && ($this->input->get('utk') == "csr")) {
-		 		if ($this->session->userdata('usersess') == "BES"){
+		if (($this->input->get('parent') == "desk") && ($this->input->get('utk') == "csr")) {
+			if ($this->session->userdata('usersess') == "BES"){
 				$this->session->set_userdata('usersess','FES');
 				$data['servnm'] = $this->loginModel->servicename('FES');
 				$this->session->set_userdata('usersessn',$data['servnm'][0]->service_name);}
-		 		elseif ($this->session->userdata('usersess') == "FES"){
+			elseif ($this->session->userdata('usersess') == "FES"){
 				$this->session->set_userdata('usersess','HKS');
 				$data['servnm'] = $this->loginModel->servicename('HKS');
 				$this->session->set_userdata('usersessn',$data['servnm'][0]->service_name);}
-		 		elseif ($this->session->userdata('usersess') == "HKS"){
+			elseif ($this->session->userdata('usersess') == "HKS"){
 				$this->session->set_userdata('usersess','BES');
 				$data['servnm'] = $this->loginModel->servicename('BES');
-				$this->session->set_userdata('usersessn',$data['servnm'][0]->service_name);}
-		 }
+				$this->session->set_userdata('usersessn',$data['servnm'][0]->service_name);
+			}
+		}
 		//$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		//$data['month']= ($this->input->get('m') <> 0) ? $this->input->get('m') : date("mm");
 		$data['tabber'] = ($this->input->get('work-a') <> 0) ? $this->input->get('work-a') : '0';	
@@ -339,9 +338,9 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("head");
 		$this ->load->view("left");
 		$this ->load->view("Content_workorder",$data);
-	  }
+	}
 	
-		public function workorderlist(){
+	public function workorderlist(){
 		$data['wrk_ord'] = $this->input->get('wrk_ord');
 		$this->load->model("display_model");
 		$data['record'] = $this->display_model->request_tab($data['wrk_ord']);
@@ -349,7 +348,8 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("Content_workorderlist",$data);
 	}
-		public function workorderlist_update(){
+	
+	public function workorderlist_update(){
 		$data['wrk_ord'] = $this->input->get('wrk_ord');
 		$this->load->model("get_model");
 		$data['record'] = $this->get_model->request_update($data['wrk_ord']);
@@ -358,7 +358,8 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("Content_workorderlist_update",$data);
 	}
-		public function workorderlist_confirm(){
+	
+	public function workorderlist_confirm(){
 		$data['wrk_ord'] = $this->input->post('wrk_ord');
 		$this->load->model("get_model");
 		$data['record'] = $this->get_model->request_update($data['wrk_ord']);
@@ -367,17 +368,20 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("Content_workorderlist_Comfirm",$data);
 	}
-		public function ppm_gen(){
+	
+	public function ppm_gen(){
 		$this ->load->view("head");
 		$this ->load->view("left");
 		$this ->load->view("Content_ppm_gen");
 	}
-		public function ppm_generator(){
+
+	public function ppm_generator(){
 		$this ->load->view("head");
 		$this ->load->view("left");
 		$this ->load->view("Content_ppm_generator");
 	}	
-		public function response(){
+	
+	public function response(){
 		$data['wrk_ord'] = $this->input->get('wrk_ord');
 		$this->load->model("display_model");
 		$this->load->model('get_model');
@@ -385,91 +389,92 @@ class Contentcontroller extends CI_Controller {
 		$data['disp'] = $this->display_model->list_display($data['wrk_ord']);
 		$data['record'] = $this->display_model->response_tab($data['wrk_ord']);
 		if (isset($data['record'][0]->v_WrkOrdNo)){
-		//total time response
+			//total time response
 			$time1 = strtotime($data['time'][0]->D_date);
-    		$time2 = strtotime($data['time'][0]->d_Date);
-    		$diff = $time2-$time1; 
-    		$min = $diff / 60;
-    		if ($min < 60 ){
-    		if ($min == 1){
-    		$t_time = $min. ' minute';
-    		$data['res_time'] = $t_time;
-    		}
-    		else{
-    		$t_time = $min. ' minutes';
-    		$data['res_time'] = $t_time;	
-    		}
-    		}
-    		else{	
-    		$bal_min = ($min%60);
-    		$h_min = $min - $bal_min;
-    		$hour = $h_min/60;
-    		if ($hour == 1 && $bal_min == 1){
-    		$t_time = $hour. ' hour ' .$bal_min. ' minute';
-    		$data['res_time'] = $t_time;
-    		}
-    		else if ($hour == 1 && $bal_min > 1){
-    		$t_time = $hour. ' hour ' .$bal_min. ' minutes';
-    		$data['res_time'] = $t_time;
-    		}
-    		else{
-    		$t_time = $hour. ' hours ' .$bal_min. ' minutes';
-    		$data['res_time'] = $t_time;
-    		}
-    		}
-		//time action completed
+			$time2 = strtotime($data['time'][0]->d_Date);
+			$diff = $time2-$time1; 
+			$min = $diff / 60;
+			if ($min < 60 ){
+				if ($min == 1){
+					$t_time = $min. ' minute';
+					$data['res_time'] = $t_time;
+				}
+				else{
+					$t_time = $min. ' minutes';
+					$data['res_time'] = $t_time;	
+				}
+			}
+			else{	
+				$bal_min = ($min%60);
+				$h_min = $min - $bal_min;
+				$hour = $h_min/60;
+				if ($hour == 1 && $bal_min == 1){
+					$t_time = $hour. ' hour ' .$bal_min. ' minute';
+					$data['res_time'] = $t_time;
+				}
+				else if ($hour == 1 && $bal_min > 1){
+					$t_time = $hour. ' hour ' .$bal_min. ' minutes';
+					$data['res_time'] = $t_time;
+				}
+				else{
+					$t_time = $hour. ' hours ' .$bal_min. ' minutes';
+					$data['res_time'] = $t_time;
+				}
+			}
+			//time action completed
 			$time1 = strtotime($data['time'][0]->v_Time);
-    		$time2 = strtotime($data['time'][0]->v_Etime);
+			$time2 = strtotime($data['time'][0]->v_Etime);
 			$diff = $time2-$time1;
-    		$tc_min = $diff / 60;
+			$tc_min = $diff / 60;
 			if ($tc_min < 60 ){
-    		if ($tc_min == 1){
-    		$tc_time = $tc_min. ' minute';
-    		$data['time_comp'] = $tc_time;
-    		}
-    		else{
-    		$tc_time = $tc_min. ' minutes';
-    		$data['time_comp'] = $tc_time;	
-    		}
-    		}
-    		else{	
-    		$bal_min = ($tc_min%60);
-    		$h_min = $tc_min - $bal_min;
-    		$hour = $h_min/60;
-    		if ($hour == 1 && $bal_min == 1){
-    		$tc_time = $hour. ' hour ' .$bal_min. ' minute';
-    		$data['time_comp'] = $tc_time;
-    		}
-    		else if ($hour == 1 && $bal_min > 1){
-    		$tc_time = $hour. ' hour ' .$bal_min. ' minutes';
-    		$data['time_comp'] = $tc_time;
-    		}
-    		else{
-    		$tc_time = $hour. ' hours ' .$bal_min. ' minutes';
-    		$data['time_comp'] = $tc_time;
-    		}
-    		}
-        	$data['P1time'] = explode(':',$data['record'][0]->n_Hours1);
-		$data['P2time'] = explode(':',$data['record'][0]->n_Hours2);
-		$data['P3time'] = explode(':',$data['record'][0]->n_Hours3);
-		$data['P1personal'] = explode('-',$data['record'][0]->v_Personal1);
-		$data['P2personal'] = explode('-',$data['record'][0]->v_Personal2);
-		$data['P3personal'] = explode('-',$data['record'][0]->v_Personal3);
-		$data['P1Rate'] = number_format($data['record'][0]->n_Rate1,2);
-		$data['P2Rate'] = number_format($data['record'][0]->n_Rate2,2);
-		$data['P3Rate'] = number_format($data['record'][0]->n_Rate3,2);
-		$data['P1Trate'] = number_format($data['record'][0]->n_Total1,2);
-		$data['P2Trate'] = number_format($data['record'][0]->n_Total2,2);
-		$data['P3Trate'] = number_format($data['record'][0]->n_Total3,2);
-		$data['Vendor'] = explode('-',$data['record'][0]->v_Vendor1);
-		$data['VRM'] = number_format($data['record'][0]->n_vHours,2);
-		$data['VTrate'] = number_format($data['record'][0]->n_vTotal,2);
+				if ($tc_min == 1){
+					$tc_time = $tc_min. ' minute';
+					$data['time_comp'] = $tc_time;
+				}
+				else{
+					$tc_time = $tc_min. ' minutes';
+					$data['time_comp'] = $tc_time;	
+				}
+			}
+			else{	
+				$bal_min = ($tc_min%60);
+				$h_min = $tc_min - $bal_min;
+				$hour = $h_min/60;
+				if ($hour == 1 && $bal_min == 1){
+					$tc_time = $hour. ' hour ' .$bal_min. ' minute';
+					$data['time_comp'] = $tc_time;
+				}
+				else if ($hour == 1 && $bal_min > 1){
+					$tc_time = $hour. ' hour ' .$bal_min. ' minutes';
+					$data['time_comp'] = $tc_time;
+				}
+				else{
+					$tc_time = $hour. ' hours ' .$bal_min. ' minutes';
+					$data['time_comp'] = $tc_time;
+				}
+			}
+			$data['P1time'] = explode(':',$data['record'][0]->n_Hours1);
+			$data['P2time'] = explode(':',$data['record'][0]->n_Hours2);
+			$data['P3time'] = explode(':',$data['record'][0]->n_Hours3);
+			$data['P1personal'] = explode('-',$data['record'][0]->v_Personal1);
+			$data['P2personal'] = explode('-',$data['record'][0]->v_Personal2);
+			$data['P3personal'] = explode('-',$data['record'][0]->v_Personal3);
+			$data['P1Rate'] = number_format($data['record'][0]->n_Rate1,2);
+			$data['P2Rate'] = number_format($data['record'][0]->n_Rate2,2);
+			$data['P3Rate'] = number_format($data['record'][0]->n_Rate3,2);
+			$data['P1Trate'] = number_format($data['record'][0]->n_Total1,2);
+			$data['P2Trate'] = number_format($data['record'][0]->n_Total2,2);
+			$data['P3Trate'] = number_format($data['record'][0]->n_Total3,2);
+			$data['Vendor'] = explode('-',$data['record'][0]->v_Vendor1);
+			$data['VRM'] = number_format($data['record'][0]->n_vHours,2);
+			$data['VTrate'] = number_format($data['record'][0]->n_vTotal,2);
 		}
-    		$this ->load->view("head");
+		$this ->load->view("head");
 		$this ->load->view("left");
 		$this ->load->view("Content_workorder_response",$data);
 	}
-		public function response_update(){
+	
+	public function response_update(){
 		$data['wrk_ord'] = $this->input->post('wrk_ord');
 		$this->load->model("display_model");
 		$data['disp'] = $this->display_model->list_display($data['wrk_ord']);
@@ -477,30 +482,30 @@ class Contentcontroller extends CI_Controller {
 		$data['timereq'] = explode(':',$data['datetimereq'][1]);
 		$data['record'] = $this->display_model->response_tab($data['wrk_ord']);
 		if (isset($data['record'][0]->v_WrkOrdNo)){	
-		$data['Stime'] = explode(':',$data['record'][0]->v_Time);
-		$data['Etime'] = explode(':',$data['record'][0]->v_Etime);
-		$data['P1time'] = explode(':',$data['record'][0]->n_Hours1);
-		$data['P2time'] = explode(':',$data['record'][0]->n_Hours2);
-		$data['P3time'] = explode(':',$data['record'][0]->n_Hours3);
-		$data['P1personal'] = explode('-',$data['record'][0]->v_Personal1);
-		$data['P2personal'] = explode('-',$data['record'][0]->v_Personal2);
-		$data['P3personal'] = explode('-',$data['record'][0]->v_Personal3);
-		$data['P1Rate'] = number_format($data['record'][0]->n_Rate1,2);
-		$data['P2Rate'] = number_format($data['record'][0]->n_Rate2,2);
-		$data['P3Rate'] = number_format($data['record'][0]->n_Rate3,2);
-		$data['P1Trate'] = number_format($data['record'][0]->n_Total1,2);
-		$data['P2Trate'] = number_format($data['record'][0]->n_Total2,2);
-		$data['P3Trate'] = number_format($data['record'][0]->n_Total3,2);
-		$data['Vendor'] = explode('-',$data['record'][0]->v_Vendor1);
-		$data['VRM'] = number_format($data['record'][0]->n_vHours,2);
-		$data['VTrate'] = number_format($data['record'][0]->n_vTotal,2);
+			$data['Stime'] = explode(':',$data['record'][0]->v_Time);
+			$data['Etime'] = explode(':',$data['record'][0]->v_Etime);
+			$data['P1time'] = explode(':',$data['record'][0]->n_Hours1);
+			$data['P2time'] = explode(':',$data['record'][0]->n_Hours2);
+			$data['P3time'] = explode(':',$data['record'][0]->n_Hours3);
+			$data['P1personal'] = explode('-',$data['record'][0]->v_Personal1);
+			$data['P2personal'] = explode('-',$data['record'][0]->v_Personal2);
+			$data['P3personal'] = explode('-',$data['record'][0]->v_Personal3);
+			$data['P1Rate'] = number_format($data['record'][0]->n_Rate1,2);
+			$data['P2Rate'] = number_format($data['record'][0]->n_Rate2,2);
+			$data['P3Rate'] = number_format($data['record'][0]->n_Rate3,2);
+			$data['P1Trate'] = number_format($data['record'][0]->n_Total1,2);
+			$data['P2Trate'] = number_format($data['record'][0]->n_Total2,2);
+			$data['P3Trate'] = number_format($data['record'][0]->n_Total3,2);
+			$data['Vendor'] = explode('-',$data['record'][0]->v_Vendor1);
+			$data['VRM'] = number_format($data['record'][0]->n_vHours,2);
+			$data['VTrate'] = number_format($data['record'][0]->n_vTotal,2);
 		}
 		$this ->load->view("head");
 		$this ->load->view("left");
 		$this ->load->view("Content_workorder_response_update",$data);
 	}
 	
-		public function response_confirm(){
+	public function response_confirm(){
 		$data['wrk_ord'] = $this->input->post('wrk_ord');
 		$this->load->model("display_model");
 		$data['disp'] = $this->display_model->list_display($data['wrk_ord']);
@@ -508,216 +513,217 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("Content_workorder_response_Confirm",$data);
 	}
-		public function visitone(){
+	
+	public function visitone(){
 		$data['wrk_ord'] = $this->input->get('wrk_ord');
 		$this->load->model("display_model");
 		if (substr($data['wrk_ord'],0,2) == 'PP'){
-		$data['record'] = $this->display_model->visit1ppm_tab($data['wrk_ord']);
+			$data['record'] = $this->display_model->visit1ppm_tab($data['wrk_ord']);
 		}
 		else{
-		$data['recordcheck'] = $this->display_model->response_tab($data['wrk_ord']);
-		$data['record'] = $this->display_model->visit1_tab($data['wrk_ord']);
+			$data['recordcheck'] = $this->display_model->response_tab($data['wrk_ord']);
+			$data['record'] = $this->display_model->visit1_tab($data['wrk_ord']);
 		}
 		if (isset($data['record'][0]->v_WrkOrdNo)){
 			$time1 = strtotime($data['record'][0]->v_Time);
-    		$time2 = strtotime($data['record'][0]->v_Etime);
+			$time2 = strtotime($data['record'][0]->v_Etime);
 			$diff = $time2-$time1;
-    		$tc_min = $diff / 60;
+			$tc_min = $diff / 60;
 			if ($tc_min < 60 ){
-    		if ($tc_min == 1){
-    		$tc_time = $tc_min. ' minute';
-    		$data['time_comp'] = $tc_time;
-    		}
-    		else{
-    		$tc_time = $tc_min. ' minutes';
-    		$data['time_comp'] = $tc_time;	
-    		}
-    		}
-    		else{	
-    		$bal_min = ($tc_min%60);
-    		$h_min = $tc_min - $bal_min;
-    		$hour = $h_min/60;
-    		if ($hour == 1 && $bal_min == 1){
-    		$tc_time = $hour. ' hour ' .$bal_min. ' minute';
-    		$data['time_comp'] = $tc_time;
-    		}
-    		else if ($hour == 1 && $bal_min > 1){
-    		$tc_time = $hour. ' hour ' .$bal_min. ' minutes';
-    		$data['time_comp'] = $tc_time;
-    		}
-    		else{
-    		$tc_time = $hour. ' hours ' .$bal_min. ' minutes';
-    		$data['time_comp'] = $tc_time;
-    		}
-    		}	
-		$data['Stime'] = explode(':',$data['record'][0]->v_Time);
-		$data['Etime'] = explode(':',$data['record'][0]->v_Etime);
-		$data['P1time'] = explode(':',$data['record'][0]->n_Hours1);
-		$data['P2time'] = explode(':',$data['record'][0]->n_Hours2);
-		$data['P3time'] = explode(':',$data['record'][0]->n_Hours3);
-		$data['P1personal'] = explode('-',$data['record'][0]->v_Personal1);
-		$data['P2personal'] = explode('-',$data['record'][0]->v_Personal2);
-		$data['P3personal'] = explode('-',$data['record'][0]->v_Personal3);
-		$data['P1Rate'] = number_format($data['record'][0]->n_Rate1,2);
-		$data['P2Rate'] = number_format($data['record'][0]->n_Rate2,2);
-		$data['P3Rate'] = number_format($data['record'][0]->n_Rate3,2);
-		$data['P1Trate'] = number_format($data['record'][0]->n_Total1,2);
-		$data['P2Trate'] = number_format($data['record'][0]->n_Total2,2);
-		$data['P3Trate'] = number_format($data['record'][0]->n_Total3,2);
-		$data['Vendor'] = explode('-',$data['record'][0]->v_Vendor1);
-		$data['PartRM'] = number_format($data['record'][0]->n_PartRM,2);
-		$data['PartTrate'] = number_format($data['record'][0]->n_PartTotal,2);
+				if ($tc_min == 1){
+					$tc_time = $tc_min. ' minute';
+					$data['time_comp'] = $tc_time;
+				}
+				else{
+					$tc_time = $tc_min. ' minutes';
+					$data['time_comp'] = $tc_time;	
+				}
+			}
+			else{	
+				$bal_min = ($tc_min%60);
+				$h_min = $tc_min - $bal_min;
+				$hour = $h_min/60;
+				if ($hour == 1 && $bal_min == 1){
+					$tc_time = $hour. ' hour ' .$bal_min. ' minute';
+					$data['time_comp'] = $tc_time;
+				}
+				else if ($hour == 1 && $bal_min > 1){
+					$tc_time = $hour. ' hour ' .$bal_min. ' minutes';
+					$data['time_comp'] = $tc_time;
+				}
+				else{
+					$tc_time = $hour. ' hours ' .$bal_min. ' minutes';
+					$data['time_comp'] = $tc_time;
+				}
+			}	
+			$data['Stime'] = explode(':',$data['record'][0]->v_Time);
+			$data['Etime'] = explode(':',$data['record'][0]->v_Etime);
+			$data['P1time'] = explode(':',$data['record'][0]->n_Hours1);
+			$data['P2time'] = explode(':',$data['record'][0]->n_Hours2);
+			$data['P3time'] = explode(':',$data['record'][0]->n_Hours3);
+			$data['P1personal'] = explode('-',$data['record'][0]->v_Personal1);
+			$data['P2personal'] = explode('-',$data['record'][0]->v_Personal2);
+			$data['P3personal'] = explode('-',$data['record'][0]->v_Personal3);
+			$data['P1Rate'] = number_format($data['record'][0]->n_Rate1,2);
+			$data['P2Rate'] = number_format($data['record'][0]->n_Rate2,2);
+			$data['P3Rate'] = number_format($data['record'][0]->n_Rate3,2);
+			$data['P1Trate'] = number_format($data['record'][0]->n_Total1,2);
+			$data['P2Trate'] = number_format($data['record'][0]->n_Total2,2);
+			$data['P3Trate'] = number_format($data['record'][0]->n_Total3,2);
+			$data['Vendor'] = explode('-',$data['record'][0]->v_Vendor1);
+			$data['PartRM'] = number_format($data['record'][0]->n_PartRM,2);
+			$data['PartTrate'] = number_format($data['record'][0]->n_PartTotal,2);
 		}
 		if (substr($data['wrk_ord'],0,2) == 'PP'){
-			
-		$this ->load->view("head");
-		$this ->load->view("left");
-		$this ->load->view("content_v1",$data);
+			$this ->load->view("head");
+			$this ->load->view("left");
+			$this ->load->view("content_v1",$data);
 		}
 		else{
-			
-		$this ->load->view("head");
-		$this ->load->view("left");
-		$this ->load->view("Content_workorder_VisitOne",$data);
+			$this ->load->view("head");
+			$this ->load->view("left");
+			$this ->load->view("Content_workorder_VisitOne",$data);
 		}
 	}
-		public function visitone_update(){
+
+	public function visitone_update(){
 		$data['wrk_ord'] = $this->input->post('wrk_ord');
 		$this->load->model("display_model");
 		if (substr($data['wrk_ord'],0,2) == 'PP'){
-		$data['record'] = $this->display_model->visit1ppm_tab($data['wrk_ord']);
+			$data['record'] = $this->display_model->visit1ppm_tab($data['wrk_ord']);
 		}
 		else{
-		$data['recordresp'] = $this->display_model->response_tab($data['wrk_ord']);
-		$data['Stimeres'] = explode(':',$data['recordresp'][0]->v_Time);
-		$data['record'] = $this->display_model->visit1_tab($data['wrk_ord']);
+			$data['recordresp'] = $this->display_model->response_tab($data['wrk_ord']);
+			$data['Stimeres'] = explode(':',$data['recordresp'][0]->v_Time);
+			$data['record'] = $this->display_model->visit1_tab($data['wrk_ord']);
 		}
 		if (isset($data['record'][0]->v_WrkOrdNo)){	
-		$data['Stime'] = explode(':',$data['record'][0]->v_Time);
-		$data['Etime'] = explode(':',$data['record'][0]->v_Etime);
-		$data['P1time'] = explode(':',$data['record'][0]->n_Hours1);
-		$data['P2time'] = explode(':',$data['record'][0]->n_Hours2);
-		$data['P3time'] = explode(':',$data['record'][0]->n_Hours3);
-		$data['P1personal'] = explode('-',$data['record'][0]->v_Personal1);
-		$data['P2personal'] = explode('-',$data['record'][0]->v_Personal2);
-		$data['P3personal'] = explode('-',$data['record'][0]->v_Personal3);
-		$data['P1Rate'] = number_format($data['record'][0]->n_Rate1,2);
-		$data['P2Rate'] = number_format($data['record'][0]->n_Rate2,2);
-		$data['P3Rate'] = number_format($data['record'][0]->n_Rate3,2);
-		$data['P1Trate'] = number_format($data['record'][0]->n_Total1,2);
-		$data['P2Trate'] = number_format($data['record'][0]->n_Total2,2);
-		$data['P3Trate'] = number_format($data['record'][0]->n_Total3,2);
-		$data['Vendor'] = explode('-',$data['record'][0]->v_Vendor1);
-		$data['PartRM'] = number_format($data['record'][0]->n_PartRM,2);
-		$data['PartTrate'] = number_format($data['record'][0]->n_PartTotal,2);
-		$data['rschReason'] = explode(':',$data['record'][0]->v_ReschReason);
+			$data['Stime'] = explode(':',$data['record'][0]->v_Time);
+			$data['Etime'] = explode(':',$data['record'][0]->v_Etime);
+			$data['P1time'] = explode(':',$data['record'][0]->n_Hours1);
+			$data['P2time'] = explode(':',$data['record'][0]->n_Hours2);
+			$data['P3time'] = explode(':',$data['record'][0]->n_Hours3);
+			$data['P1personal'] = explode('-',$data['record'][0]->v_Personal1);
+			$data['P2personal'] = explode('-',$data['record'][0]->v_Personal2);
+			$data['P3personal'] = explode('-',$data['record'][0]->v_Personal3);
+			$data['P1Rate'] = number_format($data['record'][0]->n_Rate1,2);
+			$data['P2Rate'] = number_format($data['record'][0]->n_Rate2,2);
+			$data['P3Rate'] = number_format($data['record'][0]->n_Rate3,2);
+			$data['P1Trate'] = number_format($data['record'][0]->n_Total1,2);
+			$data['P2Trate'] = number_format($data['record'][0]->n_Total2,2);
+			$data['P3Trate'] = number_format($data['record'][0]->n_Total3,2);
+			$data['Vendor'] = explode('-',$data['record'][0]->v_Vendor1);
+			$data['PartRM'] = number_format($data['record'][0]->n_PartRM,2);
+			$data['PartTrate'] = number_format($data['record'][0]->n_PartTotal,2);
+			$data['rschReason'] = explode(':',$data['record'][0]->v_ReschReason);
 		}
 		if (substr($data['wrk_ord'],0,2) == 'PP'){
-		$this ->load->view("head");
-		$this ->load->view("left");
-		$this ->load->view("content_v1_update",$data);
+			$this ->load->view("head");
+			$this ->load->view("left");
+			$this ->load->view("content_v1_update",$data);
 		}
 		else{
-		$this ->load->view("head");
-		$this ->load->view("left");
-		$this ->load->view("Content_workorder_VisitOne_update",$data);
+			$this ->load->view("head");
+			$this ->load->view("left");
+			$this ->load->view("Content_workorder_VisitOne_update",$data);
 		}
 	}
-		public function visitone_confirm(){
+	
+	public function visitone_confirm(){
 		$data['wrk_ord'] = $this->input->post('wrk_ord');
 		if (substr($data['wrk_ord'],0,2) == 'PP'){
-		$this ->load->view("head");
-		$this ->load->view("left");
-		$this ->load->view("Content_v1_confirm");
+			$this ->load->view("head");
+			$this ->load->view("left");
+			$this ->load->view("Content_v1_confirm");
 		}
 		else{
-		$this ->load->view("head");
-		$this ->load->view("left");
-		$this ->load->view("Content_workorder_VisitOne_Confirm");
+			$this ->load->view("head");
+			$this ->load->view("left");
+			$this ->load->view("Content_workorder_VisitOne_Confirm");
 		}
-		
 	}
-		public function visittwo(){
+
+	public function visittwo(){
 		$data['wrk_ord'] = $this->input->get('wrk_ord');
 		$this->load->model("display_model");
 		if (substr($data['wrk_ord'],0,2) == 'PP'){
-		$data['recordcheck'] = $this->display_model->visit1ppm_tab($data['wrk_ord']);
-		$data['record'] = $this->display_model->visit2ppm_tab($data['wrk_ord']);
+			$data['recordcheck'] = $this->display_model->visit1ppm_tab($data['wrk_ord']);
+			$data['record'] = $this->display_model->visit2ppm_tab($data['wrk_ord']);
 		}
 		else{
-		$data['recordcheck'] = $this->display_model->visit1_tab($data['wrk_ord']);
-		$data['record'] = $this->display_model->visit2_tab($data['wrk_ord']);
+			$data['recordcheck'] = $this->display_model->visit1_tab($data['wrk_ord']);
+			$data['record'] = $this->display_model->visit2_tab($data['wrk_ord']);
 		}
 		if (isset($data['record'][0]->v_WrkOrdNo)){
-		$time1 = strtotime($data['record'][0]->v_Time);
-    		$time2 = strtotime($data['record'][0]->v_Etime);
-		$diff = $time2-$time1;
-    		$tc_min = $diff / 60;
-		if ($tc_min < 60 ){
-    		if ($tc_min == 1){
-    		$tc_time = $tc_min. ' minute';
-    		$data['time_comp'] = $tc_time;
-    		}
-    		else{
-    		$tc_time = $tc_min. ' minutes';
-    		$data['time_comp'] = $tc_time;	
-    		}
-    		}
-    		else{	
-    		$bal_min = ($tc_min%60);
-    		$h_min = $tc_min - $bal_min;
-    		$hour = $h_min/60;
-    		if ($hour == 1 && $bal_min == 1){
-    		$tc_time = $hour. ' hour ' .$bal_min. ' minute';
-    		$data['time_comp'] = $tc_time;
-    		}
-    		else if ($hour == 1 && $bal_min > 1){
-    		$tc_time = $hour. ' hour ' .$bal_min. ' minutes';
-    		$data['time_comp'] = $tc_time;
-    		}
-    		else{
-    		$tc_time = $hour. ' hours ' .$bal_min. ' minutes';
-    		$data['time_comp'] = $tc_time;
-    		}
-    		}	
-		$data['Stime'] = explode(':',$data['record'][0]->v_Time);
-		$data['Etime'] = explode(':',$data['record'][0]->v_Etime);
-		$data['P1time'] = explode(':',$data['record'][0]->n_Hours1);
-		$data['P2time'] = explode(':',$data['record'][0]->n_Hours2);
-		$data['P3time'] = explode(':',$data['record'][0]->n_Hours3);
-		$data['P1personal'] = explode('-',$data['record'][0]->v_Personal1);
-		$data['P2personal'] = explode('-',$data['record'][0]->v_Personal2);
-		$data['P3personal'] = explode('-',$data['record'][0]->v_Personal3);
-		$data['P1Rate'] = number_format($data['record'][0]->n_Rate1,2);
-		$data['P2Rate'] = number_format($data['record'][0]->n_Rate2,2);
-		$data['P3Rate'] = number_format($data['record'][0]->n_Rate3,2);
-		$data['P1Trate'] = number_format($data['record'][0]->n_Total1,2);
-		$data['P2Trate'] = number_format($data['record'][0]->n_Total2,2);
-		$data['P3Trate'] = number_format($data['record'][0]->n_Total3,2);
-		$data['Vendor'] = explode('-',$data['record'][0]->v_Vendor1);
-		$data['PartRM'] = number_format($data['record'][0]->n_PartRM,2);
-		$data['PartTrate'] = number_format($data['record'][0]->n_PartTotal,2);
+			$time1 = strtotime($data['record'][0]->v_Time);
+			$time2 = strtotime($data['record'][0]->v_Etime);
+			$diff = $time2-$time1;
+			$tc_min = $diff / 60;
+			if ($tc_min < 60 ){
+    			if ($tc_min == 1){
+					$tc_time = $tc_min. ' minute';
+					$data['time_comp'] = $tc_time;
+				}
+				else{
+					$tc_time = $tc_min. ' minutes';
+					$data['time_comp'] = $tc_time;	
+				}
+			}
+			else{	
+				$bal_min = ($tc_min%60);
+				$h_min = $tc_min - $bal_min;
+				$hour = $h_min/60;
+				if ($hour == 1 && $bal_min == 1){
+					$tc_time = $hour. ' hour ' .$bal_min. ' minute';
+					$data['time_comp'] = $tc_time;
+				}
+				else if ($hour == 1 && $bal_min > 1){
+					$tc_time = $hour. ' hour ' .$bal_min. ' minutes';
+					$data['time_comp'] = $tc_time;
+				}
+				else{
+					$tc_time = $hour. ' hours ' .$bal_min. ' minutes';
+					$data['time_comp'] = $tc_time;
+				}
+			}
+			$data['Stime'] = explode(':',$data['record'][0]->v_Time);
+			$data['Etime'] = explode(':',$data['record'][0]->v_Etime);
+			$data['P1time'] = explode(':',$data['record'][0]->n_Hours1);
+			$data['P2time'] = explode(':',$data['record'][0]->n_Hours2);
+			$data['P3time'] = explode(':',$data['record'][0]->n_Hours3);
+			$data['P1personal'] = explode('-',$data['record'][0]->v_Personal1);
+			$data['P2personal'] = explode('-',$data['record'][0]->v_Personal2);
+			$data['P3personal'] = explode('-',$data['record'][0]->v_Personal3);
+			$data['P1Rate'] = number_format($data['record'][0]->n_Rate1,2);
+			$data['P2Rate'] = number_format($data['record'][0]->n_Rate2,2);
+			$data['P3Rate'] = number_format($data['record'][0]->n_Rate3,2);
+			$data['P1Trate'] = number_format($data['record'][0]->n_Total1,2);
+			$data['P2Trate'] = number_format($data['record'][0]->n_Total2,2);
+			$data['P3Trate'] = number_format($data['record'][0]->n_Total3,2);
+			$data['Vendor'] = explode('-',$data['record'][0]->v_Vendor1);
+			$data['PartRM'] = number_format($data['record'][0]->n_PartRM,2);
+			$data['PartTrate'] = number_format($data['record'][0]->n_PartTotal,2);
 		}
 		if (substr($data['wrk_ord'],0,2) == 'PP'){
-		$this ->load->view("head");
-		$this ->load->view("left");
-		$this ->load->view("content_v2",$data);
+			$this ->load->view("head");
+			$this ->load->view("left");
+			$this ->load->view("content_v2",$data);
 		}
 		else{
-		$this ->load->view("head");
-		$this ->load->view("left");
-		$this ->load->view("Content_workorder_Visittwo",$data);
+			$this ->load->view("head");
+			$this ->load->view("left");
+			$this ->load->view("Content_workorder_Visittwo",$data);
 		}
 	}
 	
 	public function confirmReg (){
-	  // load libraries for URL and form processing
+		// load libraries for URL and form processing
 		$data['assetno'] = $this->input->get('assetno');
-    $this->load->helper(array('form', 'url'));
-    // load library for form validation
-    $this->load->library('form_validation');
-    $this->form_validation->set_rules('a_group','Asset Group','trim|required');
-    if($this->form_validation->run()==FALSE)
+		$this->load->helper(array('form', 'url'));
+		// load library for form validation
+		$this->load->library('form_validation');
+		$this->form_validation->set_rules('a_group','Asset Group','trim|required');
+		if($this->form_validation->run()==FALSE)
 		{
 			$this->load->model("get_model");
 			$data['asset_det'] = $this->get_model->get_assetdet2($data['assetno']);
@@ -732,42 +738,39 @@ class Contentcontroller extends CI_Controller {
 			$this ->load->view("left");
 			$this ->load->view("Update_Reg_Confirm", $data);
 		}
-	  //echo "nilai post : ".$this->input->post('password');
+		//echo "nilai post : ".$this->input->post('password');
 		//$this->form_validation->set_rules('n_username','*Equipment Code','trim|required');
 		//if($this->form_validation->run()==FALSE)
 		//{echo 'no';}else {echo 'yes';}
 		//exit();
-		
 	}
 	
 	public function confirmRegsv (){
-	
-	  $insert_data = array(
-					//'D_Register_date'=>$this->input->post('n_registered_date'),
-					'D_Register_date'=>date('y-m-d',strtotime($this->input->post('n_registered_date'))),
-					'V_User_Dept_code'=>$this->input->post('n_user_department'),
-					'V_Location_code'=>$this->input->post('n_location'),
-					'v_asset_grp'=>$this->input->post('a_group'),
-					//'V_Asset_no'=>$this->input->post('n_asset_number'),
-					'V_Asset_no'=>$this->input->get('assetno'),
-					'V_Timestamp'=>date('Y-m-d H:i:s'),
-					'V_Actionflag'=>'U'
+		$insert_data = array(
+			//'D_Register_date'=>$this->input->post('n_registered_date'),
+			'D_Register_date'=>date('y-m-d',strtotime($this->input->post('n_registered_date'))),
+			'V_User_Dept_code'=>$this->input->post('n_user_department'),
+			'V_Location_code'=>$this->input->post('n_location'),
+			'v_asset_grp'=>$this->input->post('a_group'),
+			//'V_Asset_no'=>$this->input->post('n_asset_number'),
+			'V_Asset_no'=>$this->input->get('assetno'),
+			'V_Timestamp'=>date('Y-m-d H:i:s'),
+			'V_Actionflag'=>'U'
 		);
 		$this->load->model('update_model');	
 		$this->update_model->update_pmis2_egm_assetregistration($insert_data);
 		
 		$insert_data = array(
-					'v_username'=>$this->input->post('n_username'),
-					'd_Timestamp'=>date('Y-m-d H:i:s'),
-					//'V_Asset_no'=>$this->input->post('n_asset_number'),
-					'V_Asset_no'=>$this->input->get('assetno'),
-					'V_Actionflag'=>'U'
-		);
+						'v_username'=>$this->input->post('n_username'),
+						'd_Timestamp'=>date('Y-m-d H:i:s'),
+						//'V_Asset_no'=>$this->input->post('n_asset_number'),
+						'V_Asset_no'=>$this->input->get('assetno'),
+						'V_Actionflag'=>'U'
+					);
 		$this->update_model->update_pmis2_egm_assetreg_general($insert_data);
 		//exit();
 		//redirect('contentcontroller/assetupdate?asstno='.$this->input->post('n_asset_number'));
-		redirect('contentcontroller/assetupdate?asstno='.$this->input->get('assetno').'&tab=0&parent=assets');
-		
+		redirect('contentcontroller/assetupdate?asstno='.$this->input->get('assetno').'&tab=0&parent=assets');		
 	}
 	
 	public function confirmcom (){
@@ -777,7 +780,6 @@ class Contentcontroller extends CI_Controller {
 	}
 	
 	public function confirmcomsv (){
-	  
 		$insert_data = array(
 					'V_Misc_details'=>$this->input->post('n_comments'),
 					'd_Timestamp'=>date('Y-m-d H:i:s'),
@@ -798,7 +800,7 @@ class Contentcontroller extends CI_Controller {
 	}
 	
 	public function confirmspecsv (){
-		 $insert_data = array(
+		$insert_data = array(
 					'v_make'=>$this->input->post('n_make'),
 					'V_Manufacturer'=>$this->input->post('n_manufacturer'),
 					'V_Brandname'=>$this->input->post('n_brand'),
@@ -836,7 +838,6 @@ class Contentcontroller extends CI_Controller {
 	}
 	
 	public function confirmacqusv (){
-	
 		$this->load->model('update_model');	
 		
 		$insert_data = array(
@@ -898,11 +899,9 @@ class Contentcontroller extends CI_Controller {
 		//exit();
 		//redirect('contentcontroller/assetupdate?asstno='.$this->input->post('n_asset_number'));
 		redirect('contentcontroller/assetupdate?asstno='.$this->input->post('n_asset_number').'&tab=0&parent=assets');
-	
 	}
 	
 	public function confirmmaintenance (){
-	
 		$this ->load->view("head");
 		$this ->load->view("left");
 		$this ->load->view("Update_Maintenance_Confirm");
@@ -910,7 +909,7 @@ class Contentcontroller extends CI_Controller {
 	
 	public function confirmmaintenancesv (){
 		//echo 'masuk saver';
-	//exit();
+		//exit();
 		$insert_data = array(
 					'v_AssetCondition'=>$this->input->post('n_asset_condition'),
 					'v_AssetVStatus'=>$this->input->post('n_variation_status'),
@@ -997,265 +996,269 @@ class Contentcontroller extends CI_Controller {
 		redirect('contentcontroller/assetupdate?asstno='.$this->input->post('n_asset_number').'&tab=0&parent=assets');
 	}
 	
-		public function visittwo_update(){
+	public function visittwo_update(){
 		$data['wrk_ord'] = $this->input->post('wrk_ord');
 		$this->load->model("display_model");
 		if (substr($data['wrk_ord'],0,2) == 'PP'){
-		$data['record'] = $this->display_model->visit2ppm_tab($data['wrk_ord']);
+			$data['record'] = $this->display_model->visit2ppm_tab($data['wrk_ord']);
 		}
 		else{
-		$data['record'] = $this->display_model->visit2_tab($data['wrk_ord']);
+			$data['record'] = $this->display_model->visit2_tab($data['wrk_ord']);
 		}
 		if (isset($data['record'][0]->v_WrkOrdNo)){	
-		$data['Stime'] = explode(':',$data['record'][0]->v_Time);
-		$data['Etime'] = explode(':',$data['record'][0]->v_Etime);
-		$data['P1time'] = explode(':',$data['record'][0]->n_Hours1);
-		$data['P2time'] = explode(':',$data['record'][0]->n_Hours2);
-		$data['P3time'] = explode(':',$data['record'][0]->n_Hours3);
-		$data['P1personal'] = explode('-',$data['record'][0]->v_Personal1);
-		$data['P2personal'] = explode('-',$data['record'][0]->v_Personal2);
-		$data['P3personal'] = explode('-',$data['record'][0]->v_Personal3);
-		$data['P1Rate'] = number_format($data['record'][0]->n_Rate1,2);
-		$data['P2Rate'] = number_format($data['record'][0]->n_Rate2,2);
-		$data['P3Rate'] = number_format($data['record'][0]->n_Rate3,2);
-		$data['P1Trate'] = number_format($data['record'][0]->n_Total1,2);
-		$data['P2Trate'] = number_format($data['record'][0]->n_Total2,2);
-		$data['P3Trate'] = number_format($data['record'][0]->n_Total3,2);
-		$data['Vendor'] = explode('-',$data['record'][0]->v_Vendor1);
-		$data['PartRM'] = number_format($data['record'][0]->n_PartRM,2);
-		$data['PartTrate'] = number_format($data['record'][0]->n_PartTotal,2);
-		$data['rschReason'] = explode(':',$data['record'][0]->v_Reschreason);
+			$data['Stime'] = explode(':',$data['record'][0]->v_Time);
+			$data['Etime'] = explode(':',$data['record'][0]->v_Etime);
+			$data['P1time'] = explode(':',$data['record'][0]->n_Hours1);
+			$data['P2time'] = explode(':',$data['record'][0]->n_Hours2);
+			$data['P3time'] = explode(':',$data['record'][0]->n_Hours3);
+			$data['P1personal'] = explode('-',$data['record'][0]->v_Personal1);
+			$data['P2personal'] = explode('-',$data['record'][0]->v_Personal2);
+			$data['P3personal'] = explode('-',$data['record'][0]->v_Personal3);
+			$data['P1Rate'] = number_format($data['record'][0]->n_Rate1,2);
+			$data['P2Rate'] = number_format($data['record'][0]->n_Rate2,2);
+			$data['P3Rate'] = number_format($data['record'][0]->n_Rate3,2);
+			$data['P1Trate'] = number_format($data['record'][0]->n_Total1,2);
+			$data['P2Trate'] = number_format($data['record'][0]->n_Total2,2);
+			$data['P3Trate'] = number_format($data['record'][0]->n_Total3,2);
+			$data['Vendor'] = explode('-',$data['record'][0]->v_Vendor1);
+			$data['PartRM'] = number_format($data['record'][0]->n_PartRM,2);
+			$data['PartTrate'] = number_format($data['record'][0]->n_PartTotal,2);
+			$data['rschReason'] = explode(':',$data['record'][0]->v_Reschreason);
 		}
 		if (substr($data['wrk_ord'],0,2) == 'PP'){
-		$this ->load->view("head");
-		$this ->load->view("left");
-		$this ->load->view("content_v2_update",$data);
+			$this ->load->view("head");
+			$this ->load->view("left");
+			$this ->load->view("content_v2_update",$data);
 		}
 		else{
-		$this ->load->view("head");
-		$this ->load->view("left");
-		$this ->load->view("Content_workorder_Visittwo_update",$data);
+			$this ->load->view("head");
+			$this ->load->view("left");
+			$this ->load->view("Content_workorder_Visittwo_update",$data);
 		}
 	}
-		public function visittwo_confirm(){
+	
+	public function visittwo_confirm(){
 		$data['wrk_ord'] = $this->input->post('wrk_ord');
 		if (substr($data['wrk_ord'],0,2) == 'PP'){
-		$this->load->model("display_model");
-		$data['record'] = $this->display_model->visit2ppm_tab($data['wrk_ord']);
-		$this ->load->view("head");
-		$this ->load->view("left_workorder");
-		$this ->load->view("Content_v2_confirm",$data);
+			$this->load->model("display_model");
+			$data['record'] = $this->display_model->visit2ppm_tab($data['wrk_ord']);
+			$this ->load->view("head");
+			$this ->load->view("left_workorder");
+			$this ->load->view("Content_v2_confirm",$data);
 		}
 		else{
-		$this->load->model("display_model");
-		$data['record'] = $this->display_model->visit2_tab($data['wrk_ord']);
-		$this ->load->view("head");
-		$this ->load->view("left");
-		$this ->load->view("Content_workorder_Visittwo_Confirm",$data);
+			$this->load->model("display_model");
+			$data['record'] = $this->display_model->visit2_tab($data['wrk_ord']);
+			$this ->load->view("head");
+			$this ->load->view("left");
+			$this ->load->view("Content_workorder_Visittwo_Confirm",$data);
 		}
 	}
-		public function visitthree(){
+	
+	public function visitthree(){
 		$data['wrk_ord'] = $this->input->get('wrk_ord');
 		$this->load->model("display_model");
 		if (substr($data['wrk_ord'],0,2) == 'PP'){
-		$data['recordcheck'] = $this->display_model->visit2ppm_tab($data['wrk_ord']);
-		$data['record'] = $this->display_model->visit3ppm_tab($data['wrk_ord']);
+			$data['recordcheck'] = $this->display_model->visit2ppm_tab($data['wrk_ord']);
+			$data['record'] = $this->display_model->visit3ppm_tab($data['wrk_ord']);
 		}
 		else{
-		$data['recordcheck'] = $this->display_model->visit2_tab($data['wrk_ord']);
-		$data['record'] = $this->display_model->visit3_tab($data['wrk_ord']);
+			$data['recordcheck'] = $this->display_model->visit2_tab($data['wrk_ord']);
+			$data['record'] = $this->display_model->visit3_tab($data['wrk_ord']);
 		}
 		if (isset($data['record'][0]->v_WrkOrdNo)){
 			$time1 = strtotime($data['record'][0]->v_Time);
-    		$time2 = strtotime($data['record'][0]->v_Etime);
+			$time2 = strtotime($data['record'][0]->v_Etime);
 			$diff = $time2-$time1;
-    		$tc_min = $diff / 60;
+			$tc_min = $diff / 60;
 			if ($tc_min < 60 ){
-    		if ($tc_min == 1){
-    		$tc_time = $tc_min. ' minute';
-    		$data['time_comp'] = $tc_time;
-    		}
-    		else{
-    		$tc_time = $tc_min. ' minutes';
-    		$data['time_comp'] = $tc_time;	
-    		}
-    		}
-    		else{	
-    		$bal_min = ($tc_min%60);
-    		$h_min = $tc_min - $bal_min;
-    		$hour = $h_min/60;
-    		if ($hour == 1 && $bal_min == 1){
-    		$tc_time = $hour. ' hour ' .$bal_min. ' minute';
-    		$data['time_comp'] = $tc_time;
-    		}
-    		else if ($hour == 1 && $bal_min > 1){
-    		$tc_time = $hour. ' hour ' .$bal_min. ' minutes';
-    		$data['time_comp'] = $tc_time;
-    		}
-    		else{
-    		$tc_time = $hour. ' hours ' .$bal_min. ' minutes';
-    		$data['time_comp'] = $tc_time;
-    		}
-    		}	
-		$data['Stime'] = explode(':',$data['record'][0]->v_Time);
-		$data['Etime'] = explode(':',$data['record'][0]->v_Etime);
-		$data['P1time'] = explode(':',$data['record'][0]->n_Hours1);
-		$data['P2time'] = explode(':',$data['record'][0]->n_Hours2);
-		$data['P3time'] = explode(':',$data['record'][0]->n_Hours3);
-		$data['P1personal'] = explode('-',$data['record'][0]->v_Personal1);
-		$data['P2personal'] = explode('-',$data['record'][0]->v_Personal2);
-		$data['P3personal'] = explode('-',$data['record'][0]->v_Personal3);
-		$data['P1Rate'] = number_format($data['record'][0]->n_Rate1,2);
-		$data['P2Rate'] = number_format($data['record'][0]->n_Rate2,2);
-		$data['P3Rate'] = number_format($data['record'][0]->n_Rate3,2);
-		$data['P1Trate'] = number_format($data['record'][0]->n_Total1,2);
-		$data['P2Trate'] = number_format($data['record'][0]->n_Total2,2);
-		$data['P3Trate'] = number_format($data['record'][0]->n_Total3,2);
-		$data['Vendor'] = explode('-',$data['record'][0]->v_Vendor1);
-		$data['PartRM'] = number_format($data['record'][0]->n_PartRM,2);
-		$data['PartTrate'] = number_format($data['record'][0]->n_PartTotal,2);
+				if ($tc_min == 1){
+					$tc_time = $tc_min. ' minute';
+					$data['time_comp'] = $tc_time;
+				}
+				else{
+					$tc_time = $tc_min. ' minutes';
+					$data['time_comp'] = $tc_time;	
+				}
+			}
+			else{	
+				$bal_min = ($tc_min%60);
+				$h_min = $tc_min - $bal_min;
+				$hour = $h_min/60;
+				if ($hour == 1 && $bal_min == 1){
+					$tc_time = $hour. ' hour ' .$bal_min. ' minute';
+					$data['time_comp'] = $tc_time;
+				}
+				else if ($hour == 1 && $bal_min > 1){
+					$tc_time = $hour. ' hour ' .$bal_min. ' minutes';
+					$data['time_comp'] = $tc_time;
+				}
+				else{
+					$tc_time = $hour. ' hours ' .$bal_min. ' minutes';
+					$data['time_comp'] = $tc_time;
+				}
+			}	
+			$data['Stime'] = explode(':',$data['record'][0]->v_Time);
+			$data['Etime'] = explode(':',$data['record'][0]->v_Etime);
+			$data['P1time'] = explode(':',$data['record'][0]->n_Hours1);
+			$data['P2time'] = explode(':',$data['record'][0]->n_Hours2);
+			$data['P3time'] = explode(':',$data['record'][0]->n_Hours3);
+			$data['P1personal'] = explode('-',$data['record'][0]->v_Personal1);
+			$data['P2personal'] = explode('-',$data['record'][0]->v_Personal2);
+			$data['P3personal'] = explode('-',$data['record'][0]->v_Personal3);
+			$data['P1Rate'] = number_format($data['record'][0]->n_Rate1,2);
+			$data['P2Rate'] = number_format($data['record'][0]->n_Rate2,2);
+			$data['P3Rate'] = number_format($data['record'][0]->n_Rate3,2);
+			$data['P1Trate'] = number_format($data['record'][0]->n_Total1,2);
+			$data['P2Trate'] = number_format($data['record'][0]->n_Total2,2);
+			$data['P3Trate'] = number_format($data['record'][0]->n_Total3,2);
+			$data['Vendor'] = explode('-',$data['record'][0]->v_Vendor1);
+			$data['PartRM'] = number_format($data['record'][0]->n_PartRM,2);
+			$data['PartTrate'] = number_format($data['record'][0]->n_PartTotal,2);
 		}
 		if (substr($data['wrk_ord'],0,2) == 'PP'){
-		$this ->load->view("head");
-		$this ->load->view("left");
-		$this ->load->view("Content_v3",$data);
+			$this ->load->view("head");
+			$this ->load->view("left");
+			$this ->load->view("Content_v3",$data);
 		}
 		else{
-		$this ->load->view("head");
-		$this ->load->view("left");
-		$this ->load->view("Content_workorder_Visitthree",$data);
+			$this ->load->view("head");
+			$this ->load->view("left");
+			$this ->load->view("Content_workorder_Visitthree",$data);
 		}
-		
 	}
-		public function visitthree_update(){
+	
+	public function visitthree_update(){
 		$data['wrk_ord'] = $this->input->post('wrk_ord');
 		$this->load->model("display_model");
 		if (substr($data['wrk_ord'],0,2) == 'PP'){
-		$data['record'] = $this->display_model->visit3ppm_tab($data['wrk_ord']);
+			$data['record'] = $this->display_model->visit3ppm_tab($data['wrk_ord']);
 		}
 		else{
-		$data['record'] = $this->display_model->visit3_tab($data['wrk_ord']);
+			$data['record'] = $this->display_model->visit3_tab($data['wrk_ord']);
 		}
 		if (isset($data['record'][0]->v_WrkOrdNo)){	
-		$data['Stime'] = explode(':',$data['record'][0]->v_Time);
-		$data['Etime'] = explode(':',$data['record'][0]->v_Etime);
-		$data['P1time'] = explode(':',$data['record'][0]->n_Hours1);
-		$data['P2time'] = explode(':',$data['record'][0]->n_Hours2);
-		$data['P3time'] = explode(':',$data['record'][0]->n_Hours3);
-		$data['P1personal'] = explode('-',$data['record'][0]->v_Personal1);
-		$data['P2personal'] = explode('-',$data['record'][0]->v_Personal2);
-		$data['P3personal'] = explode('-',$data['record'][0]->v_Personal3);
-		$data['P1Rate'] = number_format($data['record'][0]->n_Rate1,2);
-		$data['P2Rate'] = number_format($data['record'][0]->n_Rate2,2);
-		$data['P3Rate'] = number_format($data['record'][0]->n_Rate3,2);
-		$data['P1Trate'] = number_format($data['record'][0]->n_Total1,2);
-		$data['P2Trate'] = number_format($data['record'][0]->n_Total2,2);
-		$data['P3Trate'] = number_format($data['record'][0]->n_Total3,2);
-		$data['Vendor'] = explode('-',$data['record'][0]->v_Vendor1);
-		$data['PartRM'] = number_format($data['record'][0]->n_PartRM,2);
-		$data['PartTrate'] = number_format($data['record'][0]->n_PartTotal,2);
-		$data['rschReason'] = explode(':',$data['record'][0]->v_Reschreason);
+			$data['Stime'] = explode(':',$data['record'][0]->v_Time);
+			$data['Etime'] = explode(':',$data['record'][0]->v_Etime);
+			$data['P1time'] = explode(':',$data['record'][0]->n_Hours1);
+			$data['P2time'] = explode(':',$data['record'][0]->n_Hours2);
+			$data['P3time'] = explode(':',$data['record'][0]->n_Hours3);
+			$data['P1personal'] = explode('-',$data['record'][0]->v_Personal1);
+			$data['P2personal'] = explode('-',$data['record'][0]->v_Personal2);
+			$data['P3personal'] = explode('-',$data['record'][0]->v_Personal3);
+			$data['P1Rate'] = number_format($data['record'][0]->n_Rate1,2);
+			$data['P2Rate'] = number_format($data['record'][0]->n_Rate2,2);
+			$data['P3Rate'] = number_format($data['record'][0]->n_Rate3,2);
+			$data['P1Trate'] = number_format($data['record'][0]->n_Total1,2);
+			$data['P2Trate'] = number_format($data['record'][0]->n_Total2,2);
+			$data['P3Trate'] = number_format($data['record'][0]->n_Total3,2);
+			$data['Vendor'] = explode('-',$data['record'][0]->v_Vendor1);
+			$data['PartRM'] = number_format($data['record'][0]->n_PartRM,2);
+			$data['PartTrate'] = number_format($data['record'][0]->n_PartTotal,2);
+			$data['rschReason'] = explode(':',$data['record'][0]->v_Reschreason);
 		}
 		if (substr($data['wrk_ord'],0,2) == 'PP'){
-		$this ->load->view("head");
-		$this ->load->view("left");
-		$this ->load->view("Content_v3_update",$data);
+			$this ->load->view("head");
+			$this ->load->view("left");
+			$this ->load->view("Content_v3_update",$data);
 		}
 		else{
-		$this ->load->view("head");
-		$this ->load->view("left");
-		$this ->load->view("Content_workorder_Visitthree_update",$data);
+			$this ->load->view("head");
+			$this ->load->view("left");
+			$this ->load->view("Content_workorder_Visitthree_update",$data);
 		}
 		
 	}
-		public function visitthree_confirm(){
+	
+	public function visitthree_confirm(){
 		$data['wrk_ord'] = $this->input->post('wrk_ord');
 		if (substr($data['wrk_ord'],0,2) == 'PP'){
-		$this->load->model("display_model");
-		$data['record'] = $this->display_model->visit3ppm_tab($data['wrk_ord']);
-		$this ->load->view("head");
-		$this ->load->view("left_workorder");
-		$this ->load->view("Content_v3_confirm",$data);
+			$this->load->model("display_model");
+			$data['record'] = $this->display_model->visit3ppm_tab($data['wrk_ord']);
+			$this ->load->view("head");
+			$this ->load->view("left_workorder");
+			$this ->load->view("Content_v3_confirm",$data);
 		}
 		else{
-		$this->load->model("display_model");
-		$data['record'] = $this->display_model->visit3_tab($data['wrk_ord']);
-		$this ->load->view("head");
-		$this ->load->view("left");
-		$this ->load->view("Content_workorder_Visitthree_Confirm",$data);
+			$this->load->model("display_model");
+			$data['record'] = $this->display_model->visit3_tab($data['wrk_ord']);
+			$this ->load->view("head");
+			$this ->load->view("left");
+			$this ->load->view("Content_workorder_Visitthree_Confirm",$data);
 		}
-		
 	}
-		public function personnelinvolved(){
+	
+	public function personnelinvolved(){
 		$data['wrk_ord'] = $this->input->get('wrk_ord');
 		$this->load->model('display_model');
 		if (substr($data['wrk_ord'],0,2) == 'PP'){
-		$data['rvisit1'] = $this->display_model->visit1ppm_tab($data['wrk_ord']);
-		//$data['rvisit2'] = $this->display_model->visit2ppm_tab($data['wrk_ord']);
-		//$data['rvisit3'] = $this->display_model->visit3ppm_tab($data['wrk_ord']);
+			$data['rvisit1'] = $this->display_model->visit1ppm_tab($data['wrk_ord']);
+			//$data['rvisit2'] = $this->display_model->visit2ppm_tab($data['wrk_ord']);
+			//$data['rvisit3'] = $this->display_model->visit3ppm_tab($data['wrk_ord']);
 		}
 		else{
-		$data['rpersonnel'] = $this->display_model->response_tab($data['wrk_ord']);
-		$data['rvisit1'] = $this->display_model->visit1_tab($data['wrk_ord']);
-		//$data['rvisit2'] = $this->display_model->visit2_tab($data['wrk_ord']);
-		//$data['rvisit3'] = $this->display_model->visit3_tab($data['wrk_ord']);
+			$data['rpersonnel'] = $this->display_model->response_tab($data['wrk_ord']);
+			$data['rvisit1'] = $this->display_model->visit1_tab($data['wrk_ord']);
+			//$data['rvisit2'] = $this->display_model->visit2_tab($data['wrk_ord']);
+			//$data['rvisit3'] = $this->display_model->visit3_tab($data['wrk_ord']);
 		}
 		
 		if (isset($data['rpersonnel'][0]->v_WrkOrdNo)){
-		$data['P1personnel'] = explode('-',$data['rpersonnel'][0]->v_Personal1);
-		$data['P2personnel'] = explode('-',$data['rpersonnel'][0]->v_Personal2);
-		$data['P3personnel'] = explode('-',$data['rpersonnel'][0]->v_Personal3);
-		$data['P1ptime'] = explode(':',$data['rpersonnel'][0]->n_Hours1);
-		$data['P2ptime'] = explode(':',$data['rpersonnel'][0]->n_Hours2);
-		$data['P3ptime'] = explode(':',$data['rpersonnel'][0]->n_Hours3);
-		$data['P1pRate'] = number_format($data['rpersonnel'][0]->n_Rate1,2);
-		$data['P2pRate'] = number_format($data['rpersonnel'][0]->n_Rate2,2);
-		$data['P3pRate'] = number_format($data['rpersonnel'][0]->n_Rate3,2);
-		$data['P1pTrate'] = number_format($data['rpersonnel'][0]->n_Total1,2);
-		$data['P2pTrate'] = number_format($data['rpersonnel'][0]->n_Total2,2);
-		$data['P3pTrate'] = number_format($data['rpersonnel'][0]->n_Total3,2);
+			$data['P1personnel'] = explode('-',$data['rpersonnel'][0]->v_Personal1);
+			$data['P2personnel'] = explode('-',$data['rpersonnel'][0]->v_Personal2);
+			$data['P3personnel'] = explode('-',$data['rpersonnel'][0]->v_Personal3);
+			$data['P1ptime'] = explode(':',$data['rpersonnel'][0]->n_Hours1);
+			$data['P2ptime'] = explode(':',$data['rpersonnel'][0]->n_Hours2);
+			$data['P3ptime'] = explode(':',$data['rpersonnel'][0]->n_Hours3);
+			$data['P1pRate'] = number_format($data['rpersonnel'][0]->n_Rate1,2);
+			$data['P2pRate'] = number_format($data['rpersonnel'][0]->n_Rate2,2);
+			$data['P3pRate'] = number_format($data['rpersonnel'][0]->n_Rate3,2);
+			$data['P1pTrate'] = number_format($data['rpersonnel'][0]->n_Total1,2);
+			$data['P2pTrate'] = number_format($data['rpersonnel'][0]->n_Total2,2);
+			$data['P3pTrate'] = number_format($data['rpersonnel'][0]->n_Total3,2);
 		}
-			$Trate1 = 0;
-			$Trate2 = 0;
-			$Trate3 = 0;
+		$Trate1 = 0;
+		$Trate2 = 0;
+		$Trate3 = 0;
 		if (substr($data['wrk_ord'],0,2) == 'PP'){
-		foreach ($data['rvisit1'] as $row){
-			$data['P1TrateV'.$row->n_Visit] = number_format($row->n_Total1,2);
-			$data['P2TrateV'.$row->n_Visit] = number_format($row->n_Total2,2);
-			$data['P3TrateV'.$row->n_Visit] = number_format($row->n_Total3,2);
+			foreach ($data['rvisit1'] as $row){
+				$data['P1TrateV'.$row->n_Visit] = number_format($row->n_Total1,2);
+				$data['P2TrateV'.$row->n_Visit] = number_format($row->n_Total2,2);
+				$data['P3TrateV'.$row->n_Visit] = number_format($row->n_Total3,2);
 
-			$Trate1 += $data['P1TrateV'.$row->n_Visit];
-			$Trate2 += $data['P2TrateV'.$row->n_Visit];
-			$Trate3 += $data['P3TrateV'.$row->n_Visit];
+				$Trate1 += $data['P1TrateV'.$row->n_Visit];
+				$Trate2 += $data['P2TrateV'.$row->n_Visit];
+				$Trate3 += $data['P3TrateV'.$row->n_Visit];
 
-			$data['TRate'] = $Trate1 + $Trate2 + $Trate3;
-		}
-		$data['TotalRate'] = number_format(isset($data['TRate']) ? $data['TRate'] : 0 ,2);
-		$this ->load->view("head");
-		$this ->load->view("left");
-		$this ->load->view("Content_PI",$data);
+				$data['TRate'] = $Trate1 + $Trate2 + $Trate3;
+			}
+			$data['TotalRate'] = number_format(isset($data['TRate']) ? $data['TRate'] : 0 ,2);
+			$this ->load->view("head");
+			$this ->load->view("left");
+			$this ->load->view("Content_PI",$data);
 		}
 		else{
-		foreach($data['rvisit1'] as $row){
-			$data['P1TrateV'.$row->n_Visit] = number_format($row->n_Total1,2);
-			$data['P2TrateV'.$row->n_Visit] = number_format($row->n_Total2,2);
-			$data['P3TrateV'.$row->n_Visit] = number_format($row->n_Total3,2);
+			foreach($data['rvisit1'] as $row){
+				$data['P1TrateV'.$row->n_Visit] = number_format($row->n_Total1,2);
+				$data['P2TrateV'.$row->n_Visit] = number_format($row->n_Total2,2);
+				$data['P3TrateV'.$row->n_Visit] = number_format($row->n_Total3,2);
 
-			$Trate1 += $data['P1TrateV'.$row->n_Visit];
-			$Trate2 += $data['P2TrateV'.$row->n_Visit];
-			$Trate3 += $data['P3TrateV'.$row->n_Visit];
-		}
-		$data['TRate'] = (isset($data['P1pTrate']) ? $data['P1pTrate'] : 0) + (isset($data['P2pTrate']) ? $data['P2pTrate'] : 0) + (isset($data['P3pTrate']) ? $data['P3pTrate'] : 0) +
+				$Trate1 += $data['P1TrateV'.$row->n_Visit];
+				$Trate2 += $data['P2TrateV'.$row->n_Visit];
+				$Trate3 += $data['P3TrateV'.$row->n_Visit];
+			}
+			$data['TRate'] = (isset($data['P1pTrate']) ? $data['P1pTrate'] : 0) + (isset($data['P2pTrate']) ? $data['P2pTrate'] : 0) + (isset($data['P3pTrate']) ? $data['P3pTrate'] : 0) +
 						 $Trate1 + $Trate2 + $Trate3;
-		$data['TotalRate'] = number_format(isset($data['TRate']) ? $data['TRate'] : 0 ,2);
-		//echo $data['TotalRate'];
-		//exit();
-		$this ->load->view("head");
-		$this ->load->view("left");
-		$this ->load->view("Content_workorder_personnelinvolved",$data);
+			$data['TotalRate'] = number_format(isset($data['TRate']) ? $data['TRate'] : 0 ,2);
+			//echo $data['TotalRate'];
+			//exit();
+			$this ->load->view("head");
+			$this ->load->view("left");
+			$this ->load->view("Content_workorder_personnelinvolved",$data);
 		}
 	}
-		public function jobclose(){
+	
+	public function jobclose(){
 		$data['wrk_ord'] = $this->input->get('wrk_ord');
 		$this->load->model("display_model");
 		$data['recordcheck'] = $this->display_model->response_tab($data['wrk_ord']);
@@ -1278,265 +1281,265 @@ class Contentcontroller extends CI_Controller {
 		$data['PPPMpersonal'] = isset($data['recordppm'][0]->userr) ? explode('-',$data['recordppm'][0]->userr) : "";
 		//PPM
 		if (substr($data['wrk_ord'],0,2) == 'PP'){
-		$data['d_date'] = (isset($data['ppmrec'][0]->d_StartDt) ? $data['ppmrec'][0]->d_StartDt : NULL);
-		$data['duedate'] = (isset($data['ppmrec'][0]->d_DueDt) ? $data['ppmrec'][0]->d_DueDt : NULL);
+			$data['d_date'] = (isset($data['ppmrec'][0]->d_StartDt) ? $data['ppmrec'][0]->d_StartDt : NULL);
+			$data['duedate'] = (isset($data['ppmrec'][0]->d_DueDt) ? $data['ppmrec'][0]->d_DueDt : NULL);
 		
-		if (isset($data['recordppm'][0]->v_Wrkordno)){
-		//visit1
-			if (isset($data['Visit1ppm'][0]->v_WrkOrdNo)){
-			$V1time1 = strtotime($data['Visit1ppm'][0]->v_Time);
-    		$V1time2 = strtotime($data['Visit1ppm'][0]->v_Etime);
-			$V1diff = $V1time2-$V1time1;
-    		$V1tc_min = $V1diff / 60;
-			if ($V1tc_min < 60 ){
-    		$V1tc_time = $V1tc_min. ' min';
-    		$data['time_comp1'] = $V1tc_time;
-    		}
-    		else{	
-    		$bal_min = ($V1tc_min%60);
-    		$h_min = $V1tc_min - $bal_min;
-    		$hour = $h_min/60;
-    		$V1tc_time = $hour. ' hr ' .$bal_min. ' min';
-    		$data['time_comp1'] = $V1tc_time;
-    		}	
-    		}
-    		else{
-    		$V1tc_min = 0;
-    		}
-    	//visit2
-    		if (isset($data['Visit2ppm'][0]->v_WrkOrdNo)){
-			$V2time1 = strtotime($data['Visit2ppm'][0]->v_Time);
-    		$V2time2 = strtotime($data['Visit2ppm'][0]->v_Etime);
-			$V2diff = $V2time2-$V2time1;
-    		$V2tc_min = $V2diff / 60;
-			if ($V2tc_min < 60 ){
-    		$V2tc_time = $V2tc_min. ' min';
-    		$data['time_comp2'] = $V2tc_time;
-    		}
-    		else{	
-    		$bal_min = ($V2tc_min%60);
-    		$h_min = $V2tc_min - $bal_min;
-    		$hour = $h_min/60;
-    		$V2tc_time = $hour. ' hr ' .$bal_min. ' min';
-    		$data['time_comp2'] = $V2tc_time;
-    		}	
-    		}
-    		else{
-    		$V2tc_min = 0;
-    		}	
-    	//visit3
-    		if (isset($data['Visit3ppm'][0]->v_WrkOrdNo)){
-			$V3time1 = strtotime($data['Visit3ppm'][0]->v_Time);
-    		$V3time2 = strtotime($data['Visit3ppm'][0]->v_Etime);
-			$V3diff = $V3time2-$V3time1;
-    		$V3tc_min = $V3diff / 60;
-			if ($V3tc_min < 60 ){
-    		$V3tc_time = $V3tc_min. ' min';
-    		$data['time_comp3'] = $V3tc_time;
-    		}
-    		else{	
-    		$bal_min = ($V3tc_min%60);
-    		$h_min = $V3tc_min - $bal_min;
-    		$hour = $h_min/60;
-    		$V3tc_time = $hour. ' hr ' .$bal_min. ' min';
-    		$data['time_comp3'] = $V3tc_time;
-    		}	
-    		}
-    		else{
-    		$V3tc_min = 0;
-    		}
-    	//service time
-    		$serv_t = $V1tc_min + $V2tc_min + $V3tc_min;
-    		if ($serv_t < 60){
-    		$serv_time = $serv_t. ' min';
-    		$data['serv_time'] = $serv_time;
-    		}
-    		else{
-    		$bal_smin = ($serv_t%60);
-    		$h_smin = $serv_t - $bal_smin;
-    		$Shour = $h_smin/60;
-    		$serv_time = $Shour. ' hr ' .$bal_smin. ' min';
-    		$data['serv_time'] = $serv_time;
-    		}
-    	//down time	
-    		$time1 = strtotime($data['ppmrec'][0]->d_StartDt);
-    		$time2 = strtotime($data['recordppm'][0]->d_DateDone);
-    		$diff = $time2-$time1;
-    		$down_min = $diff / 60;
-    		if ($down_min < 60 ){
-    		$down_time = $down_min. ' min';
-    		$data['down_time'] = $down_time;
-    		}
-    		else{	
-    		$Dbal_min = ($down_min%60);
-    		$Dh_min = $down_min - $Dbal_min;
-    		$Dhour = $Dh_min/60;
-    		$down_time = $Dhour. ' hr ' .$Dbal_min. ' min';
-    		$data['down_time'] = $down_time;
-    		
-    		}
-    	//stopage
-    		$stoppage1 = strtotime($data['recordppm'][0]->d_pfsdate);
-    		$stoppage2 = strtotime($data['recordppm'][0]->d_pfedate);
-    		$diffS = $stoppage2-$stoppage1;
-    		$Stop_min = $diffS / 60;
-    		if ($Stop_min < 60 ){
-    		$Stop_time = $Stop_min. ' min';
-    		$data['Stop_time'] = $Stop_time;
-    		}
-    		else{	
-    		$Sbal_min = ($Stop_min%60);
-    		$Sh_min = $Stop_min - $Sbal_min;
-    		$Shour = $Sh_min/60;
-    		$Stop_time = $Shour. ' hr ' .$Sbal_min. ' min';
-    		$data['Stop_time'] = $Stop_time;
-    		}	
-		}
-		$this ->load->view("head");
-		$this ->load->view("left");
-		$this ->load->view("Content_job",$data);
+			if (isset($data['recordppm'][0]->v_Wrkordno)){
+				//visit1
+				if (isset($data['Visit1ppm'][0]->v_WrkOrdNo)){
+					$V1time1 = strtotime($data['Visit1ppm'][0]->v_Time);
+					$V1time2 = strtotime($data['Visit1ppm'][0]->v_Etime);
+					$V1diff = $V1time2-$V1time1;
+					$V1tc_min = $V1diff / 60;
+					if ($V1tc_min < 60 ){
+						$V1tc_time = $V1tc_min. ' min';
+						$data['time_comp1'] = $V1tc_time;
+					}
+					else{	
+						$bal_min = ($V1tc_min%60);
+						$h_min = $V1tc_min - $bal_min;
+						$hour = $h_min/60;
+						$V1tc_time = $hour. ' hr ' .$bal_min. ' min';
+						$data['time_comp1'] = $V1tc_time;
+					}	
+				}
+				else{
+					$V1tc_min = 0;
+				}
+				//visit2
+				if (isset($data['Visit2ppm'][0]->v_WrkOrdNo)){
+					$V2time1 = strtotime($data['Visit2ppm'][0]->v_Time);
+					$V2time2 = strtotime($data['Visit2ppm'][0]->v_Etime);
+					$V2diff = $V2time2-$V2time1;
+					$V2tc_min = $V2diff / 60;
+					if ($V2tc_min < 60 ){
+						$V2tc_time = $V2tc_min. ' min';
+						$data['time_comp2'] = $V2tc_time;
+					}
+					else{	
+							$bal_min = ($V2tc_min%60);
+						$h_min = $V2tc_min - $bal_min;
+						$hour = $h_min/60;
+						$V2tc_time = $hour. ' hr ' .$bal_min. ' min';
+						$data['time_comp2'] = $V2tc_time;
+					}	
+				}
+				else{
+					$V2tc_min = 0;
+				}	
+				//visit3
+				if (isset($data['Visit3ppm'][0]->v_WrkOrdNo)){
+					$V3time1 = strtotime($data['Visit3ppm'][0]->v_Time);
+					$V3time2 = strtotime($data['Visit3ppm'][0]->v_Etime);
+					$V3diff = $V3time2-$V3time1;
+					$V3tc_min = $V3diff / 60;
+					if ($V3tc_min < 60 ){
+						$V3tc_time = $V3tc_min. ' min';
+						$data['time_comp3'] = $V3tc_time;
+					}
+					else{	
+						$bal_min = ($V3tc_min%60);
+						$h_min = $V3tc_min - $bal_min;
+						$hour = $h_min/60;
+						$V3tc_time = $hour. ' hr ' .$bal_min. ' min';
+						$data['time_comp3'] = $V3tc_time;
+					}	
+				}
+				else{
+					$V3tc_min = 0;
+				}
+				//service time
+				$serv_t = $V1tc_min + $V2tc_min + $V3tc_min;
+				if ($serv_t < 60){
+					$serv_time = $serv_t. ' min';
+				$data['serv_time'] = $serv_time;
+				}
+				else{
+					$bal_smin = ($serv_t%60);
+					$h_smin = $serv_t - $bal_smin;
+					$Shour = $h_smin/60;
+					$serv_time = $Shour. ' hr ' .$bal_smin. ' min';
+					$data['serv_time'] = $serv_time;
+				}
+				//down time	
+				$time1 = strtotime($data['ppmrec'][0]->d_StartDt);
+				$time2 = strtotime($data['recordppm'][0]->d_DateDone);
+				$diff = $time2-$time1;
+				$down_min = $diff / 60;
+				if ($down_min < 60 ){
+					$down_time = $down_min. ' min';
+					$data['down_time'] = $down_time;
+				}
+				else{	
+					$Dbal_min = ($down_min%60);
+					$Dh_min = $down_min - $Dbal_min;
+					$Dhour = $Dh_min/60;
+					$down_time = $Dhour. ' hr ' .$Dbal_min. ' min';
+					$data['down_time'] = $down_time;
+				}
+				//stopage
+				$stoppage1 = strtotime($data['recordppm'][0]->d_pfsdate);
+				$stoppage2 = strtotime($data['recordppm'][0]->d_pfedate);
+				$diffS = $stoppage2-$stoppage1;
+				$Stop_min = $diffS / 60;
+				if ($Stop_min < 60 ){
+					$Stop_time = $Stop_min. ' min';
+					$data['Stop_time'] = $Stop_time;
+				}
+				else{	
+					$Sbal_min = ($Stop_min%60);
+					$Sh_min = $Stop_min - $Sbal_min;
+					$Shour = $Sh_min/60;
+					$Stop_time = $Shour. ' hr ' .$Sbal_min. ' min';
+					$data['Stop_time'] = $Stop_time;
+				}	
+			}
+			$this ->load->view("head");
+			$this ->load->view("left");
+			$this ->load->view("Content_job",$data);
 		}
 
 		//RCM
 		else{
-		$data['d_date'] = isset($data['disp'][0]->D_date) ? $data['disp'][0]->D_date : NULL ;
-		$data['d_time'] = isset($data['disp'][0]->D_time) ? $data['disp'][0]->D_time : NULL ;
-		$data['duedate'] = !is_null($data['d_date']) ? date('Y-m-d',strtotime("+13 day", strtotime($data['d_date']))) : NULL ;
+			$data['d_date'] = isset($data['disp'][0]->D_date) ? $data['disp'][0]->D_date : NULL ;
+			$data['d_time'] = isset($data['disp'][0]->D_time) ? $data['disp'][0]->D_time : NULL ;
+			$data['duedate'] = !is_null($data['d_date']) ? date('Y-m-d',strtotime("+13 day", strtotime($data['d_date']))) : NULL ;
 
-		if (isset($data['record'][0]->v_Wrkordno)){
-		//visit1
-			if (isset($data['Visit1'][0]->v_WrkOrdNo)){
-			$V1time1 = strtotime($data['Visit1'][0]->v_Time);
-    		$V1time2 = strtotime($data['Visit1'][0]->v_Etime);
-			$V1diff = $V1time2-$V1time1;
-    		$V1tc_min = $V1diff / 60;
-			if ($V1tc_min < 60 ){
-    		$V1tc_time = $V1tc_min. ' min';
-    		$data['time_comp1'] = $V1tc_time;
-    		}
-    		else{	
-    		$bal_min = ($V1tc_min%60);
-    		$h_min = $V1tc_min - $bal_min;
-    		$hour = $h_min/60;
-    		$V1tc_time = $hour. ' hr ' .$bal_min. ' min';
-    		$data['time_comp1'] = $V1tc_time;
-    		}	
-    		}
-    		else{
-    		$V1tc_min = 0;
-    		}
-    	//visit2
-    		if (isset($data['Visit2'][0]->v_WrkOrdNo)){
-			$V2time1 = strtotime($data['Visit2'][0]->v_Time);
-    		$V2time2 = strtotime($data['Visit2'][0]->v_Etime);
-			$V2diff = $V2time2-$V2time1;
-    		$V2tc_min = $V2diff / 60;
-			if ($V2tc_min < 60 ){
-    		$V2tc_time = $V2tc_min. ' min';
-    		$data['time_comp2'] = $V2tc_time;
-    		}
-    		else{	
-    		$bal_min = ($V2tc_min%60);
-    		$h_min = $V2tc_min - $bal_min;
-    		$hour = $h_min/60;
-    		$V2tc_time = $hour. ' hr ' .$bal_min. ' min';
-    		$data['time_comp2'] = $V2tc_time;
-    		}	
-    		}
-    		else{
-    		$V2tc_min = 0;
-    		}	
-    	//visit3
-    		if (isset($data['Visit3'][0]->v_WrkOrdNo)){
-			$V3time1 = strtotime($data['Visit3'][0]->v_Time);
-    		$V3time2 = strtotime($data['Visit3'][0]->v_Etime);
-			$V3diff = $V3time2-$V3time1;
-    		$V3tc_min = $V3diff / 60;
-			if ($V3tc_min < 60 ){
-    		$V3tc_time = $V3tc_min. ' min';
-    		$data['time_comp3'] = $V3tc_time;
-    		}
-    		else{	
-    		$bal_min = ($V3tc_min%60);
-    		$h_min = $V3tc_min - $bal_min;
-    		$hour = $h_min/60;
-    		$V3tc_time = $hour. ' hr ' .$bal_min. ' min';
-    		$data['time_comp3'] = $V3tc_time;
-    		}	
-    		}
-    		else{
-    		$V3tc_min = 0;
-    		}
-    	//service time
-    		$serv_t = $V1tc_min + $V2tc_min + $V3tc_min;
-    		if ($serv_t < 60){
-    		$serv_time = $serv_t. ' min';
-    		$data['serv_time'] = $serv_time;
-    		}
-    		else{
-    		$bal_smin = ($serv_t%60);
-    		$h_smin = $serv_t - $bal_smin;
-    		$Shour = $h_smin/60;
-    		$serv_time = $Shour. ' hr ' .$bal_smin. ' min';
-    		$data['serv_time'] = $serv_time;
-    		}
-    	//down time	
-    		$time1 = strtotime($data['disp'][0]->D_date);
-    		$time2 = strtotime($data['record'][0]->d_DateDone);
-    		$diff = $time2-$time1;
-    		$down_min = $diff / 60;
-    		if ($down_min < 60 ){
-    		$down_time = $down_min. ' min';
-    		$data['down_time'] = $down_time;
-    		}
-    		else{	
-    		$Dbal_min = ($down_min%60);
-    		$Dh_min = $down_min - $Dbal_min;
-    		$Dhour = $Dh_min/60;
-    		$down_time = $Dhour. ' hr ' .$Dbal_min. ' min';
-    		$data['down_time'] = $down_time;
-    		}
-    	//stopage
-    		$stoppage1 = strtotime($data['record'][0]->d_pfsdate);
-    		$stoppage2 = strtotime($data['record'][0]->d_pfedate);
-    		$diffS = $stoppage2-$stoppage1;
-    		$Stop_min = $diffS / 60;
-    		if ($Stop_min < 60 ){
-    		$Stop_time = $Stop_min. ' min';
-    		$data['Stop_time'] = $Stop_time;
-    		}
-    		else{	
-    		$Sbal_min = ($Stop_min%60);
-    		$Sh_min = $Stop_min - $Sbal_min;
-    		$Shour = $Sh_min/60;
-    		$Stop_time = $Shour. ' hr ' .$Sbal_min. ' min';
-    		$data['Stop_time'] = $Stop_time;
-    		}
-    	//completion time
-    		if ($Stop_min > 0){
-    		$comp_diff = $down_min - $Stop_min;
-    		if ($comp_diff < 60 ){
-    		$comp_time = $comp_diff. ' min';
-    		$data['comp_time'] = $comp_time;
-    		}
-    		else{	
-    		$Cbal_min = ($comp_diff%60);
-    		$Ch_min = $comp_diff - $Cbal_min;
-    		$Chour = $Ch_min/60;
-    		$comp_time = $Chour. ' hr ' .$Cbal_min. ' min';
-    		$data['comp_time'] = $comp_time;
-    		}
-    		}
-    		else {
-    		$data['comp_time'] = $data['down_time'];
-    		}
-    	}
-    		$this ->load->view("head");
-		$this ->load->view("left");
-		$this ->load->view("Content_workorder_jobclose",$data);
+			if (isset($data['record'][0]->v_Wrkordno)){
+				//visit1
+				if (isset($data['Visit1'][0]->v_WrkOrdNo)){
+					$V1time1 = strtotime($data['Visit1'][0]->v_Time);
+					$V1time2 = strtotime($data['Visit1'][0]->v_Etime);
+					$V1diff = $V1time2-$V1time1;
+					$V1tc_min = $V1diff / 60;
+					if ($V1tc_min < 60 ){
+						$V1tc_time = $V1tc_min. ' min';
+						$data['time_comp1'] = $V1tc_time;
+					}
+					else{	
+						$bal_min = ($V1tc_min%60);
+						$h_min = $V1tc_min - $bal_min;
+						$hour = $h_min/60;
+						$V1tc_time = $hour. ' hr ' .$bal_min. ' min';
+						$data['time_comp1'] = $V1tc_time;
+					}	
+				}
+				else{
+					$V1tc_min = 0;
+				}
+				//visit2
+				if (isset($data['Visit2'][0]->v_WrkOrdNo)){
+					$V2time1 = strtotime($data['Visit2'][0]->v_Time);
+					$V2time2 = strtotime($data['Visit2'][0]->v_Etime);
+					$V2diff = $V2time2-$V2time1;
+					$V2tc_min = $V2diff / 60;
+					if ($V2tc_min < 60 ){
+						$V2tc_time = $V2tc_min. ' min';
+						$data['time_comp2'] = $V2tc_time;
+					}
+					else{	
+						$bal_min = ($V2tc_min%60);
+						$h_min = $V2tc_min - $bal_min;
+						$hour = $h_min/60;
+						$V2tc_time = $hour. ' hr ' .$bal_min. ' min';
+						$data['time_comp2'] = $V2tc_time;
+					}	
+				}
+				else{
+					$V2tc_min = 0;
+				}	
+				//visit3
+				if (isset($data['Visit3'][0]->v_WrkOrdNo)){
+					$V3time1 = strtotime($data['Visit3'][0]->v_Time);
+					$V3time2 = strtotime($data['Visit3'][0]->v_Etime);
+					$V3diff = $V3time2-$V3time1;
+					$V3tc_min = $V3diff / 60;
+					if ($V3tc_min < 60 ){
+						$V3tc_time = $V3tc_min. ' min';
+						$data['time_comp3'] = $V3tc_time;
+					}
+					else{	
+						$bal_min = ($V3tc_min%60);
+						$h_min = $V3tc_min - $bal_min;
+						$hour = $h_min/60;
+						$V3tc_time = $hour. ' hr ' .$bal_min. ' min';
+						$data['time_comp3'] = $V3tc_time;
+					}	
+				}
+				else{
+					$V3tc_min = 0;
+				}
+				//service time
+				$serv_t = $V1tc_min + $V2tc_min + $V3tc_min;
+				if ($serv_t < 60){
+					$serv_time = $serv_t. ' min';
+					$data['serv_time'] = $serv_time;
+				}
+				else{
+					$bal_smin = ($serv_t%60);
+					$h_smin = $serv_t - $bal_smin;
+					$Shour = $h_smin/60;
+					$serv_time = $Shour. ' hr ' .$bal_smin. ' min';
+					$data['serv_time'] = $serv_time;
+				}
+				//down time	
+				$time1 = strtotime($data['disp'][0]->D_date);
+				$time2 = strtotime($data['record'][0]->d_DateDone);
+				$diff = $time2-$time1;
+				$down_min = $diff / 60;
+				if ($down_min < 60 ){
+					$down_time = $down_min. ' min';
+					$data['down_time'] = $down_time;
+				}
+				else{	
+					$Dbal_min = ($down_min%60);
+					$Dh_min = $down_min - $Dbal_min;
+					$Dhour = $Dh_min/60;
+					$down_time = $Dhour. ' hr ' .$Dbal_min. ' min';
+					$data['down_time'] = $down_time;
+				}
+				//stopage
+				$stoppage1 = strtotime($data['record'][0]->d_pfsdate);
+				$stoppage2 = strtotime($data['record'][0]->d_pfedate);
+				$diffS = $stoppage2-$stoppage1;
+				$Stop_min = $diffS / 60;
+				if ($Stop_min < 60 ){
+					$Stop_time = $Stop_min. ' min';
+					$data['Stop_time'] = $Stop_time;
+				}
+				else{	
+					$Sbal_min = ($Stop_min%60);
+					$Sh_min = $Stop_min - $Sbal_min;
+					$Shour = $Sh_min/60;
+					$Stop_time = $Shour. ' hr ' .$Sbal_min. ' min';
+					$data['Stop_time'] = $Stop_time;
+				}
+				//completion time
+				if ($Stop_min > 0){
+					$comp_diff = $down_min - $Stop_min;
+					if ($comp_diff < 60 ){
+						$comp_time = $comp_diff. ' min';
+						$data['comp_time'] = $comp_time;
+					}
+					else{	
+						$Cbal_min = ($comp_diff%60);
+						$Ch_min = $comp_diff - $Cbal_min;
+						$Chour = $Ch_min/60;
+						$comp_time = $Chour. ' hr ' .$Cbal_min. ' min';
+						$data['comp_time'] = $comp_time;
+					}
+				}
+				else {
+					$data['comp_time'] = $data['down_time'];
+				}
+			}
+			$this ->load->view("head");
+			$this ->load->view("left");
+			$this ->load->view("Content_workorder_jobclose",$data);
 		}
 	}
-		public function jobclose_update(){
+	
+	public function jobclose_update(){
 		$data['wrk_ord'] = $this->input->post('wrk_ord');
 		$this->load->model("display_model");
 		$data['disp'] = $this->display_model->list_display($data['wrk_ord']);
@@ -1588,7 +1591,8 @@ class Contentcontroller extends CI_Controller {
 			$this ->load->view("Content_workorder_jobclose_update",$data);
 		}
 	}
-		public function jobclose_confirm(){
+	
+	public function jobclose_confirm(){
 		$data['wrk_ord'] = $this->input->post('wrk_ord');
 		$this->load->model("display_model");
 		$data['disp'] = $this->display_model->list_display($data['wrk_ord']);
@@ -1596,81 +1600,86 @@ class Contentcontroller extends CI_Controller {
 		$data['dispasset'] = $this->display_model->request_tab($data['wrk_ord']);
 		$data['ppmasset'] = $this->display_model->wo_ppm($data['wrk_ord']);
 		if (substr($data['wrk_ord'],0,2) == 'PP'){
-		$data['d_date'] = $data['ppmrec'][0]->d_StartDt;
-		$data['duedate'] = date('Y-m-d',strtotime($data['ppmrec'][0]->d_DueDt));
-		$this ->load->view("head");
-		$this ->load->view("left");
-		$this ->load->view("content_job_confirm",$data);
+			$data['d_date'] = $data['ppmrec'][0]->d_StartDt;
+			$data['duedate'] = date('Y-m-d',strtotime($data['ppmrec'][0]->d_DueDt));
+			$this ->load->view("head");
+			$this ->load->view("left");
+			$this ->load->view("content_job_confirm",$data);
 		}
 		else{
-		$data['d_date'] = $data['disp'][0]->D_date;
-		$data['d_time'] = $data['disp'][0]->D_time;
-		$data['duedate'] = date('Y-m-d',strtotime("+13 day", strtotime($data['disp'][0]->D_date)));
-		$this ->load->view("head");
-		$this ->load->view("left");
-		$this ->load->view("Content_workorder_jobclose_Confirm",$data);
+			$data['d_date'] = $data['disp'][0]->D_date;
+			$data['d_time'] = $data['disp'][0]->D_time;
+			$data['duedate'] = date('Y-m-d',strtotime("+13 day", strtotime($data['disp'][0]->D_date)));
+			$this ->load->view("head");
+			$this ->load->view("left");
+			$this ->load->view("Content_workorder_jobclose_Confirm",$data);
 		}	
 	}
-		public function technicalsummary(){
+	
+	public function technicalsummary(){
 		$this ->load->view("head");
 		$this ->load->view("left");
 		$this ->load->view("Content_workorder_technicalsummary");
 	}
-		public function technicalsummary_update(){
+	
+	public function technicalsummary_update(){
 		$this ->load->view("head");
 		$this ->load->view("left");
 		$this ->load->view("Content_workorder_technicalsummary_Update");
 	}
-		public function clause(){
+	
+	public function clause(){
 		$this ->load->view("head");
 		$this ->load->view("left");
 		$this ->load->view("Content_workorder_clause");
 	}
-		public function clause_update(){
+	
+	public function clause_update(){
 		$this->load->model('display_model');
 		$data['record'] = $this->display_model->clause_rec($this->input->get('wrk_ord'));
 		if ($data['record']){
-		$data['vendor'] = explode(' - ',$data['record'][0]->vendor_name);
+			$data['vendor'] = explode(' - ',$data['record'][0]->vendor_name);
 		}
 		$this ->load->view("head");
 		$this ->load->view("left");
 		$this ->load->view("Content_workorder_clause_update",$data);
 	}
-		public function Register(){
+	
+	public function Register(){
 		$this ->load->view("head");
 		$this ->load->view("left");
 		$this ->load->view("Content_Resgister");
 	}		
-		public function desknewrequest(){
+	
+	public function desknewrequest(){
 		$this ->load->view("head");
 		$this ->load->view("left");
 		$this ->load->view("Content_deskrequest");
 	}
 		
-		public function Procurement(){
-				function toArray($obj)
-{
-    $obj = (array) $obj;//cast to array, optional
-    return $obj['path'];
-}
-    $idArray = array_map('toArray', $this->session->userdata('accessr'));
-   
+	public function Procurement(){
+		function toArray($obj)
+		{
+			$obj = (array) $obj;//cast to array, optional
+			return $obj['path'];
+		}
+		$idArray = array_map('toArray', $this->session->userdata('accessr'));
+
 		//echo "nilai id : ".print_r($idArray);
 		$data['chkers'] = $idArray;
 		$this ->load->view("head");
 		$this ->load->view("left");
 		$this ->load->view("Content_Procurement", $data);
-		
 	}
 		
-		public function Business(){
+	public function Business(){
 		function toArray($obj)
-{
-    $obj = (array) $obj;//cast to array, optional
-    return $obj['path'];
-}
-    $idArray = array_map('toArray', $this->session->userdata('accessr'));
-   
+		{
+			$obj = (array) $obj;//cast to array, optional
+			return $obj['path'];
+		}
+		$idArray = array_map('toArray', $this->session->userdata('accessr'));
+
 		//echo "nilai id : ".print_r($idArray);
 		$data['chkers'] = $idArray;
 		$this ->load->view("head");
@@ -1678,10 +1687,10 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("Content_Business", $data);
 	}		
 		
-		public function report (){
+	public function report (){
 		$data['service_apa'] = $this->loginModel->validate3();		
 		$data['Title'] = $this->Title;
-  		$data['Title_left'] = $this->Title_left;
+		$data['Title_left'] = $this->Title_left;
 		$data['Title_left_child'] = $this->Title_left_child;
 		
 		$this ->load->view("content_head");
@@ -1690,6 +1699,7 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("content_report");
 		$this ->load->view("content_footer");
 	}
+
 	/*	public function assets (){
 		$this->load->model("get_model");
 		$data['asset_images'] = $this->get_model->assetimage();
@@ -1727,7 +1737,7 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("content_assets", $data);
 	}
 	
-	 /* public function locationlist (){
+	/* public function locationlist (){
 		$this->load->model("get_model");
 		$data['dept'] = $this->get_model->get_poploclistb();
 		//$data['loc'] = $this->get_model->get_poploclista();
@@ -1757,7 +1767,7 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("content_locations", $data);
 	}
 	
-	  public function assets_ajax (){
+	public function assets_ajax (){
 		//$this->load->model("get_model");
 		//$data['asset_cat'] = $this->get_model->get_assetcat();
 		//$this ->load->view("head");
@@ -1766,7 +1776,6 @@ class Contentcontroller extends CI_Controller {
 	}
 	
 	public function get_all_users(){
- 
 		$query = $this->db->get('pmis2_egm_assetregistration');
 		if($query->num_rows > 0){
 			$header = false;
@@ -1787,7 +1796,6 @@ class Contentcontroller extends CI_Controller {
 	}
 	
 	public function get_all_usersx(){
- 
 		$query = $this->db->get('pmis2_egm_assetregistration');
 		if($query->num_rows > 0){
 			$header = false;
@@ -1837,18 +1845,20 @@ class Contentcontroller extends CI_Controller {
 		echo json_encode($output_string);
 	}
 	
-		public function assetsC (){
+	public function assetsC (){
 		$this->load->model("get_model");
 		$data['non_ppm'] = $this->get_model->get_assetnonppm();
 		$this ->load->view("head");
 		$this ->load->view("left");
 		$this ->load->view("content_assets_C",$data);
 	}
-		public function assetnew (){
+	
+	public function assetnew (){
 		$this ->load->view("head");
 		$this ->load->view("left");
 		$this ->load->view("content_assetnew");
 	}
+
 	public function assetupdatepic (){
 		//$url = $this->input->post('continue') ? $this->input->post('continue') : site_url('contentcontroller/select');
 		$config['upload_path'] = 'C:\inetpub\wwwroot\FEMSHospital_v3\uploadassetimages';
@@ -1860,50 +1870,51 @@ class Contentcontroller extends CI_Controller {
 		$config['max_height']  = 'auto';
 
 		$this->load->library('upload', $config);
-			if ( ! $this->upload->do_upload())
-			{
-	//echo 'masuk error';
-	//exit();
-				$data['error'] = array($this->upload->display_errors());
-				$data['assetn'] = $this->input->get('asstno');
-				//echo 'nilai'.$assetn;
-				$this->load->model("get_model");
-				$data['asset_det'] = $this->get_model->get_assetdet2($data['assetn']);
-				$data['asset_UMDNS'] = $this->get_model->get_UMDNSAsset($data['asset_det'][0]->V_Equip_code);
-				$data['asset_vo'] = $this->get_model->get_VOStatus($data['assetn']);
-				$data['asset_chklist'] = $this->get_model->get_chklist($data['asset_det'][0]->v_ChecklistCode);
-				$data['assetppm'] = $this->get_model->assetppmlist($data['assetn']);
-				$this ->load->view("head");
-				$this ->load->view("left");
-				$this ->load->view("content_assetupdate",$data);
-			}
-			else
-			{
-				$data['assetn'] = $this->input->get('asstno');
+		if ( ! $this->upload->do_upload())
+		{
+			//echo 'masuk error';
+			//exit();
+			$data['error'] = array($this->upload->display_errors());
+			$data['assetn'] = $this->input->get('asstno');
+			//echo 'nilai'.$assetn;
+			$this->load->model("get_model");
+			$data['asset_det'] = $this->get_model->get_assetdet2($data['assetn']);
+			$data['asset_UMDNS'] = $this->get_model->get_UMDNSAsset($data['asset_det'][0]->V_Equip_code);
+			$data['asset_vo'] = $this->get_model->get_VOStatus($data['assetn']);
+			$data['asset_chklist'] = $this->get_model->get_chklist($data['asset_det'][0]->v_ChecklistCode);
+			$data['assetppm'] = $this->get_model->assetppmlist($data['assetn']);
+			$this ->load->view("head");
+			$this ->load->view("left");
+			$this ->load->view("content_assetupdate",$data);
+		}
+		else
+		{
+			$data['assetn'] = $this->input->get('asstno');
 
-				$data['upload_data'] = $this->upload->data();
-				$data['upload_data']['asset_no'] = $data['assetn'];
-				$data['upload_data']['service_code'] = $this->session->userdata('usersess');
-				$data['upload_data']['hospital'] = $this->session->userdata('hosp_code');
-				$data['upload_data']['action_flag'] = 'I';
-				
-				$this->load->model('insert_model');
-				$this->insert_model->uploadassetimages($data['upload_data']);
-				
-				$this->load->model("get_model");
-				$data['asset_det'] = $this->get_model->get_assetdet2($data['assetn']);
-				$data['asset_UMDNS'] = $this->get_model->get_UMDNSAsset($data['asset_det'][0]->V_Equip_code);
-				$data['asset_vo'] = $this->get_model->get_VOStatus($data['assetn']);
-				$data['asset_chklist'] = $this->get_model->get_chklist($data['asset_det'][0]->v_ChecklistCode);
-				$data['asset_images'] = $this->get_model->assetimages($data['assetn'],$this->session->userdata('usersess'),$this->session->userdata('hosp_code'));
-				$data['datacount'] = count($data['asset_images']);
-				$data['assetppm'] = $this->get_model->assetppmlist($data['assetn']);
-				$this ->load->view("head");
-				$this ->load->view("left",$data);
-				$this ->load->view("content_assetupdate",$data);
-			}
+			$data['upload_data'] = $this->upload->data();
+			$data['upload_data']['asset_no'] = $data['assetn'];
+			$data['upload_data']['service_code'] = $this->session->userdata('usersess');
+			$data['upload_data']['hospital'] = $this->session->userdata('hosp_code');
+			$data['upload_data']['action_flag'] = 'I';
+			
+			$this->load->model('insert_model');
+			$this->insert_model->uploadassetimages($data['upload_data']);
+			
+			$this->load->model("get_model");
+			$data['asset_det'] = $this->get_model->get_assetdet2($data['assetn']);
+			$data['asset_UMDNS'] = $this->get_model->get_UMDNSAsset($data['asset_det'][0]->V_Equip_code);
+			$data['asset_vo'] = $this->get_model->get_VOStatus($data['assetn']);
+			$data['asset_chklist'] = $this->get_model->get_chklist($data['asset_det'][0]->v_ChecklistCode);
+			$data['asset_images'] = $this->get_model->assetimages($data['assetn'],$this->session->userdata('usersess'),$this->session->userdata('hosp_code'));
+			$data['datacount'] = count($data['asset_images']);
+			$data['assetppm'] = $this->get_model->assetppmlist($data['assetn']);
+			$this ->load->view("head");
+			$this ->load->view("left",$data);
+			$this ->load->view("content_assetupdate",$data);
+		}
 	}
-		public function assetupdate (){
+	
+	public function assetupdate (){
 		$data['assetn'] = $this->input->get('asstno');
 		//echo 'nilai'.$assetn;
 		$this->load->model("get_model");
@@ -1924,7 +1935,8 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left",$data);
 		$this ->load->view("content_assetupdate",$data);
 	}
-		public function updateReg (){
+	
+	public function updateReg (){
 		$data['assetno'] = $this->input->get('assetno');
 		$this->load->model("get_model");
 		$data['asset_det'] = $this->get_model->get_assetdet2($data['assetno']);
@@ -1934,7 +1946,8 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("Update_Reg", $data);
 	}
-		public function updatecom (){
+	
+	public function updatecom (){
 		$data['assetno'] = $this->input->get('assetno');
 		$this->load->model("get_model");
 		$data['asset_det'] = $this->get_model->get_assetdet2($data['assetno']);
@@ -1942,7 +1955,8 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("Update_commet", $data);
 	}
-		public function updatespec (){
+	
+	public function updatespec (){
 		$data['assetno'] = $this->input->get('assetno');
 		$this->load->model("get_model");
 		$data['asset_det'] = $this->get_model->get_assetdet2($data['assetno']);
@@ -1952,7 +1966,8 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("Update_specification", $data);
 	}
-		public function updateacqu (){
+	
+	public function updateacqu (){
 		$data['assetno'] = $this->input->get('assetno');
 		$this->load->model("get_model");
 		$data['asset_det'] = $this->get_model->get_assetdet2($data['assetno']);
@@ -1960,7 +1975,8 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("Update_Acquisition", $data);
 	}
-		public function updatecommissioning (){
+	
+	public function updatecommissioning (){
 		$data['assetno'] = $this->input->get('assetno');
 		$this->load->model("get_model");
 		$data['asset_det'] = $this->get_model->get_assetdet2($data['assetno']);
@@ -1970,7 +1986,8 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("Update_Commissioning", $data);
 	}
-		public function updatemaintenance (){
+	
+	public function updatemaintenance (){
 		$data['assetno'] = $this->input->get('assetno');
 		$this->load->model("get_model");
 		$data['asset_main'] = $this->get_model->get_assetmainte($data['assetno']);
@@ -1984,7 +2001,8 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("Update_Maintenance", $data);
 	}
-		public function assetstatutory (){
+	
+	public function assetstatutory (){
 		$data['assetno'] = $this->input->get('asstno');
 		$this->load->model("get_model");
 		$data['asset_sta'] = $this->get_model->assetstatutory($data['assetno']);
@@ -1996,7 +2014,8 @@ class Contentcontroller extends CI_Controller {
 		
 		$this ->load->view("content_asset_statutory", $data);
 	}
-		public function assetstatutory_update (){
+	
+	public function assetstatutory_update (){
 		$data['certno'] = $this->input->get('certno');
 		$data['assetno'] = $this->input->get('assetno');
 		$data['id'] = $this->input->get('id');
@@ -2005,13 +2024,13 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("head");
 		$this ->load->view("left");
 		$this ->load->view("content_asset_statutory_update",$data);
-		
 	}
-		public function assetstatutory_update_confrim (){
+	
+	public function assetstatutory_update_confrim (){
 		$this->load->helper(array('form', 'url'));
-	    // load library for form validation
-	    $this->load->library('form_validation');
-	    // validation rule
+		// load library for form validation
+		$this->load->library('form_validation');
+		// validation rule
 		$this->form_validation->set_rules('n_Authorit','Authority','trim|required');
 		$this->form_validation->set_rules('n_Authorit2','Authority2','trim');
 		$this->form_validation->set_rules('n_Registration_Number','Registration Number' ,'trim|required');
@@ -2025,18 +2044,16 @@ class Contentcontroller extends CI_Controller {
 		$this->form_validation->set_rules('delete_chk','Delete','trim');
 		if($this->form_validation->run()==FALSE)
 		{
-		$this ->load->view("head");
-		$this ->load->view("left");
-		$this ->load->view("content_asset_statutory_update");
+			$this ->load->view("head");
+			$this ->load->view("left");
+			$this ->load->view("content_asset_statutory_update");
 		}
 		else
 		{
-		$this ->load->view("head");
-		$this ->load->view("left");
-		$this ->load->view("content_asset_statutory_confirm");
+			$this ->load->view("head");
+			$this ->load->view("left");
+			$this ->load->view("content_asset_statutory_confirm");
 		}
-		
-		
 	}
 	
 	public function assetstatutory_update_confrimsv (){
@@ -2050,7 +2067,7 @@ class Contentcontroller extends CI_Controller {
 		redirect("contentcontroller/assetstatutory?asstno=".$data['assetno']."&tab=1");
 	}
 	
-		public function assetcontract (){
+	public function assetcontract (){
 		$data['asstno'] = $this->input->get('asstno');
 		$this->load->model('display_model');
 		$data['record'] = $this->display_model->servicecontract($data['asstno']);
@@ -2059,7 +2076,8 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left" , $data);
 		$this ->load->view("content_asset_contract",$data);
 	}
-		public function assetworkorder (){
+	
+	public function assetworkorder (){
 		$data['assetno'] = $this->input->get('asstno');
 		$this->load->model("get_model");
 		$data['wo_list'] = $this->get_model->get_wobyasset($data['assetno']);
@@ -2069,7 +2087,8 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left" , $data);
 		$this ->load->view("content_asset_workorder",$data);
 	}
-		public function assetaccessories (){
+	
+	public function assetaccessories (){
 		$data['assetno'] = $this->input->get('asstno');
 		$this->load->model("get_model");
 		$data['acces_list'] = $this->get_model->assetaccessories($data['assetno']);
@@ -2080,14 +2099,14 @@ class Contentcontroller extends CI_Controller {
 		
 		$this ->load->view("content_asset_accessories", $data);
 	}
-		public function Accessories_update (){
-		
+	
+	public function Accessories_update (){		
 		$this ->load->view("head");
 		$this ->load->view("left");	
 		$this ->load->view("content_Accessories_update");
 	}
-		public function Accessories_confirm (){
-		
+	
+	public function Accessories_confirm (){		
 		$this ->load->view("head");
 		$this ->load->view("left");
 		
@@ -2095,41 +2114,36 @@ class Contentcontroller extends CI_Controller {
 	}
 	
 	public function Accessories_confirmsv (){
+		if ($this->input->post('n_acces') <> ''){
 	
-	if ($this->input->post('n_acces') <> ''){
-	
-	$insert_data = array(
-					
-					'v_accesoriescode'=>$this->input->post('n_acces'),
-					'v_description'=>$this->input->post('n_description'),
-					'v_assetno'=>$this->input->post('n_asset_no'),
-					'v_hospitalcode'=>$this->session->userdata('hosp_code'),
-					'v_actionflag'=>'I',
-					'd_timestamp'=>date('Y-m-d H:i:s')
-		);
-		
-		$this->load->model('update_model');	
-		$this->update_model->pmis2_egm_accesories($insert_data);
-	
-	} else {
-		$this->load->model('get_model');
-		$nilaibaru = $this->get_model->get_accesnewnum($this->input->post('n_asset_no'));
-		$insert_data = array(
-					
-					'v_accesoriescode'=>str_pad($nilaibaru[0]->thenum, 3, 0, STR_PAD_LEFT),
-					'v_description'=>$this->input->post('n_description'),
-					'v_assetno'=>$this->input->post('n_asset_no'),
-					'v_hospitalcode'=>$this->session->userdata('hosp_code'),
-					'v_actionflag'=>'I',
-					'd_timestamp'=>date('Y-m-d H:i:s')
-		);
-		$this->load->model('insert_model');	
-		$this->insert_model->ins_assetaccesories($insert_data);
+			$insert_data = array(					
+								'v_accesoriescode'=>$this->input->post('n_acces'),
+								'v_description'=>$this->input->post('n_description'),
+								'v_assetno'=>$this->input->post('n_asset_no'),
+								'v_hospitalcode'=>$this->session->userdata('hosp_code'),
+								'v_actionflag'=>'I',
+								'd_timestamp'=>date('Y-m-d H:i:s')
+								);
+			$this->load->model('update_model');	
+			$this->update_model->pmis2_egm_accesories($insert_data);	
+		} else {
+			$this->load->model('get_model');
+			$nilaibaru = $this->get_model->get_accesnewnum($this->input->post('n_asset_no'));
+			$insert_data = array(					
+								'v_accesoriescode'=>str_pad($nilaibaru[0]->thenum, 3, 0, STR_PAD_LEFT),
+								'v_description'=>$this->input->post('n_description'),
+								'v_assetno'=>$this->input->post('n_asset_no'),
+								'v_hospitalcode'=>$this->session->userdata('hosp_code'),
+								'v_actionflag'=>'I',
+								'd_timestamp'=>date('Y-m-d H:i:s')
+								);
+			$this->load->model('insert_model');	
+			$this->insert_model->ins_assetaccesories($insert_data);
 		}
 		redirect("contentcontroller/assetaccessories?asstno=".$this->input->post('n_asset_no')."&tab=4");
 	}
 	
-		public function assetPPMplanner (){
+	public function assetPPMplanner (){
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");
 
 		$data['assetno'] = $this->input->get('asstno');
@@ -2137,61 +2151,74 @@ class Contentcontroller extends CI_Controller {
 		$data['records'] = $this->get_model->assetjobtyperegy($data['assetno'],$data['year']);
 
 		if ($data['records']){
-		$data['weeksch'] = explode(',',$data['records'][0]->v_weeksch);
+			$data['weeksch'] = explode(',',$data['records'][0]->v_weeksch);
 		}
 		$this ->load->view("head");
 		$this ->load->view("left");
 		
 		$this ->load->view("content_asset_PPMplanner",$data);
 	}
-		public function assetlogcards (){
+		
+	public function assetlogcards (){
 		$data['assetno'] = $this->input->get('asstno');
 		$this->load->model("display_model");
+
 		$data['result'] = $this->display_model->searchassettag($data['assetno']);
+
 		$this ->load->view("head");
 		$this ->load->view("left" , $data);
 		//$this->load->model("get_model");
 		$this ->load->view("content_asset_logcards");
 		$this ->load->view("content_asset_logcards_Relocation");
 	}
-		public function assetlogcards_M (){
+		
+	public function assetlogcards_M (){
 		$data['assetno'] = $this->input->get('asstno');
 		$this->load->model("get_model");
 		$data['ppm_list'] = $this->get_model->assetppmlog($data['assetno']);
 		$data['ppm_list_cost'] = $this->get_model->assetlaborpartbyppm($data['assetno']);
 		$this->load->model("display_model");
-    $data['result'] = $this->display_model->searchassettag($data['assetno']);
+
+    	$data['result'] = $this->display_model->searchassettag($data['assetno']);
+
 		$this ->load->view("head");
 		$this ->load->view("left" , $data);
 		$this ->load->view("content_asset_logcards");
 		$this ->load->view("content_asset_logcards_Maintenance", $data);
 	}
-		public function assetlogcards_U (){
+		
+	public function assetlogcards_U (){
 		$data['assetno'] = $this->input->get('asstno');
 		$this->load->model("get_model");
 		$data['wo_list'] = $this->get_model->assetwolog($data['assetno']);
 		$data['wo_list_cost'] = $this->get_model->assetlaborpartbywo($data['assetno']);
 		$this->load->model("display_model");
-    $data['result'] = $this->display_model->searchassettag($data['assetno']);
+
+    	$data['result'] = $this->display_model->searchassettag($data['assetno']);
+
 		$this ->load->view("head");
 		$this ->load->view("left" , $data);
 		
 		$this ->load->view("content_asset_logcards");
 		$this ->load->view("content_asset_logcards_Unschedule", $data);
 	}
-		public function assetlogcards_C (){
+	
+	public function assetlogcards_C (){
 		$data['assetno'] = $this->input->get('asstno');
 		$this->load->model("get_model");
 		$data['c_list'] = $this->get_model->assetcomplaintlog($data['assetno']);
 		$this->load->model("display_model");
-    $data['result'] = $this->display_model->searchassettag($data['assetno']);
+
+    	$data['result'] = $this->display_model->searchassettag($data['assetno']);
+
 		$this ->load->view("head");
 		$this ->load->view("left" , $data);
 		
 		$this ->load->view("content_asset_logcards");
 		$this ->load->view("content_asset_logcards_Complaints", $data);
 	}
-		public function assetlogcards_Re (){
+	
+	public function assetlogcards_Re (){
 		$data['assetno'] = $this->input->get('asstno');
 		$this->load->model("display_model");
 		$data['result'] = $this->display_model->searchassettag($data['assetno']);
@@ -2199,8 +2226,7 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left" , $data);
 		$this ->load->view("content_asset_logcards");
 		$this ->load->view("content_asset_logcards_Reclassification");
-	}
-		
+	}		
 	
 	public function assetlicenses (){
 		$data['asstno'] = $this->input->get('asstno');
@@ -2213,22 +2239,21 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("content_asset_licenses", $data);
 	}
 	
-	
-		public function assetlicenses_update (){
+	public function assetlicenses_update (){
 		$this ->load->view("head");
 		$this ->load->view("left");
 		
 		$this ->load->view("content_asset_licenses_update");
 	}
-		public function pop_Agency_Code(){
-			
+		
+	public function pop_Agency_Code(){			
 		$this->load->model("display_model");
 		$data['records'] = $this->display_model->list_agency();
 		$this ->load->view("head");
 		$this ->load->view("content_pop_Agency_Code",$data);
 	}
-		public function Identification_Type(){
-			
+	
+	public function Identification_Type(){			
 		$this->load->model("get_model");	
 		$this->load->model("display_model");
 		$data['records'] = $this->display_model->list_personel();
@@ -2239,13 +2264,15 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("head");
 		$this ->load->view("content_pop_Identification_Type",$data);
 	}
-		public function assetlicenses_confrim (){
+	
+	public function assetlicenses_confrim (){
 		$this ->load->view("head");
 		$this ->load->view("left");
 		
 		$this ->load->view("content_asset_licenses_confirm");
 	}
-		public function assetvariationhistory (){
+	
+	public function assetvariationhistory (){
 		$data['assetno'] = $this->input->get('asstno');
 		$this->load->model("display_model");
 		$data['result'] = $this->display_model->searchassettag($data['assetno']);
@@ -2254,13 +2281,15 @@ class Contentcontroller extends CI_Controller {
     	$this ->load->view("left" , $data);
 		$this ->load->view("content_asset_variationhistory",$data);
 	}
-		public function assetmaintenancespecification (){
+		
+	public function assetmaintenancespecification (){
 		$this ->load->view("head");
 		$this ->load->view("left");
 		
 		$this ->load->view("content_asset_maintenancespecification");
 	}
-		public function assetcostcummulative (){
+	
+	public function assetcostcummulative (){
 		$data['assetno'] = $this->input->get('asstno');
 		$this->load->model("get_model");
 		$this->load->model("display_model");
@@ -2273,7 +2302,7 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("content_asset_costcummulative", $data);
 	}
 
-		public function assetPPMjob (){
+	public function assetPPMjob (){
 		$data['assetno'] = $this->input->get('asstno');
 		$this->load->model("get_model");
 		$data['records'] = $this->get_model->assetjobtypereg($data['assetno']);
@@ -2284,7 +2313,8 @@ class Contentcontroller extends CI_Controller {
 		
 		$this ->load->view("content_asset_PPMjob", $data);
 	}
-		public function assetPPMjob_update (){
+	
+	public function assetPPMjob_update (){
 		//$data['asstno'] = $this->input->post('asstno');
 		$data['asstno'] = $this->input->get('asstno');
 		$data['year'] = $this->input->get('jobyear');
@@ -2301,21 +2331,22 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("content_asset_PPMjob_update",$data);
 	}
-		public function pop_Job_Type(){
-			
+	
+	public function pop_Job_Type(){			
 		$this->load->model("get_model");
 		$data['records'] = $this->get_model->assetjobtype();
 		$this ->load->view("head");
 		$this ->load->view("content_pop_Job_Type",$data);
 	}
-		public function pop_Checklist_Code(){
-			
+	
+	public function pop_Checklist_Code(){			
 		$this->load->model("get_model");
 		$data['records'] = $this->get_model->assetchklistcd();
 		$this ->load->view("head");
 		$this ->load->view("content_pop_Checklist_Code",$data);
 	}
-		public function assetPPMjob_confirm (){
+	
+	public function assetPPMjob_confirm (){
 		$this ->load->view("head");
 		$this ->load->view("left");
 		$this ->load->view("content_asset_PPMjob_Confirm");
@@ -2324,54 +2355,50 @@ class Contentcontroller extends CI_Controller {
 	public function assetPPMjob_confirmsv (){
 		$data['year'] = $this->input->post('year');
 		if ($data['year'] <> ''){
-			$insert_data = array(
-					
-					'v_Asset_no'=>$this->input->post('n_asset_no'),
-					'v_JobType'=>$this->input->post('n_Job_Type'),
-					'd_StartDate'=>date('Y-m-d H:i:s', strtotime($this->input->post('n_Registered_Date').'-01-01')),
-					'd_ToDate'=>date('Y-m-d H:i:s', strtotime($this->input->post('n_Registered_Date').'-12-31')),
-					'v_Checklistcode'=>$this->input->post('n_Checklist_Code'),
-					'v_ProcedureCode'=>$this->input->post('n_Procedure'),
-					'v_SpareList'=>$this->input->post('n_Spare_List'),
-					'v_Details'=>$this->input->post('n_Details'),
-					'd_Timestamp'=>date('Y-m-d H:i:s'),
-					'v_ActionFlag'=>'U',
-					'v_HospitalCode'=>$this->session->userdata('hosp_code'),
-					'v_Year'=>$this->input->post('n_Registered_Date'),
-					'n_ind'=>'1',
-					
-		);
-		//print_r($insert_data) ;
-		//exit();
-		$this->load->model('update_model');	
-		$this->update_model->pmis2_egm_assetjobtypeid($insert_data,$this->input->post('id'));
+			$insert_data = array(					
+								'v_Asset_no'=>$this->input->post('n_asset_no'),
+								'v_JobType'=>$this->input->post('n_Job_Type'),
+								'd_StartDate'=>date('Y-m-d H:i:s', strtotime($this->input->post('n_Registered_Date').'-01-01')),
+								'd_ToDate'=>date('Y-m-d H:i:s', strtotime($this->input->post('n_Registered_Date').'-12-31')),
+								'v_Checklistcode'=>$this->input->post('n_Checklist_Code'),
+								'v_ProcedureCode'=>$this->input->post('n_Procedure'),
+								'v_SpareList'=>$this->input->post('n_Spare_List'),
+								'v_Details'=>$this->input->post('n_Details'),
+								'd_Timestamp'=>date('Y-m-d H:i:s'),
+								'v_ActionFlag'=>'U',
+								'v_HospitalCode'=>$this->session->userdata('hosp_code'),
+								'v_Year'=>$this->input->post('n_Registered_Date'),
+								'n_ind'=>'1',					
+								);
+			//print_r($insert_data) ;
+			//exit();
+			$this->load->model('update_model');	
+			$this->update_model->pmis2_egm_assetjobtypeid($insert_data,$this->input->post('id'));
 		}else{
 			//echo "test222";
 			//exit();
 			$insert_data = array(
-					'v_Asset_no'=>$this->input->post('n_asset_no'),
-					'v_JobType'=>$this->input->post('n_Job_Type'),
-					'd_StartDate'=>date('Y-m-d H:i:s', strtotime($this->input->post('n_Registered_Date').'-01-01')),
-					'd_ToDate'=>date('Y-m-d H:i:s', strtotime($this->input->post('n_Registered_Date').'-12-31')),
-					'v_Checklistcode'=>$this->input->post('n_Checklist_Code'),
-					'v_ProcedureCode'=>$this->input->post('n_Procedure'),
-					'v_SpareList'=>$this->input->post('n_Spare_List'),
-					'v_Details'=>$this->input->post('n_Details'),
-					'd_Timestamp'=>date('Y-m-d H:i:s'),
-					'v_ActionFlag'=>'I',
-					'v_HospitalCode'=>$this->session->userdata('hosp_code'),
-					'v_Year'=>$this->input->post('n_Registered_Date'),
-					'n_ind'=>'1',
-		);
-		
-		$this->insert_model->pmis2_egm_assetjobtype($insert_data);
-		}
-		
+								'v_Asset_no'=>$this->input->post('n_asset_no'),
+								'v_JobType'=>$this->input->post('n_Job_Type'),
+								'd_StartDate'=>date('Y-m-d H:i:s', strtotime($this->input->post('n_Registered_Date').'-01-01')),
+								'd_ToDate'=>date('Y-m-d H:i:s', strtotime($this->input->post('n_Registered_Date').'-12-31')),
+								'v_Checklistcode'=>$this->input->post('n_Checklist_Code'),
+								'v_ProcedureCode'=>$this->input->post('n_Procedure'),
+								'v_SpareList'=>$this->input->post('n_Spare_List'),
+								'v_Details'=>$this->input->post('n_Details'),
+								'd_Timestamp'=>date('Y-m-d H:i:s'),
+								'v_ActionFlag'=>'I',
+								'v_HospitalCode'=>$this->session->userdata('hosp_code'),
+								'v_Year'=>$this->input->post('n_Registered_Date'),
+								'n_ind'=>'1',
+								);
+			$this->insert_model->pmis2_egm_assetjobtype($insert_data);
+		}	
 		//exit();
 		redirect('contentcontroller/assetPPMjob?asstno='.$this->input->post('n_asset_no').'&tab=6');
 	}
 		
-		/*function insert_form()Update_specification
+	/*function insert_form()Update_specification
 	{
 		
 		$this->load->library('form_validation');
@@ -2382,41 +2409,35 @@ class Contentcontroller extends CI_Controller {
 		if($this->form_validation->run()==FALSE)
 		{
 			$this->form();	
-		}
-		
+		}		
 		else
 		{
-		$insert_data = array(
-		
-		'V_request_type'=>$this->input->post('V_request_type'),
-		//'D_time'=>$this->input->post('D_time'),
-		'V_priority_code'=>$this->input->post('V_priority_code'),
-		'V_summary'=>$this->input->post('V_summary')
-		
-		);
-		$this->insert_model->create_form($insert_data);
-		$this->form();
-		
-	
-		
-	}
-		
+			$insert_data = array(			
+								'V_request_type'=>$this->input->post('V_request_type'),
+								//'D_time'=>$this->input->post('D_time'),
+								'V_priority_code'=>$this->input->post('V_priority_code'),
+								'V_summary'=>$this->input->post('V_summary')			
+								);
+			$this->insert_model->create_form($insert_data);
+			$this->form();
+		}	
 	}*/
+
 /* Pop-Screen */
+
 	public function assetnumber(){
-	
 		$this->load->model("get_model");
 		$data['records'] = $this->get_model->get_popassetlist($this->input->get('n_asset_number'),$this->input->get('s_department'),$this->input->get('n_tag_number'));
 		$this ->load->view("head");
 		$this ->load->view("content_pop_assetsnumber",$data);
 	}
+
 	public function location(){
-	
-	  if(isset($_GET['dept'])) {
-    $dept = $_GET['dept'];
+		if(isset($_GET['dept'])) {
+			$dept = $_GET['dept'];
 		} else {
-    $dept = '';
-		}	
+			$dept = '';
+		}
 		//echo "nilai postman : " . $_GET["dept"]."<br>";	
 		
 		$this->load->model("get_model");
@@ -2427,12 +2448,12 @@ class Contentcontroller extends CI_Controller {
 	}
 
 	public function asset_tag(){
-			
 		$this->load->model("display_model");
 		$data['records'] = $this->display_model->list_workorder();
 		$this ->load->view("head");
 		$this ->load->view("content_asset_tag",$data);
 	}
+
 	public function R_number(){
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
@@ -2441,13 +2462,14 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("head");
 		$this ->load->view("content_asset_number",$data);
 	}
+
 	public function assetdetailname(){
-			
 		$this->load->model("display_model");
 		$data['records'] = $this->display_model->list_personel();
 		$this ->load->view("head");
 		$this ->load->view("content_detail_name",$data);
 	}
+
 	public function tc_r_number(){
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");	
@@ -2456,23 +2478,23 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("head");
 		$this ->load->view("content_tc_request_number",$data);
 	}
+
 	public function E_Code(){
-			
 		$this->load->model("get_model");
 		//$data['records'] = $this->display_model->list_workorder();
 		$data['records'] = $this->get_model->get_assetlist();
 		$this ->load->view("head");
 		$this ->load->view("content_pop_EquipmentCode",$data);
 	}
+
 	public function pop_vendor(){
-			
 		$this->load->model("get_model");
 		$data['records'] = $this->get_model->get_vendortlist();
 		$this ->load->view("head");
 		$this ->load->view("content_pop_vendor",$data);
 	}
+
 	public function pop_chklist(){
-			
 		$this->load->model("get_model");
 		$data['records'] = $this->get_model->get_vendortlist();
 		$this ->load->view("head");
@@ -2483,8 +2505,7 @@ class Contentcontroller extends CI_Controller {
 		if (is_null($this->input->get('p')) == FALSE) {
 			if (date('m') > 6){
 				$data['Period'] = "P2".date('y');
-			}
-			else{
+			}else{
 				$data['Period'] = "P1".date('y');
 			}
 		}
@@ -2496,7 +2517,6 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("content_vo3",$data);
 	}
 	public function Licenses(){
-			
 		$this->load->model("get_model");
 		$data['lic'] = $this->get_model->licensesandcert();
 		$data['asset_stat'] = $this->get_model->assetstatutorylic();
@@ -2506,7 +2526,6 @@ class Contentcontroller extends CI_Controller {
 	}
 	
 	public function vo3_vvf(){
-			
 		$data['rpt_no'] = $this->input->get('rpt_no');
 		$this->load->model("display_model");
 		$data['records'] = $this->display_model->vo3general($data['rpt_no']);
@@ -2514,6 +2533,7 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("content_vo3_vvf",$data);
 	}
+
 	public function vo3_vvf_update(){
 		$data['rpt_no'] = $this->input->get('rpt_no');
 		$this->load->model("display_model");
@@ -2543,6 +2563,7 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("content_vo3_vvf_update",$data);
 	}
+
 	public function vo3_vvf_confirm(){
 		$data['rpt_no'] = $this->input->get('rpt_no');
 		$this->load->model("display_model");
@@ -2551,6 +2572,7 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("content_vo3_vvf_confirm",$data);
 	}
+
 	public function vo3_Signatories(){
 		$data['rpt_no'] = $this->input->get('rpt_no');
 		$this->load->model("display_model");
@@ -2559,6 +2581,7 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("content_vo3_Signatories",$data);
 	}
+
 	public function vo3_Signatories_update(){
 		$data['rpt_no'] = $this->input->get('rpt_no');
 		$this->load->model("display_model");
@@ -2567,13 +2590,14 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("content_vo3_Signatories_update",$data);
 	}
+
 	public function vo3_Signatories_confirm(){
 		$this ->load->view("head");
 		$this ->load->view("left");
 		$this ->load->view("content_vo3_Signatories_confirm");
 	}
-	public function vo3_Assets(){
 
+	public function vo3_Assets(){
 		$data['m'] = ($this->input->get('m') <> 0) ? $this->input->get('m') : NULL;
 		$data['rpt_no'] = $this->input->get('rpt_no');
 		$data['period'] = explode('/',$data['rpt_no']);
@@ -2585,6 +2609,7 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("content_vo3_Assets",$data);
 	}
+
 	public function vo3_Asset_Number(){
 		$data['rpt_no'] = $this->input->get('rpt_no');
 		$data['assetno'] = $this->input->get('asset');
@@ -2594,6 +2619,7 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("content_vo3_Asset_Number",$data);
 	}
+
 	public function vo3_remark_update(){
 		$data['rpt_no'] = $this->input->get('rpt_no');
 		$data['assetno'] = $this->input->get('asset');
@@ -2603,6 +2629,7 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("content_vo3_remark_update",$data);
 	}
+
 	public function vo3_remark_confirm(){
 		$data['rpt_no'] = $this->input->get('rpt_no');
 		$data['assetno'] = $this->input->get('asset');
@@ -2612,6 +2639,7 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("content_vo3_remark_confirm",$data);
 	}
+
 	public function vo3_Rates(){
 		$data['m'] = ($this->input->get('m') <> 0) ? $this->input->get('m') : NULL;
 		$data['rpt_no'] = $this->input->get('rpt_no');
@@ -2625,8 +2653,7 @@ class Contentcontroller extends CI_Controller {
 				echo '0.00%';
 			}
 			else{
-				//echo $row->vvfFeeDW.'<br>';
-				
+				//echo $row->vvfFeeDW.'<br>';				
 				$ntotal+= $row->vvfFeeDW;
 				$data['nTotalDW'] = $ntotal.'<br>';
 				//print_r($data['t']);
@@ -2638,8 +2665,7 @@ class Contentcontroller extends CI_Controller {
 				echo '0.00%';
 			}
 			else{
-				//echo $row->vvfFeeDW.'<br>';
-				
+				//echo $row->vvfFeeDW.'<br>';				
 				$ntotal+= $row->vvfFeePW;
 				$data['nTotalPW'] = $ntotal.'<br>';
 				//print_r($data['t']);
@@ -2650,6 +2676,7 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("content_vo3_Rates", $data);
 	}
+
 	public function vo3_Rates_update(){
 		$data['m'] = ($this->input->get('m') <> 0) ? $this->input->get('m') : NULL;
 		$data['rpt_no'] = $this->input->get('rpt_no');
@@ -2660,6 +2687,7 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("content_vo3_Rates_update", $data);
 	}
+
 	public function vo3_assets_main(){
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
@@ -2677,7 +2705,8 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("content_vo3_assets_main", $data);
 	}
-	public function vo3_C_main(){		
+
+	public function vo3_C_main(){
 		$data['Period'] = $this->input->get('p');
 		if (is_null($data['Period'])) {
 			if (date('m') > 6){
@@ -2708,6 +2737,7 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("content_vo3_C_main", $data);
 	}
+
 	public function vo3_rates_main(){
 		if (is_null($this->input->get('p')) == FALSE) {
 			if (date('m') > 6){
@@ -2724,6 +2754,7 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("content_vo3_rates_main", $data);
 	}
+
 	public function vo3_type_code(){
 		$data['ratesid'] = $this->input->get('ratesid');
 		$this->load->model('display_model');
@@ -2732,6 +2763,7 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("content_vo3_type_code",$data);
 	}
+
 	public function vo3_rate_item_update(){
 		$data['ratesid'] = $this->input->get('ratesid');
 		$this->load->model('display_model');
@@ -2740,19 +2772,21 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("content_vo3_rate_item_update",$data);
 	}
+
 	public function vo3_rate_item_confirm(){
 		$this ->load->view("head");
 		$this ->load->view("left");
 		$this ->load->view("content_vo3_rate_item_confirm");
 	}
+
 	public function qap3(){
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
 		$this->load->model("get_model");
 		$data['validPeriod'] = $this->get_model->validPeriod(date('F',mktime(0, 0, 0, $data['month'], 10)),$data['year']);
 		$data['recordsiq'] = $this->get_model->SIQsummary_siq(date('F',mktime(0, 0, 0, $data['month'], 10)),$data['year']);
-		//$data['siq_no'] = 'SBE/'.$this->session->userdata('hosp_code').'/'.$data['year'].$data['month'];
-		$data['siq_no'] = 'SBE/MKA/201501'; //for test
+		$data['siq_no'] = 'SBE/'.$this->session->userdata('hosp_code').'/'.$data['year'].$data['month'];
+		//$data['siq_no'] = 'SBE/MKA/201501'; //for test
 		$data['recordcar'] = $this->get_model->SIQsummary_car($data['siq_no']);
 		!empty($data['validPeriod']) ? $data['validPeriod'] = 'true' : $data['validPeriod'] = 'false';
 		!is_null($data['recordsiq'][0]->ppm_siq) ? $data['PPMSIQ'] = $data['recordsiq'][0]->ppm_siq : $data['PPMSIQ'] = 0;
@@ -2767,6 +2801,7 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("content_qap3", $data);
 	}
+
 	public function qap3_PPM(){
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
@@ -2778,6 +2813,7 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("content_qap3_PPM", $data);
 	}
+
 	public function qap3_SIQ(){
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
@@ -2789,6 +2825,7 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("content_qap3_SIQ", $data);
 	}
+
 	public function qap3_SIQ_Number_update(){
 		$data['ssiq'] = $this->input->get('ssiq');
 		$this->load->model("display_model");
@@ -2802,6 +2839,7 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("content_qap3_SIQ_Number_update", $data);
 	}
+
 	public function qap3_SIQ_number_Create(){
 		$data['ssiq'] = $this->input->get('ssiq');
 		$data['carid'] = $this->input->get('carid');
@@ -2818,11 +2856,13 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("content_qap3_SIQ_number_Create",$data);
 	}
+
 	public function qap3_SIQ_number_confirm(){
 		$this ->load->view("head");
 		$this ->load->view("left");
 		$this ->load->view("content_qap3_SIQ_number_confirm");
 	}
+
 	public function qap3_asset(){
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
@@ -2847,6 +2887,7 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("content_qap3_asset", $data);
 	}
+
 	public function qap3_asset_n_SIQ(){
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
@@ -2871,6 +2912,7 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("content_qap3_asset_n_SIQ", $data);
 	}
+
 	public function qap3_asset_E(){
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
@@ -2895,6 +2937,7 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("content_qap3_asset_E", $data);
 	}
+
 	public function qap3_wo(){
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
@@ -2918,13 +2961,14 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("content_qap3_wo", $data);
 	}
+
 	public function qap3_wo_n_SIQ(){
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
 		$this->load->model("get_model");
 		$data['validPeriod'] = $this->get_model->validPeriod(date('F',mktime(0, 0, 0, $data['month'], 10)),$data['year']);
 		!empty($data['validPeriod']) ? $data['validPeriod'] = 'true' : $data['validPeriod'] = 'false';
-//$data['records'] = $this->get_model->qap3_wo_noSIQ($data['year'],$data['month']);
+		//$data['records'] = $this->get_model->qap3_wo_noSIQ($data['year'],$data['month']);
 		
 		$data['limit'] = 15;
 		isset($_GET['numrow']) ? $data['numrow'] = $_GET['numrow'] : $data['numrow'] = 1;
@@ -2938,11 +2982,12 @@ class Contentcontroller extends CI_Controller {
 
 		$data['records'] = $this->get_model->qap3_wo_noSIQlim($data['year'],$data['month'],$data['limit'],$data['start']);
 		//print_r ($data['records']);
-//exit();
+		//exit();
 		$this ->load->view("head");
 		$this ->load->view("left");
 		$this ->load->view("content_qap3_wo_n_SIQ", $data);
 	}
+
 	public function qap3_wo_order(){
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
@@ -2966,6 +3011,7 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("content_qap3_wo_order", $data);
 	}
+
 	public function qap3_analysisv4(){
 		$data['fyear']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['fmonth']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
@@ -2979,22 +3025,23 @@ class Contentcontroller extends CI_Controller {
 		$data['recordqcppm'] = $this->display_model->qap3_QCPPM_analysis($data['fromDate'], $data['toDate']);
 		$data['recordqcuptime'] = $this->display_model->qap3_QCUptime_analysis($data['fromDate'], $data['toDate']);
 		if(!empty($data['recordqcppm'])){
-		foreach ($data['recordqcppm'] as $row){
-			$data['Occurance'][] = $row->Occurance;
-			$data['totalOcc'] = array_sum($data['Occurance']);
-			
-		}
+			foreach ($data['recordqcppm'] as $row){
+				$data['Occurance'][] = $row->Occurance;
+				$data['totalOcc'] = array_sum($data['Occurance']);
+				
+			}
 		}
 		if(!empty($data['recordqcuptime'])){
-		foreach ($data['recordqcuptime'] as $val){
-			$data['downtime'][] = $val->total_down_time;
-			$data['totalDT'] = array_sum($data['downtime']);
-		}
+			foreach ($data['recordqcuptime'] as $val){
+				$data['downtime'][] = $val->total_down_time;
+				$data['totalDT'] = array_sum($data['downtime']);
+			}
 		}
 		$this ->load->view("head");
 		$this ->load->view("left");
 		$this ->load->view("content_qap3_analysisv4", $data);
 	}
+
 	public function qap3_analysisv4x(){
 		$data['fyear']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['fmonth']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
@@ -3021,24 +3068,19 @@ class Contentcontroller extends CI_Controller {
 	}
 	
 	public function assetPPMplannerupdatesv (){
-	
-	//echo 'dpat masuk ppm set aarrr<br>';
-	$checkBox = implode(',', $_POST['weeks']);
-	//print_r($checkBox);
-	//exit();
-	//echo 'pilihan weeks : '.$checkBox.'<br>';
-	//echo 'asset : '.$this->input->post('n_asset_no').'<br>';
-	//echo 'year : '.$this->input->post('n_year').'<br>';
-	//exit();
-	$insert_data = array(
-					
-					'v_Asset_no'=>$this->input->post('n_asset_no'),
-					'v_Year'=>$this->input->post('n_year'),
-					'v_Weeksch'=>$checkBox,
-					
-					
-		);
-		
+		//echo 'dpat masuk ppm set aarrr<br>';
+		$checkBox = implode(',', $_POST['weeks']);
+		//print_r($checkBox);
+		//exit();
+		//echo 'pilihan weeks : '.$checkBox.'<br>';
+		//echo 'asset : '.$this->input->post('n_asset_no').'<br>';
+		//echo 'year : '.$this->input->post('n_year').'<br>';
+		//exit();
+		$insert_data = array(					
+							'v_Asset_no'=>$this->input->post('n_asset_no'),
+							'v_Year'=>$this->input->post('n_year'),
+							'v_Weeksch'=>$checkBox,
+							);
 		$this->load->model('update_model');	
 		$this->update_model->pmis2_egm_assetjobtypeid($insert_data,$this->input->post('assetjt'));
 		
@@ -3047,13 +3089,11 @@ class Contentcontroller extends CI_Controller {
 		//$this ->load->view("head");
 		//$this ->load->view("left");
 		//$this ->load->view("content_asset_PPMplanner_update");
-	}
-	
+	}	
 	
 	public function assetlicenses_detail (){
-		
 		$data['error'] = 2;
-	  $data['liccode'] = $this->input->get('liccd');
+		$data['liccode'] = $this->input->get('liccd');
 		$this->load->model("get_model");
 		$data['lic'] = $this->get_model->licensesandcertbycode($data['liccode']);
 		$data['licimg'] = $this->get_model->licenseimage($data['liccode']);
@@ -3061,11 +3101,13 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left",$data);
 		$this ->load->view("content_assetlicenses_detail", $data);
 	}
+
 	public function assetlicenses_edit (){
 		$this ->load->view("head");
 		$this ->load->view("left");
 		$this ->load->view("content_asset_licenses_Edit");
 	}
+
 	public function assetlicenses_confirm_update (){
 		$this ->load->view("head");
 		$this ->load->view("left");
@@ -3073,13 +3115,12 @@ class Contentcontroller extends CI_Controller {
 	}
 	
 	public function assetlicenses_confirm_updatesv (){
-	
 		$config['upload_path'] = 'C:\inetpub\wwwroot\FEMSHospital_v3\uploadlicenseimages';
 		$config['allowed_types'] = 'gif|jpg|png';
 		$config['max_size']	= '5000';
 		$config['max_width']  = 'auto';
 		$config['max_height']  = 'auto';
-	//if ($this->input->post('upload_data') == ''){	
+		//if ($this->input->post('upload_data') == ''){	
 		$this->load->library('upload', $config);
 		if ( ! $this->upload->do_upload())
 		{
@@ -3090,8 +3131,8 @@ class Contentcontroller extends CI_Controller {
 			else{
 				$data['upload_data'] = $this->input->post('upload_data');	
 			}
-	//print_r($data['error']) ;
-	//exit();	
+			//print_r($data['error']) ;
+			//exit();	
 			$data['liccode'] = $this->input->post('liccd');
 			if ($data['liccode'] <> ''){
 				$this->load->model("get_model");
@@ -3103,8 +3144,8 @@ class Contentcontroller extends CI_Controller {
 		}
 		else
 		{
-				//echo 'masuk error1';
-	//exit();
+			//echo 'masuk error1';
+			//exit();
 			$data['upload_data'] = $this->upload->data();
 			//$data['upload_data']['asset_no'] = $data['assetn'];
 			$data['upload_data']['service_code'] = $this->session->userdata('usersess');
@@ -3113,124 +3154,116 @@ class Contentcontroller extends CI_Controller {
 
 			$data['licimg'] = NULL;
 		}
-	//}
-	//else{
-	//	$data['upload_data'] = $this->input->post('upload_data');
-	//	$data['licimg'] = NULL;
-	//}
-//print_r($data['upload_data']) ;
-//exit();
+		//}
+		//else{
+		//	$data['upload_data'] = $this->input->post('upload_data');
+		//	$data['licimg'] = NULL;
+		//}
+		//print_r($data['upload_data']) ;
+		//exit();
 
-	// load libraries for URL and form processing
-    $this->load->helper(array('form', 'url'));
-    // load library for form validation
-    $this->load->library('form_validation');
-			//echo 'masuk0';
-			//exit();
-	
-	//validation rule
-	$this->form_validation->set_rules('n_Certificate_Number','Certificate Number','trim|required|callback_check[Certificate Number]');
-	$this->form_validation->set_rules('n_Registration_Number','Registration Number','trim|required|callback_check[Registration Number]');
-	$this->form_validation->set_rules('n_Start_On','Start On','trim|required|callback_check[Start On]');
-	$this->form_validation->set_rules('n_Expire_On','Expire On','trim|required|callback_check[Expire On]');
-	$this->form_validation->set_rules('n_Grade','Grade','trim|required|callback_check[Grade]');
-	$this->form_validation->set_rules('n_Agency_Code','Agency Code','trim|required|callback_check[Agency Code]');
-	$this->form_validation->set_rules('n_Agency_Name','Agency Name','trim|required|callback_check[Agency Name]');
-	$this->form_validation->set_rules('n_Category_Code','Category Code','trim|required|callback_check[Category Code]');
-	$this->form_validation->set_rules('n_Category_Description','Category Description','trim|required|callback_check[Category Description]');
-	$this->form_validation->set_rules('n_tester','Tester Name','trim');
-	$this->form_validation->set_rules('n_Identification_Type','Identification Type','trim');
-	$this->form_validation->set_rules('n_Identification_Code','Identification Code','trim');
-	$this->form_validation->set_rules('n_Description','Description','trim');
-	$this->form_validation->set_rules('n_Remarks','Remarks','trim');
-
-	if($this->form_validation->run()==FALSE)
-		{
-		$data['error'] = 0;
-		$data['add'] = 1;
-		$this ->load->view("head");
-		//$this ->load->view("left",$data);
-		$this ->load->view("content_asset_licenses_update",$data);
-		}
+		// load libraries for URL and form processing
+		$this->load->helper(array('form', 'url'));
+		// load library for form validation
+		$this->load->library('form_validation');
+				//echo 'masuk0';
+				//exit();
 		
+		//validation rule
+		$this->form_validation->set_rules('n_Certificate_Number','Certificate Number','trim|required|callback_check[Certificate Number]');
+		$this->form_validation->set_rules('n_Registration_Number','Registration Number','trim|required|callback_check[Registration Number]');
+		$this->form_validation->set_rules('n_Start_On','Start On','trim|required|callback_check[Start On]');
+		$this->form_validation->set_rules('n_Expire_On','Expire On','trim|required|callback_check[Expire On]');
+		$this->form_validation->set_rules('n_Grade','Grade','trim|required|callback_check[Grade]');
+		$this->form_validation->set_rules('n_Agency_Code','Agency Code','trim|required|callback_check[Agency Code]');
+		$this->form_validation->set_rules('n_Agency_Name','Agency Name','trim|required|callback_check[Agency Name]');
+		$this->form_validation->set_rules('n_Category_Code','Category Code','trim|required|callback_check[Category Code]');
+		$this->form_validation->set_rules('n_Category_Description','Category Description','trim|required|callback_check[Category Description]');
+		$this->form_validation->set_rules('n_tester','Tester Name','trim');
+		$this->form_validation->set_rules('n_Identification_Type','Identification Type','trim');
+		$this->form_validation->set_rules('n_Identification_Code','Identification Code','trim');
+		$this->form_validation->set_rules('n_Description','Description','trim');
+		$this->form_validation->set_rules('n_Remarks','Remarks','trim');
+
+		if($this->form_validation->run()==FALSE)
+		{
+			$data['error'] = 0;
+			$data['add'] = 1;
+			$this ->load->view("head");
+			//$this ->load->view("left",$data);
+			$this ->load->view("content_asset_licenses_update",$data);
+		}
 		else
 		{
-		$data['error'] = 1;
-		$data['add'] = 0;
-		$this ->load->view("head");
-		// $this ->load->view("left",$data);
-		$this ->load->view("content_asset_licenses_confirm",$data);
+			$data['error'] = 1;
+			$data['add'] = 0;
+			$this ->load->view("head");
+			// $this ->load->view("left",$data);
+			$this ->load->view("content_asset_licenses_confirm",$data);
 		}
 	}
+
 	function confirmation_assetlicenses_updatesv(){
-	//echo $this->input->post('liccd');
-	//exit();
-	if ($this->input->post('liccd') <> ''){
-	$insert_data = array(
-					
-					'v_IdentificationType'=>$this->input->post('n_Identification_Type'),
-					'v_Identification'=>$this->input->post('n_Description'),
-					'v_RegistrationNo'=>$this->input->post('n_Registration_Number'),
-					'v_StartDate'=>$this->input->post('n_Start_On'),
-					'v_ExpiryDate'=>$this->input->post('n_Expire_On'),
-					'v_GradeID'=>$this->input->post('n_Grade'),
-					'v_AgencyCode'=>$this->input->post('n_Agency_Code'),
-					'v_LicenseCategoryCode'=>$this->input->post('n_Category_Code'),
-					'v_Remarks'=>$this->input->post('n_Remarks'),
-					'v_actionflag'=>'U',
-					'd_timestamp'=>date('Y-m-d H:i:s'),
-					'v_Key'=>$this->input->post('n_Identification_Code'),
-					'v_CertificateNo'=>$this->input->post('n_Certificate_Number'),
-					'v_TesterName' => $this->input->post('n_tester')
-					
-		);
-		
-		$this->load->model('update_model');	
-		$this->update_model->pmis2_egm_lnc_lincense_details($insert_data,$this->input->post('liccd'));
-		
-		$data['upload_data'] = $this->input->post('upload_data');
-		if ($data['upload_data']){
-			$data['upload_data']['licenses_no'] = $this->input->post('liccd');
-			//print_r($data['upload_data']);
-			//exit();
-			$this->insert_model->license_image($data['upload_data']);	
-		}
-	} 
-	else {
-		
-		//echo 'jjjj';
+		//echo $this->input->post('liccd');
 		//exit();
-		$insert_data = array(
-					
-					
-					'v_CertificateNo'=>$this->input->post('n_Certificate_Number'),
-					'v_ServiceCode'=>$this->session->userdata('usersess'),
-					'v_AgencyCode'=>$this->input->post('n_Agency_Code'),
-					'v_LicenseCategoryCode'=>$this->input->post('n_Category_Code'),
-					'v_IdentificationType'=>$this->input->post('n_Identification_Type'),
-					'v_Identification'=>$this->input->post('n_Description'),
-					'v_RegistrationNo'=>$this->input->post('n_Registration_Number'),
-					'v_StartDate'=>$this->input->post('n_Start_On'),
-					'v_ExpiryDate'=>$this->input->post('n_Expire_On'),
-					'v_GradeID'=>$this->input->post('n_Grade'),
-					'v_Remarks'=>$this->input->post('n_Remarks'),
-					'v_hospitalcode'=>$this->session->userdata('hosp_code'),
-					'v_actionflag'=>'I',
-					'd_timestamp'=>date('Y-m-d H:i:s'),
-					'v_Key'=>$this->input->post('n_Identification_Code'),
-					'v_TesterName' => $this->input->post('n_tester')
-					
-		);
+		if ($this->input->post('liccd') <> ''){
+			$insert_data = array(					
+								'v_IdentificationType'=>$this->input->post('n_Identification_Type'),
+								'v_Identification'=>$this->input->post('n_Description'),
+								'v_RegistrationNo'=>$this->input->post('n_Registration_Number'),
+								'v_StartDate'=>$this->input->post('n_Start_On'),
+								'v_ExpiryDate'=>$this->input->post('n_Expire_On'),
+								'v_GradeID'=>$this->input->post('n_Grade'),
+								'v_AgencyCode'=>$this->input->post('n_Agency_Code'),
+								'v_LicenseCategoryCode'=>$this->input->post('n_Category_Code'),
+								'v_Remarks'=>$this->input->post('n_Remarks'),
+								'v_actionflag'=>'U',
+								'd_timestamp'=>date('Y-m-d H:i:s'),
+								'v_Key'=>$this->input->post('n_Identification_Code'),
+								'v_CertificateNo'=>$this->input->post('n_Certificate_Number'),
+								'v_TesterName' => $this->input->post('n_tester')					
+								);
+			$this->load->model('update_model');	
+			$this->update_model->pmis2_egm_lnc_lincense_details($insert_data,$this->input->post('liccd'));
+		
+			$data['upload_data'] = $this->input->post('upload_data');
+			if ($data['upload_data']){
+				$data['upload_data']['licenses_no'] = $this->input->post('liccd');
+				//print_r($data['upload_data']);
+				//exit();
+				$this->insert_model->license_image($data['upload_data']);	
+			}
+		} else {
+			//echo 'jjjj';
+			//exit();
+			$insert_data = array(
+								'v_CertificateNo'=>$this->input->post('n_Certificate_Number'),
+								'v_ServiceCode'=>$this->session->userdata('usersess'),
+								'v_AgencyCode'=>$this->input->post('n_Agency_Code'),
+								'v_LicenseCategoryCode'=>$this->input->post('n_Category_Code'),
+								'v_IdentificationType'=>$this->input->post('n_Identification_Type'),
+								'v_Identification'=>$this->input->post('n_Description'),
+								'v_RegistrationNo'=>$this->input->post('n_Registration_Number'),
+								'v_StartDate'=>$this->input->post('n_Start_On'),
+								'v_ExpiryDate'=>$this->input->post('n_Expire_On'),
+								'v_GradeID'=>$this->input->post('n_Grade'),
+								'v_Remarks'=>$this->input->post('n_Remarks'),
+								'v_hospitalcode'=>$this->session->userdata('hosp_code'),
+								'v_actionflag'=>'I',
+								'd_timestamp'=>date('Y-m-d H:i:s'),
+								'v_Key'=>$this->input->post('n_Identification_Code'),
+								'v_TesterName' => $this->input->post('n_tester')
+								);
 			$this->load->model('insert_model');	
 			$id = $this->insert_model->pmis2_egm_lnc_lincense_details($insert_data);
-			
+
 			$data['upload_data'] = $this->input->post('upload_data');
 			if ($data['upload_data']){
 				$data['upload_data']['licenses_no'] = $id;
 				$this->insert_model->license_image($data['upload_data']);
 			}
 		}
-			redirect("contentcontroller/Licenses");
+		redirect("contentcontroller/Licenses");
 	}
 	
 	public function print_workorder(){
@@ -3302,21 +3335,24 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("headprinter");
 		$this ->load->view("Content_workorder_print", $data);
 	}
+
 	public function testlaa(){
 		//$this ->load->view("headprinter");
 		$this ->load->view("head");
 		$this ->load->view("left");
 		$this ->load->view("test2");
 	}
-		public function print_wos(){
+	
+	public function print_wos(){
 		$this->load->model("display_model");
 		$data['hosp'] = $this->display_model->list_hospinfo();
-		 $data['wrk_ord'] = $this->input->get('wrk_ord');
-	  $this->load->model("get_model");
+		$data['wrk_ord'] = $this->input->get('wrk_ord');
+		$this->load->model("get_model");
 		$data['woinfo'] = $this->get_model->request_update($data['wrk_ord']);
 		$this ->load->view("headprinter");
 		$this ->load->view("Content_print_wos", $data);
 	}
+
 	/***  PPM   **/
 	public function wo(){
 		$data['wrk_ord'] = $this->input->get('wrk_ord');
@@ -3328,6 +3364,7 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("content_wo",$data);
 	}
+
 	public function wo_update(){
 		$data['wrk_ord'] = $this->input->get('wrk_ord');
 		$this->load->model("display_model");
@@ -3338,41 +3375,49 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("Content_wo_update",$data);
 	}
+
 	public function wo_confirm(){
 		$this ->load->view("head");
 		$this ->load->view("left");
 		$this ->load->view("Content_wo_confirm");
 	}
+
 	public function v1(){
 		$this ->load->view("head");
 		$this ->load->view("left");
 		$this ->load->view("Content_v1");
 	}
+
 	public function v2(){
 		$this ->load->view("head");
 		$this ->load->view("left");
 		$this ->load->view("Content_v2");
 	}
+
 	public function v3(){
 		$this ->load->view("head");
 		$this ->load->view("left");
 		$this ->load->view("Content_v3");
 	}
+
 	public function PI(){
 		$this ->load->view("head");
 		$this ->load->view("left");
 		$this ->load->view("Content_PI");
 	}
+
 	public function job(){
 		$this ->load->view("head");
 		$this ->load->view("left");
 		$this ->load->view("Content_job");
 	}
+
 	public function tech(){
 		$this ->load->view("head");
 		$this ->load->view("left");
 		$this ->load->view("Content_tech");
 	}
+
 	public function clau(){
 		$data['wrk_ord'] = $this->input->get('wrk_ord');
 		$this->load->model('display_model');
@@ -3381,6 +3426,7 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("Content_clau",$data);
 	}
+
 	public function print_ppm(){
 	  	$this->load->model("display_model");
 	  	$this->load->model("get_model");
@@ -3584,6 +3630,7 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("headprinter");
 		$this ->load->view("Content_ppm_print", $data);
 	}
+
 	public function print_chklist1(){
 	   	$asst = "BES/16885/012";
 	  	$this->load->model("display_model");
@@ -3621,6 +3668,7 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("headprinter");
 		$this ->load->view("Content_report_dmc", $data);
 	}
+
 	public function report_rmc(){
 	  $this->load->model("display_model");
 		$data['records'] = $this->display_model->list_hospinfo();
@@ -3631,6 +3679,7 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("headprinter");
 		$this ->load->view("Content_report_rmc", $data);
 	}
+
 	public function report_volu(){
 	  //echo 'nilai : '.$this->input->post('wrty-status');
                 $pilape = "";
@@ -3643,6 +3692,7 @@ class Contentcontroller extends CI_Controller {
 		}
 	  	$this->load->model("display_model");
 		$data['records'] = $this->display_model->list_hospinfo();
+		$data['fon']= ($this->input->get('fon')) ? $this->input->get('fon') : "";	
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
 		$data['reqtype']= $this->input->get('req') ? $this->input->get('req') : '';
@@ -3661,7 +3711,7 @@ class Contentcontroller extends CI_Controller {
 				}
 			}
 		}
-		$data['record'] = $this->display_model->rpt_volu($data['month'],$data['year'],$this->input->get('stat'),$data['reqtype'],$this->input->get('broughtfwd'),$data['grpsel'],$pilape,$data['tag'],$data['cm'],$data['limab'],$data['bfwd']);
+		$data['record'] = $this->display_model->rpt_volu($data['month'],$data['year'],$this->input->get('stat'),$data['reqtype'],$this->input->get('broughtfwd'),$data['grpsel'],$pilape,$data['tag'],$data['cm'],$data['limab'],$data['bfwd'],"",$data['fon']);
 
 		//print_r($data['record']);
 		//exit();
@@ -3674,9 +3724,10 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("Content_report_volu", $data);
 		}
 	}
+
 	public function report_volc(){
-	  //echo 'nilai : '.$this->input->post('wrty-status');
-	  $this->load->model("display_model");
+		//echo 'nilai : '.$this->input->post('wrty-status');
+		$this->load->model("display_model");
 		$data['records'] = $this->display_model->list_hospinfo();
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
@@ -3691,26 +3742,28 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("Content_report_volc", $data);
 		}
 	}
+
 	public function report_vols(){
-	  $this->load->model("display_model");
+		$this->load->model("display_model");
+		$data['fon']= ($this->input->get('fon')) ? $this->input->get('fon') : "";	
 		$data['records'] = $this->display_model->list_hospinfo();
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
 		$data['grpsel']= $this->input->get('grp') ? $this->input->get('grp') : '';
-                $pilape = "";
+		$pilape = "";
 		if ($this->input->get('serv') == "ele"){
-		$pilape = "IIUM E";
+			$pilape = "IIUM E";
 		} elseif ($this->input->get('serv') == "mec"){
-		$pilape = "IIUM M";
+			$pilape = "IIUM M";
 		} elseif ($this->input->get('serv') == "civ"){
-		$pilape = "IIUM C";
+			$pilape = "IIUM C";
 		}
-		//echo "lalalalalla : " . $this->session->userdata('v_UserName');
-		if ($this->session->userdata('v_UserName') == "mariana") {
-		$data['record'] = $this->display_model->rpt_volsmar($data['month'],$data['year'], $this->input->get('stat'), $this->input->get('resch'),$data['grpsel'],$pilape);
-		} else {
-		$data['record'] = $this->display_model->rpt_vols($data['month'],$data['year'], $this->input->get('stat'), $this->input->get('resch'),$data['grpsel'],$pilape);
-		}
+		// echo "lalalalalla : " . $this->session->userdata('v_UserName');
+		// if ($this->session->userdata('v_UserName') == "mariana") {
+		// $data['record'] = $this->display_model->rpt_volsmar($data['month'],$data['year'], $this->input->get('stat'), $this->input->get('resch'),$data['grpsel'],$pilape);
+		// } else {
+		$data['record'] = $this->display_model->rpt_vols($data['month'],$data['year'], $this->input->get('stat'), $this->input->get('resch'),$data['grpsel'],$pilape,$data['fon']);
+		// }
 		$data['reqtype'] = 'A2';
 		$data['tag'] = '';
 		$data['cm']= '';
@@ -3718,16 +3771,16 @@ class Contentcontroller extends CI_Controller {
 		//$data['recordrq'] = $this->display_model->rpt_volu($data['month'],$data['year'],$this->input->get('stat'),$data['reqtype'],$this->input->get('broughtfwd'),$data['grpsel'],$pilape,$data['tag'],$data['cm'],$data['limab']);
 		//$this ->load->view("headprinter");
 		//$this ->load->view("Content_report_vols", $data);
-                if($this->input->get('pdf') == 1){
-		$this ->load->view("Content_report_vols_pdf", $data);
+		if($this->input->get('pdf') == 1){
+			$this ->load->view("Content_report_vols_pdf", $data);
 		}else{
-		$this ->load->view("headprinter");
-		$this ->load->view("Content_report_vols", $data);
-		}
-		
+			$this ->load->view("headprinter");
+			$this ->load->view("Content_report_vols", $data);
+		}		
 	}
+
 	public function report_rtlu(){
-	  $this->load->model("display_model");
+		$this->load->model("display_model");
 		$data['records'] = $this->display_model->list_hospinfo();
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
@@ -3736,14 +3789,15 @@ class Contentcontroller extends CI_Controller {
 		//$this ->load->view("headprinter");
 		//$this ->load->view("Content_report_rtlu", $data);
 		if ($this->input->get('pdf') == 1){
-		$this ->load->view("Content_report_rtlu_pdf", $data);
+			$this ->load->view("Content_report_rtlu_pdf", $data);
 		}else{
-		$this ->load->view("headprinter");
-		$this ->load->view("Content_report_rtlu", $data);
+			$this ->load->view("headprinter");
+			$this ->load->view("Content_report_rtlu", $data);
 		}
 	}
+
 	public function report_rsls(){
-	  $this->load->model("display_model");
+		$this->load->model("display_model");
 		$data['records'] = $this->display_model->list_hospinfo();
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
@@ -3751,16 +3805,17 @@ class Contentcontroller extends CI_Controller {
 		$data['record2'] = $this->display_model->rpt_rsls2($data['month'],$data['year'], $this->input->get('stat'),$this->input->get('expiring'),$this->input->get('grp'));
 		
 		if ($this->input->get('pdf') == 1){
-		$this ->load->view("Content_report_rsls_pdf", $data);
+			$this ->load->view("Content_report_rsls_pdf", $data);
 		}else{
-		$this ->load->view("headprinter");
-		$this ->load->view("Content_report_rsls", $data);
+			$this ->load->view("headprinter");
+			$this ->load->view("Content_report_rsls", $data);
 		}
 		//$this ->load->view("headprinter");
 		//$this ->load->view("Content_report_rsls", $data);
 	}
+
 	public function report_agl(){
-	  $this->load->model("display_model");
+		$this->load->model("display_model");
 		$data['records'] = $this->display_model->list_hospinfo();
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
@@ -3768,117 +3823,119 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("headprinter");
 		$this ->load->view("Content_report_agl", $data);
 	}
+
 	public function report_vossu(){
-	$n1900Cases = 0;
-	$nCErrorCases = 0;
-	$nUnrespondedCases = 0;
-	$nNCases = 0;
-	$nECases = 0;
-	$m_total = 0;
-	$nOnTime = 0;
-	$nLate = 0;
-	$time_minN = 0;
-  $time_minE = 0;
-	$nNResponseTime = 0;
-	$nEResponseTime = 0;
-	$nCErrorNo = '';
+		$n1900Cases = 0;
+		$nCErrorCases = 0;
+		$nUnrespondedCases = 0;
+		$nNCases = 0;
+		$nECases = 0;
+		$m_total = 0;
+		$nOnTime = 0;
+		$nLate = 0;
+		$time_minN = 0;
+		$time_minE = 0;
+		$nNResponseTime = 0;
+		$nEResponseTime = 0;
+		$nCErrorNo = '';
 	
-	  $this->load->model("display_model");
+		$this->load->model("display_model");
 		$data['records'] = $this->display_model->list_hospinfo();
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
 		$data['record'] = $this->display_model->rpt_vossu($data['month'],$data['year']);
 		if (!empty($data['record'])) {
 			foreach($data['record'] as $row):
-			//$respndt = ($row->v_respondate) ? strtotime($row->v_respondate) : NULL;
-			if (date('Y', strtotime($row->v_respondate)) == 1900) {
-				$n1900Cases = $n1900Cases  + 1;
-				//s1900No = s1900No & "<a href=""wo-item4.asp?id=" & ures("v_request_no") & """ target=""_blank"">" & ures("v_request_no") & " (" & ures("v_request_status") & ")</a><br>"
-			} elseif (($row->v_respondate === NULL) && ($row->v_request_status = "C")) {
-				$nCErrorCases = $nCErrorCases + 1;
-				$nCErrorNo = $nCErrorNo . ' ' . $row->v_request_no;//"<a href=""wo-item4.asp?id=" & ures("v_request_no") & """ target=""_blank"">" & ures("v_request_no") & " (" & ures("v_request_status") & ")</a><br>"
-			} elseif ($row->v_respondate === NULL) {
-				$nUnrespondedCases = $nUnrespondedCases + 1;
-				//$sUnrespondedRQNo = sUnrespondedRQNo & "<a href=""wo-item4.asp?id=" & ures("v_request_no") & """ target=""_blank"">" & ures("v_request_no") & " (" & ures("v_request_status") & ")</a><br>"
-			} elseif ($row->v_respondate) {
-			
-				switch ($row->v_priority_code)
-				{
-    		case "Normal":
-				$nNCases = $nNCases + 1;
-				$today = strtotime("TODAY");
-				$nNResponseTime = $nNResponseTime + (strtotime('0:'.$row->d_time) - $today);
-				if (strtotime('0:'.$row->d_time) <= strtotime('2:00:00')) {
-							$nOnTime = $nOnTime + 1; }
-						else {
-							$nLate = $nLate + 1; }
+				//$respndt = ($row->v_respondate) ? strtotime($row->v_respondate) : NULL;
+				if (date('Y', strtotime($row->v_respondate)) == 1900) {
+					$n1900Cases = $n1900Cases  + 1;
+					//s1900No = s1900No & "<a href=""wo-item4.asp?id=" & ures("v_request_no") & """ target=""_blank"">" & ures("v_request_no") & " (" & ures("v_request_status") & ")</a><br>"
+				} elseif (($row->v_respondate === NULL) && ($row->v_request_status = "C")) {
+					$nCErrorCases = $nCErrorCases + 1;
+					$nCErrorNo = $nCErrorNo . ' ' . $row->v_request_no;//"<a href=""wo-item4.asp?id=" & ures("v_request_no") & """ target=""_blank"">" & ures("v_request_no") & " (" & ures("v_request_status") & ")</a><br>"
+				} elseif ($row->v_respondate === NULL) {
+					$nUnrespondedCases = $nUnrespondedCases + 1;
+					//$sUnrespondedRQNo = sUnrespondedRQNo & "<a href=""wo-item4.asp?id=" & ures("v_request_no") & """ target=""_blank"">" & ures("v_request_no") & " (" & ures("v_request_status") & ")</a><br>"
+				} elseif ($row->v_respondate) {
 				
-				break;
-    		case "Emergency":
-        $nECases = $nECases + 1;
-				$today = strtotime("TODAY");
-				$nEResponseTime = $nEResponseTime + (strtotime($row->d_time) - $today);
-				if (strtotime('0:'.$row->d_time) <= strtotime('2:00:00')) {
-							$nOnTime = $nOnTime + 1; }
-						else {
-							$nLate = $nLate + 1; }
+					switch ($row->v_priority_code)
+					{
+						case "Normal":
+							$nNCases = $nNCases + 1;
+							$today = strtotime("TODAY");
+							$nNResponseTime = $nNResponseTime + (strtotime('0:'.$row->d_time) - $today);
+							if (strtotime('0:'.$row->d_time) <= strtotime('2:00:00')) {
+								$nOnTime = $nOnTime + 1;
+							}else {
+								$nLate = $nLate + 1;
+							}
 				
-    		break;
-				}
+						break;
+						case "Emergency":
+							$nECases = $nECases + 1;
+							$today = strtotime("TODAY");
+							$nEResponseTime = $nEResponseTime + (strtotime($row->d_time) - $today);
+							if (strtotime('0:'.$row->d_time) <= strtotime('2:00:00')) {
+								$nOnTime = $nOnTime + 1;
+							}else {
+								$nLate = $nLate + 1;
+							}
+						break;
+					}
 				
-				$nNResponseTime = $nNResponseTime + $today;
-				$nEResponseTime = $nEResponseTime + $today;
-				
-				$str_time = date('h:i:s', $nNResponseTime);
-				$str_time = preg_replace("/^([\d]{1,2})\:([\d]{2})$/", "00:$1:$2", $str_time);
-				sscanf($str_time, "%d:%d:%d", $hours, $minutes, $seconds);
-				$time_minN = $hours * 60 + $minutes;
-				
-				$str_time = date('h:i:s', $nEResponseTime);
-				$str_time = preg_replace("/^([\d]{1,2})\:([\d]{2})$/", "00:$1:$2", $str_time);
-				sscanf($str_time, "%d:%d:%d", $hours, $minutes, $seconds);
-				$time_minE = $hours * 60 + $minutes;
-				
-				/*sStart = cdate(sStart)
-				sEnd = cdate(sEnd)
-				sMinute = clng(datediff("N", sStart, sEnd))
-				select case sPriority
-					case "N"
-						nNCases = nNCases + 1
-						nNResponseTime = nNResponseTime + sMinute
-						if sMinute <= gnMaxResponseTimeForNormalCase then
-							nOnTime = nOnTime + 1
-						else
-							nLate = nLate + 1
-						end if
+					$nNResponseTime = $nNResponseTime + $today;
+					$nEResponseTime = $nEResponseTime + $today;
+					
+					$str_time = date('h:i:s', $nNResponseTime);
+					$str_time = preg_replace("/^([\d]{1,2})\:([\d]{2})$/", "00:$1:$2", $str_time);
+					sscanf($str_time, "%d:%d:%d", $hours, $minutes, $seconds);
+					$time_minN = $hours * 60 + $minutes;
+					
+					$str_time = date('h:i:s', $nEResponseTime);
+					$str_time = preg_replace("/^([\d]{1,2})\:([\d]{2})$/", "00:$1:$2", $str_time);
+					sscanf($str_time, "%d:%d:%d", $hours, $minutes, $seconds);
+					$time_minE = $hours * 60 + $minutes;
+					
+					/*sStart = cdate(sStart)
+					sEnd = cdate(sEnd)
+					sMinute = clng(datediff("N", sStart, sEnd))
+					select case sPriority
+						case "N"
+							nNCases = nNCases + 1
+							nNResponseTime = nNResponseTime + sMinute
+							if sMinute <= gnMaxResponseTimeForNormalCase then
+								nOnTime = nOnTime + 1
+							else
+								nLate = nLate + 1
+							end if
 
-					case "E"
-						nECases = nECases + 1
-						nEResponseTime = nEResponseTime + sMinute
-						if sMinute <= gnMaxResponseTimeForEmergencyCase then
-							nOnTime = nOnTime + 1
-						else
-							nLate = nLate + 1
-						end if
-					case else
-						nAlienCases = nAlienCases + 1
-				end select*/	
-			}
+						case "E"
+							nECases = nECases + 1
+							nEResponseTime = nEResponseTime + sMinute
+							if sMinute <= gnMaxResponseTimeForEmergencyCase then
+								nOnTime = nOnTime + 1
+							else
+								nLate = nLate + 1
+							end if
+						case else
+							nAlienCases = nAlienCases + 1
+					end select*/	
+				}
 			endforeach;
 		}
 		//echo $n1900Cases.','.$nCErrorCases.','.$nUnrespondedCases;
 		$data['kira'] = array(
-    'n1900Cases' => $n1900Cases,
-    'nCErrorCases' => $nCErrorCases,
-    'nUnrespondedCases' => $nUnrespondedCases,
-    'nNCases' => $nNCases,
-    'nECases' => $nECases,
-    'nNResponseTime' => $nNResponseTime,
-    'nEResponseTime' => $nEResponseTime,
-    'nOnTime' => $nOnTime,
-    'nLate' => $nLate,
-    'time_minN' => $time_minN,
-    'time_minE' => $time_minE,
+		'n1900Cases' => $n1900Cases,
+		'nCErrorCases' => $nCErrorCases,
+		'nUnrespondedCases' => $nUnrespondedCases,
+		'nNCases' => $nNCases,
+		'nECases' => $nECases,
+		'nNResponseTime' => $nNResponseTime,
+		'nEResponseTime' => $nEResponseTime,
+		'nOnTime' => $nOnTime,
+		'nLate' => $nLate,
+		'time_minN' => $time_minN,
+		'time_minE' => $time_minE,
 		'nCErrorNo'=> $nCErrorNo);
 		//$data['kira'] = array_keys($data['record'], "Normal");
 		$this ->load->view("headprinter");
@@ -3886,71 +3943,75 @@ class Contentcontroller extends CI_Controller {
 	}
 	
 	public function report_ppmwos(){
-	
-	  $this->load->model("display_model");
+
+		$this->load->model("display_model");
 		$data['records'] = $this->display_model->list_hospinfo();
+		$data['fon']= ($this->input->get('fon')) ? $this->input->get('fon') : "";	
+		//echo "nilai fon : ".$data['fon'].":".$this->input->get('fon');
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
-		$data['ppmsum'] = $this->display_model->sumppm($data['month'],$data['year'],$this->input->get('grp'));
-		$data['reqtype'] = 'A2';
+		$data['ppmsum'] = $this->display_model->sumppm($data['month'],$data['year'],$this->input->get('grp'),"",$data['fon']);
+		$data['reschout'] = $this->display_model->reschout($data['month'],$data['year'],$this->input->get('grp'));
+		$data['reqtype'] = 'A2';	
+		$data['total'] = $this->display_model->sumpp_m($data['month'],$data['year'],'total');
+		$data['totale'] = $this->display_model->sumpp_m($data['month'],$data['year'],'totale');
+		$data['totalm'] = $this->display_model->sumpp_m($data['month'],$data['year'],'totalm');
+		$data['totalc'] = $this->display_model->sumpp_m($data['month'],$data['year'],'totalc');
 		//$data['rqsum'] = $this->display_model->sumrq($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'));
-                if ($this->session->userdata('usersess') == 'FES') {
-		$data['ppmcivil'] = $this->display_model->sumppm($data['month'],$data['year'],$this->input->get('grp'),"IIUM C");
-		$data['ppmmech'] = $this->display_model->sumppm($data['month'],$data['year'],$this->input->get('grp'),"IIUM M");
-		$data['ppmelec'] = $this->display_model->sumppm($data['month'],$data['year'],$this->input->get('grp'),"IIUM E");
-		//$data['rqcivil'] = $this->display_model->sumrq($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'),"IIUM C");
-		//$data['rqmech'] = $this->display_model->sumrq($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'),"IIUM M");
-		//$data['rqelec'] = $this->display_model->sumrq($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'),"IIUM E");
+		if ($this->session->userdata('usersess') == 'FES') {
+			$data['ppmcivil'] = $this->display_model->sumppm($data['month'],$data['year'],$this->input->get('grp'),"IIUM C",$data['fon']);
+			$data['ppmmech'] = $this->display_model->sumppm($data['month'],$data['year'],$this->input->get('grp'),"IIUM M",$data['fon']);
+			$data['ppmelec'] = $this->display_model->sumppm($data['month'],$data['year'],$this->input->get('grp'),"IIUM E",$data['fon']);
+			$data['reschoutcivil'] = $this->display_model->reschout($data['month'],$data['year'],$this->input->get('grp'),"IIUM C");
+			$data['reschoutmech'] = $this->display_model->reschout($data['month'],$data['year'],$this->input->get('grp'),"IIUM M");
+			$data['reschoutlec'] = $this->display_model->reschout($data['month'],$data['year'],$this->input->get('grp'),"IIUM E");
+			//$data['rqcivil'] = $this->display_model->sumrq($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'),"IIUM C");
+			//$data['rqmech'] = $this->display_model->sumrq($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'),"IIUM M");
+			//$data['rqelec'] = $this->display_model->sumrq($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'),"IIUM E");
 		}
 		//$data['rqsum'] = $this->display_model->sumrq($data['month'],$data['year']);
 		//$data['complntsum'] = $this->display_model->sumcomplnt($data['month'],$data['year']);
 		
-	  $this ->load->view("headprinter");
+		$this ->load->view("headprinter");
 		//$this ->load->view("Content_report_ppmsum", $data);
 		$this ->load->view("Content_report_ppmwos", $data);
 	}
 	
 	public function report_reqwos(){
-	
-	  $this->load->model("display_model");
+
+		$this->load->model("display_model");
 		$data['records'] = $this->display_model->list_hospinfo();
+		$data['fon']= ($this->input->get('fon')) ? $this->input->get('fon') : "";
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
 		$data['reqtype']= $this->input->get('req') ? $this->input->get('req') : '';
 		//$data['ppmsum'] = $this->display_model->sumppm($data['month'],$data['year']);
-		$data['rqsum'] = $this->display_model->sumrq($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'));
+		$data['rqsum'] = $this->display_model->sumrq($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'),"",$data['fon']);
 		//$data['complntsum'] = $this->display_model->sumcomplnt($data['month'],$data['year']);
-		
-
-                if ($this->session->userdata('usersess') == 'FES') {
-		$data['rqcivil'] = $this->display_model->sumrq($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'),"IIUM C");
-		$data['rqmech'] = $this->display_model->sumrq($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'),"IIUM M");
-		$data['rqelec'] = $this->display_model->sumrq($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'),"IIUM E");
+		if ($this->session->userdata('usersess') == 'FES') {
+			$data['rqcivil'] = $this->display_model->sumrq($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'),"IIUM C",$data['fon']);
+			$data['rqmech'] = $this->display_model->sumrq($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'),"IIUM M",$data['fon']);
+			$data['rqelec'] = $this->display_model->sumrq($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'),"IIUM E",$data['fon']);
 		}
-
-                
-
-	  $this ->load->view("headprinter");
+		$this ->load->view("headprinter");
 		$this ->load->view("Content_report_reqwos", $data);
 	}
 	
-	public function report_cwos(){
-	
-	  $this->load->model("display_model");
+	public function report_cwos(){		
+		$this->load->model("display_model");
 		$data['records'] = $this->display_model->list_hospinfo();
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
 		//$data['ppmsum'] = $this->display_model->sumppm($data['month'],$data['year']);
 		//$data['rqsum'] = $this->display_model->sumrq($data['month'],$data['year']);
 		$data['complntsum'] = $this->display_model->sumcomplnt($data['month'],$data['year'],$this->input->get('grp'));
-		
-	  $this ->load->view("headprinter");
+
+		$this ->load->view("headprinter");
 		$this ->load->view("Content_report_cwos", $data);
 	}
 	
 	public function report_reswos(){
-	
-	  $this->load->model("display_model");
+		$this->load->model("display_model");
 		$data['records'] = $this->display_model->list_hospinfo();
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
@@ -3958,14 +4019,13 @@ class Contentcontroller extends CI_Controller {
 		//$data['ppmsum'] = $this->display_model->sumppm($data['month'],$data['year']);
 		$data['rqsum'] = $this->display_model->sumrq($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'));
 		//$data['complntsum'] = $this->display_model->sumcomplnt($data['month'],$data['year']);
-		
-	  $this ->load->view("headprinter");
+
+		$this ->load->view("headprinter");
 		$this ->load->view("Content_report_reswos", $data);
 	}
 	
 	public function report_sls(){
-	
-	  $this->load->model("display_model");
+		$this->load->model("display_model");
 		$data['records'] = $this->display_model->list_hospinfo();
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
@@ -3974,12 +4034,12 @@ class Contentcontroller extends CI_Controller {
 		//$data['complntsum'] = $this->display_model->sumcomplnt($data['month'],$data['year']);
 		$data['licsatsum'] = $this->display_model->sumlicsat($data['month'],$data['year']);
 		$data['satsum'] = $this->display_model->sumsat($data['month'],$data['year'],$this->input->get('grp'));
-	  $this ->load->view("headprinter");
+		$this ->load->view("headprinter");
 		$this ->load->view("Content_report_sls", $data);
 	}
 	
 	public function report_alr(){
-	  $this->load->model("display_model");
+		$this->load->model("display_model");
 		$data['records'] = $this->display_model->list_hospinfo();
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
@@ -4000,8 +4060,9 @@ class Contentcontroller extends CI_Controller {
 			$this ->load->view("Content_report_alr_bes", $data);
 		}
 	}
+
 	public function report_ppmp(){
-	  $this->load->model("display_model");
+		$this->load->model("display_model");
 		$data['records'] = $this->display_model->list_hospinfo();
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
@@ -4009,8 +4070,9 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("headprinter");
 		$this ->load->view("Content_report_ppmp", $data);
 	}
+
 	public function report_rcmp(){
-	  $this->load->model("display_model");
+		$this->load->model("display_model");
 		$data['records'] = $this->display_model->list_hospinfo();
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
@@ -4018,8 +4080,9 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("headprinter");
 		$this ->load->view("Content_report_rcmp", $data);
 	}
+
 	public function report_qc(){
-	  $this->load->model("display_model");
+		$this->load->model("display_model");
 		$data['records'] = $this->display_model->list_hospinfo();
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
@@ -4027,8 +4090,9 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("headprinter");
 		$this ->load->view("Content_report_qc", $data);
 	}
+
 	public function report_qapc(){
-	  $this->load->model("display_model");
+		$this->load->model("display_model");
 		$data['records'] = $this->display_model->list_hospinfo();
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
@@ -4036,8 +4100,9 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("headprinter");
 		$this ->load->view("Content_report_qapc", $data);
 	}
+
 	public function report_qapac(){
-	  $this->load->model("display_model");
+		$this->load->model("display_model");
 		$data['records'] = $this->display_model->list_hospinfo();
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
@@ -4045,8 +4110,9 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("headprinter");
 		$this ->load->view("Content_report_qapac", $data);
 	}
+
 	public function report_wc(){
-	  $this->load->model("display_model");
+		$this->load->model("display_model");
 		$data['records'] = $this->display_model->list_hospinfo();
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
@@ -4054,36 +4120,41 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("headprinter");
 		$this ->load->view("Content_report_wc",$data);
 	}
+
 	public function report_tcc(){
-	  $this->load->model("display_model");
+		$this->load->model("display_model");
 		$data['records'] = $this->display_model->list_hospinfo();
 		$this ->load->view("headprinter");
 		$this ->load->view("Content_report_tcc", $data);
 	}
+
 	public function report_tcw(){
-	  $this->load->model("display_model");
+		$this->load->model("display_model");
 		$data['records'] = $this->display_model->list_hospinfo();
 		$this ->load->view("headprinter");
 		$this ->load->view("Content_report_tcw", $data);
 	}
+
 	public function report_tcac(){
-	  $this->load->model("display_model");
+		$this->load->model("display_model");
 		$data['records'] = $this->display_model->list_hospinfo();
 		$this ->load->view("headprinter");
 		$this ->load->view("Content_report_tcac", $data);
 	}
+
 	public function report_ppmw(){
-	  	$this->load->model("display_model");
-	  	$data['records'] = $this->display_model->list_hospinfo();
+		$this->load->model("display_model");
+		$data['records'] = $this->display_model->list_hospinfo();
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
 		$data['records'] = $this->display_model->list_hospinfo();
 		$this ->load->view("headprinter");
 		$this ->load->view("Content_report_ppmw", $data);
 	}
+
 	public function report_vl(){
-	  	$data['search_box'] = $this->input->get_post('search_box');
-	  	$this->load->model("display_model");
+		$data['search_box'] = $this->input->get_post('search_box');
+		$this->load->model("display_model");
 		$data['records'] = $this->display_model->list_hospinfo();
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
@@ -4091,8 +4162,9 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("headprinter");
 		$this ->load->view("Content_report_vl", $data);
 	}
+
 	public function report_rp(){
-	  $this->load->model("display_model");
+		$this->load->model("display_model");
 		$data['records'] = $this->display_model->list_hospinfo();
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
@@ -4103,14 +4175,16 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("headprinter");
 		$this ->load->view("Content_report_rp", $data);
 	}
+
 	public function report_cr(){
-	  $this->load->model("display_model");
+		$this->load->model("display_model");
 		$data['records'] = $this->display_model->list_hospinfo();
 		$this ->load->view("headprinter");
 		$this ->load->view("Content_report_cr", $data);
 	}
+
 	public function report_ppmuw(){
-	  $this->load->model("display_model");
+		$this->load->model("display_model");
 		$data['records'] = $this->display_model->list_hospinfo();	
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
@@ -4118,8 +4192,9 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("headprinter");
 		$this ->load->view("Content_report_ppmuw", $data);
 	}
+
 	public function report_rcmuw(){
-	  $this->load->model("display_model");
+		$this->load->model("display_model");
 		$data['records'] = $this->display_model->list_hospinfo();	
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
@@ -4127,6 +4202,7 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("headprinter");
 		$this ->load->view("Content_report_rcmuw", $data);
 	}
+
 	public function assetlicenses_new (){
 		$data['error'] = '';
 		$data['add'] = 1;
@@ -4145,6 +4221,7 @@ class Contentcontroller extends CI_Controller {
 		//$this ->load->view("left",$data);
 		$this ->load->view("content_asset_licenses_update",$data);
 	}
+	
 	public function deskopen(){
 		$this->load->model("display_model");
 		$data['records_desk'] = $this->display_model->list_desk();
@@ -4152,6 +4229,7 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("Content_desk_open",$data);
 	}
+
 	public function deskclosed(){
 		$this->load->model("display_model");
 		$data['records_desk'] = $this->display_model->list_desk();
@@ -4159,7 +4237,8 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("Content_desk_closed",$data);
 	}
-		public function desk_complaint(){
+	
+	public function desk_complaint(){
 		$data['cmplnt_no'] = $this->input->get('cmplnt_no');
 		$this->load->model("display_model");
 		$data['record'] = $this->display_model->complaint_form($data['cmplnt_no']);
@@ -4173,6 +4252,7 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("Content_desk_complaint",$data);
 	}
+
 	public function desk_complaint_update(){
 		$data['cmplnt_no'] = $this->input->get('cmplnt_no');
 		$this->load->model("get_model");
@@ -4181,11 +4261,12 @@ class Contentcontroller extends CI_Controller {
 		$data['records'] = $this->display_model->complaintdet_form($data['cmplnt_no']);
 		if (isset($data['records'][0]->v_ComplaintNo)){
 			$data['vcmdate'] = explode('/',$data['records'][0]->v_Monyr);
-	}
+		}
 		$this ->load->view("head");
 		$this ->load->view("left");
 		$this ->load->view("Content_desk_complaint_update",$data);
 	}
+
 	public function desk_complaint_confirm(){
 		$data['cmplnt_no'] = $this->input->get('cmplnt_no');
 		$this->load->model("get_model");
@@ -4194,8 +4275,8 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("Content_desk_complaint_confirm",$data);
 	}
+
 	public function workorder_a3(){
-			
 		$this->load->model("display_model");
 		//$data['r'] = $this->display_model->listworkorder();
 		$data['records'] = $this->display_model->list_workorder();
@@ -4203,8 +4284,8 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("Content_workorder_a3",$data);
 	}
+
 	public function workorder_a4(){
-			
 		$this->load->model("display_model");
 		//$data['r'] = $this->display_model->listworkorder();
 		$data['records'] = $this->display_model->list_workorder();
@@ -4212,6 +4293,7 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("Content_workorder_a4",$data);
 	}
+
 	public function workorder_a5(){
 			
 		$this->load->model("display_model");
@@ -4965,6 +5047,7 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("headprinter");
 		$this ->load->view("content_print_report_ppmun",$data);		
 	}
+
 	public function report_RPPMW(){
 		isset($_REQUEST['n_startdate']) ? $data['startdate'] = $_REQUEST['n_startdate'] : $data['startdate'] = "";
 		isset($_REQUEST['n_enddate']) ? $data['enddate'] = $_REQUEST['n_enddate'] : $data['enddate'] = "";
@@ -4983,16 +5066,17 @@ class Contentcontroller extends CI_Controller {
 				$data['enddate'] = "";
 			}
 			else{
-			$data['record'] = $this->display_model->reschPPM(date("Y-m-d",strtotime($data['startdate'])),date("Y-m-d",strtotime($data['enddate'])));
-			foreach($data['record'] as $row){
-				$data['records'][$row->v_WrkOrdNo] = array($row);
-			}
+				$data['record'] = $this->display_model->reschPPM(date("Y-m-d",strtotime($data['startdate'])),date("Y-m-d",strtotime($data['enddate'])));
+				foreach($data['record'] as $row){
+					$data['records'][$row->v_WrkOrdNo] = array($row);
+				}
 			}
 		}
 		$this ->load->view("head");
 		$this ->load->view("left");
 		$this ->load->view("content_report_RPPMW",$data);		
 	}
+
 	/// new //
 	public function pop_location_user(){
 		$this->load->model("get_model");
@@ -5007,36 +5091,42 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("head");
 		$this ->load->view("content_reportbi_rcmage_listing",$data);		
 	}
+
 	public function reportbi_rcm15_listing(){
 		$this->load->model("get_model");
 		$data['records'] = $this->get_model->assetchklistcd();
 		$this ->load->view("head");
 		$this ->load->view("content_reportbi_rcm15_listing",$data);		
 	}
+
 	public function reportbi_rcm7_listing(){
 		$this->load->model("get_model");
 		$data['records'] = $this->get_model->assetchklistcd();
 		$this ->load->view("head");
 		$this ->load->view("content_reportbi_rcm7_listing",$data);		
 	}
+
 	public function reportbi_ppmage_listing(){
 		$this->load->model("get_model");
 		$data['records'] = $this->get_model->assetchklistcd();
 		$this ->load->view("head");
 		$this ->load->view("content_reportbi_ppmage_listing",$data);		
 	}
+
 	public function reportbi_ppm15_listing(){
 		$this->load->model("get_model");
 		$data['records'] = $this->get_model->assetchklistcd();
 		$this ->load->view("head");
 		$this ->load->view("content_reportbi_ppm15_listing",$data);		
 	}
+
 	public function reportbi_ind_listing(){
 		$this->load->model("get_model");
 		$data['records'] = $this->get_model->assetchklistcd();
 		$this ->load->view("head");
 		$this ->load->view("content_reportbi_ind_listing",$data);		
 	}
+
 	public function vo3_report(){
 		$data['rpt_no_array'] = explode('/',$this->input->get('rpt_no'));
 		$data['period'] = $data['rpt_no_array'][2];
@@ -5048,6 +5138,7 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("content_vo3_report",$data);		
 	}
+
 	public function print_vo3_report(){
 		$data['rpt_no'] = $this->input->get('rpt_no');
 		//echo $this->input->post('n_lineNo');
@@ -5071,18 +5162,19 @@ class Contentcontroller extends CI_Controller {
 		//exit();
 		//echo "pilihan report ".$this->input->post('n_report_type');
 		if ($this->input->post('n_report_type') == 1) {
-		$this ->load->view("headprinter");
-		$this ->load->view("content_print_vo3_report_site",$data);
+			$this ->load->view("headprinter");
+			$this ->load->view("content_print_vo3_report_site",$data);
 		}
 		elseif ($this->input->post('n_report_type') == 2) {
-		$this ->load->view("headprinter");
-		$this ->load->view("content_print_vo3_report",$data);
+			$this ->load->view("headprinter");
+			$this ->load->view("content_print_vo3_report",$data);
 		}
 		else{
-		$this ->load->view("headprinter");
-		$this ->load->view("content_print_vo3_report",$data);	
+			$this ->load->view("headprinter");
+			$this ->load->view("content_print_vo3_report",$data);	
 		}		
 	}
+
 	public function vo3_item_general(){
 		$data['rpt_no'] = $this->input->get('rpt_no');
 		$data['assetno'] = $this->input->get('asset');
@@ -5095,6 +5187,7 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("content_vo3_item_general",$data);		
 	}
+
 	public function vo3_item_general_confirm(){
 		$this ->load->view("head");
 		$this ->load->view("left");
@@ -5102,13 +5195,13 @@ class Contentcontroller extends CI_Controller {
 	}
 	
 	public function pop_Checklist(){
-			
 		$this->load->model("get_model");
 		//$data['records'] = $this->get_model->assetchklist($this->input->get('assetno'));
 		$data['records'] = $this->get_model->assetchklist($this->input->get('id'));
 		$this ->load->view("head");
 		$this ->load->view("content_pop_chklist",$data);
 	}
+
 	public function lock_vo3_asset(){
 		$data['rpt_no'] = $this->input->get('rpt_no');
 		$data['assetno'] = $this->input->get('asset');
@@ -5118,30 +5211,31 @@ class Contentcontroller extends CI_Controller {
 		$this->load->model('update_model');
 		if(!isset($data['records'][0]->vvfAssetLockedStatus) OR $data['records'][0]->vvfAssetLockedStatus == 0){
 		
-		$insert_data = array(
-			'vvfAssetLockedStatus' => 1,
-			'vvfAssetLockedDate' => date('Y-m-d H:i:s'),
-			'vvfAssetLockedBy' => $this->session->userdata('v_UserName')
+			$insert_data = array(
+				'vvfAssetLockedStatus' => 1,
+				'vvfAssetLockedDate' => date('Y-m-d H:i:s'),
+				'vvfAssetLockedBy' => $this->session->userdata('v_UserName')
 			);
 		}
 		elseif($data['records'][0]->vvfAssetLockedStatus == 1){
 		
-		$insert_data = array(
-			'vvfAssetLockedStatus' => 0,
-			'vvfAssetLockedDate' => date('Y-m-d H:i:s'),
-			'vvfAssetLockedBy' => $this->session->userdata('v_UserName')
+			$insert_data = array(
+				'vvfAssetLockedStatus' => 0,
+				'vvfAssetLockedDate' => date('Y-m-d H:i:s'),
+				'vvfAssetLockedBy' => $this->session->userdata('v_UserName')
 			);	
 		}
 		else{
-		$insert_data = array(
-			'vvfAssetLockedStatus' => NULL,
-			'vvfAssetLockedDate' => NULL,
-			'vvfAssetLockedBy' => NULL
+			$insert_data = array(
+				'vvfAssetLockedStatus' => NULL,
+				'vvfAssetLockedDate' => NULL,
+				'vvfAssetLockedBy' => NULL
 			);		
 		}
 		$this->update_model->vo3_lock_authorize_asset($insert_data);
 		redirect('contentcontroller/vo3_Asset_Number?rpt_no='.$this->input->get('rpt_no').'&asset='.$this->input->get('asset'));		
 	}
+
 	public function authorize_vo3_asset(){
 		$data['rpt_no'] = $this->input->get('rpt_no');
 		$data['assetno'] = $this->input->get('asset');
@@ -5151,38 +5245,39 @@ class Contentcontroller extends CI_Controller {
 		$this->load->model('update_model');
 		if(!isset($data['records'][0]->vvfAuthorizedStatus) OR $data['records'][0]->vvfAuthorizedStatus == 0){
 		
-		$insert_data = array(
-			'vvfAuthorizedStatus' => 1,
-			'vvfAuthorizedDate' => date('Y-m-d H:i:s'),
-			'vvfAuthorizedBy' => $this->session->userdata('v_UserName')
+			$insert_data = array(
+				'vvfAuthorizedStatus' => 1,
+				'vvfAuthorizedDate' => date('Y-m-d H:i:s'),
+				'vvfAuthorizedBy' => $this->session->userdata('v_UserName')
 			);
 		}
 		elseif($data['records'][0]->vvfAuthorizedStatus == 1){
 		
-		$insert_data = array(
-			'vvfAuthorizedStatus' => 2,
-			'vvfAuthorizedDate' => date('Y-m-d H:i:s'),
-			'vvfAuthorizedBy' => $this->session->userdata('v_UserName')
+			$insert_data = array(
+				'vvfAuthorizedStatus' => 2,
+				'vvfAuthorizedDate' => date('Y-m-d H:i:s'),
+				'vvfAuthorizedBy' => $this->session->userdata('v_UserName')
 			);	
 		}
 		elseif($data['records'][0]->vvfAuthorizedStatus == 2){
 		
-		$insert_data = array(
-			'vvfAuthorizedStatus' => 1,
-			'vvfAuthorizedDate' => date('Y-m-d H:i:s'),
-			'vvfAuthorizedBy' => $this->session->userdata('v_UserName')
+			$insert_data = array(
+				'vvfAuthorizedStatus' => 1,
+				'vvfAuthorizedDate' => date('Y-m-d H:i:s'),
+				'vvfAuthorizedBy' => $this->session->userdata('v_UserName')
 			);	
 		}
 		else{
-		$insert_data = array(
-			'vvfAuthorizedStatus' => NULL,
-			'vvfAuthorizedDate' => NULL,
-			'vvfAuthorizedBy' => NULL
+			$insert_data = array(
+				'vvfAuthorizedStatus' => NULL,
+				'vvfAuthorizedDate' => NULL,
+				'vvfAuthorizedBy' => NULL
 			);			
 		}
 		$this->update_model->vo3_lock_authorize_asset($insert_data);
 		redirect('contentcontroller/vo3_Asset_Number?rpt_no='.$this->input->get('rpt_no').'&asset='.$this->input->get('asset'));	
 	}
+
 	public function delete_vo3_asset(){
 		$data['rpt_no'] = $this->input->get('rpt_no');
 		$data['assetno'] = $this->input->get('asset');
@@ -5191,18 +5286,20 @@ class Contentcontroller extends CI_Controller {
 		$this->load->model('update_model');
 		if($data['records'][0]->vvfActionflag != 'D'){
 		
-		$insert_data = array(
-			'vvfActionflag' => 'D',
-			'vvfTimestamp' => date('Y-m-d H:i:s'),
+			$insert_data = array(
+				'vvfActionflag' => 'D',
+				'vvfTimestamp' => date('Y-m-d H:i:s'),
 			);
 		}
 		$this->update_model->vo3_asset_update($insert_data);
 		redirect('contentcontroller/vo3_Assets?rpt_no='.$this->input->get('rpt_no').'&vo=2');
 	}
+
 	public function print_vo3_report_site(){
 		$this ->load->view("headprinter");
 		$this ->load->view("content_print_vo3_report_site");		
 	}
+
 	public function vo3_Analysis(){
 		$data['rpt_no'] = $this->input->get('rpt_no');
 		$data['rpt_no_array'] = explode('/',$data['rpt_no']);
@@ -5210,35 +5307,35 @@ class Contentcontroller extends CI_Controller {
 		$this->load->model('get_model');
 		$data['records'] = $this->get_model->vvf_analysis1($data['period']);
 		foreach ($data['records'] as $row) {
-		if ($row->V20 > 0 OR $row->V21 > 0 OR $row->V22 > 0 OR $row->V30 > 0 OR $row->V31 > 0 OR $row->V32 > 0 OR $row->V40 > 0 OR $row->V41 > 0 OR $row->V42 > 0 OR 
-			$row->V4L0 > 0 OR $row->V4L1 > 0 OR $row->V4L2 > 0 OR $row->V50 > 0 OR $row->V51 > 0 OR $row->V52 > 0 OR $row->V60 > 0 OR $row->V61 > 0 OR $row->V62 > 0 OR 
-			$row->V70 > 0 OR $row->V71 > 0 OR $row->V72 > 0 OR $row->V80 > 0 OR $row->V81 > 0 OR $row->V82 > 0 OR $row->V90 > 0 OR $row->V91 > 0 OR $row->V92 > 0 ) {
-			$data['GotData'] = 'TRUE';
-		//echo '1st : ';
-		//print_r($data['GotData']);
-		//echo '<br>';
-		//exit();
-		}
-		else{
-			$data['GotData'] = 'FALSE';
-			//echo '1st : ';
-			//print_r($data['GotData']);
-			//echo '<br>';
-			//exit();
-		}
+			if ($row->V20 > 0 OR $row->V21 > 0 OR $row->V22 > 0 OR $row->V30 > 0 OR $row->V31 > 0 OR $row->V32 > 0 OR $row->V40 > 0 OR $row->V41 > 0 OR $row->V42 > 0 OR 
+				$row->V4L0 > 0 OR $row->V4L1 > 0 OR $row->V4L2 > 0 OR $row->V50 > 0 OR $row->V51 > 0 OR $row->V52 > 0 OR $row->V60 > 0 OR $row->V61 > 0 OR $row->V62 > 0 OR 
+				$row->V70 > 0 OR $row->V71 > 0 OR $row->V72 > 0 OR $row->V80 > 0 OR $row->V81 > 0 OR $row->V82 > 0 OR $row->V90 > 0 OR $row->V91 > 0 OR $row->V92 > 0 ) {
+				$data['GotData'] = 'TRUE';
+				//echo '1st : ';
+				//print_r($data['GotData']);
+				//echo '<br>';
+				//exit();
+			}
+			else{
+				$data['GotData'] = 'FALSE';
+				//echo '1st : ';
+				//print_r($data['GotData']);
+				//echo '<br>';
+				//exit();
+			}
 		}
 		if ($data['GotData'] == 'TRUE') {
 			if (substr($data['period'],0,2) == 'P1'){
 				for ($monloop = 1;$monloop <= 6;$monloop++){
 					$data['monloop'] = $monloop;
-			$data['recordchart2'][$monloop] = $this->get_model->vvf_analysis1month($data['period'],$data['monloop']);
-					}
+					$data['recordchart2'][$monloop] = $this->get_model->vvf_analysis1month($data['period'],$data['monloop']);
 				}
+			}
 		
 			elseif (substr($data['period'],0,2) == 'P2'){
 				for ($monloop = 7;$monloop <= 12;$monloop++){
 					$data['monloop'] = $monloop;
-			$data['recordchart2'][$monloop] = $this->get_model->vvf_analysis1month($data['period'],$data['monloop']);
+					$data['recordchart2'][$monloop] = $this->get_model->vvf_analysis1month($data['period'],$data['monloop']);
 				}
 			}
 		}
@@ -5251,6 +5348,7 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("content_vo3_Analysis",$data);		
 	}
+
 	public function vo3_als(){
 		$data['rpt_no'] = $this->input->get('rpt_no');
 		$data['rpt_no_array'] = explode('/',$data['rpt_no']);
@@ -5258,28 +5356,28 @@ class Contentcontroller extends CI_Controller {
 		$this->load->model('get_model');
 		$data['records'] = $this->get_model->vvf_analysis2($data['period']);
 		foreach ($data['records'] as $row) {
-		if ($row->V20 > 0 OR $row->V21 > 0 OR $row->V30 > 0 OR $row->V31 > 0 OR $row->V40 > 0 OR $row->V41 > 0 OR $row->V4L0 > 0 OR $row->V4L1 > 0 OR
-			$row->V50 > 0 OR $row->V51 > 0 OR $row->V60 > 0 OR $row->V61 > 0 OR $row->V70 > 0 OR $row->V71 > 0 OR $row->V80 > 0 OR $row->V81 > 0 OR
-			$row->V90 > 0 OR $row->V91 > 0 ) {
-			$data['GotData'] = 'TRUE';
-		}
-		else{
-			$data['GotData'] = 'FALSE';
-		}
+			if ($row->V20 > 0 OR $row->V21 > 0 OR $row->V30 > 0 OR $row->V31 > 0 OR $row->V40 > 0 OR $row->V41 > 0 OR $row->V4L0 > 0 OR $row->V4L1 > 0 OR
+				$row->V50 > 0 OR $row->V51 > 0 OR $row->V60 > 0 OR $row->V61 > 0 OR $row->V70 > 0 OR $row->V71 > 0 OR $row->V80 > 0 OR $row->V81 > 0 OR
+				$row->V90 > 0 OR $row->V91 > 0 ) {
+				$data['GotData'] = 'TRUE';
+			}
+			else{
+				$data['GotData'] = 'FALSE';
+			}
 		}
 		
 		if ($data['GotData'] == 'TRUE') {
 			if (substr($data['period'],0,2) == 'P1'){
 				for ($monloop = 1;$monloop <= 6;$monloop++){
 					$data['monloop'] = $monloop;
-			$data['recordchart2'][$monloop] = $this->get_model->vvf_analysis2month($data['period'],$data['monloop']);
-					}
+					$data['recordchart2'][$monloop] = $this->get_model->vvf_analysis2month($data['period'],$data['monloop']);
 				}
+			}
 		
 			elseif (substr($data['period'],0,2) == 'P2'){
 				for ($monloop = 7;$monloop <= 12;$monloop++){
 					$data['monloop'] = $monloop;
-			$data['recordchart2'][$monloop] = $this->get_model->vvf_analysis2month($data['period'],$data['monloop']);
+					$data['recordchart2'][$monloop] = $this->get_model->vvf_analysis2month($data['period'],$data['monloop']);
 				}
 			}
 		}
@@ -5297,86 +5395,95 @@ class Contentcontroller extends CI_Controller {
 	}	
 	
 	public function wo_ppmgen_week(){
-	$this ->load->view("head");
-	$this ->load->view("left");
-	$this ->load->view("Content_wo_ppmgen_week");
+		$this ->load->view("head");
+		$this ->load->view("left");
+		$this ->load->view("Content_wo_ppmgen_week");
 	}
+
 	public function print_report2_wo_ppm_week_list(){
 		$this ->load->view("headprinter");
 		$this ->load->view("Content_print_report2_wo_ppm_week_list");
 	}
+
 	public function qap3_car(){
-	$data['ssiq'] = $this->input->get('ssiq');
-	$data['carid'] = $this->input->get('carid');
-	$this->load->model('display_model');
-	$data['record'] = $this->display_model->qap3_car($data['ssiq'],$data['carid']);
-	$this ->load->view("head");
-	$this ->load->view("left");
-	$this ->load->view("Content_qap3_car",$data);
+		$data['ssiq'] = $this->input->get('ssiq');
+		$data['carid'] = $this->input->get('carid');
+		$this->load->model('display_model');
+		$data['record'] = $this->display_model->qap3_car($data['ssiq'],$data['carid']);
+		$this ->load->view("head");
+		$this ->load->view("left");
+		$this ->load->view("Content_qap3_car",$data);
 	}
+
 	public function qap3_car_edit(){
-	$data['ssiq'] = $this->input->get('ssiq');
-	$data['carid'] = $this->input->get('carid');
-	$this->load->model('display_model');
-	$data['record'] = $this->display_model->qap3_cardisp($data['ssiq'],$data['carid']);
-	$data['recordsiq'] = $this->display_model->qap3_carsiqdisp($data['ssiq']);
-	$data['recordind'] = $this->display_model->qap3_carinddisp();
-	$data['recordqc'] = $this->display_model->qap3_carqcdisp();
-	//print_r($data['recordqc']);
-	//exit();
-	if(strlen($data['recordsiq'][0]->type_code) > 0){
-	$data['recordasset'] = $this->display_model->qap3_assetcodedisp($data['recordsiq'][0]->type_code);	
+		$data['ssiq'] = $this->input->get('ssiq');
+		$data['carid'] = $this->input->get('carid');
+		$this->load->model('display_model');
+		$data['record'] = $this->display_model->qap3_cardisp($data['ssiq'],$data['carid']);
+		$data['recordsiq'] = $this->display_model->qap3_carsiqdisp($data['ssiq']);
+		$data['recordind'] = $this->display_model->qap3_carinddisp();
+		$data['recordqc'] = $this->display_model->qap3_carqcdisp();
+		//print_r($data['recordqc']);
+		//exit();
+		if(strlen($data['recordsiq'][0]->type_code) > 0){
+			$data['recordasset'] = $this->display_model->qap3_assetcodedisp($data['recordsiq'][0]->type_code);	
+		}
+		!empty($data['recordasset']) ? $data['assetcode'] = $data['recordasset'][0]->v_Equip_Code.' - '.$data['recordasset'][0]->v_Equip_Desc : $data['assetcode'] = '';
+		
+		$this ->load->view("head");
+		$this ->load->view("left");
+		$this ->load->view("Content_qap3_car_edit",$data);
 	}
-	!empty($data['recordasset']) ? $data['assetcode'] = $data['recordasset'][0]->v_Equip_Code.' - '.$data['recordasset'][0]->v_Equip_Desc : $data['assetcode'] = '';
-	
-	$this ->load->view("head");
-	$this ->load->view("left");
-	$this ->load->view("Content_qap3_car_edit",$data);
-	}
+
 	public function qap3_car_confirm(){
-	$this ->load->view("head");
-	$this ->load->view("left");
-	$this ->load->view("Content_qap3_car_confirm");
+		$this ->load->view("head");
+		$this ->load->view("left");
+		$this ->load->view("Content_qap3_car_confirm");
 	}
+
 	public function qap3_action(){
-	$data['ssiq'] = $this->input->get('ssiq');
-	$data['carid'] = $this->input->get('carid');
-	$this->load->model('display_model');
-	$data['record'] = $this->display_model->qap3_action($data['carid']);
-	$this ->load->view("head");
-	$this ->load->view("left");
-	$this ->load->view("Content_qap3_action",$data);
+		$data['ssiq'] = $this->input->get('ssiq');
+		$data['carid'] = $this->input->get('carid');
+		$this->load->model('display_model');
+		$data['record'] = $this->display_model->qap3_action($data['carid']);
+		$this ->load->view("head");
+		$this ->load->view("left");
+		$this ->load->view("Content_qap3_action",$data);
 	}
+
 	public function qap3_action_new(){
-	$data['carid'] = $this->input->get('carid');
-	$this->load->model('get_model');
-	$data['record'] = $this->get_model->qap3_actionnew($data['carid']);	
-	$this ->load->view("head");
-	$this ->load->view("left");
-	$this ->load->view("Content_qap3_action_new",$data);
+		$data['carid'] = $this->input->get('carid');
+		$this->load->model('get_model');
+		$data['record'] = $this->get_model->qap3_actionnew($data['carid']);	
+		$this ->load->view("head");
+		$this ->load->view("left");
+		$this ->load->view("Content_qap3_action_new",$data);
 	}
+
 	public function qap3_action_confirm(){
-	$this ->load->view("head");
-	$this ->load->view("left");
-	$this ->load->view("Content_qap3_action_confirm");
+		$this ->load->view("head");
+		$this ->load->view("left");
+		$this ->load->view("Content_qap3_action_confirm");
 	}
+	
 	public function qap3_action_edit(){
-	$data['ssiq'] = $this->input->get('ssiq');
-	$data['carid'] = $this->input->get('carid');
-	$data['sl_no'] = $this->input->get('sl_no');
-	$this->load->model('display_model');
-	$data['record'] = $this->display_model->qap3_actiondisp($data['carid'],$data['sl_no']);	
-	$this ->load->view("head");
-	$this ->load->view("left");
-	$this ->load->view("Content_qap3_action_edit",$data);
+		$data['ssiq'] = $this->input->get('ssiq');
+		$data['carid'] = $this->input->get('carid');
+		$data['sl_no'] = $this->input->get('sl_no');
+		$this->load->model('display_model');
+		$data['record'] = $this->display_model->qap3_actiondisp($data['carid'],$data['sl_no']);	
+		$this ->load->view("head");
+		$this ->load->view("left");
+		$this ->load->view("Content_qap3_action_edit",$data);
 	}
+
 	public function qap3_action_confirmedit(){
-	$this ->load->view("head");
-	$this ->load->view("left");
-	$this ->load->view("Content_qap3_action_confirmedit");
+		$this ->load->view("head");
+		$this ->load->view("left");
+		$this ->load->view("Content_qap3_action_confirmedit");
 	}
-	public function Schedule(){
-			
+
+	public function Schedule(){	
 		$this->load->model("display_model");
 		$data['records'] = $this->display_model->list_hospinfo();
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");
@@ -5388,13 +5495,12 @@ class Contentcontroller extends CI_Controller {
 		$data['year'] = ($data['month'] == 0)  ? $data['year']-1 : $data['year'];
 		$data['month'] = ($data['month'] == 0)  ? 12 : $data['month'];
 		function toArray($obj)
-{
-    $obj = (array) $obj;//cast to array, optional
-    return $obj['path'];
-}
+		{
+			$obj = (array) $obj;//cast to array, optional
+			return $obj['path'];
+		}
 
-    $idArray = array_map('toArray', $this->session->userdata('accessr'));
-   
+		$idArray = array_map('toArray', $this->session->userdata('accessr'));
 		//echo "nilai id : ".print_r($idArray);
 		$data['chkers'] = $idArray;
 		$this ->load->view("head");
@@ -5403,28 +5509,27 @@ class Contentcontroller extends CI_Controller {
 	}
 	
 	public function Store(){
-	//echo "nilai oooo : ".$this->input->post('searchquestion');
-	//exit();
+		//echo "nilai oooo : ".$this->input->post('searchquestion');
+		//exit();
 		$this->load->model('display_model');
 		$data['record'] = $this->display_model->stock_asset($this->input->post('searchquestion'));
 		//$data['count'] = count($data['record']);
 
 		foreach($data['record'] as $row){
-		$data['pricel'] = $this->display_model->stock_passet($row->ItemCode,$row->Hosp_code);
-		$data['pricerec'][] = $data['pricel'];
-		
-		$data['assetl'] = $this->display_model->storeasset_detail($row->ItemCode,$row->Hosp_code);
+			$data['pricel'] = $this->display_model->stock_passet($row->ItemCode,$row->Hosp_code);
+			$data['pricerec'][] = $data['pricel'];
+			
+			$data['assetl'] = $this->display_model->storeasset_detail($row->ItemCode,$row->Hosp_code);
 
-		$data['assetrec'][] = $data['assetl'];
+			$data['assetrec'][] = $data['assetl'];
 		}
 		function toArray($obj)
 		{
-    $obj = (array) $obj;//cast to array, optional
-    return $obj['path'];
+			$obj = (array) $obj;//cast to array, optional
+			return $obj['path'];
 		}
 
-    $idArray = array_map('toArray', $this->session->userdata('accessr'));
-   
+		$idArray = array_map('toArray', $this->session->userdata('accessr'));
 		//echo "nilai id : ".print_r($idArray);
 		$data['chkers'] = $idArray;
 		//exit();
@@ -5438,11 +5543,13 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("content_store_item_new");
 	}
+
 	public function store_item_confirm(){
 		$this ->load->view("head");
 		$this ->load->view("left");
 		$this ->load->view("content_store_item_confirm");
 	}
+
 	public function pecodes(){
 		$data['hosp'] = $this->input->get('hosp');
 		$this->load->model('display_model');
@@ -5450,6 +5557,7 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("head");
 		$this ->load->view("content_pop_pecodes",$data);
 	}
+
 	public function pecodes2(){
 		$data['ic'] = $this->input->get('ic');
 		$this->load->model('display_model');
@@ -5457,8 +5565,8 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("head");
 		$this ->load->view("content_pop_pecodes2",$data);
 	}
+
 	public function ustore(){
-		
 		$data['id'] = $this->input->get('id');
 		$data['qty'] = $this->input->get('qty');
 		$data['n'] = $this->input->get('n');
@@ -5475,6 +5583,7 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("content_pop_ustore_c");
 	}
+
 	public function pop_requests(){
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
@@ -5483,20 +5592,18 @@ class Contentcontroller extends CI_Controller {
 		$data['hosp'] = $this->session->userdata('hosp_code');
 		$this->load->model('display_model');
 		if($data['wwo'] == 1){
-		$data['record'] = $this->display_model->poprequest_rcm($data['hosp'],$data['year'],$data['month'],$data['s']);	
+			$data['record'] = $this->display_model->poprequest_rcm($data['hosp'],$data['year'],$data['month'],$data['s']);	
 		}
 		else{
-		$data['record'] = $this->display_model->poprequest_ppm($data['hosp'],$data['year'],$data['month']);
+			$data['record'] = $this->display_model->poprequest_ppm($data['hosp'],$data['year'],$data['month']);
 		}
 		$this ->load->view("head");
 		$this ->load->view("content_pop_requests",$data);
 	}
 	
-	
-	
 	public function schedule_p_work(){
-	  $data['dept']=$this->input->get('dept', TRUE);
-    $data['loc']=$this->input->get('loc', TRUE);
+		$data['dept']=$this->input->get('dept', TRUE);
+		$data['loc']=$this->input->get('loc', TRUE);
 		$this ->load->view("headprinter");
 		$this ->load->view("content_schedule_p_work", $data);
 	}
@@ -5514,7 +5621,7 @@ class Contentcontroller extends CI_Controller {
 		$this->load->model('display_model');
 		$data['record'] = $this->display_model->jobsch_disp($data['Scheduler_Name']);
 		if (isset($data['record'][0]->Monthly_days)) {
-		$data['weekDays'] = explode(',',$data['record'][0]->Monthly_days);
+			$data['weekDays'] = explode(',',$data['record'][0]->Monthly_days);
 			foreach ($data['weekDays'] as $rows){
 				if ($rows == 'Monday'){
 					$data['Monday'] = $rows;
@@ -5543,11 +5650,13 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("head");
 		$this ->load->view("content_job_schedule",$data);
 	}
+
 	public function job_schedule_c(){
 		$this ->load->view("head");
 		$this ->load->view("left");
 		$this ->load->view("content_job_schedule_c");
 	}
+
 	public function usaCleansing_Items(){
 		$this ->load->view("headprinter");
 		$this ->load->view("content_usaCleansing_Items");
@@ -5563,31 +5672,30 @@ class Contentcontroller extends CI_Controller {
 		$this->load->model('display_model');
 		$data['record'] = $this->display_model->stock_asset();
 		
-			foreach($data['record'] as $row){
-				if($data['item'] == $row->ItemName){
-					$data['code'] = $row->ItemCode;
-				}
+		foreach($data['record'] as $row){
+			if($data['item'] == $row->ItemName){
+				$data['code'] = $row->ItemCode;
 			}
+		}
 		
 		if($data['item'] <> ''){
-		$data['assetrec'] = $this->display_model->storeasset_report($data['code'],$data['month'],$data['year']);
-		$data['countarray'] = count($data['assetrec']);
-		if($data['countarray']==0){
-		$data['assetrec'] = array(
-								  'ItemName' => NULL,
-			);	
-		}
+			$data['assetrec'] = $this->display_model->storeasset_report($data['code'],$data['month'],$data['year']);
+			$data['countarray'] = count($data['assetrec']);
+			if($data['countarray']==0){
+				$data['assetrec'] = array(
+										'ItemName' => NULL,
+				);	
+			}
 		}
 		else { 
-		$data['assetrec'] = array(
-								  'ItemName' => NULL,
-			);
+			$data['assetrec'] = array(
+									'ItemName' => NULL,
+									);
 		}
 		
 		$this ->load->view("headprinter");
 		$this ->load->view("content_Report_Part",$data);
-	}
-	
+	}	
 	
 	public function visitplus(){
 		//$data ['records']= array(array('n_code' => 's Date 1', 'n_name'=>'Viseit Date 2','n_time'=>'Visidt Date 3','n_rate'=>'Viseit Date 2','n_total'=>'Visidt Date 3'));
@@ -5596,78 +5704,78 @@ class Contentcontroller extends CI_Controller {
 
 		//if (substr($data['wrk_ord'],0,2) == 'PP'){
 		if ((substr($data['wrk_ord'],0,2) == 'PP') || (substr($data['wrk_ord'],0,2) == 'RI')) {
-		$data['records'] = $this->display_model->visit1ppm_tab($data['wrk_ord']);
-		$data['recordjob'] = $this->display_model->jobclose_ppm($data['wrk_ord']);
+			$data['records'] = $this->display_model->visit1ppm_tab($data['wrk_ord']);
+			$data['recordjob'] = $this->display_model->jobclose_ppm($data['wrk_ord']);
 		}
 		else{
-		//$data['recordcheck'] = $this->display_model->response_tab($data['wrk_ord']);
-		$data['records'] = $this->display_model->visit1_tab($data['wrk_ord']);
-		$data['recordjob'] = $this->display_model->jobclose_tab($data['wrk_ord']);
+			//$data['recordcheck'] = $this->display_model->response_tab($data['wrk_ord']);
+			$data['records'] = $this->display_model->visit1_tab($data['wrk_ord']);
+			$data['recordjob'] = $this->display_model->jobclose_tab($data['wrk_ord']);
 		}
 		//print_r($data['records']);
 		//exit();
 		//Content_workorder_visitplus
 		if ((substr($data['wrk_ord'],0,2) == 'PP') || (substr($data['wrk_ord'],0,2) == 'RI')){
-		$this ->load->view("head");
-		$this ->load->view("left");
-		$this ->load->view("content_ppmvisitplus" , $data);
+			$this ->load->view("head");
+			$this ->load->view("left");
+			$this ->load->view("content_ppmvisitplus" , $data);
 		}
 		else{
-		$this ->load->view("head");
-		$this ->load->view("left");
-		$this ->load->view("Content_workorder_visitplus" , $data);
+			$this ->load->view("head");
+			$this ->load->view("left");
+			$this ->load->view("Content_workorder_visitplus" , $data);
 		}
-
 	}
-		public function visitplusupdate(){
+	
+	public function visitplusupdate(){
 		$data['wrk_ord'] = $this->input->get('wrk_ord');
 		$data['visit'] = $this->input->get('visit');
 		$this->load->model("display_model");
 		$this->load->model('get_model');
 		//if (substr($data['wrk_ord'],0,2) == 'PP'){
 		if ((substr($data['wrk_ord'],0,2) == 'PP') || (substr($data['wrk_ord'],0,2) == 'RI')){
-		$data['latestvisit'] = $this->get_model->latestppmvisit($data['wrk_ord']);
-		$data['record'] = $this->display_model->visit1ppm_utab($data['wrk_ord'],$data['visit']);
-		$data['recordjob'] = $this->display_model->jobclose_ppm($data['wrk_ord']);
+			$data['latestvisit'] = $this->get_model->latestppmvisit($data['wrk_ord']);
+			$data['record'] = $this->display_model->visit1ppm_utab($data['wrk_ord'],$data['visit']);
+			$data['recordjob'] = $this->display_model->jobclose_ppm($data['wrk_ord']);
 		}
 		else{
-		$data['latestvisit'] = $this->get_model->latestvisit($data['wrk_ord']);
-		$data['record'] = $this->display_model->visit1_utab($data['wrk_ord'],$data['visit']);
-		$data['recordjob'] = $this->display_model->jobclose_tab($data['wrk_ord']);
+			$data['latestvisit'] = $this->get_model->latestvisit($data['wrk_ord']);
+			$data['record'] = $this->display_model->visit1_utab($data['wrk_ord'],$data['visit']);
+			$data['recordjob'] = $this->display_model->jobclose_tab($data['wrk_ord']);
 		}
 		if (isset($data['record'][0]->v_WrkOrdNo)){	
-		$data['Stime'] = explode(':',$data['record'][0]->v_Time);
-		$data['Etime'] = explode(':',$data['record'][0]->v_Etime);
-		$data['P1time'] = explode(':',$data['record'][0]->n_Hours1);
-		$data['P2time'] = explode(':',$data['record'][0]->n_Hours2);
-		$data['P3time'] = explode(':',$data['record'][0]->n_Hours3);
-		$data['P1personal'] = explode('-',$data['record'][0]->v_Personal1);
-		//print_r($data['P1personal']);
-		//echo '<br>';
-		$data['P2personal'] = explode('-',$data['record'][0]->v_Personal2);
-		$data['P3personal'] = explode('-',$data['record'][0]->v_Personal3);
-		$data['P1Rate'] = number_format($data['record'][0]->n_Rate1,2);
-		$data['P2Rate'] = number_format($data['record'][0]->n_Rate2,2);
-		$data['P3Rate'] = number_format($data['record'][0]->n_Rate3,2);
-		$data['P1Trate'] = number_format($data['record'][0]->n_Total1,2);
-		$data['P2Trate'] = number_format($data['record'][0]->n_Total2,2);
-		$data['P3Trate'] = number_format($data['record'][0]->n_Total3,2);
-		$data['Vendor'] = explode('-',$data['record'][0]->v_Vendor1);
-		$data['PartRM'] = number_format($data['record'][0]->n_PartRM,2);
-		$data['PartTrate'] = number_format($data['record'][0]->n_PartTotal,2);
-		$data['rschReason'] = explode(':',$data['record'][0]->v_ReschReason);
+			$data['Stime'] = explode(':',$data['record'][0]->v_Time);
+			$data['Etime'] = explode(':',$data['record'][0]->v_Etime);
+			$data['P1time'] = explode(':',$data['record'][0]->n_Hours1);
+			$data['P2time'] = explode(':',$data['record'][0]->n_Hours2);
+			$data['P3time'] = explode(':',$data['record'][0]->n_Hours3);
+			$data['P1personal'] = explode('-',$data['record'][0]->v_Personal1);
+			//print_r($data['P1personal']);
+			//echo '<br>';
+			$data['P2personal'] = explode('-',$data['record'][0]->v_Personal2);
+			$data['P3personal'] = explode('-',$data['record'][0]->v_Personal3);
+			$data['P1Rate'] = number_format($data['record'][0]->n_Rate1,2);
+			$data['P2Rate'] = number_format($data['record'][0]->n_Rate2,2);
+			$data['P3Rate'] = number_format($data['record'][0]->n_Rate3,2);
+			$data['P1Trate'] = number_format($data['record'][0]->n_Total1,2);
+			$data['P2Trate'] = number_format($data['record'][0]->n_Total2,2);
+			$data['P3Trate'] = number_format($data['record'][0]->n_Total3,2);
+			$data['Vendor'] = explode('-',$data['record'][0]->v_Vendor1);
+			$data['PartRM'] = number_format($data['record'][0]->n_PartRM,2);
+			$data['PartTrate'] = number_format($data['record'][0]->n_PartTotal,2);
+			$data['rschReason'] = explode(':',$data['record'][0]->v_ReschReason);
 		}
 
 		//if (substr($data['wrk_ord'],0,2) == 'PP'){
 		if ((substr($data['wrk_ord'],0,2) == 'PP') || (substr($data['wrk_ord'],0,2) == 'RI')){
-		$this ->load->view("head");
-		$this ->load->view("left");
-		$this ->load->view("Content_ppmvisitplusupdate",$data);
+			$this ->load->view("head");
+			$this ->load->view("left");
+			$this ->load->view("Content_ppmvisitplusupdate",$data);
 		}
 		else{
-		$this ->load->view("head");
-		$this ->load->view("left");
-		$this ->load->view("Content_workorder_visitplusupdate",$data);	
+			$this ->load->view("head");
+			$this ->load->view("left");
+			$this ->load->view("Content_workorder_visitplusupdate",$data);	
 		}
 	}
 	
@@ -5729,15 +5837,15 @@ class Contentcontroller extends CI_Controller {
 			if ($row->Scheduler_Name == $data['loct'].'-DCAP'){
 				$data['DCAP'] = $row->Scheduler_Name;
 			}*/
-		//echo 'j ';
-		//print_r($data['PWMP']);
-		//echo '<br>';
-		}
-		
+			//echo 'j ';
+			//print_r($data['PWMP']);
+			//echo '<br>';
+		}		
 		
 		$this ->load->view("head");
 		$this ->load->view("content_p_Schduler",$data);
 	}
+
 	public function acg(){
 		$data['month'] = ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
 		$data['year'] = ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");
@@ -5763,10 +5871,12 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("Content_acg",$data);
 	}
+
 	public function acg_confirm(){
 		$this ->load->view("headprinter");
 		$this ->load->view("Content_acg_confirm");
 	}
+
 	public function fnindex_new(){
 		$data['month'] = ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
 		$data['year'] = ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");
@@ -5781,6 +5891,7 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("headprinter");
 		$this ->load->view("Content_fnindex_new",$data);
 	}
+
 	public function fsfrindex_new(){
 		$data['month'] = ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
 		$data['year'] = ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");
@@ -5795,6 +5906,7 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("headprinter");
 		$this ->load->view("Content_fsfrindex_new",$data);
 	}
+
 	public function fsfrinput(){
 		$data['month'] = ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
 		$data['year'] = ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");
@@ -5808,10 +5920,12 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("headprinter");
 		$this ->load->view("Content_fsfrinput",$data);
 	}
+
 	public function fsfrinputcfirm(){
 		$this ->load->view("headprinter");
 		$this ->load->view("Content_fsfrinputcfirm");
 	}
+
 	public function delpic(){
 		//echo 'masuk<br>';
 		$data['imgid'] = $this->input->get('imgid');
@@ -5837,6 +5951,7 @@ class Contentcontroller extends CI_Controller {
 		$data['asset_cat'] = $this->get_model->get_assetcat();
 		$this ->load->view("Content_ASummaryListing", $data);
 	}
+
 	public function ttassetmodel(){
 		$this ->load->view("headreport");
 		$this ->load->view("leftreport");
@@ -5844,6 +5959,7 @@ class Contentcontroller extends CI_Controller {
 		$data['asset_mod'] = $this->get_model->get_assetmod();
 		$this ->load->view("ttassetmodel", $data);
 	}
+
 	public function ttassetmanufacturer(){
 		$this ->load->view("headreport");
 		$this ->load->view("leftreport");
@@ -5851,6 +5967,7 @@ class Contentcontroller extends CI_Controller {
 		$data['asset_man'] = $this->get_model->get_assetmanu();
 		$this ->load->view("Content_ttassetmanufacturer", $data);
 	}
+	
 	public function ttassettype(){
 		$this ->load->view("headreport");
 		$this ->load->view("leftreport");
@@ -5858,6 +5975,7 @@ class Contentcontroller extends CI_Controller {
 		$data['asset_cos'] = $this->get_model->get_assetcost();
 		$this ->load->view("Content_ttassettype", $data);
 	}
+
 	public function ttassetpcmodel(){
 		$this ->load->view("headreport");
 		$this ->load->view("leftreport");
@@ -5865,6 +5983,7 @@ class Contentcontroller extends CI_Controller {
 		$data['asset_cosm'] = $this->get_model->get_assetcostm();
 		$this ->load->view("Content_ttassetpcmodel", $data);
 	}
+
 	public function ttassetpcmanufacturer(){
 		$this ->load->view("headreport");
 		$this ->load->view("leftreport");
@@ -5872,6 +5991,7 @@ class Contentcontroller extends CI_Controller {
 		$data['asset_cosmanu'] = $this->get_model->get_assetcostmanu();
 		$this ->load->view("Content_ttassetpcmanufacturer", $data);
 	}
+
 	public function ttassetdepart(){
 		$this ->load->view("headreport");
 		$this ->load->view("leftreport");
@@ -5879,11 +5999,13 @@ class Contentcontroller extends CI_Controller {
 		$data['asset_bydebt'] = $this->get_model->get_assetbdept();
 		$this ->load->view("Content_ttassetdepart", $data);
 	}
+
 	public function ttassetgroupasset(){
 		$this ->load->view("headreport");
 		$this ->load->view("leftreport");
 		$this ->load->view("ttassetgroupasset");
 	}
+
 	public function ttassetyearpurchase(){
 		$this ->load->view("headreport");
 		$this ->load->view("leftreport");
@@ -5891,6 +6013,7 @@ class Contentcontroller extends CI_Controller {
 		$data['asset_bydebt'] = $this->get_model->get_assetbyear();
 		$this ->load->view("Content_ttassetyearpurchase", $data);
 	}
+
 	public function ttassetlocation(){
 		$this ->load->view("headreport");
 		$this ->load->view("leftreport");
@@ -5898,6 +6021,7 @@ class Contentcontroller extends CI_Controller {
 		$data['asset_byloc'] = $this->get_model->get_assetbloc();
 		$this ->load->view("Content_ttassetlocation", $data);
 	}
+
 	public function ttassetstatus(){
 		$this ->load->view("headreport");
 		$this ->load->view("leftreport");
@@ -5905,6 +6029,7 @@ class Contentcontroller extends CI_Controller {
 		$data['asset_bystatus'] = $this->get_model->get_assetbstatus();
 		$this ->load->view("Content_ttassetstatus", $data);
 	}
+
 	public function ttassetcondition(){
 		$this ->load->view("headreport");
 		$this ->load->view("leftreport");
@@ -5912,6 +6037,7 @@ class Contentcontroller extends CI_Controller {
 		$data['asset_bycond'] = $this->get_model->get_assetbcond();
 		$this ->load->view("Content_ttassetcondition", $data);
 	}
+
 	public function ttassetvariation(){
 		$this ->load->view("headreport");
 		$this ->load->view("leftreport");
@@ -5919,31 +6045,37 @@ class Contentcontroller extends CI_Controller {
 		$data['asset_byvar'] = $this->get_model->get_assetbvar();
 		$this ->load->view("Content_ttassetvariation", $data);
 	}
+
 	public function ttassetwarranty(){
 		$this ->load->view("headreport");
 		$this ->load->view("leftreport");
 		$this ->load->view("Content_ttassetwarranty");
 	}
+
 	public function ttassetexceedwarranty(){
 		$this ->load->view("headreport");
 		$this ->load->view("leftreport");
 		$this ->load->view("Content_ttassetexceedwarranty");
 	}
+
 	public function ttassetaging(){
 		$this ->load->view("headreport");
 		$this ->load->view("leftreport");
 		$this ->load->view("Content_ttassetaging");
 	}
+
 	public function ttassetrequiment(){
 		$this ->load->view("headreport");
 		$this ->load->view("leftreport");
 		$this ->load->view("Content_ttassetrequiment");
 	}
+
 	public function ttassetPartCost(){
 		$this ->load->view("headreport");
 		$this ->load->view("leftreport");
 		$this ->load->view("Content_ttassetPartCost");
 	}
+
 	public function ttrrlate(){
 		$this ->load->view("headreport");
 		$this ->load->view("leftreport");
@@ -5951,6 +6083,7 @@ class Contentcontroller extends CI_Controller {
 		$data['c_lateresponse'] = $this->get_model->get_cresponselate();
 		$this ->load->view("Content_ttrrlate", $data);
 	}
+
 	public function ttrrontime(){
 		$this ->load->view("headreport");
 		$this ->load->view("leftreport");
@@ -5958,6 +6091,7 @@ class Contentcontroller extends CI_Controller {
 		$data['c_responseontime'] = $this->get_model->get_cresponseontime();
 		$this ->load->view("Content_ttrrontime", $data);
 	}
+
 	public function ttrrdepartment(){
 		$this ->load->view("headreport");
 		$this ->load->view("leftreport");
@@ -5965,6 +6099,7 @@ class Contentcontroller extends CI_Controller {
 		$data['wo_bydept'] = $this->get_model->get_cbydept();
 		$this ->load->view("Content_ttrrdepartment", $data);
 	}
+
 	public function ttrraging(){
 		$this ->load->view("headreport");
 		$this ->load->view("leftreport");
@@ -5972,6 +6107,7 @@ class Contentcontroller extends CI_Controller {
 		$data['wo_byage'] = $this->get_model->get_cbyage();
 		$this ->load->view("Content_ttrraging", $data);
 	}
+
 	public function ttrrtechnical(){
 		$this ->load->view("headreport");
 		$this ->load->view("leftreport");
@@ -5979,6 +6115,7 @@ class Contentcontroller extends CI_Controller {
 		$data['wo_bypersonnel'] = $this->get_model->get_cbypersonnel();
 		$this ->load->view("Content_ttrrtechnical", $data);
 	}
+
 	public function ttrtimeframe(){
 		$this ->load->view("headreport");
 		$this ->load->view("leftreport");
@@ -5986,6 +6123,7 @@ class Contentcontroller extends CI_Controller {
 		$data['wo_responseontime'] = $this->get_model->get_woresponseontime();
 		$this ->load->view("Content_ttrtimeframe", $data);
 	}
+
 	public function ttroutstandingtimeframe(){
 		$this ->load->view("headreport");
 		$this ->load->view("leftreport");
@@ -5993,6 +6131,7 @@ class Contentcontroller extends CI_Controller {
 		$data['wo_lateresponse'] = $this->get_model->get_woresponselate();
 		$this ->load->view("Content_ttroutstandingtimeframe", $data);
 	}
+
 	public function ttrassettmm(){
 		$this ->load->view("headreport");
 		$this ->load->view("leftreport");
@@ -6000,6 +6139,7 @@ class Contentcontroller extends CI_Controller {
 		$data['wo_bymodelman'] = $this->get_model->get_wobymodelman();
 		$this ->load->view("Content_ttrassettmm", $data);
 	}
+
 	public function ttrld(){
 		$this ->load->view("headreport");
 		$this ->load->view("leftreport");
@@ -6007,6 +6147,7 @@ class Contentcontroller extends CI_Controller {
 		$data['wo_bydept'] = $this->get_model->get_wobydept();
 		$this ->load->view("Content_ttrld", $data);
 	}
+
 	public function ttrttrassetscv(){
 		$this ->load->view("headreport");
 		$this ->load->view("leftreport");
@@ -6014,6 +6155,7 @@ class Contentcontroller extends CI_Controller {
 		$data['wo_byscv'] = $this->get_model->get_wobyassetscv();
 		$this ->load->view("Content_ttrttrassetscv", $data);
 	}
+
 	public function ttrts(){
 		$this ->load->view("headreport");
 		$this ->load->view("leftreport");
@@ -6021,6 +6163,7 @@ class Contentcontroller extends CI_Controller {
 		$data['wo_bypersonnel'] = $this->get_model->get_wobypersonnel();
 		$this ->load->view("Content_ttrts", $data);
 	}
+
 	public function ttrctimeframe(){
 		$this ->load->view("headreport");
 		$this ->load->view("leftreport");
@@ -6028,6 +6171,7 @@ class Contentcontroller extends CI_Controller {
 		$data['ppmon'] = $this->get_model->get_ppmtarget();
 		$this ->load->view("Content_ttrctimeframe", $data);
 	}
+
 	public function ttrcoutstandingtimeframe(){
 		$this ->load->view("headreport");
 		$this ->load->view("leftreport");
@@ -6035,11 +6179,13 @@ class Contentcontroller extends CI_Controller {
 		$data['ppmonoff'] = $this->get_model->get_ppmofftarget();
 		$this ->load->view("Content_ttrcoutstandingtimeframe", $data);
 	}
+
 	public function ttrcdiscipline(){
 		$this ->load->view("headreport");
 		$this ->load->view("leftreport");
 		$this ->load->view("Content_ttrcdiscipline");
 	}
+
 	public function ttrcassettmm(){
 		$this ->load->view("headreport");
 		$this ->load->view("leftreport");
@@ -6047,6 +6193,7 @@ class Contentcontroller extends CI_Controller {
 		$data['ppmmm'] = $this->get_model->get_ppmmm();
 		$this ->load->view("Content_ttrcassettmm", $data);
 	}
+
 	public function ttrcld(){
 		$this ->load->view("headreport");
 		$this ->load->view("leftreport");
@@ -6054,6 +6201,7 @@ class Contentcontroller extends CI_Controller {
 		$data['ppmld'] = $this->get_model->get_ppmld();
 		$this ->load->view("Content_ttrcld", $data);
 	}
+
 	public function ttrcttrassetscv(){
 		$this ->load->view("headreport");
 		$this ->load->view("leftreport");
@@ -6061,6 +6209,7 @@ class Contentcontroller extends CI_Controller {
 		$data['ppmscv'] = $this->get_model->get_ppmscv();
 		$this ->load->view("Content_ttrcttrassetscv", $data);
 	}
+
 	public function ttrcts(){
 		$this ->load->view("headreport");
 		$this ->load->view("leftreport");
@@ -6068,6 +6217,7 @@ class Contentcontroller extends CI_Controller {
 		$data['ppmperson'] = $this->get_model->get_ppmbypersonnel();
 		$this ->load->view("Content_ttrcts", $data);
 	}
+
 	public function Service_update(){
 		$data['asstno'] = $this->input->get('asstno');
 		$this->load->model('display_model');
@@ -6076,11 +6226,13 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("Content_asset_Service_update",$data);
 	}
+
 	public function Service_confirm(){
 		$this ->load->view("head");
 		$this ->load->view("left");
 		$this ->load->view("Content_asset_Service_confirm");
 	}
+
 	public function delete_wo(){
 		$wrk_ord = $this->input->get('wrk_ord');
 		$this->load->model('update_model');
@@ -6099,6 +6251,7 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("ppm_set_detail",$data);
 	}
+
 	public function vendor_reg (){
 		//$data['assetno'] = $this->input->get('assetno');
 		//$data['year'] = $this->input->get('jobyear');
@@ -6108,6 +6261,7 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("content_vendor_reg");
 	}
+
 	public function vendor_reg_confirm (){
 		//$data['assetno'] = $this->input->get('assetno');
 		//$data['year'] = $this->input->get('jobyear');
@@ -6116,7 +6270,8 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("head");
 		$this ->load->view("left");
 		$this ->load->view("content_vendor_reg_confirm");
-	}	
+	}
+
 	public function vendor_reg_update (){
 		//$data['assetno'] = $this->input->get('assetno');
 		//$data['year'] = $this->input->get('jobyear');
@@ -6126,7 +6281,6 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("content_vendor_reg");
 	}
-	
 	
 	public function report_print_workorder(){
 		$this->load->model("get_model");
@@ -6138,6 +6292,7 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("headprinter");
 		$this ->load->view("report_print_workorder", $data);
 	}
+
 	public function report_print_RSReport(){
 		$data['daterange'] = $this->input->post('daterange');
 		$data['wostat'] = $this->input->post('wostat');
@@ -6175,15 +6330,16 @@ class Contentcontroller extends CI_Controller {
 		$this->load->model("display_model");
 		$data['records'] = $this->display_model->list_hospinfo();
 		if ($this->input->get('none') == 'closed'){
-		$data['record'] = $this->display_model->wostatus($this->input->get('sdate'),$this->input->get('edate'),$this->input->get('stat'));	
+			$data['record'] = $this->display_model->wostatus($this->input->get('sdate'),$this->input->get('edate'),$this->input->get('stat'));	
 		}
 		else{
-		//$data['record'] = $this->display_model->wostatusrep($this->input->post('wrk_odrno'));
-		$data['record'] = $this->display_model->wostatus(date("Y-m-d",strtotime($data['daterange'][0])),date("Y-m-d",strtotime($data['daterange'][1])),$data['wostat']);
+			//$data['record'] = $this->display_model->wostatusrep($this->input->post('wrk_odrno'));
+			$data['record'] = $this->display_model->wostatus(date("Y-m-d",strtotime($data['daterange'][0])),date("Y-m-d",strtotime($data['daterange'][1])),$data['wostat']);
 		}
 		$this ->load->view("headprinter");
 		$this ->load->view("report_print_RSReport",$data);
 	}
+
 	public function report_print_PPMWOrders(){
 		$data['daterange'] = $this->input->post('daterange');
 		$data['wostat'] = $this->input->post('wostat');
@@ -6221,15 +6377,16 @@ class Contentcontroller extends CI_Controller {
 		$this->load->model("display_model");
 		$data['records'] = $this->display_model->list_hospinfo();
 		if ($this->input->get('none') == 'closed'){
-		$data['record'] = $this->display_model->ppmstatus($this->input->get('sdate'),$this->input->get('edate'),$this->input->get('stat'));
+			$data['record'] = $this->display_model->ppmstatus($this->input->get('sdate'),$this->input->get('edate'),$this->input->get('stat'));
 		}
 		else{
-		//$data['record'] = $this->display_model->ppmstatusrep($this->input->post('wrk_odrno'));
-		$data['record'] = $this->display_model->ppmstatus(date("Y-m-d",strtotime($data['daterange'][0])),date("Y-m-d",strtotime($data['daterange'][1])),$data['wostat']);
+			//$data['record'] = $this->display_model->ppmstatusrep($this->input->post('wrk_odrno'));
+			$data['record'] = $this->display_model->ppmstatus(date("Y-m-d",strtotime($data['daterange'][0])),date("Y-m-d",strtotime($data['daterange'][1])),$data['wostat']);
 		}
 		$this ->load->view("headprinter");
 		$this ->load->view("report_print_PPMWOrders",$data);
 	}
+
 	public function report_print_ppmms(){
 		$data['month'] = $this->input->get_post('n_month');
 		$data['year'] = $this->input->get_post('n_year');
@@ -6239,6 +6396,7 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("headprinter");
 		$this ->load->view("report_print_ppmms",$data);
 	}
+	
 	public function report_print_RPPMW(){
 		$data['daterange'] = $this->input->post('daterange');
 
@@ -6265,14 +6423,14 @@ class Contentcontroller extends CI_Controller {
 		$this->load->model("display_model");
 		$data['records'] = $this->display_model->list_hospinfo();
 		if ($this->input->get('none') == 'closed'){
-		$data['record'] = $this->display_model->reschPPM($this->input->get('sdate'),$this->input->get('edate'));
+			$data['record'] = $this->display_model->reschPPM($this->input->get('sdate'),$this->input->get('edate'));
 			foreach($data['record'] as $row){
 				$data['recorddata'][$row->v_WrkOrdNo] = array($row);
 			}
 		}
 		else{
-		//$data['record'] = $this->display_model->ppmstatusrep($this->input->post('wrk_odrno'));
-		$data['record'] = $this->display_model->reschPPM(date("Y-m-d",strtotime($data['daterange'][0])),date("Y-m-d",strtotime($data['daterange'][1])));
+			//$data['record'] = $this->display_model->ppmstatusrep($this->input->post('wrk_odrno'));
+			$data['record'] = $this->display_model->reschPPM(date("Y-m-d",strtotime($data['daterange'][0])),date("Y-m-d",strtotime($data['daterange'][1])));
 			foreach($data['record'] as $row){
 				$data['recorddata'][$row->v_WrkOrdNo] = array($row);
 			}
@@ -6280,6 +6438,7 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("headprinter");
 		$this ->load->view("report_print_RPPMW",$data);
 	}
+
 	public function report_ppmyearlyplanner(){
 		isset($_REQUEST['n_range']) ? $data['range'] = $_REQUEST['n_range'] : $data['range'] = '';
 		isset($_REQUEST['myclear']) ? $data['clearbutton'] = $_REQUEST['myclear'] : $data['clearbutton'] = '';
@@ -6328,6 +6487,7 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("content_report_ppm_yearlyplanner",$data);		
 	}
+
 	public function acg_modulesf(){
 		$data['month'] = ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
 		$data['year'] = ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");
@@ -6355,7 +6515,6 @@ class Contentcontroller extends CI_Controller {
 		}
 		
 		$data['record'] = $this->display_model->acg_modulesf($data['service'],$data['fmonth'],$data['fyear'],$data['rdetail'],$data['noreq'],$data['dept_c'],$data['limit'],$data['start']);
-
 		
 		$data['totalind1pg'] = 0;
 		$data['totalind2pg'] = 0;
@@ -6549,8 +6708,8 @@ class Contentcontroller extends CI_Controller {
 				}
 			}
 		}
-//echo $data['totalparam1pg'];
-//exit();
+		//echo $data['totalparam1pg'];
+		//exit();
 		$data['totalindt'] = array(1 => $data['totalind1t'],
 									2 => $data['totalind2t'],
 									3 => $data['totalind3t'],
@@ -6578,6 +6737,7 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("Content_acg_modulesf",$data);
 	}
+
 	public function AssetRegis(){
 		$data['tab'] = $this->input->get('tab');
 		$data['assetno'] = $this->input->get('assetno');
@@ -6630,22 +6790,23 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("Content_AssetRegis",$data);
 	}
 
-public function assethistory(){
+	public function assethistory(){
 		$data['assetno'] = $this->input->get('assetno');
 		$data['hosp'] = $this->session->userdata('hosp_code');
 		$data['service_code'] = $this->session->userdata('usersess');
 		$this->load->model('get_model');
 		$data['wolist'] = $this->get_model->wolist($data['assetno'],$data['hosp'],$data['service_code']);
 		if ($data['wolist']) { 
-		foreach ($data['wolist'] as $row){
-			$data['wrkno'][] = $row->V_Request_no;
-		}
-		$data['countwrk'] = count($data['wrkno']);
+			foreach ($data['wolist'] as $row){
+				$data['wrkno'][] = $row->V_Request_no;
+			}
+			$data['countwrk'] = count($data['wrkno']);
 		}
 		$this ->load->view("head");
 		$this ->load->view("left");
 		$this ->load->view("Content_assethistory",$data);
 	}
+
 	public function acg_report(){
 
 		$data['month'] = ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
@@ -6657,8 +6818,8 @@ public function assethistory(){
 		isset($_REQUEST['fromYear']) ? $data['fyear'] = $_REQUEST['fromYear'] : $data['fyear'] = $data['year'];
         isset($_POST['deductiont']) ? $data['t'] = $_POST['deductiont'] : $data['t'] = 1;
 
-	//echo $data['t'];
-	//exit();
+		//echo $data['t'];
+		//exit();
 	
 		$this->load->model('display_model');
 		$data['keyindlist'] = $this->display_model->keyindlist($data['service']);
@@ -6684,6 +6845,7 @@ public function assethistory(){
 		$this ->load->view("Content_acg_report",$data);
 
 	}
+
 	public function spare_part(){
 	  $this->load->model('display_model');
 		$data['record'] = $this->display_model->stock_asset();
@@ -6692,7 +6854,7 @@ public function assethistory(){
 		$this ->load->view("Content_spare_part", $data);
 	}
 /*
- public function joint_ins(){
+	public function joint_ins(){
 		$this ->load->view("head");
 		$this ->load->view("left");
 		$this ->load->view("Content_joint_ins");
@@ -6712,6 +6874,7 @@ public function assethistory(){
 		isset($_GET['fromYear']) ? $data['fyear'] = $_GET['fromYear'] : $data['fyear'] = $data['year'];
 		$this->load->model('get_model');
 		if ($this->input->get('en') == 'JIS'){
+// echo $data['month'];die;
 			$data['recordloc'] = $this->get_model->hosplocjic($data['fmonth'],$data['fyear']);
 			$data['record'] = $this->get_model->hospjic($data['fmonth'],$data['fyear']);
 			//print_r($data['record']);
@@ -6833,8 +6996,8 @@ public function assethistory(){
 					}
 				}
 			}
-//print_r($data['records']);
-//exit();
+			//print_r($data['records']);
+			//exit();
 			$data['recordhosp'] = $this->get_model->deptlist($data['fmonth'],$data['fyear'],$data['hosp']);
 			if ($data['recordhosp']) {
 				foreach ($data['recordhosp'] as $row){
@@ -7095,6 +7258,7 @@ public function assethistory(){
 					$data['record'] = NULL;
 				}
 		}
+		// echo "<pre>";var_export($data['records']);die;
 		//print_r($data['recordji']);
 		//exit();
 		//$this ->load->view("head");
@@ -7155,11 +7319,13 @@ public function assethistory(){
 		$this ->load->view("headprinter");
 		$this ->load->view("content_daily_summary",$data);
 	}
+
 	public function fnex(){
 		$this ->load->view("head");
 		$this ->load->view("left");
 		$this ->load->view("Content_fnex");
 	}
+
 	public function pop_authority(){
 		$this->load->model("get_model");
 		$data['assetauth'] = $this->get_model->assetauth();
@@ -7168,6 +7334,7 @@ public function assethistory(){
 		$this ->load->view("head");
 		$this ->load->view("Content_pop_authority",$data);
 	}
+
 	public function Attendance(){
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
@@ -7175,6 +7342,7 @@ public function assethistory(){
 		//$this ->load->view("Content_Attendance",$data);
 		$this ->load->view("Content_under_construction",$data);
 	}
+
 	public function complaintreport(){
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
@@ -7304,7 +7472,7 @@ public function assethistory(){
 		$this ->load->view("content_visitclosed",$data);
 	}
 
-public function visitjclosed(){
+	public function visitjclosed(){
 		$data['wrk_ord'] = $this->input->get('wrk_ord');
 
 		$this->load->model("display_model");
@@ -7426,45 +7594,45 @@ public function visitjclosed(){
 		$this ->load->view("head");
 		$this ->load->view("left");
 		if ($this->input->get('gbl') == 1){
-		$this->load->model("display_model");
-		$data['record'] = $this->display_model->personnellist();
-		$this ->load->view("Content_sys_personal",$data);
+			$this->load->model("display_model");
+			$data['record'] = $this->display_model->personnellist();
+			$this ->load->view("Content_sys_personal",$data);
 		}elseif ($this->input->get('gbl') == 2){
-		$this->load->model("display_model");
-		$data['record'] = $this->display_model->personnelrec($this->input->get('sys_id'));
-		$this ->load->view("Content_sys_Update",$data);
+			$this->load->model("display_model");
+			$data['record'] = $this->display_model->personnelrec($this->input->get('sys_id'));
+			$this ->load->view("Content_sys_Update",$data);
 		}elseif ($this->input->get('gbl') == 3){
-		$this ->load->view("Content_sys_Confirm");
+			$this ->load->view("Content_sys_Confirm");
 		}elseif ($this->input->get('us') == 1){
-		$this ->load->view("Content_sys_usersetup");
+			$this ->load->view("Content_sys_usersetup");
 		}elseif ($this->input->get('us') == 2){
-		$this ->load->view("Content_sys_usersetup_update");
+			$this ->load->view("Content_sys_usersetup_update");
 		}elseif ($this->input->get('us') == 3){
-		$this ->load->view("Content_sys_usersetup_confirm");
+			$this ->load->view("Content_sys_usersetup_confirm");
 		}elseif ($this->input->get('ec') == 1){
-		$this ->load->view("Content_sys_equiment");
+			$this ->load->view("Content_sys_equiment");
 		}elseif ($this->input->get('ec') == 2){
-		$this ->load->view("Content_sys_equiment_update");
+			$this ->load->view("Content_sys_equiment_update");
 		}elseif ($this->input->get('ec') == 3){
-		$this ->load->view("Content_sys_equiment_confirm");
+			$this ->load->view("Content_sys_equiment_confirm");
 		}elseif ($this->input->get('ud') == 1){
-		$this->load->model("display_model");
-		$data['record'] = $this->display_model->udlist();
-		$this ->load->view("Content_sys_User_Department",$data);
+			$this->load->model("display_model");
+			$data['record'] = $this->display_model->udlist();
+			$this ->load->view("Content_sys_User_Department",$data);
 		}elseif ($this->input->get('ud') == 2){
-		$this->load->model("display_model");
-		$data['record'] = $this->display_model->udrecord($this->input->get('sys_id'));
-		$this ->load->view("Content_sys_User_Department_update",$data);
+			$this->load->model("display_model");
+			$data['record'] = $this->display_model->udrecord($this->input->get('sys_id'));
+			$this ->load->view("Content_sys_User_Department_update",$data);
 		}elseif ($this->input->get('ud') == 3){
-		$this ->load->view("Content_sys_User_Department_confirm");
+			$this ->load->view("Content_sys_User_Department_confirm");
 		}elseif ($this->input->get('jt') == 1){
-		$this ->load->view("Content_sys_User_jobtype");
+			$this ->load->view("Content_sys_User_jobtype");
 		}elseif ($this->input->get('jt') == 2){
-		$this ->load->view("Content_sys_User_jobtype_update");
+			$this ->load->view("Content_sys_User_jobtype_update");
 		}elseif ($this->input->get('jt') == 3){
-		$this ->load->view("Content_sys_User_jobtype_confirm");
+			$this ->load->view("Content_sys_User_jobtype_confirm");
 		}else{
-		$this ->load->view("Content_sys_admin", $data);
+			$this ->load->view("Content_sys_admin", $data);
 		}
 	}
 	
@@ -7472,24 +7640,29 @@ public function visitjclosed(){
 		$this ->load->view("head");
 		$this ->load->view("content_pop_systemcode");
 	}
+
 	public function pop_fWorkgroup(){
 		$this ->load->view("head");
 		$this ->load->view("content_pop_fWorkgroup");
 	}
+
 	public function pop_fEquipment(){
 		$this ->load->view("head");
 		$this ->load->view("content_pop_fEquipment");
 	}
+
 	public function pop_fType(){
 		$this ->load->view("head");
 		$this ->load->view("content_pop_fType");
 	}
+
 	public function pop_fProcedure(){
 		$this ->load->view("head");
 		$this ->load->view("content_pop_fProcedure");
 	}
+
 	public function D_Assessement(){
-	  $data['month'] = ($this->input->get('mth') <> "") ? sprintf("%02d", $this->input->get('mth')) : date("m");
+		$data['month'] = ($this->input->get('mth') <> "") ? sprintf("%02d", $this->input->get('mth')) : date("m");
 		$data['year'] = ($this->input->get('yr') <> "") ? $this->input->get('yr') : date("Y");
 		$data['service'] = ($this->input->get('sev') <> "") ? $this->input->get('sev') : "BES";
 		//echo "nilai serv".$data['service'].":".$this->input->get('sev');
@@ -8032,10 +8205,72 @@ public function pop_fail(){
 public function new_item (){
 		$this ->load->view("head");
 		$this ->load->view("left");
+		$this->load->model("display_model");
+    	$this->load->model("get_model");
+		$this->load->model('update_model');
+         if (isset($_GET['edit'])){
+	
+		$data['edititem'] = $this->get_model->get_asset_list($_GET['edit']);
+	    // print_r ($data['edititem']);
+		}
+		$data['limit'] = 10; 	
+        isset($_GET['pa']) ? $data['page'] = $_GET['pa'] : $data['page'] = 1;
+	    $data['start'] = ($data['page'] * $data['limit']) - $data['limit'];
+		
+     	$data['records'] = $this->display_model->s_item_detail($data['limit'],$data['start']);
+
+		$data['count'] = count($data['records']);
+        $data['rec'] =  $this->display_model->s_item_detail('0','0');
+		if($data['rec'][0]->jumlah > ($data['page'] * $data['limit']) ){
+	    $data['next'] = ++$data['page'];
+		}	   
+
+
 		if($this->input->get('p') == 'confirm'){
 		$this ->load->view("content_new_item_confirm");
+		}elseif($this->input->get('p') == 'save'){
+
+     	$this->db->select('id');
+        $this->db->from('pmis2_sa_vendor');
+        $this->db->where('v_vendorcode',$this->input->post('n_vendor_code'));
+        $result_array = $this->db->get()->result_array();
+		$insert_data = array(
+
+		'ItemCode'=>$this->input->post('n_code'),
+		'ItemName'=>$this->input->post('n_description'),
+		'ItemLoc'=>$this->input->post('n_location'),
+		'PartNumber'=>$this->input->post('n_partno'),
+		'PartDescription'=>$this->input->post('n_pdescription'),
+	      'UnitPrice'=>$this->input->post('n_unitprice'),
+		'CurrencyID'=>$this->input->post('n_currency'),
+		'MeasurementID'=>$this->input->post('n_Unit_of_measurement'),
+		'VendorID'=>$result_array[0]['id'],
+		'Comments'=>$this->input->post('n_comments'),
+		'CodeCat'=>$this->input->post('n_codecat'),
+		'EquipCat'=>$this->input->post('n_equipcat'),		
+		'Brand'=>$this->input->post('n_brand'),
+		'Model'=>$this->input->post('n_model'),
+
+		'Dept'=>$this->session->userdata('usersess'),
+		'DateCreated'=>date('Y-m-d H:i:s'),
+		//'DateCreated'=>date("Y-m-d"),
+	
+	
+		);
+/* 		print_r($insert_data);
+		exit(); */
+
+		if($this->input->post('editid')){
+		 $this->load->model('update_model');
+		 $this->update_model->updateitems($insert_data,$this->input->post('editid'));
+		 }else{		
+          $this->insert_model->ins_itembaru($insert_data);
+		 }
+	/* 	 echo $this->db->last_query();
+		 exit(); */
+		 redirect('contentcontroller/new_item?itemname='.$this->input->post('n_description').'&itemcode='.$this->input->post('n_code'));
 		}else{
-		$this ->load->view("content_new_item");
+		$this ->load->view("content_new_item",$data);
 		}
 }
 

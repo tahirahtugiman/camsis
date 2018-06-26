@@ -4,7 +4,7 @@ class ajaxasset extends CI_Controller {
 	public function index(){
 		$this->load->model("get_model");
 		$data['asset_det'] = $this->get_model->get_assetdetx(trim($this->input->get('ast')));
-		echo '<table class="ui-content-middle-menu-workorder3" width="100%" id="no-more-tables"><tr class="ui-menu-color-header" style="color:white; font-weight:bold;"><th>No</th><th >Asset Image</th><th>Asset No</th><th>Asset Name</th><th>User<br />Dept</th><th>Location</th><th>Condition</th><th>Status</th><th>Model</th><th>Manu<br />Facturer</th><th>Serial No</th><th>Purchase <br />Cost</th></tr>';
+		echo '<table class="ui-content-middle-menu-workorder3" width="100%" id="no-more-tables" data-table="assets"><tr class="ui-menu-color-header" style="color:white; font-weight:bold;"><th>No</th><th >Asset Image</th><th>Asset No</th><th>Asset Name</th><th>User<br />Dept</th><th>Location</th><th>Condition</th><th>Status</th><th>Model</th><th>Manu<br />Facturer</th><th>Serial No</th><th>Purchase <br />Cost</th></tr>';
 		$i = 1;
 		//print_r(trim($this->input->get('ast')));
 		//$result = array_map('trim', $data['asset_det']);

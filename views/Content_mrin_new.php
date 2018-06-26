@@ -305,6 +305,22 @@ echo form_open('mrinnew_ctrl?pro=edit&mrinno='.$this->input->get('mrinno'));
 							</td>
 						</tr>						
 					</table> -->
+					<style type="text/css">
+						/*.p_itemspec{width: 100%; display: table;}*/
+						.p_wnclabel{width: 10%; float: left; padding: 10px;}
+						.p_wnctable{width: 80%; float: left; padding: 10px;}
+						@media screen and (max-device-width:1200px){table.wnctable {border-collapse: collapse;color: black;width: 95%;}}
+						/*@media only screen and (min-width: 375px) and (max-width: 425px){
+							.p_itemspec{width: 100%; display: table;}
+							.p_wnclabel{width: 10%; float: left; padding: 10px;}
+							.p_wnctable{width: 51%; float: left; padding: 10px;}
+						}
+						@media only screen and (min-width: 0px) and (max-width: 320px){
+							.p_itemspec{width: 100%; display: table;}
+							.p_wnclabel{width: 10%; float: left; padding: 10px;}
+							.p_wnctable{width: 39%; float: left; padding: 10px;}
+						}*/
+					</style>
 					<div class="ui-content-form-reg">
 						<div style="color:white; width: 100%;" height="30px">
 							<div class="ui-header-new"><b>Item Specification</b></div>
@@ -312,11 +328,11 @@ echo form_open('mrinnew_ctrl?pro=edit&mrinno='.$this->input->get('mrinno'));
 						<div style="color: white;width: 100%;">
 							<div class="ui-desk-style-table">
 								<div class="ui-content-form" style="color: black; width: 100%;">
-									<div style="width: 100%; display: inline-block;">
-										<div style="width: 10%; float: left; padding: 10px;" valign="top"><b>Item(s)		:	</b></div>
-										<div style="width: 80%; float: left; padding: 10px;">
-											<div style="width: 100%; overflow-x: auto;">
-												<table class="wnctable" border="1" id="myTable">
+									<div class="p_itemspec" style="width: 100%; display: inline-block;">
+										<div class="p_wnclabel" valign="top"><b>Item(s)		:	</b></div>
+										<div class="p_wnctable">
+											<div style="width: auto; overflow-x: auto;">
+												<table class="wnctable" border="1" id="myTable" width="100%">
 													<tr>
 														<th style="width: 1%;">No</th>
 														<th style="width:7%;">Item Code</th>
@@ -333,11 +349,19 @@ echo form_open('mrinnew_ctrl?pro=edit&mrinno='.$this->input->get('mrinno'));
 													<?php $numrow = 1; foreach ($recordis as $item): ?>
 														<tr>
 															<td><?=$numrow?><input type="hidden" name="rows" value="<?=$numrow?>"><</td>
-															<td><p id="itemcode<?=$numrow?>"><?=isset($item->ItemCode) ? $item->ItemCode : ''?></p><input type="hidden" id="itemcodei<?=$numrow?>" name="itemcode<?=$numrow?>" value="<?=isset($item->ItemCode) ? $item->ItemCode : ''?>"><</td>
+															<td>
+																<p id="itemcode<?=$numrow?>"><?=isset($item->ItemCode) ? $item->ItemCode : ''?></p><input type="hidden" id="itemcodei<?=$numrow?>" name="itemcode<?=$numrow?>" value="<?=isset($item->ItemCode) ? $item->ItemCode : ''?>"><
+															</td>
 															<td><?=isset($item->ItemName) ? $item->ItemName : ''?></td>
-															<td><input type="text" name="n_qty<?=$numrow?>" value="<?=isset($item->Qty) ? $item->Qty : ''?>" class="form-control-button2" style=width:100px;"><</td>
-															<td><select name="a_rem<?=$numrow?>" class="dropdown"><option value="" <?=isset($item->Reimbursable) && $item->Reimbursable == 0 ? 'selected="selected"' : 'selected="selected"'?>>None</option><option value="1" <?=isset($item->Reimbursable) && $item->Reimbursable == 1 ? 'selected="selected"' : ''?>>Mishandling</option><option value="2" <?=isset($item->Reimbursable) && $item->Reimbursable == 2 ? 'selected="selected"' : ''?>>Supplementary</option><option value="3" <?=isset($item->Reimbursable) && $item->Reimbursable == 3 ? 'selected="selected"' : ''?>>Upgrading</option><option value="4" <?=isset($item->Reimbursable) && $item->Reimbursable == 4 ? 'selected="selected"' : ''?>>Re-Installation</option><option value="5" <?=isset($item->Reimbursable) && $item->Reimbursable == 5 ? 'selected="selected"' : ''?>>Other</option></select></td>
-															<td><INPUT TYPE="text" name="startDate<?=$numrow?>" value="<?=isset($item->LastRepDt) ? date("m/d/Y",strtotime($item->LastRepDt)) : ''?>" class="form-control-button2" style=width:100px;" onChange="validDate(this)"></INPUT></td>
+															<td>
+																<input type="text" name="n_qty<?=$numrow?>" value="<?=isset($item->Qty) ? $item->Qty : ''?>" class="form-control-button2" style=width:100px;"><
+															</td>
+															<td>
+																<select name="a_rem<?=$numrow?>" class="dropdown"><option value="" <?=isset($item->Reimbursable) && $item->Reimbursable == 0 ? 'selected="selected"' : 'selected="selected"'?>>None</option><option value="1" <?=isset($item->Reimbursable) && $item->Reimbursable == 1 ? 'selected="selected"' : ''?>>Mishandling</option><option value="2" <?=isset($item->Reimbursable) && $item->Reimbursable == 2 ? 'selected="selected"' : ''?>>Supplementary</option><option value="3" <?=isset($item->Reimbursable) && $item->Reimbursable == 3 ? 'selected="selected"' : ''?>>Upgrading</option><option value="4" <?=isset($item->Reimbursable) && $item->Reimbursable == 4 ? 'selected="selected"' : ''?>>Re-Installation</option><option value="5" <?=isset($item->Reimbursable) && $item->Reimbursable == 5 ? 'selected="selected"' : ''?>>Other</option></select>
+															</td>
+															<td>
+																<INPUT TYPE="text" name="startDate<?=$numrow?>" value="<?=isset($item->LastRepDt) ? date("m/d/Y",strtotime($item->LastRepDt)) : ''?>" class="form-control-button2" style=width:100px;" onChange="validDate(this)"></INPUT>
+															</td>
 															<input type="hidden" name="id<?=$numrow?>" value="<?=isset($item->Id) ? $item->Id : ''?>">
 														</tr>
 													<?php $numrow++?>
