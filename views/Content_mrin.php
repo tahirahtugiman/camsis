@@ -42,10 +42,10 @@
 			?>
 			<?php include 'content_pro_tab.php';?>
 			<tr class="ui-color-desk desk2">
-				<td class="t-header" style="color:black; height:40px; padding-left:10px;"><b><?= $tulis ?></b> <?=date('F', mktime(0, 0, 0, $month, 10))?> <?=$year?> </td>
+				<td colspan="4" class="t-header" style="color:black; height:40px; padding-left:10px;"><b><?= $tulis ?></b> <?=date('F', mktime(0, 0, 0, $month, 10))?> <?=$year?> </td>
 			</tr>
 			<tr class="ui-color-desk bg-red-blood"> 
-				<td>
+				<td colspan="4">
 					<table width="100%" class="ui-content-middle-menu-desk">
 						<tr style="background:#B3130A;">
 							<td width="3%" height="30px">
@@ -68,7 +68,7 @@
 				</td>
 			</tr>
 			<tr class="ui-color-contents-style-1">
-				<td style="" valign="top" >
+				<td style="" valign="top" colspan="4">
 					<table class="ui-content-middle-menu-workorder2 ui-landscape" width="100%">
 						<tr class="ui-menu-color-header" style="color:white; font-size:12px;">
 							<th >&nbsp;</th>
