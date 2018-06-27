@@ -49,19 +49,20 @@
 					<table width="100%" class="ui-content-middle-menu-desk">
 						<tr style="background:#B3130A;">
 							<td width="3%" height="30px">
-								<a href="?pro=mrin&y=<?= $year-1?>&m=<?= $month?>"><img src="<?php echo base_url(); ?>images/arrow-left2.png" alt="" class="ui-img-icon"/></a>
+							
+								<a href="?pro=mrin&tab=<?=$this->input->get('tab') ?>&y=<?= $year-1?>&m=<?= $month?>"><img src="<?php echo base_url(); ?>images/arrow-left2.png" alt="" class="ui-img-icon"/></a>
 							</td>
 							<td width="3%">
-								<a href="?pro=mrin&y=<?= ($month-1 == 0) ? $year-1 :$year?>&m=<?= ($month-1 == 0) ? 12 :$month-1?>"><img src="<?php echo base_url(); ?>images/arrow-left.png" alt="" class="ui-img-icon"/></a>
+								<a href="?pro=mrin&tab=<?=$this->input->get('tab') ?>&y=<?= ($month-1 == 0) ? $year-1 :$year?>&m=<?= ($month-1 == 0) ? 12 :$month-1?>"><img src="<?php echo base_url(); ?>images/arrow-left.png" alt="" class="ui-img-icon"/></a>
 							</td>
 							<td width="88%" align="center">
 								<?=date('F', mktime(0, 0, 0, $month, 10))?> <?=$year?>
 							</td>
 							<td width="3%">
-								<a href="?pro=mrin&y=<?= ($month+1 == 13) ? $year+1 :$year?>&m=<?= ($month+1 == 13) ? 1 :$month+1?>"><img src="<?php echo base_url(); ?>images/arrow-right.png" alt="" class="ui-img-icon"/></a>
+								<a href="?pro=mrin&tab=<?=$this->input->get('tab') ?>&y=<?= ($month+1 == 13) ? $year+1 :$year?>&m=<?= ($month+1 == 13) ? 1 :$month+1?>"><img src="<?php echo base_url(); ?>images/arrow-right.png" alt="" class="ui-img-icon"/></a>
 							</td>
 							<td width="3%">
-								<a href="?pro=mrin&y=<?= $year+1?>&m=<?= $month?>"><img src="<?php echo base_url(); ?>images/arrow-right2.png" alt="" class="ui-img-icon"/></a>
+								<a href="?pro=mrin&tab=<?=$this->input->get('tab') ?>&y=<?= $year+1?>&m=<?= $month?>"><img src="<?php echo base_url(); ?>images/arrow-right2.png" alt="" class="ui-img-icon"/></a>
 							</td>
 						</tr>
 					</table>
