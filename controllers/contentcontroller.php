@@ -8232,7 +8232,17 @@ public function deductmapping_2(){
    
 		$this->load->model("display_model");
 	    $data['record'] = $this->display_model->stock_asset($this->input->get('id'));
-        $data['limit'] = 6; 	
+		
+		if($this->input->get('print')){
+	
+		foreach($data['record'] as $row){
+		$data['rec'] =  $this->display_model->stock_details($row->ItemCode,$row->Hosp_code,'0','0');
+		}
+		$data['limit'] = $data['rec'][0]->jumlah;	
+		}else{
+		$data['limit'] = 10;		
+		}
+         
          isset($_GET['p']) ? $data['page'] = $_GET['p'] : $data['page'] = 1;
 	   $data['start'] = ($data['page'] * $data['limit']) - $data['limit'];		 
 		foreach($data['record'] as $row){
@@ -8244,10 +8254,18 @@ public function deductmapping_2(){
 		if($data['rec'][0]->jumlah > ($data['page'] * $data['limit']) ){
 			$data['next'] = ++$data['page'];
 		}
+		
+		if($this->input->get('print')){
+		$data['print'] = 0;
+		$this ->load->view("headprinter");
+		$this ->load->view("Content_print_stockactvt", $data);
+		}else{	
 		$this ->load->view("head");
 		$this ->load->view("left");
 		$this ->load->view("Content_stockDact",$data);
+	    }
 	}
+	
 	
 	
 public function print_kewpa(){

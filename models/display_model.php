@@ -4276,7 +4276,7 @@ ORDER BY r.D_date, r.D_time
 		}
 		$this->db->order_by('DocReferenceNo','ASC');
 		$query = $this->db->get();
-		echo $this->db->last_query();
+		//echo $this->db->last_query();
 		//exit();
 		$query_result = $query->result();
 		return $query_result;	

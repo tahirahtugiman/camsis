@@ -20,7 +20,7 @@ class Procurement extends CI_Controller {
 			} elseif ($data['mrintype'] == 3) {
 				 $data['mrintype'] = 0;
 			}
-			echo "lalalal : ".$data['mrintype'];
+			//echo "lalalal : ".$data['mrintype'];
 			$this->load->model('display_model');
 			$data['user'] = $this->display_model->user_class($this->session->userdata('v_UserName'));
 			$data['record']= $this->display_model->mrinlist($data['month'],$data['year'],$data['mrintype'], $data['user'][0]->class_id);

@@ -749,7 +749,7 @@ $query = $this->db->get();
 return $query->result();
 
 }
-
+/*
 function licensesandcert()
 {
 
@@ -768,6 +768,34 @@ $query = $this->db->get();
 //echo "laalla".$query->DWRate;
 //echo $this->db->last_query();
 //exit();
+return $query->result();
+
+}
+*/
+function licensesandcert()
+{
+
+$this->db->select("A.v_CertificateNo, A.v_ServiceCode, A.v_AgencyCode, A.v_LicenseCategoryCode, B.v_LicenceCategoryDesc, A.v_IdentificationType, A.v_Identification, A.v_RegistrationNo, A.v_StartDate, A.v_ExpiryDate, A.v_GradeID, A.v_Remarks, A.v_hospitalcode, A.v_key, A.CMIS_Action_Flag, A.d_timestamp, A.id",FALSE);
+
+//$this->db->select("A.v_CertificateNo, A.v_ServiceCode, A.v_AgencyCode, A.v_LicenseCategoryCode, B.v_LicenceCategoryDesc, A.v_IdentificationType, A.v_Identification, A.v_RegistrationNo, A.v_StartDate, A.v_ExpiryDate, A.v_GradeID, A.v_Remarks, A.v_hospitalcode, A.v_key, A.CMIS_Action_Flag, A.d_timestamp, MAX(A.d_timestamp),A.id",FALSE);
+//SELECT (case when DWRate = 999 then (case when 500 <= 2000000 then 0.0075 * 100 else 0.0050 * 100 end) else DWRate end) as DWRate, PWRate, (case when DWRate = 999 then (case when 500 <= 2000000 then (500 * 0.0075) / 12 else (500 * 0.0050) / 12 end) else (500 * ( DWRate / 100)) / 12 end) as 'FeeDW', (500 * ( PWRate / 100) / 12) as 'FeePW'
+$this->db->from('pmis2_egm_lnc_lincense_details A');
+$this->db->join('pmis2_egm_lnc_license_category_code B','A.v_LicenseCategoryCode=B.v_LicenceCategoryCode');
+
+$this->db->join("(SELECT v_ExpiryDate AS Expired,id,v_CertificateNo FROM pmis2_egm_lnc_lincense_details 
+ORDER BY v_ExpiryDate DESC)`G`",'G.id=A.id');
+
+$this->db->where('A.v_ServiceCode =', $this->session->userdata('usersess'));
+$this->db->where('v_HospitalCode =', $this->session->userdata('hosp_code'));
+$this->db->where('A.v_ActionFlag <> ', 'D');
+$this->db->where('B.v_ActionFlag <> ', 'D');
+
+$this->db->group_by('A.v_CertificateNo,A.v_RegistrationNo,A.v_Identification');
+
+$query = $this->db->get();
+//echo "laalla".$query->DWRate;
+ echo $this->db->last_query();
+/*exit(); */
 return $query->result();
 
 }
@@ -3732,6 +3760,7 @@ function get_itemdet($codecat){
 	if ($codecat <> ''){
 		$this->db->where('CodeCat',$codecat);
 	}
+	$this->db->where('Dept',$this->session->userdata('usersess'));
 	$query = $this->db->get();
 	//echo $this->db->last_query();
 	//echo '<br><br>';

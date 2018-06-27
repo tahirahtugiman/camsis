@@ -156,11 +156,9 @@ header('Content-Disposition: attachment; filename='.$filename);
 			<td><?= ($row->V_request_status) ? $row->V_request_status : 'N/A' ?></td>
 			<td><?= 'N/A' ?></td>
 			<td><?= 'N/A' ?></td>
-			
-			
-			<td><?= ($row->d_Date) ? date("d/m/Y",strtotime($row->d_Date)) : 'N/A' ?></td>
-			<td><?= ($row->v_ActionTaken) ? $row->v_ActionTaken : 'N/A' ?></td>
 			<td><?= ($row->v_closeddate) ? date("d/m/Y",strtotime($row->v_closeddate)) : 'N/A' ?></td>
+			<td><?= ($row->v_ActionTaken) ? $row->v_ActionTaken : 'N/A' ?></td>
+			<td><?= 'N/A' ?></td>
 			<td><?= 'N/A' ?></td>
 			
 			<td><?= ($row->v_UserDeptDesc) ? $row->v_location_name.' ('.$row->v_location_code.')' : 'N/A' ?></td>
@@ -375,11 +373,9 @@ if ($numrow==$numrowx OR $numrow%13==1) {
 			<td><?= ($row->V_request_status) ? $row->V_request_status : 'N/A' ?></td>
 			<td><?= 'N/A' ?></td>
 			<td><?= 'N/A' ?></td>
-			
-			
-			<td><?= ($row->d_Date) ? date("d/m/Y",strtotime($row->d_Date)) : 'N/A' ?></td>
-			<td><?= ($row->v_ActionTaken) ? $row->v_ActionTaken : 'N/A' ?></td>
 			<td><?= ($row->v_closeddate) ? date("d/m/Y",strtotime($row->v_closeddate)) : 'N/A' ?></td>
+			<td><?= ($row->v_ActionTaken) ? $row->v_ActionTaken : 'N/A' ?></td>
+			<td><?= 'N/A' ?></td>
 			<td><?= 'N/A' ?></td>
 			
 			<td><?= ($row->v_UserDeptDesc) ? $row->v_location_name.' ('.$row->v_location_code.')' : 'N/A' ?></td>
