@@ -75,17 +75,16 @@ header('Content-Disposition: attachment; filename='.$filename);
 	<table class="tftable" border="1" style="text-align:center;">
 		<tr>
 			<th rowspan=2>No</th>
-			<th rowspan=2>A2 Scheduled Date</th>
+			<th rowspan=2>Work Order Date</th>
 			<th rowspan=2>A2 Work Order</th>
 			<th rowspan=2>Asset No</th>	
 			<th rowspan=2 style="width:25%;">Equipment Name</th>
 			<th rowspan=2>UDP</th>
-			<th rowspan=2>Freq</th>
 			<th rowspan=2>Status</th>
 			<th colspan=2>Test</th>
-			<th rowspan=2>Completion Date</th>
+			<th rowspan=2>Complete Date</th>
 			<th rowspan=2>Remark</th>
-			<th rowspan=2>Visit Date</th>
+			<th rowspan=2>Schedule Date</th>
 			<th rowspan=2>Reschedule Date</th>
 			<th rowspan=2>Deparment (Location Code)</th>
 			<th rowspan=2>Asset Group</th>
@@ -120,23 +119,25 @@ header('Content-Disposition: attachment; filename='.$filename);
 
 <table class="rport-header">
 		<tr>
-			<td colspan="5">A2 LISTING - <?=date('F', mktime(0, 0, 0, $month, 10))?> <?=$year?> - <?php echo $this->session->userdata('usersessn');?> ( <?php if ($this->input->get('grp') == ''){echo 'ALL'; }else{ echo 'Group '.$this->input->get('grp');} ?> )</td>
+		
+			<!--<td colspan="5">A2 LISTING - <?=date('F', mktime(0, 0, 0, $month, 10))?> <?=$year?> - <?php echo $this->session->userdata('usersessn');?> ( <?php if ($this->input->get('grp') == ''){echo 'ALL'; }else{ echo 'Group '.$this->input->get('grp');} ?> )</td> -->
+			
+			<td colspan="4" valign="top">A2 Work Order Report Listing- <?=date('F', mktime(0, 0, 0, $month, 10))?> <?=$year?> - FACILITY ENGINEERING SERVICES ( A2 - Schedule Corrective Maintenance (SCM) )</td>
 		</tr>
 	</table>
 	<table class="tftable" border="1" style="text-align:center;">
 		<tr>
 			<th rowspan=2>No</th>
-			<th rowspan=2>A2 Date</th>
+			<th rowspan=2>Work Order Date</th>
 			<th rowspan=2>A2 Work Order</th>
 			<th rowspan=2>Asset No</th>	
 			<th rowspan=2 style="width:25%;">Equipment Name</th>
 			<th rowspan=2>UDP</th>
-			<th rowspan=2>Freq</th>
 			<th rowspan=2>Status</th>
 			<th colspan=2>Test</th>
-			<th rowspan=2>Completion Date</th>
+			<th rowspan=2>Complete Date</th>
 			<th rowspan=2>Remark</th>
-			<th rowspan=2>Visit Date</th>
+			<th rowspan=2>Schedule Date</th>
 			<th rowspan=2>Reschedule Date</th>
 			<th rowspan=2>Deparment (Location Code)</th>
 			<th rowspan=2>Asset Group</th>
@@ -145,110 +146,86 @@ header('Content-Disposition: attachment; filename='.$filename);
 			<th>S</th>
 			<th>P</th>
 		</tr>
-		<?php $numrow = 1; foreach($recordrq as $row):?>
-<?php echo ($numrow%2==0) ? '<tr class="ui-color-color-color">' : '<tr>'; ?>
-	    					
-    		<td><?= $numrow ?></td>
-			<td><?= ($row->D_date) ?  date("d/m/Y",strtotime($row->D_date)) : 'N/A' ?></td>
+		    <?php $numrow = 1; foreach($recordrq as $row):?>
+            <?php echo ($numrow%2==0) ? '<tr class="ui-color-color-color">' : '<tr>'; ?>				
+    		<td align="left"><?= $numrow ?></td>
+			<td align="left"><?= ($row->D_date) ?  date("d/m/Y",strtotime($row->D_date)) : 'N/A' ?></td>
 			<td><?=($row->V_Request_no) ? anchor ('contentcontroller/AssetRegis?wrk_ord='.$row->V_Request_no.'&assetno='.$row->V_Asset_no.'&m='.$this->input->get('m').'&y='.$this->input->get('y').'&stat='.$this->input->get('stat').'&resch=fbfb&state='.$this->input->get('state'),''.$row->V_Request_no.'' ) : 'N/A' ?></td>
 			
 			<td><?=(($row->V_Asset_no) && $row->V_Asset_no != 'N/A') ? anchor ('contentcontroller/AssetRegis?tab=Maintenance&assetno='.$row->V_Asset_no.'&state='.$this->input->get('state'),''.$row->v_tag_no.'' ) : 'N/A' ?></td>			
 			<td><?= ($row->V_Asset_name) ? $row->V_Asset_name : 'N/A' ?></td>
 			<td><?= ($row->V_User_dept_code) ? $row->V_User_dept_code : 'N/A' ?></td>
-			<td><?= 'N/A' ?></td>
 			<td><?= ($row->V_request_status) ? $row->V_request_status : 'N/A' ?></td>
 			<td><?= 'N/A' ?></td>
 			<td><?= 'N/A' ?></td>
-			
-			
 			<td><?= ($row->v_closeddate) ? date("d/m/Y",strtotime($row->v_closeddate)) : 'N/A' ?></td>
 			<td><?= ($row->v_ActionTaken) ? $row->v_ActionTaken : 'N/A' ?></td>
-			<td><?= ($row->d_Date) ? date("d/m/Y",strtotime($row->d_Date)) : 'N/A' ?></td>
 			<td><?= 'N/A' ?></td>
-			
+			<td><?= 'N/A' ?></td>			
 			<td><?= ($row->v_UserDeptDesc) ? $row->v_location_name.' ('.$row->v_location_code.')' : 'N/A' ?></td>
 			<?php if ($this->input->get('broughtfwd') != '') { ?>
 			<td><?= ($row->V_Asset_WG_code) ? $row->V_Asset_WG_code : 'N/A' ?></td>
 			<?php } else { ?>
 			<td><?= ($row->v_asset_grp) ? $row->v_asset_grp : 'N/A' ?></td>
 			<?php } ?>
-  
-	        			</tr>
-								<?php $numrow++; ?>
-								<?php endforeach;?>
-								<?php $numrowx = $numrow;?>
-								<?php foreach($record as $row):?>
-								<?php echo ($numrow%2==0) ? '<tr class="ui-color-color-color">' : '<tr>'; ?>
-				<td><?= $numrowx ?></td>
-				<td><?= ($row->sd_duedt) ? date("d/m/Y",strtotime($row->sd_duedt)) : 'N/A' ?></td>
-				<?php if  ($this->input->get('ex') != 'excel'){ ?>
-				<td><?=($row->sv_wrkordno) ? anchor ('contentcontroller/AssetRegis?wrk_ord='.$row->sv_wrkordno.'&assetno='.$row->sv_asset_no.'&m='.$this->input->get('m').'&y='.$this->input->get('y').'&stat='.$this->input->get('stat').'&resch='.$this->input->get('resch'),''.$row->sv_wrkordno.'' ) : 'N/A' ?></td>
-				<td><?=($row->sv_asset_no) && $row->sv_asset_no != 'N/A' ? anchor ('contentcontroller/AssetRegis?tab=Maintenance&assetno='.$row->sv_asset_no.'&m='.$this->input->get('m').'&y='.$this->input->get('y').'&stat='.$this->input->get('stat').'&resch='.$this->input->get('resch'),''.$row->av_tag_no.'' ) : 'N/A' ?></td>				
-				<?php }else{ ?>
-				<td> <?=isset($row->sv_wrkordno) ? $row->sv_wrkordno : ''?></td>
-				<td> <?=isset($row->av_tag_no) ? $row->av_tag_no : ''?></td>
-				<?php } ?>
-				<td><?= ($row->av_asset_name) ? $row->av_asset_name : 'N/A' ?></td>
-				<td ><?= ($row->av_user_dept_code) ? $row->av_user_dept_code : 'N/A' ?></td>
-				<td><?= ($row->sv_jobtype) ? $row->sv_jobtype : 'N/A' ?></td>
-				<td><?= ($row->v_Wrkordstatus) ? $row->v_Wrkordstatus : 'N/A' ?></td>
-				<td><?= ($row->v_stest) ? $row->v_stest : 'N/A' ?></td>
-				<td><?= ($row->v_ptest) ? $row->v_ptest : 'N/A' ?></td>
-				<td><?= ($row->d_DateDone) ? date("d-m-Y",strtotime($row->d_DateDone)) : 'N/A' ?></td>
-				<!--<td></td>-->
-				<td style="height: 52px;">
-				<?php if (($row->v_summary) ? $row->v_summary : 'N/A' != "N/A"){ ?>
-				<div style="overflow: hidden; text-overflow: ellipsis; height: 42px; overflow: hidden; text-overflow: ellipsis;">
-				<?php }?>
-				<?= ($row->v_summary) ? $row->v_summary : 'N/A' ?>
-				<?php if (($row->v_summary) ? $row->v_summary : 'N/A' != "N/A"){ ?>
-				</div>
-				<?php }?>
-				</td>
-				<td><?= ($row->d_Date) ? date("d-m-Y",strtotime($row->d_Date)) : 'N/A' ?></td>
-				<td><?= ($row->d_Reschdt) ? date("d-m-Y",strtotime($row->d_Reschdt)) : 'N/A' ?></td>
-				<td><?= ($row->v_UserDeptDesc) ? $row->v_UserDeptDesc.' ('.$row->V_Location_code.')' : 'N/A' ?></td>
-				<td><?= ($row->v_asset_grp) ? $row->v_asset_grp : 'N/A' ?></td>
-			</tr>	
-			
-								<?php $numrowx++; ?>	
-								<?php endforeach;?>
-						</table>
-
-
-
-
-
-
-
-
-
-
-
-
-<?php }else{ ?>
-<?php $numrow = 1; ?>
-
-
-<?php $numrowx = $numrow; if (!empty($recordrq)) {?>
-<?php  foreach($recordrq as $row):?>
-<?php //if ($numrow==1 OR $numrow%13==1) { 
-if ($numrow==$numrowx OR $numrow%13==1) {
-?>
-<?php if (true){?>
-<?php include 'content_headprint.php';?>
-<?php } ?>
-
-<?php if (true){?>
-<div id="Instruction" >
-<center>View List : 
-<form method="get" action="">
-
-		<?php
-		
-    $idArray = array_map('toArray', $this->session->userdata('accessr'));
-		if (!(in_array("contentcontroller/Schedule(main)", $idArray))) { 
-		 if ($this->session->userdata('usersess')=="HKS") {
+	   </tr>
+			<?php $numrow++; ?>
+		    <?php endforeach;?>								
+	    <!--<?php $numrowx = $numrow;?>
+			<?php foreach($record as $row):?>
+			<?php echo ($numrow%2==0) ? '<tr class="ui-color-color-color">' : '<tr>'; ?>
+			<td><?= $numrowx ?></td>
+			<td><?= ($row->sd_duedt) ? date("d/m/Y",strtotime($row->sd_duedt)) : 'N/A' ?></td>
+			<?php if  ($this->input->get('ex') != 'excel'){ ?>
+			<td><?=($row->sv_wrkordno) ? anchor ('contentcontroller/AssetRegis?wrk_ord='.$row->sv_wrkordno.'&assetno='.$row->sv_asset_no.'&m='.$this->input->get('m').'&y='.$this->input->get('y').'&stat='.$this->input->get('stat').'&resch='.$this->input->get('resch'),''.$row->sv_wrkordno.'' ) : 'N/A' ?></td>
+			<td><?=($row->sv_asset_no) && $row->sv_asset_no != 'N/A' ? anchor ('contentcontroller/AssetRegis?tab=Maintenance&assetno='.$row->sv_asset_no.'&m='.$this->input->get('m').'&y='.$this->input->get('y').'&stat='.$this->input->get('stat').'&resch='.$this->input->get('resch'),''.$row->av_tag_no.'' ) : 'N/A' ?></td>				
+			<?php }else{ ?>
+		    <td> <?=isset($row->sv_wrkordno) ? $row->sv_wrkordno : ''?></td>
+		    <td> <?=isset($row->av_tag_no) ? $row->av_tag_no : ''?></td>
+			<?php } ?>
+			<td><?= ($row->av_asset_name) ? $row->av_asset_name : 'N/A' ?></td>
+			<td ><?= ($row->av_user_dept_code) ? $row->av_user_dept_code : 'N/A' ?></td>
+			<td><?= ($row->sv_jobtype) ? $row->sv_jobtype : 'N/A' ?></td>
+			<td><?= ($row->v_Wrkordstatus) ? $row->v_Wrkordstatus : 'N/A' ?></td>
+			<td><?= ($row->v_stest) ? $row->v_stest : 'N/A' ?></td>
+			<td><?= ($row->v_ptest) ? $row->v_ptest : 'N/A' ?></td>
+			<td><?= ($row->d_Date) ? date("d-m-Y",strtotime($row->d_Date)) : 'N/A' ?></td>
+			<!--<td></td>-->
+			<!--<td style="height: 52px;">
+			<?php if (($row->v_summary) ? $row->v_summary : 'N/A' != "N/A"){ ?>
+			<div style="overflow: hidden; text-overflow: ellipsis; height: 42px; overflow: hidden; text-overflow: ellipsis;">
+			<?php }?>
+			<?= ($row->v_summary) ? $row->v_summary : 'N/A' ?>
+			<?php if (($row->v_summary) ? $row->v_summary : 'N/A' != "N/A"){ ?>
+			</div>
+			<?php }?>
+			</td>
+			<td><?= ($row->d_DateDone) ? date("d-m-Y",strtotime($row->d_DateDone)) : 'N/A' ?></td>
+			<td><?= ($row->d_Reschdt) ? date("d-m-Y",strtotime($row->d_Reschdt)) : 'N/A' ?></td>
+			<td><?= ($row->v_UserDeptDesc) ? $row->v_UserDeptDesc.' ('.$row->V_Location_code.')' : 'N/A' ?></td>
+			<td><?= ($row->v_asset_grp) ? $row->v_asset_grp : 'N/A' ?></td>
+		</tr>-->	
+			<?php $numrowx++; ?>	
+			<?php endforeach;?> 			
+	</table>
+            <?php }else{ ?>
+            <?php $numrow = 1; ?>
+            <?php $numrowx = $numrow; if (!empty($recordrq)) {?>
+            <?php  foreach($recordrq as $row):?>
+            <?php //if ($numrow==1 OR $numrow%13==1) { 
+            if ($numrow==$numrowx OR $numrow%13==1) {
+            ?>
+            <?php if (true){?>
+            <?php include 'content_headprint.php';?>
+            <?php } ?>
+            <?php if (true){?>
+            <div id="Instruction" >
+            <center>View List : 
+            <form method="get" action="">
+     		<?php	
+            $idArray = array_map('toArray', $this->session->userdata('accessr'));
+		    if (!(in_array("contentcontroller/Schedule(main)", $idArray))) { 
+		    if ($this->session->userdata('usersess')=="HKS") {
 			$req_type = array(
 			'' => 'All',
 			'A1' => 'A1 - Breakdown Maintenance (BM)',
@@ -267,7 +244,7 @@ if ($numrow==$numrowx OR $numrow%13==1) {
 			'W' => 'Window - Related Report',
 			'FIX' => 'Fixtures - Related Report',
 			'FUR' => 'Furniture / Fitting - Related Report'
-		 ); } else {
+		     ); } else {
 		 		$req_type = array(
 			'' => 'All',
 			'A1' => 'A1 - Breakdown Maintenance (BM)',
@@ -280,8 +257,8 @@ if ($numrow==$numrowx OR $numrow%13==1) {
 			'A8' => 'A8 - Testing and Commissioning (T&C)',
 			'A9' => 'A9 - Internal Request',
 			'A10' => 'A10 - Reimbursable Work'
-		 );
-		 }/*
+		    );
+		    }/*
 			$req_type = array(
 			'' => 'All',
 			'A1' => 'A1 - Breakdown Maintenance (BM)',
@@ -294,10 +271,9 @@ if ($numrow==$numrowx OR $numrow%13==1) {
 			'A8' => 'A8 - Testing and Commissioning (T&C)',
 			'A9' => 'A9 - Internal Request',
 			'A10' => 'A10 - Reimbursable Work'
-		 );*/
-		?>
+		     );*/
+		 ?>
 		<?php //echo form_dropdown('req', $req_type, set_value('req', $reqtype) , 'style="width: 300px;" id="cs_month"'); ?><br>
-
 		<?php  } else {
 		$_POST['req'] = '';
 		}
@@ -316,8 +292,7 @@ if ($numrow==$numrowx OR $numrow%13==1) {
 			'12' => 'December'
 		 );
 		?>
-		<?php echo form_dropdown('m', $month_list, set_value('m', isset($record[0]->Month) ? $record[0]->Month : $month) , 'style="width: 90px;" id="cs_month"'); ?>
-		
+		<?php echo form_dropdown('m', $month_list, set_value('m', isset($record[0]->Month) ? $record[0]->Month : $month) , 'style="width: 90px;" id="cs_month"'); ?>	
 		<?php 
 			for ($dyear = '2015';$dyear <= date("Y");$dyear++){
 				$year_list[$dyear] = $dyear;
@@ -334,25 +309,25 @@ if ($numrow==$numrowx OR $numrow%13==1) {
 	<table class="rport-header">
 		<tr>
 		  <td colspan="4" valign="top">A2 Work Order Report Listing- <?=date('F', mktime(0, 0, 0, $month, 10))?> <?=$year?> - FACILITY ENGINEERING SERVICES ( A2 - Schedule Corrective Maintenance (SCM) )</td>
+		  
 			<?php if (false) {?>
 			<td colspan="4" valign="top"><?php if ($this->input->get('broughtfwd') != ''){?>Unscheduled Brought Forward Work Order Details<?php }else{ ?>Work Order Report Listing<?php }?>- <?=date('F', mktime(0, 0, 0, $month, 10))?> <?=$year?> - <?php echo $this->session->userdata('usersessn');?>  ( <?php if (($this->input->get('req')) and (($this->input->get('grp') == '2') or ($this->input->get('grp') == '3'))){ echo 'Group'.$this->input->get('grp').','.$tulis; } elseif ($this->input->get('req')){echo $tulis; }elseif ($this->input->get('grp') == ''){ echo 'All';}else{ echo 'Group '.$this->input->get('grp');} ?> )</td>
 			<?php } ?>
 		</tr>
 	</table>
 	<table class="tftable tbl-go" border="1" style="text-align:center;">
-		<tr>
-			<th rowspan=2>No</th>
-			<th rowspan=2 style="width:7%;">A2 Scheduled Date</th>
-			<th rowspan=2 style="width:12%;">A2 Work Order</th>
+		<tr height="2">
+			<th rowspan=2 width="15">No</th>
+			<th rowspan=2 style="width:7%;">Work Order Date</th>
+			<th rowspan=2 style="width:5%;">A2 Work Order</th>
 			<th rowspan=2 style="width:5%;">Asset No</th>	
-			<th rowspan=2 style="width:30%;">Equipment Name</th>
-			<th rowspan=2>UDP</th>
-			<th rowspan=2>Freq</th>
-			<th rowspan=2>Status</th>
-			<th colspan=2>Test</th>
-			<th rowspan=2 style="width:7%;">Completion Date</th>
-			<th rowspan=2 style="width:17%;">Remark</th>
-			<th rowspan=2 style="width:7%;">Visit Date</th>
+			<th rowspan=2 style="width:20%;">Equipment Name</th>
+			<th rowspan=2 width="20">UDP</th>
+			<th rowspan=2 width="20">Status</th>
+			<th colspan=2 width="30">Test</th>
+			<th rowspan=2 style="width:7%;">Complete Date</th>
+			<th rowspan=2 style="width:10%;">Remark</th>
+			<th rowspan=2 style="width:7%;">Schedule Date</th>
 			<th rowspan=2 style="width:7%;">Reschedule Date</th>
 			<th rowspan=2 style="width:12%;">Deparment (Location Code)</th>
 			<th rowspan=2>Asset Group</th>
@@ -361,10 +336,8 @@ if ($numrow==$numrowx OR $numrow%13==1) {
 			<th>S</th>
 			<th>P</th>
 		</tr>	
-		<?php } ?>
-					      			
-	    				<?php echo ($numrow%2==0) ? '<tr class="ui-color-color-color">' : '<tr>'; ?>
-	    					
+		<?php } ?>		      			
+	        <?php echo ($numrow%2==0) ? '<tr class="ui-color-color-color">' : '<tr>'; ?>    					
     		<td><?= $numrow ?></td>
 			<td><?= ($row->D_date) ?  date("d/m/Y",strtotime($row->D_date)) : 'N/A' ?></td>
 			<td><?=($row->V_Request_no) ? anchor ('contentcontroller/AssetRegis?wrk_ord='.$row->V_Request_no.'&assetno='.$row->V_Asset_no.'&m='.$this->input->get('m').'&y='.$this->input->get('y').'&stat='.$this->input->get('stat').'&resch=fbfb&state='.$this->input->get('state'),''.$row->V_Request_no.'' ) : 'N/A' ?></td>
@@ -376,27 +349,20 @@ if ($numrow==$numrowx OR $numrow%13==1) {
 			<?php } ?>
 			<td><?= ($row->V_Asset_name) ? $row->V_Asset_name : 'N/A' ?></td>
 			<td><?= ($row->V_User_dept_code) ? $row->V_User_dept_code : 'N/A' ?></td>
-			<td><?= 'N/A' ?></td>
 			<td><?= ($row->V_request_status) ? $row->V_request_status : 'N/A' ?></td>
 			<td><?= 'N/A' ?></td>
 			<td><?= 'N/A' ?></td>
-			
-			
 			<td><?= ($row->v_closeddate) ? date("d/m/Y",strtotime($row->v_closeddate)) : 'N/A' ?></td>
 			<td><?= ($row->v_ActionTaken) ? $row->v_ActionTaken : 'N/A' ?></td>
-			<td><?= ($row->d_Date) ? date("d/m/Y",strtotime($row->d_Date)) : 'N/A' ?></td>
 			<td><?= 'N/A' ?></td>
-			
+			<td><?= 'N/A' ?></td>	
 			<td><?= ($row->v_UserDeptDesc) ? $row->v_location_name.' ('.$row->v_location_code.')' : 'N/A' ?></td>
 			<?php if ($this->input->get('broughtfwd') != '') { ?>
 			<td><?= ($row->V_Asset_WG_code) ? $row->V_Asset_WG_code : 'N/A' ?></td>
 			<?php } else { ?>
 			<td><?= ($row->v_asset_grp) ? $row->v_asset_grp : 'N/A' ?></td>
 			<?php } ?>
-			
-			
-  
-	        			</tr>	
+	        </tr>	
 						
 <?php $numrow++; ?>
 			<?php //if (($numrow-1)%13==0) {
