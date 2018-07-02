@@ -5,6 +5,11 @@
 	</style>
 	</head>
 	<body>
+	<?php 
+	$assetone = "0";
+$locationone = "0";
+	
+	?>
 <?php $req = $this->input->get('req'); $assetone = "0";?>
 			<?php switch ($req) {
 			case "A1":
@@ -67,7 +72,7 @@
 		</tr>
 	</table>
 	<table class="tftable" border="1" style="text-align:center; font-size:7px;" cellpadding="5" cellspacing="0">
-		<tr>
+		<tr nobr="true">
 			<th style="width:19px;">No</th>
 			<th >Date Req</th>
 			<th>Time Req</th>
@@ -99,7 +104,7 @@
 		</tr>
 		<?php  if (!empty($record)) {?>
 		<?php $numrow = 1; foreach($record as $row):?>
-			<?php echo ($numrow%2==0) ? '<tr class="ui-color-color-color">' : '<tr>'; ?>
+			<?php echo ($numrow%2==0) ? '<tr class="ui-color-color-color">' : '<tr nobr="true">'; ?>
 	    					
     		<td><?= $numrow ?></td>
 			<td><?= ($row->D_date) ?  date("d/m/Y",strtotime($row->D_date)) : 'N/A' ?></td>
