@@ -94,10 +94,10 @@ $locationone = "0";
 			<?php } ?>
 		</tr>
 	</table>
-	<table class="tftable" border="1" style="text-align:center;">
+	<table class="tftable" border="1" style="text-align:center;"><!--filexcel-->
 		<tr>
 			<th>No</th>
-			<th >Date Req</th>
+			<th>Date Req</th>
 			<th>Time Req</th>
 			<th>Request No</th>
 			<th>Asset No</th>				
@@ -149,11 +149,14 @@ $locationone = "0";
 			<td><?= ($row->v_closeddate) ? date("d/m/Y",strtotime($row->v_closeddate)) : 'N/A' ?></td>
 			<td><?= ($row->v_closedtime) ? $row->v_closedtime : 'N/A' ?></td>
 			<td><?= ($row->closedby) ? $row->closedby : 'N/A' ?></td>
-			<?php if (($this->input->get('broughtfwd') != '') && ($row->v_tag_no != $assetone) && ($row->V_request_type != "A34") && ($row->V_request_type != "A10") && ($row->linker == "none")){ ?>
-			<td><?= ($row->DiffDate) ? (($row->DiffDate > date('t', mktime(0, 0, 0, (int)$this->input->get('m'), 1, (int)$this->input->get('y')))) ? date('t', mktime(0, 0, 0, (int)$this->input->get('m'), 1, (int)$this->input->get('y'))) : $row->DiffDate) : '1' ?></td>
+					
+		    <?php if (($this->input->get('broughtfwd') != '') && ($row->v_tag_no != $assetone) && ($row->V_request_type != "A34") && ($row->V_request_type != "A10") && ($row->linker == "none")){ ?>
+			<!--<td><?=$row->DiffDate?></td>-->
+			<td><?= ($row->DiffDate) ? (($row->DiffDate > cal_days_in_month(CAL_GREGORIAN, $this->input->get('m'), $this->input->get('y'))) ? cal_days_in_month(CAL_GREGORIAN, $this->input->get('m'), $this->input->get('y')) : $row->DiffDate) : '1' ?></td>
 			<?php } else { ?>
-			<td><?= (($row->V_request_type == "A10") || ($row->V_request_type == "A34") || ($row->v_tag_no == $assetone)) ? '0' : $row->DiffDate ?></td>
+			<td><?= (($row->V_request_type == "A10") || ($row->V_request_type == "A34") || ($row->v_tag_no == $assetone) || ($row->linker != "none")) ? '0' : $row->DiffDate ?></td>
 			<?php } ?>
+			
 			<td><?= ($row->v_summary) ? $row->v_summary : 'N/A' ?></td>
 			<?php  } else {?>
 			<td><?= ($row->d_Date) ? date("d/m/Y",strtotime($row->d_Date)) : 'N/A' ?></td>
