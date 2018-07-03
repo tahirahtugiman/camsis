@@ -587,7 +587,7 @@
 			<?php  if (!in_array("contentcontroller/report_reqwosbya2", $chkers)) { ?>
 			<tr class="<?php  $number++; echo evenodd($number); ?>">
 				<td colspan="4">
-					<?php echo anchor ('contentcontroller/report_reqwosbya2?m='.$month.'&y='.$year.'&stat=fbfb&resch=nt&grp='.$this->input->get('grp'), '<img src="'. base_url() .'images/user.png" alt="" class="ui-icon"/>&nbsp;&nbsp;&nbsp;&nbsp;A2 Work Order Summary'); ?>
+					<?php echo anchor ('contentcontroller/report_reqwosbya2?m='.$month.'&y='.$year.'&stat=fbfb&resch=nt&grp='.$this->input->get('grp'), '<img src="'. base_url() .'images/user.png" alt="" class="ui-icon"/>&nbsp;&nbsp;&nbsp;&nbsp;Schedule Corrective Maintenance (SCM) Summary'); ?>
 				</td>
 			</tr>
 			<?php  } ?>
@@ -595,7 +595,7 @@
 			<?php if (!in_array("contentcontroller/report_a2", $chkers)) { ?>
 			<tr class="<?php  $number++; echo evenodd($number); ?>">
 				<td colspan="4">
-					<?php echo anchor ('contentcontroller/report_a2?m='.$month.'&y='.$year.'&stat=fbfb&resch=nt&grp='.$this->input->get('grp'), '<img src="'. base_url() .'images/user.png" alt="" class="ui-icon"/>&nbsp;&nbsp;&nbsp;&nbsp;A2 Work Order Listing'); ?>
+					<?php echo anchor ('contentcontroller/report_a2?m='.$month.'&y='.$year.'&stat=fbfb&resch=nt&grp='.$this->input->get('grp'), '<img src="'. base_url() .'images/user.png" alt="" class="ui-icon"/>&nbsp;&nbsp;&nbsp;&nbsp;Schedule Corrective Maintenance (SCM) Listing'); ?>
 				</td>
 			</tr>
 			<?php  } ?>

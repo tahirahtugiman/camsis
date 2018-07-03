@@ -2126,18 +2126,20 @@ return $query->result();
 			return $query->result();
 		}
 		function stock_asset($searchitem=""){
+		  $this->db->distinct();
 			$this->db->select('a.Hosp_code,a.Qty,b.ItemCode,REPLACE(REPLACE(b.ItemName, CHAR(10), ""), CHAR(13), "") AS ItemName',FALSE);
 			$this->db->from('tbl_item_store_qty a');
 			$this->db->join('tbl_invitem b','a.ItemCode = b.ItemCode','inner');
 			$this->db->where('a.Hosp_code',$this->session->userdata('hosp_code'));
 			$this->db->where('b.Dept',$this->session->userdata('usersess'));
 			$this->db->where('a.Action_Flag !=','D');
+			$this->db->limit(1000); 
 			if ($searchitem != "") {
 			$this->db->where("b.ItemCode",$searchitem)->or_where("b.ItemName",$searchitem);}
 			$this->db->order_by("itemname");
 				//$this->db->where('a.Hosp_code','MKA');//test
 			$query = $this->db->get();
-			//echo $this->db->last_query();
+			echo $this->db->last_query();
 			//exit();
 			return $query->result();
 		}

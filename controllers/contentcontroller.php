@@ -5437,13 +5437,14 @@ class Contentcontroller extends CI_Controller {
 		$this->load->model('display_model');
 		$data['record'] = $this->display_model->stock_asset($this->input->post('searchquestion'));
 		//$data['count'] = count($data['record']);
-
+//print_r($data['record']);
 		foreach($data['record'] as $row){
 		$data['pricel'] = $this->display_model->stock_passet($row->ItemCode,$row->Hosp_code);
 		$data['pricerec'][] = $data['pricel'];
 		
 		$data['assetl'] = $this->display_model->storeasset_detail($row->ItemCode,$row->Hosp_code);
-
+//print_r($data['pricel']);
+//exit();
 		$data['assetrec'][] = $data['assetl'];
 		}
 		function toArray($obj)
