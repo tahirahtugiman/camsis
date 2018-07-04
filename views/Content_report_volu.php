@@ -127,8 +127,8 @@ $locationone = "0";
 		</tr>
 		
 		<?php  if (!empty($record)) {?>
-				<?php $numrow = 1; foreach($record as $row):?>				      			
-	    	<?php echo ($numrow%2==0) ? '<tr class="ui-color-color-color">' : '<tr>'; ?>    					
+				<?php $numrow = 1; foreach($record as $row):?>					      			
+		<?php echo ($numrow%2==0) ? '<tr class="ui-color-color-color">' : '<tr>'; ?>	    					
     		<td><?= $numrow ?></td>
 			<td><?= ($row->D_date) ?  date("d/m/Y",strtotime($row->D_date)) : 'N/A' ?></td>
 			<td><?= ($row->D_time) ? $row->D_time : 'N/A' ?></td>
@@ -153,7 +153,7 @@ $locationone = "0";
 			<?php } else { ?>
 			<td><?= (($row->V_request_type == "A10") || ($row->V_request_type == "A34") || ($row->v_tag_no == $assetone) || ($row->linker != "none")) ? '0' : $row->DiffDate ?></td>
 			<?php } ?>
-           <?php  if (($row->v_tag_no) && $row->v_tag_no != 'N/A') {$assetone = $row->v_tag_no;} else {$assetone = $numrow;}
+			<?php  if (($row->v_tag_no) && $row->v_tag_no != 'N/A') {$assetone = $row->v_tag_no;} else {$assetone = $numrow;}
 			if (($row->v_location_code) && $row->v_location_code != 'N/A') {$locationone = $row->v_location_code;} else {$locationone = $numrow;}					
 			?>
 			<td><?= ($row->v_summary) ? $row->v_summary : 'N/A' ?></td>
@@ -166,9 +166,9 @@ $locationone = "0";
 			<td><?= ($row->DiffDate) ? (($row->DiffDate > date('t', mktime(0, 0, 0, (int)$this->input->get('m'), 1, (int)$this->input->get('y')))) ? date('t', mktime(0, 0, 0, (int)$this->input->get('m'), 1, (int)$this->input->get('y'))) : $row->DiffDate) : '1' ?></td>
 			<?php } else { ?>
 			<td><?= (($row->V_request_type == "A10") || ($row->V_request_type == "A34") || ($row->v_tag_no == $assetone) || ($row->v_location_code == $locationone) || ($row->linker != "none")) ? '0' : $row->DiffDate ?></td>
-			<?php } ?>	
+			<?php } ?>
 			<?php  if (($row->v_tag_no) && $row->v_tag_no != 'N/A') {$assetone = $row->v_tag_no;} else {$assetone = $numrow;}
-						 if (($row->v_location_code) && $row->v_location_code != 'N/A') {$locationone = $row->v_location_code;} else {$locationone = $numrow;}					
+						 if (($row->v_location_code) && $row->v_location_code != 'N/A') {$locationone = $row->v_location_code;} else {$locationone = $numrow;}	
 			?>
 			<td><?= ($row->v_ActionTaken) ? $row->v_ActionTaken : 'N/A' ?></td>
 			<?php } ?>
@@ -177,8 +177,8 @@ $locationone = "0";
 			<td><?= ($row->V_Asset_WG_code) ? $row->V_Asset_WG_code : 'N/A' ?></td>
 			<?php } else { ?>
 			<td><?= ($row->v_asset_grp) ? $row->v_asset_grp : 'N/A' ?></td>
-			<?php } ?>
-	                    </tr>	
+			<?php } ?>  
+	        			</tr>	
 	        			<?php $numrow++; ?>
 			    		<?php endforeach;?>
 			    		<?php }else { ?>

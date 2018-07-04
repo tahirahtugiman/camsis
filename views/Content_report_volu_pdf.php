@@ -1,16 +1,12 @@
-<?php include 'pdf_head.php'?>	<html>
+<?php include 'pdf_head.php';?>	<html>
 	<head>
 	<style>
 	.rport-header{padding-bottom:10px;}
 	</style>
 	</head>
 	<body>
-	<?php 
-	$assetone = "0";
-$locationone = "0";
-	
-	?>
-<?php $req = $this->input->get('req'); $assetone = "0";?>
+	<?php $assetone = "0";$locationone = "0";?>
+	<?php $req = $this->input->get('req'); $assetone = "0";?>
 			<?php switch ($req) {
 			case "A1":
 				$tulis = "A1 - Breakdown Maintenance (BM)";
@@ -61,7 +57,7 @@ $locationone = "0";
 				$tulis = "Furniture / Fitting - Related Report";
 				break;					
 			default:
-        $tulis = "All";	
+				$tulis = "All";	
 				break;
 			} ?>
 <table class="rport-header">
@@ -105,7 +101,7 @@ $locationone = "0";
 		<?php  if (!empty($record)) {?>
 		<?php $numrow = 1; foreach($record as $row):?>
 			<?php echo ($numrow%2==0) ? '<tr class="ui-color-color-color">' : '<tr nobr="true">'; ?>
-	    					
+
     		<td><?= $numrow ?></td>
 			<td><?= ($row->D_date) ?  date("d/m/Y",strtotime($row->D_date)) : 'N/A' ?></td>
 			<td><?= ($row->D_time) ? $row->D_time : 'N/A' ?></td>
@@ -129,12 +125,12 @@ $locationone = "0";
 			<!--<td><?=$row->DiffDate?></td>-->
 			<td><?= ($row->DiffDate) ? (($row->DiffDate > cal_days_in_month(CAL_GREGORIAN, $this->input->get('m'), $this->input->get('y'))) ? cal_days_in_month(CAL_GREGORIAN, $this->input->get('m'), $this->input->get('y')) : $row->DiffDate) : '1' ?></td>
 			<?php } else { ?>
-			<td><?= (($row->V_request_type == "A10") || ($row->V_request_type == "A34") || ($row->v_tag_no == $assetone) || ($row->linker != "none")) ? '0' : $row->DiffDate ?></td>
+			<td><?= (($row->V_request_type == "A10") || ($row->V_request_type == "A34") || ($row->v_tag_no == $assetone)) ? '0' : $row->DiffDate ?></td>
 			<?php } ?>
 
-                        <?php  if (($row->v_tag_no) && $row->v_tag_no != 'N/A') {$assetone = $row->v_tag_no;} else {$assetone = $numrow;}
-						 if (($row->v_location_code) && $row->v_location_code != 'N/A') {$locationone = $row->v_location_code;} else {$locationone = $numrow;}					
-			?>
+					<?php  if (($row->v_tag_no) && $row->v_tag_no != 'N/A') {$assetone = $row->v_tag_no;} else {$assetone = $numrow;}
+						if (($row->v_location_code) && $row->v_location_code != 'N/A') {$locationone = $row->v_location_code;} else {$locationone = $numrow;}					
+					?>
 
 			<td><?= ($row->v_summary) ? $row->v_summary : 'N/A' ?></td>
 			<?php  } else {?>
@@ -150,7 +146,7 @@ $locationone = "0";
 			<?php } ?>
 			
 			<?php  if (($row->v_tag_no) && $row->v_tag_no != 'N/A') {$assetone = $row->v_tag_no;} else {$assetone = $numrow;}
-						 if (($row->v_location_code) && $row->v_location_code != 'N/A') {$locationone = $row->v_location_code;} else {$locationone = $numrow;}					
+						 if (($row->v_location_code) && $row->v_location_code != 'N/A') {$locationone = $row->v_location_code;} else {$locationone = $numrow;}
 			?>
 			<td><?= ($row->v_ActionTaken) ? $row->v_ActionTaken : 'N/A' ?></td>
 			<?php } ?>
@@ -160,8 +156,7 @@ $locationone = "0";
 			<?php } else { ?>
 			<td><?= ($row->v_asset_grp) ? $row->v_asset_grp : 'N/A' ?></td>
 			<?php } ?>
-  
-	        			</tr>	
+		</tr>	
 		<?php $numrow++; ?>
 		<?php endforeach;?>
 		<?php }else { ?>
@@ -172,4 +167,4 @@ $locationone = "0";
 	</table>	
 	<body>
 </html>
-<?php include 'pdf_footer.php'?>
+<?php include 'pdf_footer.php';?>

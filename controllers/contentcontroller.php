@@ -5633,6 +5633,7 @@ class Contentcontroller extends CI_Controller {
 		//$data['recordcheck'] = $this->display_model->response_tab($data['wrk_ord']);
 		$data['records'] = $this->display_model->visit1_tab($data['wrk_ord']);
 		$data['recordjob'] = $this->display_model->jobclose_tab($data['wrk_ord']);
+		$data['record'] = $this->display_model->request_tab($data['wrk_ord']);
 		}
 		//print_r($data['records']);
 		//exit();
