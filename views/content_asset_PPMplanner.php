@@ -1,3 +1,4 @@
+<?php $col=1; for($i=1;$i<13;$i++){ $col += count($kalender[$i]); }?>
 <div class="ui-middle-screen">
 	<div class="content-workorder">
 		<div class="div-p">&nbsp;</div>
@@ -16,7 +17,7 @@
 						</tr>
 						<tr >
 							<td class="ui-desk-style-table">
-								<table class="ui-content-middle-menu-workorder2 ui-left_web" data-table="assetppmplanner" width="100%" border="0">
+								<table class="ui-content-middle-menu-workorder2 ui-left_web" width="100%" border="0">
 									<?php if ($records){ ?>
 										<form method="get" action="">
 											<?php 
@@ -31,7 +32,7 @@
 										</form>
 									<?php } ?>
 									<tr style="background:white; height:50px;">
-										<td colspan="53">
+										<td colspan="<?=$col;?>">
 											<span style="float:right; margin:5px;">
 												<a href="<?php echo base_url();?>index.php/assetppmplanner?asstno=<?=$this->input->get('asstno');?>&tab=7&cal=full&y=<?= $year?>&assetjt=<?=($records) ? $ajobtype : ''?>">Full Year Calendar </a>| 
 												<a href="<?php echo base_url();?>index.php/assetppmplanner?asstno=<?=$this->input->get('asstno');?>&tab=7&y=<?= $year?>&assetjt=<?=($records) ? $ajobtype : ''?>"> Weekly Summary Calendar  </a>
@@ -39,7 +40,7 @@
 										</td>
 									</tr>
 									<tr class="ui-color-contents-style-1">
-										<td colspan="53" height="40px">
+										<td colspan="<?=$col;?>" height="40px">
 											<table width="100%" class="ui-content-middle-menu-desk">
 												<tr style="background:#B3130A;">
 													<td width="6%" height="30px">
@@ -133,7 +134,7 @@
 										<td width="8.33%" colspan="<?=count($kalender[11])?>">NOV</td>
 										<td width="8.33%" colspan="<?=count($kalender[12])?>">DEC</td>
 									</tr>
-									<tr class="" style="color:black; font-size:10px; background:white;;" align="center">
+									<tr class="" style="color:black; font-size:10px; background:white;" align="center">
 										<td width="8.33%" style="padding-top:3px; padding-bottom:3px; color:white; font-size:15px;" class="ui-content-menu-desk-color">WEEK</td>
 									
 										<?php for ($i = 1; $i <= $count; $i++){ ?>
@@ -196,7 +197,7 @@
 									</tr>
 									<?php } ?>
 									<tr style="background:white;">
-										<td colspan="53" height="150px" valign="bottom">
+										<td colspan="<?=$col;?>" height="150px" valign="bottom">
 											<!--<table style="color:black">
 												<tr>
 													<td>Summary</td>
@@ -218,9 +219,17 @@
 
 								<!-- buzz -->
 								<style type="text/css">
-									.ppm_weekly_summary td{
-										width: 50%;
+									table.ppm_weekly_summary tr td{
 										color: black;
+										padding-left: 0px;
+									}
+									table.ppm_weekly_summary tr td table.ui-content-middle-menu-desk tr td.left{
+										padding-left: 16px;
+										padding-right: 0px;
+									}
+									table.ppm_weekly_summary tr td table.ui-content-middle-menu-desk tr td.right{
+										padding-left: 0px;
+										padding-right: 16px;
 									}
 								</style>
 								<table class="ui-mobile-table-desk ui-left_mobile ppm_weekly_summary" width="100%">
@@ -238,7 +247,7 @@
 										</form>
 									<?php } ?>
 									<tr style="background:white; height:50px;">
-										<td colspan="53">
+										<td colspan="8">
 											<span style="float:right; margin:5px;">
 												<a href="<?php echo base_url();?>index.php/assetppmplanner?asstno=<?=$this->input->get('asstno');?>&tab=7&cal=full&y=<?= $year?>&assetjt=<?=($records) ? $ajobtype : ''?>">Full Year Calendar </a>| 
 												<a href="<?php echo base_url();?>index.php/assetppmplanner?asstno=<?=$this->input->get('asstno');?>&tab=7&y=<?= $year?>&assetjt=<?=($records) ? $ajobtype : ''?>"> Weekly Summary Calendar  </a>
@@ -246,16 +255,16 @@
 										</td>
 									</tr>
 									<tr class="ui-color-contents-style-1">
-										<td colspan="53" height="40px">
+										<td colspan="8" height="40px">
 											<table width="100%" class="ui-content-middle-menu-desk">
 												<tr style="background:#B3130A;">
-													<td width="6%" height="30px">
+													<td width="6%" height="30px" class="left">
 														<a href="?y=<?= $year-1?>&asstno=<?=$this->input->get('asstno')?>&tab=7&cal=<?=$cals?>"><img src="<?php echo base_url(); ?>images/arrow-left2.png" alt="" class="ui-img-icon" style="padding-top:4px; padding-left:4px;"/></a>
 													</td>
-													<td width="88%" align="center">
+													<td width="88%" align="center" class="middle">
 														<?=$year?>
 													</td>
-													<td width="6%">
+													<td width="6%" class="right">
 														<a href="?y=<?= $year+1?>&asstno=<?=$this->input->get('asstno')?>&tab=7&cal=<?=$cals?>"><img src="<?php echo base_url(); ?>images/arrow-right2.png" alt="" class="ui-img-icon" style="padding-top:4px; padding-left:4px;"/></a>
 													</td>
 												</tr>
@@ -325,11 +334,11 @@
 										</tr>-->
 									<?php }else{ ?>
 									<tr>
-										<td>
+										<td colspan="8">
 											<table width="100%">
 												<?php $n=1;$rownum = 1;?>
 												<tr class="ui-color-color-color">
-													<td width="8.33%" rowspan="<?=count($kalender[1])+1?>" align="center">JAN</td>
+													<td width="33.33%" rowspan="<?=count($kalender[1])+1?>" align="center">JAN</td>
 												</tr>
 												<?php while ( $n <= count($kalender[1]) && $n <= $count ){ ?>
 													<tr>
@@ -338,7 +347,7 @@
 												<?php $n++;} ?>
 
 												<tr class="tr_color">
-													<td width="8.33%" rowspan="<?=count($kalender[2])+1?>" align="center">FEB</td>
+													<td width="33.33%" rowspan="<?=count($kalender[2])+1?>" align="center">FEB</td>
 												</tr>
 												<?php $n1=1;while ( $n1 <= count($kalender[2]) && $n <= $count ){ ?>
 													<tr <?=($rownum % 2) == 1 ? 'class="ui-color-color-color"' : 'class="tr_color"'?>>
@@ -347,7 +356,7 @@
 												<?php $n1=$n1+1;$n++;} ?>
 
 												<tr class="ui-color-color-color">
-													<td width="8.33%" rowspan="<?=count($kalender[3])+1?>" align="center">MAR</td>
+													<td width="33.33%" rowspan="<?=count($kalender[3])+1?>" align="center">MAR</td>
 												</tr>
 												<?php $n1=1;while ( $n1 <= count($kalender[3]) && $n <= $count ){ ?>
 													<tr>
@@ -356,7 +365,7 @@
 												<?php $n1=$n1+1;$n++;} ?>
 
 												<tr class="tr_color">
-													<td width="8.33%" rowspan="<?=count($kalender[4])+1?>" align="center">APR</td>
+													<td width="33.33%" rowspan="<?=count($kalender[4])+1?>" align="center">APR</td>
 												</tr>
 												<?php $n1=1;while ( $n1 <= count($kalender[4]) && $n <= $count ){ ?>
 													<tr <?=($rownum % 2) == 1 ? 'class="ui-color-color-color"' : 'class="tr_color"'?>>
@@ -365,7 +374,7 @@
 												<?php $n1=$n1+1;$n++;} ?>
 
 												<tr class="ui-color-color-color">
-													<td width="8.33%" rowspan="<?=count($kalender[5])+1?>" align="center">MAY</td>
+													<td width="33.33%" rowspan="<?=count($kalender[5])+1?>" align="center">MAY</td>
 												</tr>
 												<?php $n1=1;while ( $n1 <= count($kalender[5]) && $n <= $count ){ ?>
 													<tr>
@@ -374,7 +383,7 @@
 												<?php $n1=$n1+1;$n++;} ?>
 
 												<tr class="tr_color">
-													<td width="8.33%" rowspan="<?=count($kalender[6])+1?>" align="center">JUN</td>
+													<td width="33.33%" rowspan="<?=count($kalender[6])+1?>" align="center">JUN</td>
 												</tr>
 												<?php $n1=1;while ( $n1 <= count($kalender[6]) && $n <= $count ){ ?>
 													<tr <?=($rownum % 2) == 1 ? 'class="ui-color-color-color"' : 'class="tr_color"'?>>
@@ -383,7 +392,7 @@
 												<?php $n1=$n1+1;$n++;} ?>
 
 												<tr class="ui-color-color-color">
-													<td width="8.33%" rowspan="<?=count($kalender[7])+1?>" align="center">JUL</td>
+													<td width="33.33%" rowspan="<?=count($kalender[7])+1?>" align="center">JUL</td>
 												</tr>
 												<?php $n1=1;while ( $n1 <= count($kalender[7]) && $n <= $count ){ ?>
 													<tr>
@@ -392,7 +401,7 @@
 												<?php $n1=$n1+1;$n++;} ?>
 
 												<tr class="tr_color">
-													<td width="8.33%" rowspan="<?=count($kalender[8])+1?>" align="center">AUG</td>
+													<td width="33.33%" rowspan="<?=count($kalender[8])+1?>" align="center">AUG</td>
 												</tr>
 												<?php $n1=1;while ( $n1 <= count($kalender[8]) && $n <= $count ){ ?>
 													<tr <?=($rownum % 2) == 1 ? 'class="ui-color-color-color"' : 'class="tr_color"'?>>
@@ -401,7 +410,7 @@
 												<?php $n1=$n1+1;$n++;} ?>
 
 												<tr class="ui-color-color-color">
-													<td width="8.33%" rowspan="<?=count($kalender[9])+1?>" align="center">SEP</td>
+													<td width="33.33%" rowspan="<?=count($kalender[9])+1?>" align="center">SEP</td>
 												</tr>
 												<?php $n1=1;while ( $n1 <= count($kalender[9]) && $n <= $count ){ ?>
 													<tr>
@@ -410,7 +419,7 @@
 												<?php $n1=$n1+1;$n++;} ?>
 
 												<tr class="tr_color">
-													<td width="8.33%" rowspan="<?=count($kalender[10])+1?>" align="center">OCT</td>
+													<td width="33.33%" rowspan="<?=count($kalender[10])+1?>" align="center">OCT</td>
 												</tr>
 												<?php $n1=1;while ( $n1 <= count($kalender[10]) && $n <= $count ){ ?>
 													<tr <?=($rownum % 2) == 1 ? 'class="ui-color-color-color"' : 'class="tr_color"'?>>
@@ -419,7 +428,7 @@
 												<?php $n1=$n1+1;$n++;} ?>
 
 												<tr class="ui-color-color-color">
-													<td width="8.33%" rowspan="<?=count($kalender[11])+1?>" align="center">NOV</td>
+													<td width="33.33%" rowspan="<?=count($kalender[11])+1?>" align="center">NOV</td>
 												</tr>
 												<?php $n1=1;while ( $n1 <= count($kalender[11]) && $n <= $count ){ ?>
 													<tr>
@@ -428,7 +437,7 @@
 												<?php $n1=$n1+1;$n++;} ?>
 
 												<tr class="tr_color">
-													<td width="8.33%" rowspan="<?=count($kalender[12])+1?>" align="center">DEC</td>
+													<td width="33.33%" rowspan="<?=count($kalender[12])+1?>" align="center">DEC</td>
 												</tr>
 												<?php $n1=1;while ( $n1 <= count($kalender[12]) && $n <= $count ){ ?>
 													<tr <?=($rownum % 2) == 1 ? 'class="ui-color-color-color"' : 'class="tr_color"'?>>
