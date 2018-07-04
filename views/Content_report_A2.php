@@ -157,7 +157,7 @@ if ($this->input->get('ex') == ''){
 				<td><?= 'N/A' ?></td>
 				<td><?= 'N/A' ?></td>
 				<td><?= ($row->v_ActionTaken) ? $row->v_ActionTaken : 'N/A' ?></td>
-				<td><?= 'N/A' ?></td>
+				<td><?= ($row->d_Date) ? date("d/m/Y",strtotime($row->d_Date)) : 'N/A' ?></td>
 				<td><?= 'N/A' ?></td>
 				<td><?= ($row->v_closeddate) ? date("d/m/Y",strtotime($row->v_closeddate)) : 'N/A' ?></td>
 				
@@ -382,7 +382,7 @@ if ($this->input->get('ex') == ''){
 						<td><?= 'N/A' ?></td>
 						<td><?= 'N/A' ?></td>
 						<td><?= ($row->v_ActionTaken) ? $row->v_ActionTaken : 'N/A' ?></td>
-						<td><?= 'N/A' ?></td>
+						<td><?= ($row->d_Date) ? date("d/m/Y",strtotime($row->d_Date)) : 'N/A' ?></td>
 						<td><?= 'N/A' ?></td>
 						<td><?= ($row->v_closeddate) ? date("d/m/Y",strtotime($row->v_closeddate)) : 'N/A' ?></td>
 					

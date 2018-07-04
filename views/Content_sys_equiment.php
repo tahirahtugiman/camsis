@@ -14,7 +14,7 @@
 					</tr>
 					<tr >
 						<td class="ui-desk-style-table">
-							<table class="ui-content-form" id="no-more-tables" width="100%" border="0">
+							<table class="ui-content-form" id="no-more-tables" data-table="equipment_type_code_setup" width="100%" border="0">
 								<tr>	
 									<th width="30px">No</th>
 									<th>Equipment Code</th>
@@ -23,7 +23,8 @@
 									<th>Workgroup</th>
 									<th>Chk List</th>
 								</tr>
-								<tr align="center" >
+								<?php $numrow=1;?>
+								<tr align="center" <?= ($numrow%2==0) ?  'class="ui-color-color-color"' :  '' ?> >
 									<td data-title="No :">1</td>
 									<td data-title="Equipment Code :"><?php echo anchor ('contentcontroller/sys_admin?ec=2&sys_id=BESUR05','BESUR05');?></td>
 									<td data-title="Description :">Lavage Units, Surgical</td>
