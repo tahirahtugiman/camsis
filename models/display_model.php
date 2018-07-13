@@ -906,7 +906,7 @@ ORDER BY s.d_DueDt, s.v_WrkOrdNo
 			{
 			//$this->db->where("s.v_wrkordstatus = 'A' ", NULL, FALSE);
 			//$this->db->where("s.d_reschdt is not NULL AND s.v_wrkordstatus = 'AR' ", NULL, FALSE);
-			$this->db->where("s.d_reschdt is not NULL AND s.d_reschdt > '".$this->dater(2,$month,$year)."'", NULL, FALSE);
+			$this->db->where("s.d_reschdt is not NULL AND s.d_reschdt > '".$this->dater(1,$month,$year)."'", NULL, FALSE);
 			} else
 			{
 			$this->db->not_like('s.v_wrkordstatus', $stat);
@@ -920,6 +920,7 @@ ORDER BY s.d_DueDt, s.v_WrkOrdNo
 		     $this->db->where('s.d_DueDt <=', $this->dater(2,$month,$year));
 			}else{
 			$this->db->where('IFNULL(s.d_reschdt,s.d_DueDt) >=', $this->dater(1,$month,$year));
+			//$this->db->where('IFNULL(s.d_reschdt,s.d_DueDt) >=', $this->dater(2,$month,$year));
 			$this->db->where('IFNULL(s.d_reschdt,s.d_DueDt) <=', $this->dater(2,$month,$year));
 			}
 			$this->db->where('s.v_HospitalCode',$this->session->userdata('hosp_code'));
@@ -2126,18 +2127,20 @@ return $query->result();
 			return $query->result();
 		}
 		function stock_asset($searchitem=""){
+		  $this->db->distinct();
 			$this->db->select('a.Hosp_code,a.Qty,b.ItemCode,REPLACE(REPLACE(b.ItemName, CHAR(10), ""), CHAR(13), "") AS ItemName',FALSE);
 			$this->db->from('tbl_item_store_qty a');
 			$this->db->join('tbl_invitem b','a.ItemCode = b.ItemCode','inner');
 			$this->db->where('a.Hosp_code',$this->session->userdata('hosp_code'));
 			$this->db->where('b.Dept',$this->session->userdata('usersess'));
 			$this->db->where('a.Action_Flag !=','D');
+			$this->db->limit(1000); 
 			if ($searchitem != "") {
 			$this->db->where("b.ItemCode",$searchitem)->or_where("b.ItemName",$searchitem);}
 			$this->db->order_by("itemname");
 				//$this->db->where('a.Hosp_code','MKA');//test
 			$query = $this->db->get();
-			//echo $this->db->last_query();
+			echo $this->db->last_query();
 			//exit();
 			return $query->result();
 		}
@@ -2183,7 +2186,7 @@ return $query->result();
 				$this->db->order_by('s.V_User_dept_code','desc');
 			}
 			$query = $this->db->get();
-			// echo $this->db->last_query();
+			echo $this->db->last_query();
 			//exit();
 			return $query->result();
 		}
@@ -2427,11 +2430,11 @@ return $query->result();
 			//$this->db->select("COUNT(*) as total, SUM(CASE WHEN sc.v_wrkordstatus = 'A'  THEN 1 ELSE 0 END) AS notcomp, SUM(CASE WHEN sc.v_wrkordstatus = 'C' OR sc.v_wrkordstatus = 'CR' THEN 1 ELSE 0 END) AS comp, SUM(CASE WHEN sc.d_reschdt is not NULL AND sc.v_wrkordstatus = 'AR' THEN 1 ELSE 0 END) AS resch");
 			//$this->db->select("COUNT(*) as total, SUM(CASE WHEN sc.v_wrkordstatus = 'A'  OR (sc.v_wrkordstatus = 'AR') THEN 1 ELSE 0 END) AS notcomp, SUM(CASE WHEN (sc.v_wrkordstatus = 'C' OR sc.v_wrkordstatus = 'CR') THEN 1 ELSE 0 END) AS comp, SUM(CASE WHEN sc.d_reschdt is not NULL THEN 1 ELSE 0 END) AS resch", FALSE);
 			if ($fon == "") {
-			//$this->db->select("COUNT(*) as total, SUM(CASE WHEN sc.v_wrkordstatus = 'A'  OR (sc.v_wrkordstatus = 'AR') THEN 1 ELSE 0 END) AS notcomp, SUM(CASE WHEN (sc.v_wrkordstatus = 'C' OR sc.v_wrkordstatus = 'CR') THEN 1 ELSE 0 END) AS comp, SUM(CASE WHEN sc.d_reschdt is not NULL AND sc.d_reschdt > '".$this->dater(2,$month,$year)."' THEN 1 ELSE 0 END) AS resch", FALSE);
-						$this->db->select("COUNT(*) as total, SUM(CASE WHEN sc.v_wrkordstatus = 'A'  OR (sc.v_wrkordstatus = 'AR') THEN 1 ELSE 0 END) AS notcomp, SUM(CASE WHEN (sc.v_wrkordstatus = 'C' OR sc.v_wrkordstatus = 'CR') THEN 1 ELSE 0 END) AS comp, SUM(CASE WHEN sc.d_reschdt is not NULL AND month(sc.d_reschdt) > month(d_startdt) THEN 1 ELSE 0 END) AS resch", FALSE);
+			$this->db->select("COUNT(*) as total, SUM(CASE WHEN sc.v_wrkordstatus = 'A'  OR (sc.v_wrkordstatus = 'AR') THEN 1 ELSE 0 END) AS notcomp, SUM(CASE WHEN (sc.v_wrkordstatus = 'C' OR sc.v_wrkordstatus = 'CR') THEN 1 ELSE 0 END) AS comp, SUM(CASE WHEN sc.d_reschdt is not NULL AND sc.d_DueDt < '".$this->dater(1,$month,$year)."' THEN 1 ELSE 0 END) AS resch", FALSE);
+      //$this->db->select("COUNT(*) as total, SUM(CASE WHEN sc.v_wrkordstatus = 'A'  OR (sc.v_wrkordstatus = 'AR') THEN 1 ELSE 0 END) AS notcomp, SUM(CASE WHEN (sc.v_wrkordstatus = 'C' OR sc.v_wrkordstatus = 'CR') THEN 1 ELSE 0 END) AS comp, SUM(CASE WHEN sc.d_reschdt is not NULL AND month(sc.d_reschdt) > month(d_startdt) THEN 1 ELSE 0 END) AS resch", FALSE);
 			} else {
 			//$this->db->select("COUNT(*) as total, SUM(CASE WHEN (sc.v_wrkordstatus = 'A' OR sc.v_wrkordstatus = 'AR') OR ((sc.v_wrkordstatus = 'C' OR sc.v_wrkordstatus = 'CR') AND sc.v_closeddate > '" . $this->daterfreeze(1,$month,$year) . "') THEN 1 ELSE 0 END) AS notcomp, SUM(CASE WHEN (sc.v_wrkordstatus = 'C' OR sc.v_wrkordstatus = 'CR') AND sc.v_closeddate <= '" . $this->daterfreeze(1,$month,$year) . "' THEN 1 ELSE 0 END) AS comp, SUM(CASE WHEN sc.d_reschdt is not NULL THEN 1 ELSE 0 END) AS resch", FALSE);
-						$this->db->select("COUNT(*) as total, SUM(CASE WHEN (sc.v_wrkordstatus = 'A' OR sc.v_wrkordstatus = 'AR') OR ((sc.v_wrkordstatus = 'C' OR sc.v_wrkordstatus = 'CR') AND sc.v_closeddate > '" . $this->daterfreeze(1,$month,$year) . "') THEN 1 ELSE 0 END) AS notcomp, SUM(CASE WHEN (sc.v_wrkordstatus = 'C' OR sc.v_wrkordstatus = 'CR') AND sc.v_closeddate <= '" . $this->daterfreeze(1,$month,$year) . "' THEN 1 ELSE 0 END) AS comp, SUM(CASE WHEN sc.d_reschdt is not NULL AND month(sc.d_reschdt) > month(d_startdt) THEN 1 ELSE 0 END) AS resch", FALSE);
+        $this->db->select("COUNT(*) as total, SUM(CASE WHEN (sc.v_wrkordstatus = 'A' OR sc.v_wrkordstatus = 'AR') OR ((sc.v_wrkordstatus = 'C' OR sc.v_wrkordstatus = 'CR') AND sc.v_closeddate > '" . $this->daterfreeze(1,$month,$year) . "') THEN 1 ELSE 0 END) AS notcomp, SUM(CASE WHEN (sc.v_wrkordstatus = 'C' OR sc.v_wrkordstatus = 'CR') AND sc.v_closeddate <= '" . $this->daterfreeze(1,$month,$year) . "' THEN 1 ELSE 0 END) AS comp, SUM(CASE WHEN sc.d_reschdt is not NULL AND sc.d_DueDt < '".$this->dater(1,$month,$year)."' THEN 1 ELSE 0 END) AS resch", FALSE);
 			}
 			$this->db->from('pmis2_egm_schconfirmmon sc');
 			$this->db->join('pmis2_egm_assetregistration a','sc.v_Asset_no = a.V_Asset_no AND sc.v_HospitalCode = a.V_Hospitalcode '.$bystak,'left outer');
@@ -2451,7 +2454,7 @@ return $query->result();
 			//echo "dater : ".$this->dater(1,$month,$year);
 			//echo $this->db->last_query();
 			//exit();
-
+            
 			$query_result = $query->result();
 			return $query_result;
 		}
@@ -4210,8 +4213,8 @@ ORDER BY r.D_date, r.D_time
 	}
 	
 	function mrinlist($month,$year,$type,$kelas){
-		//echo "nilai kelas : " . $kelas . " type : " . $type;
-		$inter = (int)$month;
+	//echo "nilai kelas : " . $kelas . " type : " . $type;
+	  $inter = (int)$month;
 		$this->db->select('m.*,IFNULL(s.V_Asset_no,p.v_Asset_no) AS V_Asset_no,st.Status, IFNULL(IFNULL(IFNULL(ApprCommentsxx,ApprCommentsx),ApprComments),Comments) AS Commentsx',FALSE);
 		$this->db->from('tbl_materialreq m');
 		$this->db->join('pmis2_egm_service_request s','m.WorkOfOrder = s.V_Request_no AND s.V_actionflag <> "D"','left outer');
@@ -4222,22 +4225,22 @@ ORDER BY r.D_date, r.D_time
 		$this->db->where('service_code',$this->session->userdata('usersess'));
 		if ($type <> 0){
 			if ($type == 1){
-				$this->db->where('MONTH(DATE(m.DateCreated))',$inter);
-				$this->db->where('YEAR(DATE(m.DateCreated))',$year);
+			$this->db->where('MONTH(DATE(m.DateCreated))',$inter);
+			$this->db->where('YEAR(DATE(m.DateCreated))',$year);
 				if ($kelas == 1) {
-					$this->db->where('m.ApprStatusID = 4');
-				} else if ($kelas == 3) {		 	 
-					$this->db->where('m.ApprStatusIDx = 4');
-					$this->db->where('m.ApprStatusIDxx = 4');
-				} else {
-					$this->db->where('m.ApprStatusID = 4');
-					$this->db->where('m.ApprStatusIDx = 4');
-					$this->db->where('m.ApprStatusIDxx = 4');
-				}
+				$this->db->where('m.ApprStatusID = 4');
+			 } else if ($kelas == 3) {		 	 
+				$this->db->where('m.ApprStatusIDx = 4');
+				$this->db->where('m.ApprStatusIDxx = 4');
+			 } else {
+				$this->db->where('m.ApprStatusID = 4');
+				$this->db->where('m.ApprStatusIDx = 4');
+				$this->db->where('m.ApprStatusIDxx = 4');
+			 }
 			}
 			else if ($type == 2){
-				$this->db->where('MONTH(DATE(m.DateCreated))',$inter);
-				$this->db->where('YEAR(DATE(m.DateCreated))',$year);
+			$this->db->where('MONTH(DATE(m.DateCreated))',$inter);
+			$this->db->where('YEAR(DATE(m.DateCreated))',$year);
 				$status = array(5,107,128);
 				$this->db->where_in('m.ApprStatusID',$status);
 				//$this->db->or_where('m.ApprStatusID = 107');
@@ -4250,18 +4253,18 @@ ORDER BY r.D_date, r.D_time
 				//$this->db->or_where('m.ApprStatusIDxx = 128');
 			}
 			else if ($type == 3){
-				if ($kelas == 1) {
-				 	$this->db->where('m.ApprStatusID','6');
-				} else if ($kelas == 3) {
-				 	 
-					$this->db->where('m.ApprStatusIDx','6');
-					$this->db->or_where('m.ApprStatusIDxx','6');
-				} else {
-				 	
-					$this->db->where('m.ApprStatusID','6');
-					$this->db->or_where('m.ApprStatusIDx','6');
-					$this->db->or_where('m.ApprStatusIDxx','6');
-				}
+			 if ($kelas == 1) {
+			 	$this->db->where('m.ApprStatusID','6');
+			 } else if ($kelas == 3) {
+			 	 
+				$this->db->where('m.ApprStatusIDx','6');
+				$this->db->or_where('m.ApprStatusIDxx','6');
+			 } else {
+			 	
+				$this->db->where('m.ApprStatusID','6');
+				$this->db->or_where('m.ApprStatusIDx','6');
+				$this->db->or_where('m.ApprStatusIDxx','6');
+			 }
 			}
 			else{
 				$this->db->where('MONTH(DATE(m.DateCreated))',$inter);
@@ -4271,8 +4274,8 @@ ORDER BY r.D_date, r.D_time
 				$this->db->or_where('m.ApprStatusIDxx = 6');
 			}	
 		} else{
-			$this->db->where('MONTH(DATE(m.DateCreated))',$inter);
-			$this->db->where('YEAR(DATE(m.DateCreated))',$year);
+				$this->db->where('MONTH(DATE(m.DateCreated))',$inter);
+				$this->db->where('YEAR(DATE(m.DateCreated))',$year);
 		}
 		$this->db->order_by('DocReferenceNo','ASC');
 		$query = $this->db->get();
@@ -4282,7 +4285,7 @@ ORDER BY r.D_date, r.D_time
 		return $query_result;	
 	}
 	
-	function mrindet($mrinno){
+function mrindet($mrinno){
 		$this->db->select('m.*,s.V_Asset_no,u.Name');
 		$this->db->from('tbl_materialreq m');
 		$this->db->join('pmis2_egm_service_request s','m.WorkOfOrder = s.V_Request_no','left');
@@ -4296,7 +4299,7 @@ ORDER BY r.D_date, r.D_time
 		return $query_result;
 	}
 	
-	function itemdet($mrinno){
+function itemdet($mrinno){
 		$this->db->select('a.*,b.ItemName, IFNULL(c.Qty,0) AS Qtys', FALSE);
 		$this->db->from('tbl_mirn_comp a');
 		$this->db->join('tbl_invitem b','a.ItemCode = b.ItemCode');
@@ -4304,13 +4307,13 @@ ORDER BY r.D_date, r.D_time
 		$this->db->where('MIRNcode',$mrinno);
 		$this->db->where('Who_Del IS NULL', null, false);
 		$query = $this->db->get();
-		// echo $this->db->last_query();
-		// exit();
+		//echo $this->db->last_query();
+		//exit();
 		$query_result = $query->result();
 		return $query_result;
 	}
 	
-	function comrec($mrinno){
+function comrec($mrinno){
 		$this->db->select('*');
 		$this->db->from('component_details');
 		$this->db->where('asset_no',$mrinno);
@@ -4322,7 +4325,7 @@ ORDER BY r.D_date, r.D_time
 		return $query_result;
 	}
 
-	function attrec($mrinno){
+function attrec($mrinno){
 		$this->db->select('*');
 		$this->db->from('attachments_details');
 		$this->db->where('asset_no',$mrinno);
@@ -4335,7 +4338,7 @@ ORDER BY r.D_date, r.D_time
 	}
 	
 	
-	function pocomrec($pono){
+function pocomrec($pono){
 		$this->db->select('*');
 		$this->db->from('po_compodetails');
 		$this->db->where('PO_No',$pono);
@@ -4347,7 +4350,7 @@ ORDER BY r.D_date, r.D_time
 		return $query_result;
 	}
 
-	function poattrec($pono){
+function poattrec($pono){
 		$this->db->select('*');
 		$this->db->from('poattach_details');
 		$this->db->where('PO_No',$pono);
@@ -4360,7 +4363,7 @@ ORDER BY r.D_date, r.D_time
 	}
 	
 	
-	function mrindetedit($mrinno){
+function mrindetedit($mrinno){
 		$this->db->select('m.*,s.*,u.Name,a.V_Asset_no,a.V_Tag_no,a.V_Serial_no,a.V_Asset_name,a.V_Manufacturer,a.V_Brandname,a.V_Model_no,b.V_PO_date,b.N_Cost');
 		$this->db->from('tbl_materialreq m');
 		$this->db->join('pmis2_egm_service_request s','m.WorkOfOrder = s.V_Request_no','left');
@@ -4376,7 +4379,7 @@ ORDER BY r.D_date, r.D_time
 		return $query_result;
 	}
 	
-	function user_class($username){
+function user_class($username){
 		$this->db->select('*');
 		$this->db->from('tbl_user_class');
 		$this->db->where('user_name',$username);
@@ -4613,8 +4616,8 @@ function printpr($prno){
 	$this->db->join('tbl_mirn_comp c','m.MIRN_No = c.MIRNcode');
 	$this->db->where('p.PRNo',$prno);
 	$query = $this->db->get();
-	// echo $this->db->last_query();
-	// exit();
+	echo $this->db->last_query();
+	exit();
 	$query_result = $query->result();
 	return $query_result;
 }
@@ -5021,7 +5024,7 @@ return $obj['path'];
 			$bystak = " AND left(a.v_tag_no,6) = 'IIUM E'"; }
              		
 		    //$this->db->select("SUM(CASE WHEN sc.d_reschdt is not NULL AND sc.v_wrkordstatus = 'AR' AND (IFNULL(sc.d_reschdt, d_DueDt) > now()) THEN 1 ELSE 0 END) AS reschout",FALSE);			
-				$this->db->select("SUM(CASE WHEN sc.d_reschdt is not NULL AND sc.d_reschdt > '".$this->dater(2,$month,$year)."' THEN 1 ELSE 0 END) AS reschout",FALSE);			
+				$this->db->select("SUM(CASE WHEN sc.d_reschdt is not NULL AND sc.d_reschdt >= '".$this->dater(2,$month,$year)."' THEN 1 ELSE 0 END) AS reschout",FALSE);			
 			$this->db->from('pmis2_egm_schconfirmmon sc');	
 			$this->db->join('pmis2_egm_assetregistration a','sc.v_Asset_no = a.V_Asset_no AND sc.v_HospitalCode = a.V_Hospitalcode '.$bystak,'left outer');
 			$this->db->where('sc.v_Actionflag <> ','D');
