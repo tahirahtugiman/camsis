@@ -21,7 +21,7 @@
 				<th rowspan="2" width="30">Status</th>
 				<th colspan="2" width="50">Test</th>
 				<th rowspan="2" width="79">Remark</th>
-				<th rowspan="2">Schedule Date</th>
+				<!--<th rowspan="2">Schedule Date</th>-->
 				<th rowspan="2">Reschedule Date</th>
 				<th rowspan="2">Complete Date</th>
 				<th rowspan="2" width="80">Deparment (Location Code)</th>
@@ -44,7 +44,7 @@
 				<td><?= 'N/A' ?></td>
 				<td><?= 'N/A' ?></td>
 				<td><?= ($row->v_ActionTaken) ? $row->v_ActionTaken : 'N/A' ?></td>
-				<td><?= ($row->d_Date) ? date("d/m/Y",strtotime($row->d_Date)) : 'N/A' ?></td>
+				<!--<td><?= ($row->d_Date) ? date("d/m/Y",strtotime($row->d_Date)) : 'N/A' ?></td>-->
 				<td><?= 'N/A' ?></td>
 				<td><?= ($row->v_closeddate) ? date("d/m/Y",strtotime($row->v_closeddate)) : 'N/A' ?></td>
 				<td><?= ($row->v_UserDeptDesc) ? $row->v_location_name.' ('.$row->v_location_code.')' : 'N/A' ?></td>
