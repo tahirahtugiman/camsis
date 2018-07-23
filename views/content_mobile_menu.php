@@ -8,7 +8,7 @@ $array = [
 	// ['contentcontroller/Business/', 'BUSINESS INTELIGENT REPORTS' , base_url().'index.php/contentcontroller/Central/'.$this->session->userdata('usersess'),''],
 ];
 
-$i = array_pop(array_keys($array));
+$i = array_pop((array_keys($array)));
 if( 'nezam' == $this->session->userdata('v_UserName') ){
 	$array[$i-1][2]	= base_url()."index.php/".$array[$i-2][0].$this->session->userdata('usersess');
 	$array[$i-1][3]	= base_url()."index.php/contentcontroller/sys_admin/".$this->session->userdata("usersess");

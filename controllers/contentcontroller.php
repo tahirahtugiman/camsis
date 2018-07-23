@@ -2496,7 +2496,7 @@ class Contentcontroller extends CI_Controller {
 	}
 	
 	public function vo3(){
-		if (is_null($this->input->get('p')) == FALSE) {
+		if (is_null($this->input->get('p'))) {
 			if (date('m') > 6){
 				$data['Period'] = "P2".date('y');
 			}
@@ -5591,7 +5591,7 @@ class Contentcontroller extends CI_Controller {
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
 		
 		$this->load->model('display_model');
-		$data['record'] = $this->display_model->stock_asset();
+		$data['record'] = $this->display_model->stock_asset($data['item']);
 		
 			foreach($data['record'] as $row){
 				if($data['item'] == $row->ItemName){

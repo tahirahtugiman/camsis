@@ -25,7 +25,7 @@
 
 		//echo $this->input->post('username') . $this->input->post('password');
 		//exit;
-		if( $query->num_rows ==1)
+		if( $query->num_rows() ==1)
 		{
 
 			return TRUE;
@@ -58,7 +58,7 @@
 	
 	return $query->result();
 	
-		/*if( $query->num_rows ==3 || $query->num_rows ==2 )
+		/*if( $query->num_rows() ==3 || $query->num_rows() ==2 )
 		{
 			return TRUE;
 		}*/
@@ -77,8 +77,8 @@
 		
 		//exit();
 	
-		//if( $query->num_rows ==3 || $query->num_rows ==2)
-		if( $query->num_rows > 1 )
+		//if( $query->num_rows() ==3 || $query->num_rows() ==2)
+		if( $query->num_rows() > 1 )
 		{
 			return TRUE;
 		}
@@ -105,7 +105,7 @@
 		$this->db->where('v_userid', $this->input->post('username'));
 		$this->db->where('v_password',md5($this->input->post('opassword')));
 		$query = $this->db->get('pmis2_sa_user');
-		if( $query->num_rows ==1)
+		if( $query->num_rows() ==1)
 		{
 			return TRUE;
 		}
@@ -120,7 +120,7 @@
 		return $query->result();
 		//echo $this->db->last_query();
 		/*
-		if($query->num_rows == 1)
+		if($query->num_rows() == 1)
 		{
 			return TRUE;
 		}
