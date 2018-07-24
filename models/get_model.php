@@ -1,5 +1,5 @@
 <?php
-class get_model extends CI_Model{
+class Get_model extends CI_Model{
 function __construct() {
 parent::__construct();
 }
@@ -575,11 +575,11 @@ $this->db->join('pmis2_egm_assetmaintenance b','a.v_asset_no = b.v_assetno AND a
 $this->db->join('pmis2_egm_assetreg_general c','a.v_asset_no = c.v_asset_no AND a.v_hospitalcode = c.v_hospital_code');
 $this->db->join('pmis2_egm_assetjobtype j','j.v_asset_no = c.v_asset_no AND j.v_hospitalcode = c.v_hospital_code AND j.v_year=year(now())', 'left');
 $val = array('C1', 'C4', 'C5', 'C7');
-$this->db->where_in('left(b.v_assetcondition,2)', $val,FALSE);
+$this->db->where_in('left(b.v_assetcondition,2)', $val);
 $val = array('S1', 'S2','S4','S5');
-$this->db->where_in('left(b.v_assetstatus,2)', $val,FALSE);
+$this->db->where_in('left(b.v_assetstatus,2)', $val);
 $val = array('V3', 'V4L','V4','V5');
-$this->db->where_in('left(b.v_AssetVStatus,2)', $val,FALSE);
+$this->db->where_in('left(b.v_AssetVStatus,2)', $val);
 $val = array('BESTH01');
 //$this->db->where_not_in("a.v_asset_no", "SELECT v_asset_no FROM fmis.pmis2_egm_assetjobtype where v_hospitalcode = 'IIUM'");
 $this->db->where('a.v_hospitalcode = ', $this->session->userdata('hosp_code'));
@@ -749,12 +749,12 @@ $query = $this->db->get();
 return $query->result();
 
 }
-
+/*
 function licensesandcert()
 {
 
 $this->db->select("A.v_CertificateNo, A.v_ServiceCode, A.v_AgencyCode, A.v_LicenseCategoryCode, B.v_LicenceCategoryDesc, A.v_IdentificationType, A.v_Identification, A.v_RegistrationNo, A.v_StartDate, A.v_ExpiryDate, A.v_GradeID, A.v_Remarks, A.v_hospitalcode, A.v_key, A.CMIS_Action_Flag, A.d_timestamp,A.id",FALSE);
-/* $this->db->select("A.v_CertificateNo, A.v_ServiceCode, A.v_AgencyCode, A.v_LicenseCategoryCode, B.v_LicenceCategoryDesc, A.v_IdentificationType, A.v_Identification, A.v_RegistrationNo, A.v_StartDate, A.v_ExpiryDate, A.v_GradeID, A.v_Remarks, A.v_hospitalcode, A.v_key, A.CMIS_Action_Flag, A.d_timestamp, MAX(A.d_timestamp),A.id",FALSE); */
+//$this->db->select("A.v_CertificateNo, A.v_ServiceCode, A.v_AgencyCode, A.v_LicenseCategoryCode, B.v_LicenceCategoryDesc, A.v_IdentificationType, A.v_Identification, A.v_RegistrationNo, A.v_StartDate, A.v_ExpiryDate, A.v_GradeID, A.v_Remarks, A.v_hospitalcode, A.v_key, A.CMIS_Action_Flag, A.d_timestamp, MAX(A.d_timestamp),A.id",FALSE);
 //SELECT (case when DWRate = 999 then (case when 500 <= 2000000 then 0.0075 * 100 else 0.0050 * 100 end) else DWRate end) as DWRate, PWRate, (case when DWRate = 999 then (case when 500 <= 2000000 then (500 * 0.0075) / 12 else (500 * 0.0050) / 12 end) else (500 * ( DWRate / 100)) / 12 end) as 'FeeDW', (500 * ( PWRate / 100) / 12) as 'FeePW'
 $this->db->from('pmis2_egm_lnc_lincense_details A');
 $this->db->join('pmis2_egm_lnc_license_category_code B','A.v_LicenseCategoryCode=B.v_LicenceCategoryCode');
@@ -762,12 +762,40 @@ $this->db->where('A.v_ServiceCode =', $this->session->userdata('usersess'));
 $this->db->where('v_HospitalCode =', $this->session->userdata('hosp_code'));
 $this->db->where('A.v_ActionFlag <> ', 'D');
 $this->db->where('B.v_ActionFlag <> ', 'D');
-
-$this->db->where('A.d_timestamp IN (SELECT MAX(d_timestamp) FROM (`pmis2_egm_lnc_lincense_details`) GROUP BY `v_CertificateNo`,`v_Identification`)', NULL, FALSE);
+$this->db->where('A.d_timestamp IN (SELECT MAX(d_timestamp) FROM (`pmis2_egm_lnc_lincense_details`) GROUP BY `v_CertificateNo`,`v_Identification`,`v_RegistrationNo`)', NULL, FALSE);
+//$this->db->group_by('A.v_CertificateNo'); 
 $query = $this->db->get();
 //echo "laalla".$query->DWRate;
-/* echo $this->db->last_query();
-exit(); */
+//echo $this->db->last_query();
+//exit();
+return $query->result();
+
+}
+*/
+function licensesandcert()
+{
+
+$this->db->select("A.v_CertificateNo, A.v_ServiceCode, A.v_AgencyCode, A.v_LicenseCategoryCode, B.v_LicenceCategoryDesc, A.v_IdentificationType, A.v_Identification, A.v_RegistrationNo, A.v_StartDate, A.v_ExpiryDate, A.v_GradeID, A.v_Remarks, A.v_hospitalcode, A.v_key, A.CMIS_Action_Flag, A.d_timestamp, A.id",FALSE);
+
+//$this->db->select("A.v_CertificateNo, A.v_ServiceCode, A.v_AgencyCode, A.v_LicenseCategoryCode, B.v_LicenceCategoryDesc, A.v_IdentificationType, A.v_Identification, A.v_RegistrationNo, A.v_StartDate, A.v_ExpiryDate, A.v_GradeID, A.v_Remarks, A.v_hospitalcode, A.v_key, A.CMIS_Action_Flag, A.d_timestamp, MAX(A.d_timestamp),A.id",FALSE);
+//SELECT (case when DWRate = 999 then (case when 500 <= 2000000 then 0.0075 * 100 else 0.0050 * 100 end) else DWRate end) as DWRate, PWRate, (case when DWRate = 999 then (case when 500 <= 2000000 then (500 * 0.0075) / 12 else (500 * 0.0050) / 12 end) else (500 * ( DWRate / 100)) / 12 end) as 'FeeDW', (500 * ( PWRate / 100) / 12) as 'FeePW'
+$this->db->from('pmis2_egm_lnc_lincense_details A');
+$this->db->join('pmis2_egm_lnc_license_category_code B','A.v_LicenseCategoryCode=B.v_LicenceCategoryCode');
+
+$this->db->join("(SELECT v_ExpiryDate AS Expired,id,v_CertificateNo FROM pmis2_egm_lnc_lincense_details 
+ORDER BY v_ExpiryDate DESC)`G`",'G.id=A.id');
+
+$this->db->where('A.v_ServiceCode =', $this->session->userdata('usersess'));
+$this->db->where('v_HospitalCode =', $this->session->userdata('hosp_code'));
+$this->db->where('A.v_ActionFlag <> ', 'D');
+$this->db->where('B.v_ActionFlag <> ', 'D');
+
+$this->db->group_by('A.v_CertificateNo,A.v_RegistrationNo,A.v_Identification');
+
+$query = $this->db->get();
+//echo "laalla".$query->DWRate;
+ //echo $this->db->last_query();
+/*exit(); */
 return $query->result();
 
 }
@@ -3375,9 +3403,9 @@ function get_wodatelate($wono,$nvisit)
   $this->db->select(" ifnull(b.d_date, a.d_date) as latedt ", FALSE);
 	$this->db->join('pmis2_emg_jobvisit1 b','a.v_request_no = b.v_wrkordno '.$nkx , 'LEFT OUTER');
   $this->db->where('a.v_request_no = ', $wono);
-	$this->db->_protect_identifiers = FALSE;
+	$this->db->protect_identifiers = FALSE;
 	$this->db->order_by('ifnull(b.d_date, a.d_date)','DESC', false);
-	$this->db->_protect_identifiers = TRUE;
+	$this->db->protect_identifiers = TRUE;
   $query = $this->db->get('pmis2_egm_service_request a');
   //echo "laalla".$query->DWRate;
   //echo $this->db->last_query();
@@ -3732,6 +3760,7 @@ function get_itemdet($codecat){
 	if ($codecat <> ''){
 		$this->db->where('CodeCat',$codecat);
 	}
+	$this->db->where('Dept',$this->session->userdata('usersess'));
 	$query = $this->db->get();
 	//echo $this->db->last_query();
 	//echo '<br><br>';
