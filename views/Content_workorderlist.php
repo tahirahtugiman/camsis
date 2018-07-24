@@ -4,13 +4,13 @@
 			<table class="ui-content-middle-menu-workorder" border="0" height="" width="95%" align="center">
 			<?php include 'content_wrk_ord.php';?>
 			<tr class="ui-color-contents-style-1 ui-left_web">
-				<td colspan="11" height="40px" style="padding-left:10px; color:black;">Unscheduled</td>
+				<td colspan="11" height="40px" style="padding-left:10px; color:black;"> <?=(strstr($wrk_ord, '/A2/')) ? '' : 'Unscheduled'?></td>
 			</tr>
 			<tr class="ui-color-contents-style-1">
 				<td colspan="11" valign="top" class="pd-bttm">
 					<table width="98%" class="ui-content-middle-menu-workorder" style="">
 						<tr class="ui-color-contents-style-1" height="30px">
-							<td colspan="2" class="ui-header-new" valign="top"><span style="float: left; margin-top:8px; font-weight: bold;">General Information</span><span class="ui-left_web" style="float: left; margin-top:8px; margin-left:8px; font-weight: bold; width: 20%;"><marquee valign="bottom" direction="right" loop="40" class="marquee-color"><b>QAP ASSET</b></marquee></span>&nbsp;<span style="float: right; padding-right:10px;"><a href="delete_wo?wrk_ord=<?=$this->input->get('wrk_ord')?>" class="btn-button btn-primary-button" style="width: 80px; display:inline-block; text-align:center;">Delete</a>&nbsp;<input type="submit" class="btn-button btn-primary-button" style="width: 100px;" name="mysubmit" value="Update"></span></td>
+							<td colspan="2" class="ui-header-new" valign="top"><span style="float: left; margin-top:8px; font-weight: bold;">General Information</span><span class="ui-left_web" style="float: left; margin-top:8px; margin-left:8px; font-weight: bold; width: 20%;"><marquee valign="bottom" direction="right" loop="40" class="marquee-color"><b>QAP ASSET</b></marquee></span>&nbsp;<span style="float: right; padding-right:10px;"><a style="display:none;" href="delete_wo?wrk_ord=<?=$this->input->get('wrk_ord')?>" class="btn-button btn-primary-button" style="width: 80px; display:inline-block; text-align:center;">Delete</a>&nbsp;<input type="submit" class="btn-button btn-primary-button" style="width: 100px;" name="mysubmit" value="Update"></span></td>
 						</tr>
 						
 						<tr >
@@ -18,7 +18,7 @@
 								<table class="ui-content-form" width="100%" border="0">	
 									<tr>
 										<td class="td-assest">Registration&nbsp;Type&nbsp;:&nbsp;</td>
-										<td><b><?= isset($record[0]->V_request_type) == TRUE ? $record[0]->V_request_type : 'N/A'?></b> Unscheduled</a></td>
+										<td><b><?= isset($record[0]->V_request_type) == TRUE ? $record[0]->V_request_type : 'N/A'?></b> <?=(strstr($wrk_ord, '/A2/')) ? '' : 'Unscheduled'?></a></td>
 									</tr>
 									<tr>
 										<td class="td-assest">Job Status&nbsp;:&nbsp;</td>
