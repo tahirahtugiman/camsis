@@ -363,6 +363,12 @@ class Contentcontroller extends CI_Controller {
 		$data['record'] = $this->display_model->request_tab($data['wrk_ord']);
 		$this ->load->view("head");
 		$this ->load->view("left");
+	/* 	if(strstr($data['wrk_ord'], '/A2/')){
+         redirect('/contentcontroller/wo?wrk_ord='.$data['wrk_ord']);
+		
+        }else{
+		$this ->load->view("Content_workorderlist",$data);
+		} */
 		$this ->load->view("Content_workorderlist",$data);
 	}
 		public function workorderlist_update(){
@@ -1784,7 +1790,7 @@ class Contentcontroller extends CI_Controller {
 	public function get_all_users(){
  
 		$query = $this->db->get('pmis2_egm_assetregistration');
-		if($query->num_rows > 0){
+		if($query->num_rows() > 0){
 			$header = false;
 			$output_string = '';
 			$output_string .=  "<table border='1'>\n";
@@ -1805,7 +1811,7 @@ class Contentcontroller extends CI_Controller {
 	public function get_all_usersx(){
  
 		$query = $this->db->get('pmis2_egm_assetregistration');
-		if($query->num_rows > 0){
+		if($query->num_rows() > 0){
 			$header = false;
 			$output_string = '';
 			//$output_string .=  "<table border='1'>\n";
@@ -2496,7 +2502,7 @@ class Contentcontroller extends CI_Controller {
 	}
 	
 	public function vo3(){
-		if (is_null($this->input->get('p')) == FALSE) {
+		if (is_null($this->input->get('p'))) {
 			if (date('m') > 6){
 				$data['Period'] = "P2".date('y');
 			}
@@ -3339,6 +3345,11 @@ class Contentcontroller extends CI_Controller {
 		$this->load->model("display_model");
 		//echo "lepas yg nie";
 		//exit();
+	/*     if(strstr($data['wrk_ord'], '/A2/')){
+	    $data['record'] = $this->display_model->request_tab($data['wrk_ord']);
+	    }else{
+		$data['record'] = $this->display_model->wo_ppm($data['wrk_ord']);
+		} */
 		$data['record'] = $this->display_model->wo_ppm($data['wrk_ord']);
 		$this ->load->view("head");
 		$this ->load->view("left");
@@ -5631,7 +5642,7 @@ class Contentcontroller extends CI_Controller {
 		}
 		else{
 		//$data['recordcheck'] = $this->display_model->response_tab($data['wrk_ord']);
-		$data['records'] = $this->display_model->visit1_tab($data['wrk_ord']);	
+		$data['records'] = $this->display_model->visit1_tab($data['wrk_ord']);
 		$data['recordjob'] = $this->display_model->jobclose_tab($data['wrk_ord']);
 		$data['record'] = $this->display_model->request_tab($data['wrk_ord']);
 		}
@@ -5642,6 +5653,10 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("head");
 		$this ->load->view("left");
 		$this ->load->view("content_ppmvisitplus" , $data);
+		}elseif(strstr($data['wrk_ord'], '/A2/')){
+		$this ->load->view("head");
+		$this ->load->view("left");
+		$this ->load->view("content_ppmvisitplus",$data);
 		}
 		else{
 		$this ->load->view("head");
@@ -5662,6 +5677,7 @@ class Contentcontroller extends CI_Controller {
 		$data['recordjob'] = $this->display_model->jobclose_ppm($data['wrk_ord']);
 		}
 		else{
+		
 		$data['latestvisit'] = $this->get_model->latestvisit($data['wrk_ord']);
 		$data['record'] = $this->display_model->visit1_utab($data['wrk_ord'],$data['visit']);
 		$data['recordjob'] = $this->display_model->jobclose_tab($data['wrk_ord']);
@@ -7223,6 +7239,7 @@ public function assethistory(){
 	}
 	
 	public function visitclosed(){
+
 		$data['wrk_ord'] = $this->input->get('wrk_ord');
 		$this->load->model("display_model");
 		$data['disp'] = $this->display_model->list_display($data['wrk_ord']);

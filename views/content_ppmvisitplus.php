@@ -210,7 +210,11 @@ console.log(json);
 <div class="ui-middle-screen">
   <div class="content-workorder" align="center">
       <table class="ui-content-middle-menu-workorder" border="0" height="" width="95%" align="center">
-      <?php include 'content_tab_woppm.php';?>
+	   <?php if (strstr($wrk_ord, '/A2/')) {	?>
+	   <?php include 'content_wrk_ord.php';?>
+	   <?php } else { ?>
+	     <?php include 'content_tab_woppm.php';?>
+		 <?php } ?>
       <tr class="ui-color-contents-style-1 ui-left_web">
         <td colspan="10" height="40px" style="padding-left:10px;">&nbsp;</td>
       </tr>
