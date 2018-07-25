@@ -297,8 +297,10 @@ class wo_visitplus_update_ctrl extends CI_Controller{
 public function date_check2($shedule = '')
 {
 if ($shedule) {
-	     if ($shedule < date("d-m-Y"))
+	     if (strtotime($shedule) < strtotime(date("d-m-Y")))
 			 		{
+					 //echo $shedule.'<br>';
+					 //echo date("d-m-Y");
 					 $this->form_validation->set_message('date_check2','Reschedule date cannot be less than current date');
 					 return FALSE;
 					 }
