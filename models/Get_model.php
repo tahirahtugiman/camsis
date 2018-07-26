@@ -2935,7 +2935,7 @@ $query = $this->db->query("SELECT `sr`.`V_Request_no`, `sr`.`D_date`, `sr`.`V_re
 	return $query->result();
 }
 function wodet($wrk_ord,$assetno){
-	$this->db->select('sr.*,d.v_UserDeptDesc,l.v_Location_Name,r.V_Asset_name,jd.v_AcceptedBy,jd.V_ACCEPTED_Designation,jd.v_ptest,jd.v_stest,IFNULL(TIMEDIFF(sr.v_closeddate,sr.D_date),0) as downtime,jd.v_QCPPM,jd.v_QCuptime,SUM(jv.n_PartTotal) as parttotal, SUM(jv.n_Total1 + jv.n_Total2 + jv.n_Total3) as labourtotal,jv.v_ActionTaken,jv.d_Reschdt, r.v_tag_no',FALSE); 
+	$this->db->select('sr.*,d.v_UserDeptDesc,l.v_Location_Name,r.V_Asset_name,jd.v_AcceptedBy,jd.V_ACCEPTED_Designation,jd.v_ptest,jd.v_stest,IFNULL(TIMEDIFF(sr.v_closeddate,sr.D_date),0) as downtime,jd.v_QCPPM,jd.v_QCuptime,SUM(jv.n_PartTotal) as parttotal, SUM(jv.n_Total1 + jv.n_Total2 + jv.n_Total3) as labourtotal,jv.v_ActionTaken,jv.d_Reschdt, r.v_tag_no,jv.d_Date AS schedule_d',FALSE); 
 	$this->db->from('pmis2_egm_service_request sr');
 	$this->db->join('pmis2_sa_userdept d','sr.V_User_dept_code = d.v_UserDeptCode AND sr.V_hospitalcode = d.v_HospitalCode','left');
 	$this->db->join('pmis2_egm_assetlocation l','sr.V_Location_code = l.V_location_code AND sr.V_hospitalcode = l.V_Hospitalcode','left');
@@ -3403,12 +3403,12 @@ function get_wodatelate($wono,$nvisit)
   $this->db->select(" ifnull(b.d_date, a.d_date) as latedt ", FALSE);
 	$this->db->join('pmis2_emg_jobvisit1 b','a.v_request_no = b.v_wrkordno '.$nkx , 'LEFT OUTER');
   $this->db->where('a.v_request_no = ', $wono);
-	$this->db->protect_identifiers = FALSE;
+	$this->db->_protect_identifiers = FALSE;
 	$this->db->order_by('ifnull(b.d_date, a.d_date)','DESC', false);
-	$this->db->protect_identifiers = TRUE;
+	$this->db->_protect_identifiers = TRUE;
   $query = $this->db->get('pmis2_egm_service_request a');
   //echo "laalla".$query->DWRate;
-  //echo $this->db->last_query();
+ // echo $this->db->last_query();
   //exit();
   return $query->result();
 
