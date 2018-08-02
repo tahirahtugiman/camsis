@@ -19,7 +19,8 @@
 				<th rowspan="2" width="90">Equipment Name</th>
 				<th rowspan="2" width="30">UDP</th>
 				<th rowspan="2" width="30">Status</th>
-				<th colspan="2" width="50">Test</th>
+				<th colspan="2" style="width:6%">Test</th>
+				<th rowspan="2" style="width:6%;">Schedule Date</th>
 				<th rowspan="2" width="79">Remark</th>
 				<!--<th rowspan="2">Schedule Date</th>-->
 				<th rowspan="2">Reschedule Date</th>
@@ -28,7 +29,7 @@
 				<th rowspan="2">Asset Group</th>
 			</tr>
 			<tr nobr="true">
-				<th>S</th>
+				<th>S</th>				
 				<th>P</th>
 			</tr>
 
@@ -41,11 +42,12 @@
 				<td><?= ($row->V_Asset_name) ? $row->V_Asset_name : 'N/A' ?></td>
 				<td><?= ($row->V_User_dept_code) ? $row->V_User_dept_code : 'N/A' ?></td>
 				<td><?= ($row->V_request_status) ? $row->V_request_status : 'N/A' ?></td>
+				<td><?= 'N/A' ?></td>				
 				<td><?= 'N/A' ?></td>
-				<td><?= 'N/A' ?></td>
+				<td><?= ($row->schedule_d) ? date("d/m/Y",strtotime($row->schedule_d)) : 'N/A' ?></td>
 				<td><?= ($row->v_ActionTaken) ? $row->v_ActionTaken : 'N/A' ?></td>
-				<!--<td><?= ($row->d_Date) ? date("d/m/Y",strtotime($row->d_Date)) : 'N/A' ?></td>-->
-				<td><?= 'N/A' ?></td>
+				<td><?= ($row->dtresch) ? date("d/m/Y",strtotime($row->dtresch)) : 'N/A' ?></td>
+				<!--<td><?= 'N/A' ?></td>-->
 				<td><?= ($row->v_closeddate) ? date("d/m/Y",strtotime($row->v_closeddate)) : 'N/A' ?></td>
 				<td><?= ($row->v_UserDeptDesc) ? $row->v_location_name.' ('.$row->v_location_code.')' : 'N/A' ?></td>
 				<?php if ($this->input->get('broughtfwd') != '') { ?>

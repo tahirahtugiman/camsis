@@ -38,9 +38,8 @@ class wo_visitplus_update_ctrl extends CI_Controller{
     $this->load->helper(array('form', 'url'));
     // load library for form validation
     $this->load->library('form_validation');
-	
 	//validation rule
-	if ((substr($this->input->post('wrk_ord'),0,2) == 'PP') || (substr($this->input->post('wrk_ord'),0,2) == 'RI')) {	
+	if ((substr($this->input->post('wrk_ord'),0,2) == 'PP') || (substr($this->input->post('wrk_ord'),0,2) == 'RI') || (substr($this->input->post('wrk_ord'),3,2) == 'A2')) {	
 	$this->form_validation->set_rules('n_Visit_Date','Visit Date','trim|required');
 	} else {
 	$this->form_validation->set_rules('n_Visit_Date','Visit Date','trim|required|callback_date_check['.$paramsdt.']');
@@ -296,8 +295,11 @@ class wo_visitplus_update_ctrl extends CI_Controller{
 
 public function date_check2($shedule = '')
 {
+$date_now = new DateTime();
+$date2    = new DateTime($shedule);
 if ($shedule) {
-	     if ($shedule < date("d-m-Y"))
+	     //if ($shedule < date("d-m-Y"))
+			 if ($date2 < $date_now)
 			 		{
 					 $this->form_validation->set_message('date_check2','Reschedule date cannot be less than current date');
 					 return FALSE;

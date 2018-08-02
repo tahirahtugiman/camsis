@@ -132,6 +132,7 @@ if ($this->input->get('ex') == ''){
 				<th rowspan=2>UDP</th>
 				<th rowspan=2>Status</th>
 				<th colspan=2>Test</th>
+				<th rowspan=2 >Schedule Date</th>
 				<th rowspan=2>Remark</th>
 				<!--<th rowspan=2>Schedule Date</th>-->
 				<th rowspan=2>Reschedule Date</th>
@@ -156,9 +157,10 @@ if ($this->input->get('ex') == ''){
 				<td><?= ($row->V_request_status) ? $row->V_request_status : 'N/A' ?></td>
 				<td><?= 'N/A' ?></td>
 				<td><?= 'N/A' ?></td>
+				<td><?= ($row->schedule_d) ? date("d/m/Y",strtotime($row->schedule_d)) : 'N/A' ?></td>
 				<td><?= ($row->v_ActionTaken) ? $row->v_ActionTaken : 'N/A' ?></td>
-				<!--<td><?= ($row->d_Date) ? date("d/m/Y",strtotime($row->d_Date)) : 'N/A' ?></td>-->
-				<td><?= 'N/A' ?></td>
+				<td><?= ($row->dtresch) ? date("d/m/Y",strtotime($row->dtresch)) : 'N/A' ?></td>
+				<!--<td><?= 'N/A' ?></td>-->
 				<td><?= ($row->v_closeddate) ? date("d/m/Y",strtotime($row->v_closeddate)) : 'N/A' ?></td>
 				
 				<td><?= ($row->v_UserDeptDesc) ? $row->v_location_name.' ('.$row->v_location_code.')' : 'N/A' ?></td>
@@ -344,14 +346,15 @@ if ($this->input->get('ex') == ''){
 				</table>
 				<table class="tftable tbl-go" border="1" style="text-align:center;">
 					<tr>
-						<th rowspan=2>No</th>
+						<th rowspan=2 style="width:2%;">No</th>
 						<th rowspan=2 style="width:7%;">Work Order Date</th>
 						<th rowspan=2 style="width:12%;">A2 Work Order</th>
 						<th rowspan=2 style="width:5%;">Asset No</th>	
-						<th rowspan=2 style="width:30%;">Equipment Name</th>
-						<th rowspan=2>UDP</th>
-						<th rowspan=2>Status</th>
-						<th colspan=2>Test</th>
+						<th rowspan=2 style="width:20%;">Equipment Name</th>
+						<th rowspan=2 style="width:2%;">UDP</th>
+						<th rowspan=2 style="width:2%;">Status</th>
+						<th colspan=2 style="width:5%;">Test</th>
+						<th rowspan=2 style="width:5%;">Schedule Date</th>
 						<th rowspan=2 style="width:17%;">Remark</th>
 						<!--<th rowspan=2 style="width:7%;">Schedule Date</th>-->
 						<th rowspan=2 style="width:7%;">Reschedule Date</th>
@@ -379,11 +382,12 @@ if ($this->input->get('ex') == ''){
 						<td><?= ($row->V_Asset_name) ? $row->V_Asset_name : 'N/A' ?></td>
 						<td><?= ($row->V_User_dept_code) ? $row->V_User_dept_code : 'N/A' ?></td>
 						<td><?= ($row->V_request_status) ? $row->V_request_status : 'N/A' ?></td>
+						<td><?= 'N/A' ?></td>						
 						<td><?= 'N/A' ?></td>
-						<td><?= 'N/A' ?></td>
+						<td><?= ($row->schedule_d) ? date("d/m/Y",strtotime($row->schedule_d)) : 'N/A' ?></td>
 						<td><?= ($row->v_ActionTaken) ? $row->v_ActionTaken : 'N/A' ?></td>
-						<!--<td><?= ($row->d_Date) ? date("d/m/Y",strtotime($row->d_Date)) : 'N/A' ?></td>-->
-						<td><?= 'N/A' ?></td>
+						<td><?= ($row->dtresch) ? date("d/m/Y",strtotime($row->dtresch)) : 'N/A' ?></td>
+						<!--<td><?= 'N/A' ?></td>-->
 						<td><?= ($row->v_closeddate) ? date("d/m/Y",strtotime($row->v_closeddate)) : 'N/A' ?></td>
 					
 						<td><?= ($row->v_UserDeptDesc) ? $row->v_location_name.' ('.$row->v_location_code.')' : 'N/A' ?></td>
