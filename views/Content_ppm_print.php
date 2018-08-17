@@ -17,7 +17,7 @@
 							<td align="center"><b style="text-transform: uppercase;">IIUM MEDICAL CENTRE</b></td>
 						</tr>
 						<tr>
-							<td align="center"><b style="text-transform: uppercase;">Plan Preventive Maintenance work order</b></td>
+							<td align="center"><b style="text-transform: uppercase;"><?php echo (strpos($wrk_ord, 'RI') !== false)? "Routine Inspection work order" :  "Plan Preventive Maintenance work order"; ?></b></td>
 						</tr>
 					</table>
 				</td>

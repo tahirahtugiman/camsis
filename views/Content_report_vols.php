@@ -165,11 +165,11 @@ header('Content-Disposition: attachment; filename='.$filename);
 				<td><?= ($row->v_ptest) ? $row->v_ptest : 'N/A' ?></td>
 				<!--<td></td>-->
 				<td style="height: 52px;">
-				<?php if (($row->v_summary) ? $row->v_summary : 'N/A' != "N/A"){ ?>
+				<?php if (($row->v_summary) ? str_replace("N/A","",$row->v_summary) : 'N/A' != "N/A"){ ?>
 				<div style="overflow: hidden; text-overflow: ellipsis; height: 42px; overflow: hidden; text-overflow: ellipsis;">
 				<?php }?>
-				<?php  if ($row->v_summary == " ") {echo "N/A";}else{echo $row->v_summary;} ?>
-				<?php if (($row->v_summary) ? $row->v_summary : 'N/A' != "N/A"){ ?>
+				<?php  if ($row->v_summary == " ") {echo "N/A";}else{echo str_replace("N/A","",$row->v_summary);} ?>
+				<?php if (($row->v_summary) ? str_replace("N/A","",$row->v_summary) : 'N/A' != "N/A"){ ?>
 				</div>
 				<?php }?>
 				</td>
@@ -287,11 +287,11 @@ header('Content-Disposition: attachment; filename='.$filename);
 				<td><?= ($row->v_ptest) ? $row->v_ptest : 'N/A' ?></td>
 				<!--<td></td>-->
 				<td style="height: 52px;">
-				<?php if (($row->v_summary) ? $row->v_summary : 'N/A' != "N/A"){ ?>
+				<?php if (($row->v_summary) ? str_replace("N/A","",$row->v_summary) : 'N/A' != "N/A"){ ?>
 				<div style="overflow: hidden; text-overflow: ellipsis; height: 42px; overflow: hidden; text-overflow: ellipsis;">
 				<?php }?>
-				<?php  if ($row->v_summary == " ") {echo "N/A";}else{echo $row->v_summary;} ?>
-				<?php if (($row->v_summary) ? $row->v_summary : 'N/A' != "N/A"){ ?>
+				<?php  if ($row->v_summary == " ") {echo "N/A";}else{echo str_replace("N/A","",$row->v_summary);} ?>
+				<?php if (($row->v_summary) ? str_replace("N/A","",$row->v_summary) : 'N/A' != "N/A"){ ?>
 				</div>
 				<?php }?>
 				</td>

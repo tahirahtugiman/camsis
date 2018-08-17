@@ -152,7 +152,8 @@ function get_assetnewnum($assetcd)
 {
 
 //$this->db->select('pmis2_sa_asset_mapping.new_asset_type, left(pmis2_sa_moh_asset_type.type_desc, 50)');
-$this->db->select(" ifnull(max(MID(V_asset_no,9,5)),0) + 1 AS thenum ", FALSE);
+//$this->db->select(" ifnull(max(MID(V_asset_no,9,5)),0) + 1 AS thenum ", FALSE);
+$this->db->select(" ifnull(max(MID(V_asset_no,CHAR_LENGTH(V_asset_no)-4,5)),0) + 1 AS thenum ", FALSE);
 $this->db->like('V_asset_no', $assetcd, 'after'); 
 //    return $this->db->get('pmis2_sa_asset_mapping'); 
 $query = $this->db->get('pmis2_egm_assetregistration');
