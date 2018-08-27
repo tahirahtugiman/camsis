@@ -15,17 +15,17 @@
 		</table>-->
 		<table class="tbl-wo" border="1" align="center" style="border: 1px solid black;margin-top:5px;">
 			<tr>
-				<td style="padding-left:0px; width:120px;" align="center"><img src="<?php echo base_url(); ?>images/penmedic2.png" style="width:100px; height:30px;"/></td>
+				<td style="padding-left:0px; width:120px;" align="center"><img src="<?php echo base_url(); ?>images/penmedic3.png" style="width:100px; height:30px;"/></td>
 				<td>
 					<table class="tbl-wo" border="0" align="center">
 						<tr>
 							<td align="center"><b style="text-transform: uppercase;">Facility Management Services</b></td>
 						</tr>
 						<tr>
-							<td align="center"><b style="text-transform: uppercase;">IIUM HOSPITAL</b></td>
+							<td align="center"><b style="text-transform: uppercase;">IIUM MEDICAL CENTRE</b></td>
 						</tr>
 						<tr>
-							<td align="center"><b style="text-transform: uppercase;">COMPLAINT Work ORDER Form</b></td>
+							<td align="center"><b style="text-transform: uppercase;">COMPLAINT Work ORDER</b></td>
 						</tr>
 					</table>
 				</td>
@@ -54,7 +54,7 @@
 		</table>-->
 		<table class="tbl-wo" border="1" align="center" style="border: 1px solid black;">
 			<tr>
-				<td style="width:50%; padding:5px;" rowspan="0"> 
+				<td style="width:50%; padding:5px;" valign="top"> 
 					<table class="tbl-wo-1" border="0" align="left">
 						<!--<tr>
 							<td class="tbl-wo-data">Service Type </td>
@@ -88,30 +88,33 @@
 							<td style="width:;">Ext. No</td>
 							<td style="width:;">: <span style="color:blue;"><?= ($woinfo[0]->v_Phone) ? $woinfo[0]->v_Phone : 'NA' ?></span></td>
 						</tr>
-
 					</table>
 				</td>
-				<td style="width:50%; padding:5px;" valign="top" style="height:99%;" colspan="3">
+				<td style="width:50%; padding:5px;" valign="top">
 					<table class="tbl-wo-1" border="0" align="left">
 						<tr>
-							<td class="tbl-wo-data2">Taken By </td>
+							<td width="15%">Taken By </td>
 							<td>: <span style="color:blue;"></span></td>
 						</tr>
 						<tr>
-							<td class="tbl-wo-data2">Date</td>
+							<td width="15%">Date</td>
 							<td>: <span style="color:blue;"></span></td>
 						</tr>
 						<tr>
-							<td class="tbl-wo-data2">Time </td>
+							<td width="15%">Time </td>
 							<td >: <span style="color:blue;"></span></td>
 						</tr>
 						<tr>
-							<td class="tbl-wo-data2">Complaint Type </td>
-							<td><span style="color:blue;">: </span><div class="box2" style="margin-left:4px;"></div> Schedule Work <div class="box2" style="margin-left:20px;"></div> Unscheduled Work </br><div class="box2" style="margin-left:8px;"></div> Other : .........................................</td>
+							<td width="15%">Complaint Type </td>
+							<td>
+								<span style="color:blue;">: </span>
+								<div class="box2" style="margin-left:4px;"></div> Schedule Work 
+								<div class="box2" style="margin-left:20px;"></div> Unscheduled Work </br>
+								<div class="box2" style="margin-left:10px;"></div> Others : .....................</td>
 						</tr>
 						<tr>
-							<td class="tbl-wo-data2">Ref. No </td>
-							<td><span style="color:blue;">: </span>....................................................</td>
+							<td width="15%">Ref. No </td>
+							<td><span style="color:blue;">: </span>..........................................................................</td>
 						</tr>
 					</table>
 				</td>
@@ -120,20 +123,25 @@
 				<td style="width:100%; padding:5px;" colspan="2"> 
 					<table class="tbl-wo" border="0" align="left">
 						<tr>
-							<td width="150px" height="30px">Complaint Description : </td>
+							<td width="151px" height="10px" valign="top">Complaint Description : </td>
 							<?php if($woinfo[0]->v_ComplaintDesc == 'N/A'){?>
-						<tr>
-							<td> <hr class='dotted' style="margin:10px 10px 10px 5px;" /></td>
+							<td> <hr class='dotted' style="margin:15px 10px 10px 5px;" /></td>
 						</tr>
 						<tr>
-							<td> <hr class='dotted' style="margin:10px 10px 10px 5px;" /></td>
+							<td width="151px" height="10px" valign="top"></td>
+							<td>
+								<hr class='dotted' style="margin:5px 10px 10px 5px;" />
+							</td>
 						</tr>
 						<?php }else{ ?>
-						<tr>
-							<td style="padding:5px 5px 5px 5px;"><span style="color:blue;"><?= ($woinfo[0]->v_ComplaintDesc) ? $woinfo[0]->v_ComplaintDesc : 'NA' ?></span></td>
+							<td style="padding:5px 5px 5px 5px;">
+								<p style="border-bottom: 1px dotted black; margin-left: 5px; margin-right: 5px;">
+									<span style="color:blue;"><?= ($woinfo[0]->v_ComplaintDesc) ? $woinfo[0]->v_ComplaintDesc : 'NA' ?></span>
+								</p>
+								<p style="border-bottom: 1px dotted black; margin-left: 5px; margin-right: 5px;"></p>
+							</td>
 						</tr>
-						<?php } ?>
-							
+						<?php } ?>							
 					</table>
 				</td>
 			</tr>
@@ -150,14 +158,27 @@
 		</table>
 		<table class="tbl-wo" border="0" align="center" style="border: 1px solid black;">
 			<tr>
-				<td colspan="2" style="padding-left:10px;padding-top:10px;"> Assigned To :</td>
+				<td style="padding-left:10px;padding-top:10px;"> Assigned To <span style="float: right;">:</span></td>
+				<td width="35%"></td>
+				<td width="50%"></td>
 			</tr>
 			<tr>
-				<td style="width:50%; padding-left:10px;" valign="top" style="" colspan="">Date :</td>
-				<td style="width:50%; padding-left:10px;" valign="top" style="" colspan="">Time :</td>
+				<td style="padding-left:10px;padding-top:10px;"> Date <span style="float: right;">:</span></td>
+				<td width="35%"></td>
+				<td width="50%">
+					<table class="tbl-wo">
+						<tr>
+							<td style="padding-left:10px;padding-top:10px;"> Time <span style="float: right;">:</span></td>
+							<td width="35%"></td>
+							<td width="50%"></td>
+						</tr>
+					</table>
+				</td>
 			</tr>
 			<tr>
-			    <td style="height:75px; padding-left:10px;" colspan="2" valign="top">Details:</td>
+				<td style="padding-left:10px;padding-top:10px;"> Details <span style="float: right;">:</span></td>
+				<td width="35%"></td>
+				<td width="50%"></td>
 			</tr>
 		</table>
 		<table class="tbl-wo-1" border="0" align="center">
@@ -193,8 +214,8 @@
 							<td height="110px" valign="top" style="padding:5px;" colspan="2"> Detail </td>
 						</tr>
 						<tr>
-						<td valign="top" style="width:15%; padding:5px;" align="left"> Action taken by :</td>
-						<td valign="top" style="width:35.5%; padding-right:50px;" align="center">
+						<td valign="top" style="height:55px; width:17%; padding:5px;" align="left"> Action taken by :</td>
+						<td style="width:35.5%; padding-right:50px;" align="center">
 						<hr class='dotted' style="width:100%;"/>(Name & Signature) </td>
 							<td valign="top" style="width:51.5%; padding:5px;">Date & Time: </td>
 						</tr>
@@ -217,11 +238,12 @@
 			    <td style="" colspan="2" valign="top">
 			    	<table class="tbl-wo" border="0" align="left" style="width:100%;">
 						<tr>
-							<td height="90px" valign="top" colspan="2" style="padding:5px;"> Detail </td>
+							<td height="110px" valign="top" style="padding:5px;" colspan="2"> Detail </td>
 						</tr>
 						<tr>
-						<td valign="top" style="width:15%; padding:5px;" align="left"> Action taken by :</td>
-							<td valign="top" style="width:35.5%; padding-right:50px;" align="center"><hr class='dotted' style="width:100%;"/>(Name & Signature) </td>
+						<td valign="top" style="height:55px; width:17%; padding:5px;" align="left"> Action taken by :</td>
+						<td style="width:35.5%; padding-right:50px;" align="center">
+						<hr class='dotted' style="width:100%;"/>(Name & Signature) </td>
 							<td valign="top" style="width:51.5%; padding:5px;">Date & Time: </td>
 						</tr>
 					</table>
@@ -247,19 +269,20 @@
 				<td style="padding:5px;" class="tb-class" colspan="" rowspan="2" valign="top">
 					<table class="tbl-wo" border="0" align="left" style="width:100%; height:100%;">
 						<tr>
-							<td colspan="2" style="" valign="top" >Signature :</td>
+							<td style="width: 20%" valign="top" >Signature <span style="float: right;">:</span></td>
+							<td width="80%"></td>
 						</tr>
 						<tr>
-							<td colspan="2" style="" valign="top">Name :</td>
+							<td style="width: 20%" valign="top">Name <span style="float: right;">:</span></td>
+							<td width="80%"></td>
 						</tr>
 						<tr>
-							<td colspan="2" style="" valign="top">Designation :</td>
+							<td style="width: 20%" valign="top">Designation <span style="float: right;">:</span></td>
+							<td width="80%"></td>
 						</tr>
 						<tr>
-							<td valign="bottom">Date :</td>
-						</tr>
-						<tr>
-							<td colspan="2" style="" valign="top"> </td>
+							<td style="width: 20%" valign="bottom">Date <span style="float: right;">:</span></td>
+							<td width="80%"></td>
 						</tr>
 					</table>
 				</td>
@@ -268,16 +291,20 @@
 				<td style="padding:5px;" class="tb-class" colspan="2">
 					<table class="tbl-wo" border="0" align="left" style="width:100%; height:100%;">
 						<tr>
-							<td colspan="2" style="" valign="top">Signature :</td>
+							<td style="width: 20%" valign="top" >Signature <span style="float: right;">:</span></td>
+							<td width="80%"></td>
 						</tr>
 						<tr>
-							<td colspan="2" style="" valign="top">Name :</td>
+							<td style="width: 20%" valign="top">Name <span style="float: right;">:</span></td>
+							<td width="80%"></td>
 						</tr>
 						<tr>
-							<td colspan="2" style="" valign="top">Designation :</td>
+							<td style="width: 20%" valign="top">Designation <span style="float: right;">:</span></td>
+							<td width="80%"></td>
 						</tr>
 						<tr>
-							<td valign="bottom">Date :</td>
+							<td style="width: 20%" valign="bottom">Date <span style="float: right;">:</span></td>
+							<td width="80%"></td>
 						</tr>
 					</table>
 				</td>
@@ -289,6 +316,14 @@
 			</tr>
 			<tr>
 				<td style="" valign="top"><span style="font-size:7px; padding-left:30px;"><i>*Date and Time declared by APSB shall be deemed valid if NOT provided by the customer.</i></span></td>
+			</tr>
+			<tr>
+				<td style="" valign="top"><span style="font-size:7px; padding-left:30px;"><i></i></span></td>
+				<td style="" valign="top" align="right"><span style="font-size:7px; padding-left:30px;"><i>Copyright product of Advance Pact Sdn Bhd. All Right Reserveed.</i></span></td>
+			</tr>
+			<tr>
+				<td style="" valign="top"><span style="font-size:7px; padding-left:0px;">APSB-FORM</span></td>
+				<td style="" valign="top" align="right"><span style="font-size:7px; padding-left:30px;">QP-053 : BFHF-005 : Revision 2.0 : 09 May 2018</span></td>
 			</tr>
 		</table>
 	</div>
