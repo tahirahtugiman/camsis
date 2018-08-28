@@ -3250,9 +3250,10 @@ class Contentcontroller extends CI_Controller {
 	}
 	
 	public function print_workorder(){
-	  	$this->load->model("get_model");
-	  	$data['wrk_ord'] = $this->input->get('wrk_ord');
+	  	$this->load->model("get_model");	
 	  	$this->load->model("display_model");
+		if ($this->input->get('wrk_ord') <> '') {
+		$data['wrk_ord'] = $this->input->get('wrk_ord');
 		$data['hosp'] = $this->display_model->list_hospinfo();
 		$data['woinfo'] = $this->get_model->request_update($data['wrk_ord']);
 		$data['woinfo2'] = $this->display_model->request_tab($data['wrk_ord']);
@@ -3312,12 +3313,91 @@ class Contentcontroller extends CI_Controller {
 			$data['actiontaken'][] = array(NULL);	
 			}
 		}
+		//echo "<pre>";
+		//print_r($data['personallist']);
+	    $this ->load->view("headprinter");
+		$this ->load->view("Content_workorder_print", $data);	
+		}else{
+	//echo 'masuk bulkin<br>';
+	if ($this->input->post('chk_bxrcm')){
+	foreach($this->input->post('chk_bxrcm') as $wrkno){
+	    $data['wrk_ord'] = $wrkno;
+        $data['hosp'] = $this->display_model->list_hospinfo();
+		$data['woinfo'] = $this->get_model->request_update($wrkno);
+		$data['woinfo2'] = $this->display_model->request_tab($wrkno);
+		$data['resprec'] = $this->display_model->response_tab($wrkno);
+		$data['rvisit1'] = $this->display_model->visit1_tab($wrkno);
+		$data['recordjob'] = $this->display_model->jobclose_tab($wrkno);
+		
+		$count = 1;
+		$countpart = 1;
+		$countact = 1;
+		$data['personallist'] = array();
+		$data['partlist'] = array();
+		$data['actiontaken'] = array();
+		foreach ($data['rvisit1'] as $row){
+				for($i = 1; $i <= 3; $i++){
+					$personal = 'v_Personal'.$i;	
+					if (($row->$personal) AND ($row->$personal <> 'N/A-') AND $count <= 5){
+					$data['personallist'][] = array($row->$personal,
+											date("d-m-Y",strtotime($row->d_Date)),
+											$row->v_Time,
+											$row->v_Etime);
+					$count++;
+					}
+				}
+
+				if (($row->v_PartName) AND ($row->v_PartName <> 'N/A') AND $countpart <= 5){
+				$data['partlist'][] = array($row->v_PartName,
+											$row->n_PartAmount,
+											$row->n_PartTotal);
+
+				$countpart++;
+				}
+
+				if (($row->v_ActionTaken) AND ($row->v_ActionTaken <> 'N/A') AND $countact <= 4){
+				$data['actiontaken'][] = array($row->v_ActionTaken);
+				$countact++;
+				}
+
+		}
+		if (count($data['personallist']) < 5){
+			$rowbal = 5 - count($data['personallist']);
+			for($k=1; $k <= $rowbal; $k++){
+			$data['personallist'][] = array(NULL,NULL,NULL,NULL);	
+			}
+		}
+		if (count($data['partlist']) < 5){
+			$rowbal = 5 - count($data['partlist']);
+			for($k=1;$k <= $rowbal; $k++){
+			$data['partlist'][] = array(NULL,NULL,NULL);	
+			}
+		}
+		if (count($data['actiontaken']) < 4){
+			$rowbal = 4 - count($data['actiontaken']);
+			for($k=1;$k <= $rowbal; $k++){
+			$data['actiontaken'][] = array(NULL);	
+			}
+		}
+		$data['record'][$wrkno] = array($data['woinfo'],$data['woinfo2'],$data['personallist'],$data['partlist'],$data['actiontaken'],$data['recordjob'],$data['hosp'],$wrkno);
+		
+	}
+	}	
+	    $this ->load->view("headprinter");
+		$this ->load->view("Content_rcm_print.php", $data);	
+		//echo "<pre>";
+     	//print_r($data['record']);
+		}
+		
+		
 		//echo count($data['array']);
 		//print_r($data['personallist']);
 		//exit();
-		$this ->load->view("headprinter");
-		$this ->load->view("Content_workorder_print", $data);
+		
 	}
+	
+	
+	
 	public function testlaa(){
 		//$this ->load->view("headprinter");
 		$this ->load->view("head");
@@ -3496,6 +3576,7 @@ class Contentcontroller extends CI_Controller {
 		else{
 			//echo 'masuk bulk<br>';
 			if ($this->input->post('chk_bxppm')){
+			$data['wrk_ord'] = $this->input->get('wrk_ord');
 			//echo 'masuk DATA1<br>';
 			foreach($this->input->post('chk_bxppm') as $wrkno){
 				//echo 'masuk DATA1-1<br>';
@@ -3586,8 +3667,9 @@ class Contentcontroller extends CI_Controller {
 					}
 					//echo 'masuk DATA1-3<br>';
 					$data['record'][$wrkno] = array($data['woinfo'],$data['personallist'],$data['partlist'],$data['actiontaken'],$data['reschreason'],$data['completed_by'],$data['dateclosed'],$wrkno);
-					//print_r($data['record']);
-					//exit();
+					echo "<pre>";
+					print_r($data['record']);
+					exit();
 			}
 			}
 			else{
@@ -8291,6 +8373,32 @@ public function print_kewpa(){
 			$this ->load->view("Content_print_kewpa", $data);
 
 		}
+	}
+	
+	public function report_rcmbulk(){
+		isset($_REQUEST['n_startdate']) ? $data['startdate'] = $_REQUEST['n_startdate'] : $data['startdate'] = "";
+		isset($_REQUEST['n_enddate']) ? $data['enddate'] = $_REQUEST['n_enddate'] : $data['enddate'] = "";
+		isset($_REQUEST['data_file']) ? $data['datafile'] = $_REQUEST['data_file'] : $data['datafile'] = "";
+		isset($_REQUEST['myclear']) ? $data['clearbutton'] = $_REQUEST['myclear'] : $data['clearbutton'] = "";
+		$data['error'] = "";
+		$this->load->model('display_model');
+		if ($data['startdate'] <> '' AND $data['enddate'] <> ''){
+			if (strtotime($data['startdate']) > strtotime($data['enddate'])){
+				$data['startdate'] = "";
+				$data['enddate'] = "";
+				$data['error'] = "Start date cannot be later than the end date.";
+			}
+			else if ($data['clearbutton'] == "CLEAR"){
+				$data['startdate'] = "";
+				$data['enddate'] = "";
+			}
+			else{
+			$data['record'] = $this->display_model->rcmbulkprint(date("Y-m-d",strtotime($data['startdate'])),date("Y-m-d",strtotime($data['enddate'])));
+			}
+		}
+		$this ->load->view("head");
+		$this ->load->view("left");
+		$this ->load->view("content_report_rcmbulk",$data);		
 	}
 	
 }
