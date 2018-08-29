@@ -8,12 +8,12 @@
 					</tr>
 				</table>
 			</div>
-			<form action="" method="POST" name="myform">
+			<form action="" method="POST" name="myform" id="f">
 			<div class="middle-report-1">
-				Start Date : <input type="te"  id = "date0" name="n_startdate" value="<?=$startdate ? date('d-m-Y',strtotime($startdate)) : ''?>" class="form-control-button2">
+				Start Date : <input type="te"  id = "date0" name="n_startdate" autocomplete="off"  value="<?=$startdate ? date('d-m-Y',strtotime($startdate)) : ''?>" class="form-control-button2">
 			</div>
 			<div  class="middle-report-2">
-				End Date : <input type="te"  id = "date1" name="n_enddate" value="<?=$enddate ? date('d-m-Y',strtotime($enddate)) : ''?>" class="form-control-button2">
+				End Date : <input type="te"  id = "date1" autocomplete="off"  name="n_enddate" value="<?=$enddate ? date('d-m-Y',strtotime($enddate)) : ''?>" class="form-control-button2">
 			</div>
 			<div  class="middle-report-3">
 				<span style="color:red;">*PPM Bulk Print is limited to per week basis</span>
@@ -26,11 +26,15 @@
 				<!--<button type="report_selection" class="btn btn-primary btn-block buttoncss" id="Clear" >Clear</button>-->
 			</div>
 			</form>
+
+
 			<div class="middle-report-4">
 				<?php if ($datafile == 'Y' AND $startdate <> '' AND $enddate <> '' AND $error == "") { ?>
 				<?php if ($record){ ?>
-				<div class="middle-report-5">
+				<div class="middle-report-5">				
+				<?php $hidden = array('n_startdate' => $startdate, 'n_enddate' => $enddate);?>
 				<?php echo form_open('contentcontroller/print_ppm');?>
+				<?php echo form_hidden($hidden); ?>
 					<button type="submit" >Generate</button>
 					<input type="button" class="check" value="Select All" />
 				</div>

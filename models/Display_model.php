@@ -154,7 +154,7 @@
 			return $query_result;
         }
 		
-		function request_tab()
+		function request_tab($wrk_ord)
 		{
 			$RN = $this->input->get('wrk_ord');
 			
@@ -169,7 +169,12 @@
 			$this->db->join('pmis2_egm_assetmaintenance m','r.V_Asset_no = m.v_AssetNo AND r.V_hospitalcode = m.v_Hospitalcode','left outer'); 
 			$this->db->join('pmis2_egm_assetreg_general g','m.v_AssetNo = g.V_Asset_no AND m.v_Hospitalcode = g.V_Hospital_code','left outer');
 			$this->db->join('pmis2_egm_sharedowntime lw','s.V_Request_no = lw.ori_wo','left');
+			if($RN <> ''){
+			//echo "lalalal".$RN;
 			$this->db->where('s.V_Request_no',$RN);
+			}else{
+			$this->db->where('s.V_Request_no',$wrk_ord);
+			}
 			$this->db->where('s.V_servicecode = ',$this->session->userdata('usersess'));
 			$this->db->group_by('s.V_Asset_no');
 			$query = $this->db->get();
@@ -5100,8 +5105,7 @@ return $obj['path'];
 			exit(); */
 			return $query_result;
 		}
-		
-			function rcmbulkprint($startdate,$enddate){
+				function rcmbulkprint($startdate,$enddate){
 			$this->db->select('s.V_Request_no,s.v_Asset_no,r.V_Tag_no,r.V_User_Dept_code,s.D_date,s.v_closeddate');
 			$this->db->from('pmis2_egm_service_request s');
 			$this->db->join('pmis2_egm_assetregistration r','s.v_Asset_no = r.V_Asset_no AND s.v_HospitalCode = r.V_Hospitalcode');

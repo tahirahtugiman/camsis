@@ -2,8 +2,13 @@
 	<div id="Instruction" class="pr-printer">
 		<div class="header-pr">PREVENTIVE MAINTENANCE WORK ORDER</div>
 		<button onclick="javascript:myFunctionprint()" class="btn-button btn-primary-button" value="t">PRINT</button>
+		<?php if ($this->input->get('wrk_ord') <> '') {?>
 		<button type="cancel" class="btn-button btn-primary-button" onclick="window.history.back()">CANCEL</button>
+       <?php }else{ ?>
+			<button type="cancel" class="btn-button btn-primary-button" onclick="location.href = '<?php base_url();?>report_ppmbulk?n_startdate=<?=$this->input->post('n_startdate')?>&n_enddate=<?=$this->input->post('n_enddate')?>&t=y'">CANCEL</button>
+			<?php } ?>
 	</div>
+
 <?php $num=1;foreach ($record as $row): ?>
 		<table class="tbl-wo" border="1" align="center" style="border: 1px solid black;margin-top:5px;">
 			<tr>
@@ -54,31 +59,31 @@
 					<table class="tbl-wo-1" border="0" align="left">
 						<tr>
 							<td class="tbl-wo-data">Equipment</td>
-							<td style="width:75%;">: <span style="color:blue;"><?= ($row[0][0]->v_asset_name) ? $row[0][0]->v_asset_name : 'NA' ?> (<?= ($row[0][0]->new_asset_type) ? $row[0][0]->new_asset_type : 'NA' ?>) <?= ($row[0][0]->TASKDESC) ? $row[0][0]->TASKDESC : '' ?></span></td>
+							<td style="width:75%;">: <span style="color:blue;"><?= (isset($row[0][0]->v_asset_name)) ? $row[0][0]->v_asset_name : 'NA' ?> (<?= (isset($row[0][0]->new_asset_type)) ? $row[0][0]->new_asset_type : 'NA' ?>) <?= (isset($row[0][0]->TASKDESC)) ? $row[0][0]->TASKDESC : '' ?></span></td>
 						</tr>
 						<tr>
 							<td class="tbl-wo-data">Asset No</td>
-							<td>: <span style="color:blue;"><?= ($row[0][0]->v_tag_no) ? $row[0][0]->v_tag_no : 'NA' ?></span></td>
+							<td>: <span style="color:blue;"><?= (isset($row[0][0]->v_tag_no)) ? $row[0][0]->v_tag_no : 'NA' ?></span></td>
 						</tr>
 						<tr>
 							<td class="tbl-wo-data">Model </td>
-							<td><span style="color:blue;">: <?= ($row[0][0]->v_model_no) ? $row[0][0]->v_model_no : 'NA' ?></span></td>
+							<td><span style="color:blue;">: <?= (isset($row[0][0]->v_model_no)) ? $row[0][0]->v_model_no : 'NA' ?></span></td>
 						</tr>
 						<tr>
 							<td class="tbl-wo-data">Serial No. </td>
-							<td><span style="color:blue;">: <?= ($row[0][0]->v_serial_no) ? $row[0][0]->v_serial_no : 'NA' ?></span></td>
+							<td><span style="color:blue;">: <?= (isset($row[0][0]->v_serial_no)) ? $row[0][0]->v_serial_no : 'NA' ?></span></td>
 						</tr>
 						<tr>
 							<td class="tbl-wo-data">Department </td>
-							<td><span style="color:blue;">: <?= ($row[0][0]->v_userdeptdesc) ? $row[0][0]->v_userdeptdesc : 'NA' ?></span></td>
+							<td><span style="color:blue;">: <?= (isset($row[0][0]->v_userdeptdesc)) ? $row[0][0]->v_userdeptdesc : 'NA' ?></span></td>
 						</tr>
 						<tr>
 							<td class="tbl-wo-data">Dept. Code </td>
-							<td><span style="color:blue;">: <?= ($row[0][0]->v_user_dept_code) ? $row[0][0]->v_user_dept_code : 'NA' ?></span></td>
+							<td><span style="color:blue;">: <?= (isset($row[0][0]->v_user_dept_code)) ? $row[0][0]->v_user_dept_code : 'NA' ?></span></td>
 						</tr>
 						<tr>
 							<td class="tbl-wo-data">Room Code </td>
-							<td><span style="color:blue;">: <?= ($row[0][0]->v_location_code) ? $row[0][0]->v_location_code : 'NA' ?>(<?= ($row[0][0]->v_Location_Name) ? $row[0][0]->v_Location_Name : 'NA' ?>)</span></td>
+							<td><span style="color:blue;">: <?= (isset($row[0][0]->v_location_code)) ? $row[0][0]->v_location_code : 'NA' ?>(<?= (isset($row[0][0]->v_Location_Name)) ? $row[0][0]->v_Location_Name : 'NA' ?>)</span></td>
 						</tr>  
 						<tr>
 							<td class="tbl-wo-data" colspan="2">&nbsp; </td>
@@ -90,14 +95,14 @@
 									<tr>
 										
 										<td style="width:33.33%;"> : <div class="box2">
-									<?php if(strtotime($row[0][0]->V_Wrn_end_code) > strtotime(date("d/m/Y"))){?>
+									<?php if(strtotime(isset($row[0][0]->V_Wrn_end_code)) > strtotime(date("d/m/Y"))){?>
 									<img src="<?php echo base_url(); ?>images/tick2.png" class="img-tick"/>
 									<?php }else{ ?>
 									
 									<?php } ?>
 									</div> Under Warranty</td>
 									<td style="width:33.33%;"><div class="box2">
-									<?php if(strtotime($row[0][0]->V_Wrn_end_code) < strtotime(date("d/m/Y"))){?>
+									<?php if(strtotime(isset($row[0][0]->V_Wrn_end_code)) < strtotime(date("d/m/Y"))){?>
 									<img src="<?php echo base_url(); ?>images/tick2.png" class="img-tick"/>
 									<?php }else{ ?>
 									
@@ -116,15 +121,15 @@
 					<table class="tbl-wo-1" border="0" align="left">
 						<tr>
 							<td class="tbl-wo-data">PPM Schedule </td>
-							<td>: <span style="color:blue;">Week <?= ($row[0][0]->n_StartWk) ? $row[0][0]->n_StartWk : 'NA' ?></span></td>
+							<td>: <span style="color:blue;">Week <?= (isset($row[0][0]->n_StartWk)) ? $row[0][0]->n_StartWk : 'NA' ?></span></td>
 						</tr>
 						<tr>
 							<td class="tbl-wo-data">Frequency No</td>
-							<td>: <span style="color:blue;"><?= ($row[0][0]->v_jobtype) ? $row[0][0]->v_jobtype : 'NA' ?></span></td>
+							<td>: <span style="color:blue;"><?= (isset($row[0][0]->v_jobtype)) ? $row[0][0]->v_jobtype : 'NA' ?></span></td>
 						</tr>
 						<tr>
 							<td class="tbl-wo-data">Check list No</td>
-							<td>: <span style="color:blue;"><?= ($row[0][0]->v_checklistcode) ? $row[0][0]->v_checklistcode : 'NA' ?></span></td>
+							<td>: <span style="color:blue;"><?= (isset($row[0][0]->v_checklistcode)) ? $row[0][0]->v_checklistcode : 'NA' ?></span></td>
 						</tr>
 						<tr>
 							<td class="tbl-wo-data">Remark </td>
@@ -189,70 +194,70 @@
 				<td align="center">Time</td>
 			</tr>
 			<tr>
-				<td align="center">&nbsp;<?=($row[1][0][0]) ? $row[1][0][0] : ''?></td>
-				<td align="center">&nbsp;<?=($row[1][0][1]) ? $row[1][0][1] : ''?></td>
-				<td align="center">&nbsp;<?=($row[1][0][2]) ? $row[1][0][2] : ''?></td>
-				<td align="center">&nbsp;<?=($row[1][0][1]) ? $row[1][0][1] : ''?></td>
-				<td align="center">&nbsp;<?=($row[1][0][3]) ? $row[1][0][3] : ''?></td>
+				<td align="center">&nbsp;<?=(isset($row[1][0][0])) ? $row[1][0][0] : ''?></td>
+				<td align="center">&nbsp;<?=(isset($row[1][0][1])) ? $row[1][0][1] : ''?></td>
+				<td align="center">&nbsp;<?=(isset($row[1][0][2])) ? $row[1][0][2] : ''?></td>
+				<td align="center">&nbsp;<?=(isset($row[1][0][1])) ? $row[1][0][1] : ''?></td>
+				<td align="center">&nbsp;<?=(isset($row[1][0][3])) ? $row[1][0][3] : ''?></td>
 				<td align="center" style="width:15%;">&nbsp;</td>
-				<td align="center">&nbsp;<?=($row[2][0][0]) ? $row[2][0][0] : ''?></td>
-				<td align="center">&nbsp;<?=($row[2][0][1]) ? $row[2][0][1] : ''?></td>
-				<td align="center">&nbsp;<?=($row[2][0][2]) ? $row[2][0][2] : ''?></td>
+				<td align="center">&nbsp;<?=(isset($row[2][0][0])) ? $row[2][0][0] : ''?></td>
+				<td align="center">&nbsp;<?=(isset($row[2][0][1])) ? $row[2][0][1] : ''?></td>
+				<td align="center">&nbsp;<?=(isset($row[2][0][2])) ? $row[2][0][2] : ''?></td>
 			</tr>
 			<tr>
-				<td align="center">&nbsp;<?=($row[1][1][0]) ? $row[1][1][0] : ''?></td>
-				<td align="center">&nbsp;<?=($row[1][1][1]) ? $row[1][1][1] : ''?></td>
-				<td align="center">&nbsp;<?=($row[1][1][2]) ? $row[1][1][2] : ''?></td>
-				<td align="center">&nbsp;<?=($row[1][1][1]) ? $row[1][1][1] : ''?></td>
-				<td align="center">&nbsp;<?=($row[1][1][3]) ? $row[1][1][3] : ''?></td>
+				<td align="center">&nbsp;<?=(isset($row[1][1][0])) ? $row[1][1][0] : ''?></td>
+				<td align="center">&nbsp;<?=(isset($row[1][1][1])) ? $row[1][1][1] : ''?></td>
+				<td align="center">&nbsp;<?=(isset($row[1][1][2])) ? $row[1][1][2] : ''?></td>
+				<td align="center">&nbsp;<?=(isset($row[1][1][1])) ? $row[1][1][1] : ''?></td>
+				<td align="center">&nbsp;<?=(isset($row[1][1][3])) ? $row[1][1][3] : ''?></td>
 				<td align="center">&nbsp;</td>
-				<td align="center">&nbsp;<?=($row[2][1][0]) ? $row[2][1][0] : ''?></td>
-				<td align="center">&nbsp;<?=($row[2][1][1]) ? $row[2][1][1] : ''?></td>
-				<td align="center">&nbsp;<?=($row[2][1][2]) ? $row[2][1][2] : ''?></td>
+				<td align="center">&nbsp;<?=(isset($row[2][1][0])) ? $row[2][1][0] : ''?></td>
+				<td align="center">&nbsp;<?=(isset($row[2][1][1])) ? $row[2][1][1] : ''?></td>
+				<td align="center">&nbsp;<?=(isset($row[2][1][2])) ? $row[2][1][2] : ''?></td>
 			</tr>
 			<tr>
-				<td align="center">&nbsp;<?=($row[1][2][0]) ? $row[1][2][0] : ''?></td>
-				<td align="center">&nbsp;<?=($row[1][2][1]) ? $row[1][2][1] : ''?></td>
-				<td align="center">&nbsp;<?=($row[1][2][2]) ? $row[1][2][2] : ''?></td>
-				<td align="center">&nbsp;<?=($row[1][2][1]) ? $row[1][2][1] : ''?></td>
-				<td align="center">&nbsp;<?=($row[1][2][3]) ? $row[1][2][3] : ''?></td>
+				<td align="center">&nbsp;<?=(isset($row[1][2][0])) ? $row[1][2][0] : ''?></td>
+				<td align="center">&nbsp;<?=(isset($row[1][2][1])) ? $row[1][2][1] : ''?></td>
+				<td align="center">&nbsp;<?=(isset($row[1][2][2])) ? $row[1][2][2] : ''?></td>
+				<td align="center">&nbsp;<?=(isset($row[1][2][1])) ? $row[1][2][1] : ''?></td>
+				<td align="center">&nbsp;<?=(isset($row[1][2][3])) ? $row[1][2][3] : ''?></td>
 				<td align="center">&nbsp;</td>
-				<td align="center">&nbsp;<?=($row[2][2][0]) ? $row[2][2][0] : ''?></td>
-				<td align="center">&nbsp;<?=($row[2][2][1]) ? $row[2][2][1] : ''?></td>
-				<td align="center">&nbsp;<?=($row[2][2][2]) ? $row[2][2][2] : ''?></td>
+				<td align="center">&nbsp;<?=(isset($row[2][2][0])) ? $row[2][2][0] : ''?></td>
+				<td align="center">&nbsp;<?=(isset($row[2][2][1])) ? $row[2][2][1] : ''?></td>
+				<td align="center">&nbsp;<?=(isset($row[2][2][2])) ? $row[2][2][2] : ''?></td>
 			</tr>
 			<tr>
-				<td align="center">&nbsp;<?=($row[1][3][0]) ? $row[1][3][0] : ''?></td>
-				<td align="center">&nbsp;<?=($row[1][3][1]) ? $row[1][3][1] : ''?></td>
-				<td align="center">&nbsp;<?=($row[1][3][2]) ? $row[1][3][2] : ''?></td>
-				<td align="center">&nbsp;<?=($row[1][3][1]) ? $row[1][3][1] : ''?></td>
-				<td align="center">&nbsp;<?=($row[1][3][3]) ? $row[1][3][3] : ''?></td>
+				<td align="center">&nbsp;<?=(isset($row[1][3][0])) ? $row[1][3][0] : ''?></td>
+				<td align="center">&nbsp;<?=(isset($row[1][3][1])) ? $row[1][3][1] : ''?></td>
+				<td align="center">&nbsp;<?=(isset($row[1][3][2])) ? $row[1][3][2] : ''?></td>
+				<td align="center">&nbsp;<?=(isset($row[1][3][1])) ? $row[1][3][1] : ''?></td>
+				<td align="center">&nbsp;<?=(isset($row[1][3][3])) ? $row[1][3][3] : ''?></td>
 				<td align="center">&nbsp;</td>
-				<td align="center">&nbsp;<?=($row[2][3][0]) ? $row[2][3][0] : ''?></td>
-				<td align="center">&nbsp;<?=($row[2][3][1]) ? $row[2][3][1] : ''?></td>
-				<td align="center">&nbsp;<?=($row[2][3][2]) ? $row[2][3][2] : ''?></td>
+				<td align="center">&nbsp;<?=(isset($row[2][3][0])) ? $row[2][3][0] : ''?></td>
+				<td align="center">&nbsp;<?=(isset($row[2][3][1])) ? $row[2][3][1] : ''?></td>
+				<td align="center">&nbsp;<?=(isset($row[2][3][2])) ? $row[2][3][2] : ''?></td>
 			</tr>
 			<tr>
-				<td align="center">&nbsp;<?=($row[1][4][0]) ? $row[1][4][0] : ''?></td>
-				<td align="center">&nbsp;<?=($row[1][4][1]) ? $row[1][4][1] : ''?></td>
-				<td align="center">&nbsp;<?=($row[1][4][2]) ? $row[1][4][2] : ''?></td>
-				<td align="center">&nbsp;<?=($row[1][4][1]) ? $row[1][4][1] : ''?></td>
-				<td align="center">&nbsp;<?=($row[1][4][3]) ? $row[1][4][3] : ''?></td>
+				<td align="center">&nbsp;<?=(isset($row[1][4][0])) ? $row[1][4][0] : ''?></td>
+				<td align="center">&nbsp;<?=(isset($row[1][4][1])) ? $row[1][4][1] : ''?></td>
+				<td align="center">&nbsp;<?=(isset($row[1][4][2])) ? $row[1][4][2] : ''?></td>
+				<td align="center">&nbsp;<?=(isset($row[1][4][1])) ? $row[1][4][1] : ''?></td>
+				<td align="center">&nbsp;<?=(isset($row[1][4][3])) ? $row[1][4][3] : ''?></td>
 				<td align="center">&nbsp;</td>
-				<td align="center">&nbsp;<?=($row[2][4][0]) ? $row[2][4][0] : ''?></td>
-				<td align="center">&nbsp;<?=($row[2][4][1]) ? $row[2][4][1] : ''?></td>
-				<td align="center">&nbsp;<?=($row[2][4][2]) ? $row[2][4][2] : ''?></td>
+				<td align="center">&nbsp;<?=(isset($row[2][4][0])) ? $row[2][4][0] : ''?></td>
+				<td align="center">&nbsp;<?=(isset($row[2][4][1])) ? $row[2][4][1] : ''?></td>
+				<td align="center">&nbsp;<?=(isset($row[2][4][2])) ? $row[2][4][2] : ''?></td>
 			</tr>
 			<tr>
-				<td align="center">&nbsp;<?=($row[1][5][0]) ? $row[1][5][0] : ''?></td>
-				<td align="center">&nbsp;<?=($row[1][5][1]) ? $row[1][5][1] : ''?></td>
-				<td align="center">&nbsp;<?=($row[1][5][2]) ? $row[1][5][2] : ''?></td>
-				<td align="center">&nbsp;<?=($row[1][5][1]) ? $row[1][5][1] : ''?></td>
-				<td align="center">&nbsp;<?=($row[1][5][3]) ? $row[1][5][3] : ''?></td>
+				<td align="center">&nbsp;<?=(isset($row[1][5][0])) ? $row[1][5][0] : ''?></td>
+				<td align="center">&nbsp;<?=(isset($row[1][5][1])) ? $row[1][5][1] : ''?></td>
+				<td align="center">&nbsp;<?=(isset($row[1][5][2])) ? $row[1][5][2] : ''?></td>
+				<td align="center">&nbsp;<?=(isset($row[1][5][1])) ? $row[1][5][1] : ''?></td>
+				<td align="center">&nbsp;<?=(isset($row[1][5][3])) ? $row[1][5][3] : ''?></td>
 				<td align="center">&nbsp;</td>
-				<td align="center">&nbsp;<?=($row[2][5][0]) ? $row[2][5][0] : ''?></td>
-				<td align="center">&nbsp;<?=($row[2][5][1]) ? $row[2][5][1] : ''?></td>
-				<td align="center">&nbsp;<?=($row[2][5][2]) ? $row[2][5][2] : ''?></td>
+				<td align="center">&nbsp;<?=(isset($row[2][5][0])) ? $row[2][5][0] : ''?></td>
+				<td align="center">&nbsp;<?=(isset($row[2][5][1])) ? $row[2][5][1] : ''?></td>
+				<td align="center">&nbsp;<?=(isset($row[2][5][2])) ? $row[2][5][2] : ''?></td>
 			</tr>
 		</table>
 		<table class="tbl-wo-1" border="0" align="center">
@@ -271,13 +276,13 @@
 							<td style="padding:5px;">Reschedule of work (if any) :</td>
 						</tr>
 						<tr>
-							<td><?=($row[4][0][0]) ? $row[4][0][0] : ''?><hr class='dotted' style="margin:10px 10px 10px 5px;"/></td>
+							<td><?=(isset($row[4][0][0])) ? $row[4][0][0] : ''?><hr class='dotted' style="margin:10px 10px 10px 5px;"/></td>
 						</tr>
 						<tr>
-							<td><?=($row[4][1][0]) ? $row[4][1][0] : ''?><hr class='dotted' style="margin:10px 10px 10px 5px;"/></td>
+							<td><?=(isset($row[4][1][0])) ? $row[4][1][0] : ''?><hr class='dotted' style="margin:10px 10px 10px 5px;"/></td>
 						</tr>
 						<tr>
-							<td><?=($row[4][2][0]) ? $row[4][2][0] : ''?><hr class='dotted' style="margin:10px 10px 10px 5px;"/></td>
+							<td><?=(isset($row[4][2][0])) ? $row[4][2][0] : ''?><hr class='dotted' style="margin:10px 10px 10px 5px;"/></td>
 						</tr>
 					</table>
 				</td>
@@ -299,19 +304,19 @@
 							<td style="padding:5px;" colspan="3">Actual Work Done :</td>
 						</tr>
 						<tr>
-							<td colspan="3"><?=($row[3][0][0]) ? $row[3][0][0] : ''?><hr class='dotted' style="margin:10px 10px 10px 5px;"/></td>
+							<td colspan="3"><?=(isset($row[3][0][0])) ? $row[3][0][0] : ''?><hr class='dotted' style="margin:10px 10px 10px 5px;"/></td>
 						</tr>
 						<tr>
-							<td colspan="3"><?=($row[3][1][0]) ? $row[3][1][0] : ''?><hr class='dotted' style="margin:10px 10px 10px 5px;"/></td>
+							<td colspan="3"><?=(isset($row[3][1][0])) ? $row[3][1][0] : ''?><hr class='dotted' style="margin:10px 10px 10px 5px;"/></td>
 						</tr>
 						<tr>
-							<td colspan="3"><?=($row[3][2][0]) ? $row[3][2][0] : ''?><hr class='dotted' style="margin:10px 10px 10px 5px;"/></td>
+							<td colspan="3"><?=(isset($row[3][2][0])) ? $row[3][2][0] : ''?><hr class='dotted' style="margin:10px 10px 10px 5px;"/></td>
 						</tr>
 						<tr>
-							<td colspan="3"><?=($row[3][3][0]) ? $row[3][3][0] : ''?><hr class='dotted' style="margin:10px 10px 10px 5px;"/></td>
+							<td colspan="3"><?=(isset($row[3][3][0])) ? $row[3][3][0] : ''?><hr class='dotted' style="margin:10px 10px 10px 5px;"/></td>
 						</tr>
 						<tr>
-							<td colspan="3"><?=($row[3][4][0]) ? $row[3][4][0] : ''?><hr class='dotted' style="margin:10px 10px 10px 5px;"/></td>
+							<td colspan="3"><?=(isset($row[3][4][0])) ? $row[3][4][0] : ''?><hr class='dotted' style="margin:10px 10px 10px 5px;"/></td>
 						</tr>
 						<tr>
 							<td style="padding:5px; height:40px;">Completed By : <?=isset($row[5]) ? $row[5] : ''?></td>

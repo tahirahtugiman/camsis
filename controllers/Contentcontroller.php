@@ -3252,6 +3252,7 @@ class Contentcontroller extends CI_Controller {
 	public function print_workorder(){
 	  	$this->load->model("get_model");	
 	  	$this->load->model("display_model");
+		//echo "lklkllklklkk m: " . $this->input->get('wrk_ord');
 		if ($this->input->get('wrk_ord') <> '') {
 		$data['wrk_ord'] = $this->input->get('wrk_ord');
 		$data['hosp'] = $this->display_model->list_hospinfo();
@@ -3321,6 +3322,7 @@ class Contentcontroller extends CI_Controller {
 	//echo 'masuk bulkin<br>';
 	if ($this->input->post('chk_bxrcm')){
 	foreach($this->input->post('chk_bxrcm') as $wrkno){
+	//echo $wrkno;
 	    $data['wrk_ord'] = $wrkno;
         $data['hosp'] = $this->display_model->list_hospinfo();
 		$data['woinfo'] = $this->get_model->request_update($wrkno);
@@ -3386,7 +3388,7 @@ class Contentcontroller extends CI_Controller {
 	    $this ->load->view("headprinter");
 		$this ->load->view("Content_rcm_print.php", $data);	
 		//echo "<pre>";
-     	//print_r($data['record']);
+     	//print_r($data['woinfo2']);
 		}
 		
 		
@@ -3395,8 +3397,6 @@ class Contentcontroller extends CI_Controller {
 		//exit();
 		
 	}
-	
-	
 	
 	public function testlaa(){
 		//$this ->load->view("headprinter");
@@ -3576,7 +3576,6 @@ class Contentcontroller extends CI_Controller {
 		else{
 			//echo 'masuk bulk<br>';
 			if ($this->input->post('chk_bxppm')){
-			$data['wrk_ord'] = $this->input->get('wrk_ord');
 			//echo 'masuk DATA1<br>';
 			foreach($this->input->post('chk_bxppm') as $wrkno){
 				//echo 'masuk DATA1-1<br>';
@@ -3667,9 +3666,8 @@ class Contentcontroller extends CI_Controller {
 					}
 					//echo 'masuk DATA1-3<br>';
 					$data['record'][$wrkno] = array($data['woinfo'],$data['personallist'],$data['partlist'],$data['actiontaken'],$data['reschreason'],$data['completed_by'],$data['dateclosed'],$wrkno);
-					echo "<pre>";
-					print_r($data['record']);
-					exit();
+					//print_r($data['record']);
+					//exit();
 			}
 			}
 			else{
@@ -4913,6 +4911,12 @@ class Contentcontroller extends CI_Controller {
 			$data['record'] = $this->display_model->ppmbulkprint(date("Y-m-d",strtotime($data['startdate'])),date("Y-m-d",strtotime($data['enddate'])));
 			}
 		}
+		if (isset($_GET['t'])) {
+	   $data['startdate'] = $_GET['n_startdate'];
+	   $data['enddate'] = $_GET['n_enddate'];
+	   $data['datafile'] = "Y";
+	   $data['record'] = $this->display_model->ppmbulkprint(date("Y-m-d",strtotime($data['startdate'])),date("Y-m-d",strtotime( $data['enddate'])));
+	   }
 		$this ->load->view("head");
 		$this ->load->view("left");
 		$this ->load->view("content_report_ppmbulk",$data);		
@@ -8374,7 +8378,6 @@ public function print_kewpa(){
 
 		}
 	}
-	
 	public function report_rcmbulk(){
 		isset($_REQUEST['n_startdate']) ? $data['startdate'] = $_REQUEST['n_startdate'] : $data['startdate'] = "";
 		isset($_REQUEST['n_enddate']) ? $data['enddate'] = $_REQUEST['n_enddate'] : $data['enddate'] = "";
@@ -8396,6 +8399,12 @@ public function print_kewpa(){
 			$data['record'] = $this->display_model->rcmbulkprint(date("Y-m-d",strtotime($data['startdate'])),date("Y-m-d",strtotime($data['enddate'])));
 			}
 		}
+		if (isset($_GET['t'])) {
+	   $data['startdate'] = $_GET['n_startdate'];
+	   $data['enddate'] = $_GET['n_enddate'];
+	   $data['datafile'] = "Y";
+       $data['record'] = $this->display_model->rcmbulkprint(date("Y-m-d",strtotime($data['startdate'])),date("Y-m-d",strtotime($data['enddate'])));
+	   }
 		$this ->load->view("head");
 		$this ->load->view("left");
 		$this ->load->view("content_report_rcmbulk",$data);		
