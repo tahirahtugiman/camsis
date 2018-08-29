@@ -8,15 +8,15 @@
 					</tr>
 				</table>
 			</div>
-			<form action="" method="POST" name="myform" id="f">
+			<form action="" method="POST" name="myform">
 			<div class="middle-report-1">
-				Start Date : <input type="te"  id = "date0" name="n_startdate" autocomplete="off"  value="<?=$startdate ? date('d-m-Y',strtotime($startdate)) : ''?>" class="form-control-button2">
+				Start Date : <input type="te"  id = "date0" name="n_startdate" autocomplete="off" value="<?=$startdate ? date('d-m-Y',strtotime($startdate)) : ''?>" class="form-control-button2">
 			</div>
 			<div  class="middle-report-2">
-				End Date : <input type="te"  id = "date1" autocomplete="off"  name="n_enddate" value="<?=$enddate ? date('d-m-Y',strtotime($enddate)) : ''?>" class="form-control-button2">
+				End Date : <input type="te"  id = "date1" name="n_enddate" autocomplete="off" value="<?=$enddate ? date('d-m-Y',strtotime($enddate)) : ''?>" class="form-control-button2">
 			</div>
 			<div  class="middle-report-3">
-				<span style="color:red;">*PPM Bulk Print is limited to per week basis</span>
+				<span style="color:red;">*RCM Bulk Print is limited to per week basis</span>
 			</div>
 			<div  class="middle-report-3">
 				<input type="hidden" name="data_file" value="Y">
@@ -26,14 +26,12 @@
 				<!--<button type="report_selection" class="btn btn-primary btn-block buttoncss" id="Clear" >Clear</button>-->
 			</div>
 			</form>
-
-
 			<div class="middle-report-4">
 				<?php if ($datafile == 'Y' AND $startdate <> '' AND $enddate <> '' AND $error == "") { ?>
 				<?php if ($record){ ?>
-				<div class="middle-report-5">				
+				<div class="middle-report-5">
 				<?php $hidden = array('n_startdate' => $startdate, 'n_enddate' => $enddate);?>
-				<?php echo form_open('contentcontroller/print_ppm');?>
+				<?php echo form_open('contentcontroller/print_workorder');?>
 				<?php echo form_hidden($hidden); ?>
 					<button type="submit" >Generate</button>
 					<input type="button" class="check" value="Select All" />
@@ -47,7 +45,7 @@
 					</tr>
 					<?php $num=1;foreach ($record as $row): ?>
 					<tr>
-						<td align="left"><input type="checkbox" name="chk_bxppm[]" value="<?= isset($row->v_WrkOrdNo) ? $row->v_WrkOrdNo : '' ?>" class="cb-element"><b><?= isset($row->v_WrkOrdNo) ? $row->v_WrkOrdNo : '' ?></b></td>
+						<td align="left"><input type="checkbox" name="chk_bxrcm[]" value="<?= isset($row->V_Request_no) ? $row->V_Request_no : '' ?>" class="cb-element"><b><?= isset($row->V_Request_no) ? $row->V_Request_no : '' ?></b></td>
 						<td><?= isset($row->v_Asset_no) ? $row->v_Asset_no : '' ?></td>
 						<td><?= isset($row->V_Tag_no) ? $row->V_Tag_no : '' ?></td>
 						<td><?= isset($row->V_User_Dept_code) ? $row->V_User_Dept_code : '' ?></td>

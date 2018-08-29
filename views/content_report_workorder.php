@@ -9,6 +9,9 @@
 				<td width="25%" style="padding-left:10px;"><?php echo anchor ('contentcontroller/report_ppmbulk/','<span class="icon-folder"></span><span style="color:black; padding-left:10px;">PPM Bulk Print</span></button>');?></td>
 			</tr>
 			<tr>
+				<td width="25%" style="padding-left:10px;"><?php echo anchor ('contentcontroller/report_rcmbulk/','<span class="icon-folder"></span><span style="color:black; padding-left:10px;">RCM Bulk Print</span></button>');?></td>
+			</tr>
+			<tr>
 				<td width="25%" style="padding-left:10px;"><?php echo anchor ('contentcontroller/report_RSReport','<span class="icon-folder"></span><span style="color:black; padding-left:10px;">Status Report - Request Work Orders</span></button>');?></td>			
 			</tr>
 			<tr>

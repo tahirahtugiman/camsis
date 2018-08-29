@@ -5,8 +5,10 @@
 		<button type="cancel" class="btn-button btn-primary-button" onclick="window.location.href='contentcontroller/locationlist?parent=asset'">CANCEL</button>
 	</div>
 	<div class="form">
-		<?php $numrow=1; foreach($dept as $rows): ?>
-		<?php if ($numrow==1 OR $numrow%18==1) { ?>
+		<?php 
+		$lines = 26;
+		$numrow=1; foreach($dept as $rows): ?>
+		<?php if ($numrow==1 OR $numrow%$lines==1) { ?>
 		<table class="tbl-wo" border="1" align="center" style="border: 1px solid black;">
 			<tr>
 				<td style="padding-left:50px; width:160px;"><img src="<?php echo base_url(); ?>images/penmedic2.png" style="width:100px; height:40px;"/></td>
@@ -100,7 +102,7 @@
 		<?php if (($numrow-1)==$count){ ?>
 		<?php $lastno = $numrow ?>
 		<?php //echo $lastno ?>
-		<?php for ($x = 0; $x <= (18 - ($lastno%18)); $x++) { ?>
+		<?php for ($x = 0; $x <= ($lines - ($lastno%$lines)); $x++) { ?>
 		<?php $numrow++?>
 		<tr>
 			<td>&nbsp;</td>
@@ -115,7 +117,7 @@
 		<?php  } ?>
 		<?php  } ?>
 
-		<?php if (($numrow-1)%18==0) { ?>	
+		<?php if (($numrow-1)%$lines==0) { ?>	
 	</table>
 	<table class="tbl-wo" border="0" align="center">
 			<tr height="50px">
