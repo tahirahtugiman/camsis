@@ -3314,6 +3314,7 @@ class Contentcontroller extends CI_Controller {
 			$data['actiontaken'][] = array(NULL);	
 			}
 		}
+		$data['record'][$data['wrk_ord']] = array($data['woinfo'],$data['woinfo2'],$data['personallist'],$data['partlist'],$data['actiontaken'],$data['recordjob'],$data['hosp'],$data['wrk_ord']);
 		//echo "<pre>";
 		//print_r($data['personallist']);
 	    $this ->load->view("headprinter");
@@ -3386,7 +3387,7 @@ class Contentcontroller extends CI_Controller {
 	}
 	}	
 	    $this ->load->view("headprinter");
-		$this ->load->view("Content_rcm_print.php", $data);	
+		$this ->load->view("Content_workorder_print.php", $data);	
 		//echo "<pre>";
      	//print_r($data['woinfo2']);
 		}
