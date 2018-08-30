@@ -327,9 +327,9 @@
 						<td colspan="3"><?=($row[3][4][0]) ? $row[3][4][0] : ''?><hr class='dotted' style="margin:10px 10px 10px 45px;"/></td>
 					</tr>
 					<tr>
-						<td style="padding:5px; height:40px;">Completed By : <?=isset($row[5]) ? $row[5] : ''?></td>
-						<td>Date : <?=isset($row[6][0]) ? date("d-m-Y",strtotime($row[6][0])) : ''?></td>
-						<td>Time : <?=isset($row[6][1]) ? date("H:i",strtotime($row[6][1])) : ''?></td>
+						<td style="padding:5px; height:40px;">Completed By : <?=$row[5] ? $row[5] : ''?></td>
+						<td>Date : <?=$row[6][0] ? date("d-m-Y",strtotime($row[6][0])) : ''?></td>
+						<td>Time : <?=$row[6][1] ? date("H:i",strtotime($row[6][1])) : ''?></td>
 					</tr>
 				</table>
 			</td>
