@@ -6,6 +6,7 @@
 		<button onclick="javascript:myFunction('print_workorder?wrk_ord=<?=$this->input->get('wrk_ord')?>&none=closed');" class="btn-button btn-primary-button">PRINT</button>
 		<button type="cancel" class="btn-button btn-primary-button" onclick="location.href = '<?php base_url();?>workorderlist?&wrk_ord=<?=$this->input->get('wrk_ord')?>';">CANCEL</button>
 	</div>
+	<?php $num=1;foreach ($record as $row): ?>
 	<div class="">
 		<table class="tbl-wo font-12" border="1" align="center" style="border: 1px solid black;margin-top:5px;">
 			<tr>
@@ -94,41 +95,41 @@
 					<!-- <table class="tbl-wo-1" border="0" align="left">
 						<tr>
 							<td class="tbl-wo-data" valign="top">Requestor</td>
-							<td style="width:33%;" valign="top">: <span style="color:blue;"><?= ($woinfo[0]->V_requestor) ? $woinfo[0]->V_requestor : 'NA' ?></span></td>
+							<td style="width:33%;" valign="top">: <span style="color:blue;"><?= ($row[0][0]->V_requestor) ? $row[0][0]->V_requestor : 'NA' ?></span></td>
 							<td valign="top">Designation</td>
-							<td style="width:33%;">: <span style="color:blue;"><?= ($woinfo[0]->V_MohDesg) ? $woinfo[0]->V_MohDesg : 'NA' ?></span></td>
+							<td style="width:33%;">: <span style="color:blue;"><?= ($row[0][0]->V_MohDesg) ? $row[0][0]->V_MohDesg : 'NA' ?></span></td>
 						</tr>
 						<tr>
 							<td class="tbl-wo-data" valign="top">Department</td>
-							<td valign="top">: <span style="color:blue;"><?= ($woinfo[0]->v_UserDeptDesc) ? $woinfo[0]->v_UserDeptDesc : 'NA' ?></span></td>
+							<td valign="top">: <span style="color:blue;"><?= ($row[0][0]->v_UserDeptDesc) ? $row[0][0]->v_UserDeptDesc : 'NA' ?></span></td>
 							<td style="width:;" valign="top">Ext. No</td>
-							<td style="width:;" valign="top">: <span style="color:blue;"><?= ($woinfo[0]->V_phone_no) ? $woinfo[0]->V_phone_no : 'NA' ?></span></td>
+							<td style="width:;" valign="top">: <span style="color:blue;"><?= ($row[0][0]->V_phone_no) ? $row[0][0]->V_phone_no : 'NA' ?></span></td>
 						</tr>
 						<tr>
 							<td class="tbl-wo-data">Dept. Code </td>
-							<td><span style="color:blue;">: <?= ($woinfo[0]->V_User_dept_code) ? $woinfo[0]->V_User_dept_code : 'NA' ?></span></td>
+							<td><span style="color:blue;">: <?= ($row[0][0]->V_User_dept_code) ? $row[0][0]->V_User_dept_code : 'NA' ?></span></td>
 						</tr>
 						<tr>
 							<td class="tbl-wo-data">Room Code </td>
-							<td  style="white-space: nowrap"><span style="color:blue; ">: <?= ($woinfo[0]->V_location_code) ? $woinfo[0]->V_location_code : 'NA' ?> (<?= ($woinfo[0]->v_Location_Name) ? $woinfo[0]->v_Location_Name : 'NA' ?>)</span></td>
+							<td  style="white-space: nowrap"><span style="color:blue; ">: <?= ($row[0][0]->V_location_code) ? $row[0][0]->V_location_code : 'NA' ?> (<?= ($row[0][0]->v_Location_Name) ? $row[0][0]->v_Location_Name : 'NA' ?>)</span></td>
 						</tr>
 						<tr>
 							<td class="tbl-wo-data">Equipment </td>
-							<td><span style="color:blue;">: <?= ($woinfo[0]->V_Asset_name) ? $woinfo[0]->V_Asset_name : 'NA' ?> </span></td>
+							<td><span style="color:blue;">: <?= ($row[0][0]->V_Asset_name) ? $row[0][0]->V_Asset_name : 'NA' ?> </span></td>
 						</tr>
 						<tr>
 							<td class="tbl-wo-data">Model </td>
-							<td><span style="color:blue;">: <?= ($woinfo[0]->V_Model_no) ? $woinfo[0]->V_Model_no : 'NA' ?></span></td>
+							<td><span style="color:blue;">: <?= ($row[0][0]->V_Model_no) ? $row[0][0]->V_Model_no : 'NA' ?></span></td>
 							<?php if(($this->session->userdata('usersess') == 'SEC') or ($this->session->userdata('usersess') == 'HKS')){?>
 
 							<?php }else{ ?>
 							<td style="width:;">Asset No</td>
-							<td style="width:;">: <span style="color:blue;"><?= ($woinfo[0]->V_Tag_no) ? $woinfo[0]->V_Tag_no : 'NA' ?></span></td>
+							<td style="width:;">: <span style="color:blue;"><?= ($row[0][0]->V_Tag_no) ? $row[0][0]->V_Tag_no : 'NA' ?></span></td>
 							<?php } ?>
 						</tr>
 						<tr>
 							<td class="tbl-wo-data">Serial No </td>
-							<td><span style="color:blue;">: <?= ($woinfo[0]->V_Serial_no) ? $woinfo[0]->V_Serial_no : 'NA' ?></span>
+							<td><span style="color:blue;">: <?= ($row[0][0]->V_Serial_no) ? $row[0][0]->V_Serial_no : 'NA' ?></span>
 							</td>
 						</tr>
 					</table> -->
@@ -138,23 +139,23 @@
 								<table class="tbl-wo-1 font-10">
 									<tr>
 										<td style="width:20%;" valign="top">Requestor</td>
-										<td style="width:50%;" valign="top">: <span style="color:blue;"><?= ($woinfo[0]->V_requestor) ? $woinfo[0]->V_requestor : 'NA' ?></span></td>
+										<td style="width:50%;" valign="top">: <span style="color:blue;"><?= (isset($row[0][0]->V_requestor)) ? $row[0][0]->V_requestor : 'NA' ?></span></td>
 									</tr>
 									<tr>
 										<td style="width:20%;" valign="top">Department</td>
-										<td valign="top" style=" width: 50%;">: <span style="color:blue;"><?= ($woinfo[0]->v_UserDeptDesc) ? $woinfo[0]->v_UserDeptDesc : 'NA' ?></span></td>
+										<td valign="top" style=" width: 50%;">: <span style="color:blue;"><?= (isset($row[0][0]->v_UserDeptDesc)) ? $row[0][0]->v_UserDeptDesc : 'NA' ?></span></td>
 									</tr>
 									<tr>
 										<td style="width:20%;">Dept. Code </td>
-										<td style=" width: 50%;"><span style="color:blue;">: <?= ($woinfo[0]->V_User_dept_code) ? $woinfo[0]->V_User_dept_code : 'NA' ?></span></td>
+										<td style=" width: 50%;"><span style="color:blue;">: <?= (isset($row[0][0]->V_User_dept_code)) ? $row[0][0]->V_User_dept_code : 'NA' ?></span></td>
 									</tr>
 									<tr>
 										<td style="width:20%;">Room Code </td>
-										<td  style="width: 50%;"><span style="color:blue; ">: <?= ($woinfo[0]->V_location_code) ? $woinfo[0]->V_location_code : 'NA' ?> (<?= ($woinfo[0]->v_Location_Name) ? $woinfo[0]->v_Location_Name : 'NA' ?>)</span></td>
+										<td  style="width: 50%;"><span style="color:blue; ">: <?= (isset($row[0][0]->V_location_code)) ? $row[0][0]->V_location_code : 'NA' ?> (<?= (isset($row[0][0]->v_Location_Name)) ? $row[0][0]->v_Location_Name : 'NA' ?>)</span></td>
 									</tr>
 									<tr>
 										<td style="width:20%;">Equipment </td>
-										<td style=" width: 50%;"><span style="color:blue;">: <?= ($woinfo[0]->V_Asset_name) ? $woinfo[0]->V_Asset_name : 'NA' ?> </span></td>
+										<td style=" width: 50%;"><span style="color:blue;">: <?= (isset($row[0][0]->V_Asset_name)) ? $row[0][0]->V_Asset_name : 'NA' ?> </span></td>
 									</tr>
 								</table>
 							</td>
@@ -162,11 +163,11 @@
 								<table class="tbl-wo-1 font-10">
 									<tr>
 										<td valign="top">Designation:</td>
-										<td> <span style="color:blue;"><?= ($woinfo[0]->V_MohDesg) ? $woinfo[0]->V_MohDesg : 'NA' ?></span></td>
+										<td> <span style="color:blue;"><?= (isset($row[0][0]->V_MohDesg)) ? $row[0][0]->V_MohDesg : 'NA' ?></span></td>
 									</tr>
 									<tr>
 										<td valign="top">Ext. No:</td>
-										<td valign="top"> <span style="color:blue;"><?= ($woinfo[0]->V_phone_no) ? $woinfo[0]->V_phone_no : 'NA' ?></span></td>
+										<td valign="top"> <span style="color:blue;"><?= (isset($row[0][0]->V_phone_no)) ? $row[0][0]->V_phone_no : 'NA' ?></span></td>
 									</tr>
 								</table>
 							</td>
@@ -176,11 +177,11 @@
 								<table class="tbl-wo-1 font-10" width="100%">
 									<tr>
 										<td style="width: 45%">Model </td>
-										<td><span style="color:blue;">: <?= ($woinfo[0]->V_Model_no) ? $woinfo[0]->V_Model_no : 'NA' ?></span></td>
+										<td><span style="color:blue;">: <?= (isset($row[0][0]->V_Model_no)) ? $row[0][0]->V_Model_no : 'NA' ?></span></td>
 									</tr>
 									<tr>
 										<td style="width: 27%">Serial No </td>
-										<td><span style="color:blue;">: <?= ($woinfo[0]->V_Serial_no) ? $woinfo[0]->V_Serial_no : 'NA' ?></span>
+										<td><span style="color:blue;">: <?= (isset($row[0][0]->V_Serial_no)) ? $row[0][0]->V_Serial_no : 'NA' ?></span>
 										</td>
 									</tr>
 								</table>
@@ -192,7 +193,7 @@
 
 										<?php }else{ ?>
 										<td valign="top">Asset No: </td>
-										<td valign="top"><span style="color:blue;"><?= ($woinfo[0]->V_Tag_no) ? $woinfo[0]->V_Tag_no : 'NA' ?></span></td>
+										<td valign="top"><span style="color:blue;"><?= (isset($row[0][0]->V_Tag_no)) ? $row[0][0]->V_Tag_no : 'NA' ?></span></td>
 										<?php } ?>
 									</tr>
 								</table>
@@ -204,19 +205,19 @@
 					<table class="tbl-wo-1 font-10" border="0" align="left">
 						<tr>
 							<td class="tbl-wo-data">Taken By </td>
-							<td>: <span style="color:blue;"><?= ($woinfo[0]->takenby) ? $woinfo[0]->takenby : 'NA' ?></span></td>
+							<td>: <span style="color:blue;"><?= (isset($row[0][0]->takenby)) ? $row[0][0]->takenby : 'NA' ?></span></td>
 						</tr>
 						<tr>
 							<td class="tbl-wo-data">Request Type</td>
-							<td>: <span style="color:blue;"><?= ($woinfo[0]->V_request_type) ? $woinfo[0]->V_request_type : 'NA' ?></span></td>
+							<td>: <span style="color:blue;"><?= (isset($row[0][0]->V_request_type)) ? $row[0][0]->V_request_type : 'NA' ?></span></td>
 						</tr>
 						<tr>
 							<td class="tbl-wo-data">Date</td>
-							<td>: <span style="color:blue;"><?= date("d/m/Y", strtotime(isset($woinfo[0]->D_date) == TRUE ? $woinfo[0]->D_date : 'N/A'))?></span></td>
+							<td>: <span style="color:blue;"><?= date("d/m/Y", strtotime(isset($row[0][0]->D_date) == TRUE ? $row[0][0]->D_date : 'N/A'))?></span></td>
 						</tr>
 						<tr>
 							<td class="tbl-wo-data">Time </td>
-							<td>: <span style="color:blue;"><?= date("H:i ", strtotime(isset($woinfo[0]->D_date) == TRUE ? $woinfo[0]->D_date : 'N/A'))?></span></td>
+							<td>: <span style="color:blue;"><?= date("H:i ", strtotime(isset($row[0][0]->D_date) == TRUE ? $row[0][0]->D_date : 'N/A'))?></span></td>
 						</tr>
 						<tr>
 						<td class="tbl-wo-data">Priority </td>
@@ -225,12 +226,12 @@
 								<tr>
 									<td style="width:33.33%;"> :
 									<div class="box2">
-									<?php if($woinfo[0]->V_priority_code == 'Normal'){?>
+									<?php if($row[0][0]->V_priority_code == 'Normal'){?>
 									<img src="<?php echo base_url(); ?>images/tick2.png" class="img-tick"/>
 									<?php }else{ ?>
 									<?php } ?></div> Normal </td>
 									<td style="width:33.33%;"><div class="box2">
-									<?php if($woinfo[0]->V_priority_code == 'Emergency'){?>
+									<?php if($row[0][0]->V_priority_code == 'Emergency'){?>
 									<img src="<?php echo base_url(); ?>images/tick2.png" class="img-tick"/>
 									<?php }else{ ?>
 									<?php } ?>
@@ -248,14 +249,14 @@
 							<table class="tbl-wo font-12" border="0" align="left">
 								<tr>
 									<td style="width:55%;"> : <div class="box2">
-									<?php if((strtotime($woinfo2[0]->V_Wrn_end_code) > strtotime(date("d/m/Y")))) {?>
+									<?php if(strtotime($row[1][0]->V_Wrn_end_code) > strtotime(date("d/m/Y"))) {?>
 									<img src="<?php echo base_url(); ?>images/tick2.png" class="img-tick"/>
 									<?php }else{ ?>
 									
 									<?php } ?>
 									</div> Under Warranty</td>
 									<td style="width:40%;"><div class="box2">
-									<?php  if(strtotime($woinfo2[0]->V_Wrn_end_code) < strtotime(date("d/m/Y"))) {?>
+									<?php  if(strtotime($row[1][0]->V_Wrn_end_code) < strtotime(date("d/m/Y"))) {?>
 									<img src="<?php echo base_url(); ?>images/tick2.png" class="img-tick"/>
 									<?php }else{ ?>
 									
@@ -279,7 +280,7 @@
 								<?php } ?>
 							</td>
 						</tr>
-						<?php if($woinfo[0]->V_summary == 'N/A'){?>
+						<?php if($row[0][0]->V_summary == 'N/A'){?>
 						<tr>
 							<td> <hr class='dotted' style="margin:10px 5px 5px 5px;" /></td>
 						</tr>
@@ -290,7 +291,7 @@
 						<tr>
 							<td style="padding:3px 3px 3px 0px;">
 								<p style="border-bottom: 1px dotted black; margin-left: 5px; margin-right: 5px;">
-									<span style="color:blue;"><?= ($woinfo[0]->V_summary) ? $woinfo[0]->V_summary : 'NA' ?></span>
+									<span style="color:blue;"><?= (isset($row[0][0]->V_summary)) ? $row[0][0]->V_summary : 'NA' ?></span>
 								</p>
 								<?php if(in_array($this->session->userdata("usersess"), array("SEC","HKS"))){?>
 								<p style="border-bottom: 1px dotted black; margin-left: 5px; margin-right: 5px;"></p>
@@ -762,129 +763,7 @@
 		</table>
 	</div>
 	<div class="StartNewPage" id="breakpage"><span id="pagebreak">Page Break</span></div>
-		<!--<div style="margin-top:px;">
-			<table class="tbl-wo-2" style="width:70%;">
-				<tr>
-					<td valign="" rowspan="" style="width:5%;"><img src="<?php echo base_url(); ?>images/logo.png" style="width:100px; height:80px;"/></td>
-					<td valign=""><span style="font-weight:bold;">Advance Pact Sdn Bhd (412168-V) </span><br /><span style="font-weight:bold; color:blue;"><?= ($hosp[0]->v_HospitalName) ? $hosp[0]->v_HospitalName : 'NA' ?></span></td>
-				</tr>
-				<tr>
-					<td valign="top" colspan="2" align="center"><span style="font-weight:bold; font-size:20px;"><u>RECEIPT OF REQUEST</u></span></td>
-				</tr>
-				<tr>
-					<td valign="top" colspan="2" align="center"><span style="font-weight:bold; font-size:20px;">Advancepact - <span style="color:blue;"><?= ($hosp[0]->v_HospitalName) ? $hosp[0]->v_HospitalName : 'NA' ?></span></span></td>
-				</tr>
-				<tr>
-					<td valign="top" colspan="2" align="center" style="height:40px;"></td>
-				</tr>
-				<tr>
-					<td valign="top" colspan="2" align="right">Date : <?= date("j F Y") ?></td>
-				</tr>
-				<tr>
-					<td valign="top" colspan="2">
-						<table class="tbl-wo-2">
-							<tr>
-								<td width="9.5%">To Mr/Mrs</td>
-								<td width="2.5%"> : </td>
-								<td><span style="color:blue;"><?= ($woinfo[0]->V_requestor) ? $woinfo[0]->V_requestor : 'NA' ?></span></td>
-							</tr>
-							<tr>
-								<td>Department</td>
-								<td> : </td>
-								<td><span style="color:blue;"><?= ($woinfo[0]->v_UserDeptDesc) ? $woinfo[0]->v_UserDeptDesc : 'NA' ?></span></td>
-							</tr>
-							<tr>
-								<td>Extension</td>
-								<td> : </td>
-								<td><span style="color:blue;"><?= ($woinfo[0]->V_phone_no) ? $woinfo[0]->V_phone_no : 'NA' ?></span></td>
-							</tr>
-							<tr>
-								<td colspan="3" style="height:30px;"></td>
-							</tr>
-							<tr>
-								<td colspan="3">Dear Sir/Madam,</td>
-							</tr>
-							<tr>
-								<td colspan="3">We hereby acknowledge receipt of your request for the following</td>
-							</tr>
-							<tr>
-								<td colspan="3" style="height:20px;"></td>
-							</tr>
-							<tr>
-								<td colspan="3" style="padding-left:60px;">
-									<table class="tbl-w">
-										<tr>
-											<td width="35.5%">Request No</td>
-											<td width="2.5%"> : </td>
-											<td><span style="color:blue;"><?= ($wrk_ord) ? $wrk_ord : 'NA' ?></span></td>
-										</tr>
-										<tr>
-											<td width="">Dated</td>
-											<td width=""> : </td>
-											<td><span style="color:blue;"><?= ($woinfo[0]->D_date) ? date('d F Y',strtotime($woinfo[0]->D_date)) : 'NA' ?></span></td>
-										</tr>
-										<tr>
-											<td width="">Equipment</td>
-											<td width=""> : </td>
-											<td><span style="color:blue;"><?= ($woinfo[0]->V_Asset_no) ? $woinfo[0]->V_Asset_no : 'NA' ?></span></td>
-										</tr>
-										<tr>
-											<td width="">Tag No</td>
-											<td width=""> : </td>
-											<td><span style="color:blue;"><?= ($woinfo[0]->V_Tag_no) ? $woinfo[0]->V_Tag_no : 'NA' ?></span></td>
-										</tr>
-										<tr>
-											<td width="">At Location</td>
-											<td width=""> : </td>
-											<td><span style="color:blue;"><?= ($woinfo[0]->v_Location_Name) ? $woinfo[0]->v_Location_Name : 'NA' ?></span></td>
-										</tr>
-										<tr>
-											<td width="" height="20px"></td>
-										</tr>
-										<tr>
-											<td width="">Request Summary</td>
-											<td width=""> : </td>
-											<td><span style="color:blue;"><?= ($woinfo[0]->V_summary) ? $woinfo[0]->V_summary : 'NA' ?></span></td>
-										</tr>
-										<tr>
-											<td width="" height="20px"></td>
-										</tr>
-										<tr>
-											<td width="">Request Details</td>
-											<td width=""> : </td>
-											<td><span style="color:blue;"><?= ($woinfo[0]->V_details) ? $woinfo[0]->V_details : 'NA' ?></span></td>
-										</tr>
-									</table>
-								</td>
-							</tr>
-							<tr>
-								<td colspan="3" style="height:20px;"></td>
-							</tr>
-							<tr>
-								<td colspan="3">Please be assured that action will be taken as soon as possible.</td>
-							</tr>
-							<tr>
-								<td colspan="3" style="height:40px;"></td>
-							</tr>
-							<tr>
-								<td colspan="3">Thank You.</td>
-							</tr>
-							<tr>
-								<td colspan="" style="height:100px;" valign="bottom">
-									<table class="tbl-wo-1" border="0" align="" style="border-top:1px solid black;">
-										<tr>
-											<td style="" valign="top"></td>
-										</tr>
-									</table>
-								</td>
-							</tr>
-							<tr>
-								<td colspan="3" style="" valign="top">Engineer</td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-			</table>
-		</div>-->
+	
+		<?php endforeach; ?>
 	</body>
 </html>
