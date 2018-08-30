@@ -1,25 +1,17 @@
 
 <meta content="utf-8" http-equiv="encoding">
 <body>
-	<style type="text/css">
-		.tbl-wo{
-			font-size: 12px;
-		}
-		.tbl-wo-1{
-			font-size: 10px;
-		}
-	</style>
 	<div id="Instruction" class="pr-printer">
 		<div class="header-pr">SERVICE REQUEST AND WORK ORDER</div>
 		<button onclick="javascript:myFunction('print_workorder?wrk_ord=<?=$this->input->get('wrk_ord')?>&none=closed');" class="btn-button btn-primary-button">PRINT</button>
 		<button type="cancel" class="btn-button btn-primary-button" onclick="location.href = '<?php base_url();?>workorderlist?&wrk_ord=<?=$this->input->get('wrk_ord')?>';">CANCEL</button>
 	</div>
 	<div class="">
-		<table class="tbl-wo" border="1" align="center" style="border: 1px solid black;margin-top:5px;">
+		<table class="tbl-wo font-12" border="1" align="center" style="border: 1px solid black;margin-top:5px;">
 			<tr>
 				<td style="padding-left:0px; width:120px;" align="center"><img src="<?php echo base_url(); ?>images/penmedic3.png" style="width:100px; height:40px;"/></td>
 				<td>
-					<table class="tbl-wo" border="0" align="center">
+					<table class="tbl-wo font-12" border="0" align="center">
 						<tr>
 							<td align="center"><b style="text-transform: uppercase;"> 
 							<?php if(($this->session->userdata('usersess') == 'HKS') or ($this->session->userdata('usersess') == 'SEC')){
@@ -51,7 +43,7 @@
 				<img src="<?php echo base_url(); ?>images/logo.png" style="width:145px; height:60px;"/></td>
 			</tr>
 		</table>
-		<table class="tbl-wo" border="0" align="center" style="font-weight:bold;">
+		<table class="tbl-wo font-12" border="0" align="center" style="font-weight:bold;">
 			<tr>
 				<td style="padding:1px; width:15%; font-size: 12px;">SERVICE TYPE : </td>
 				<?php if(($this->session->userdata('usersess') == 'SEC')){?>
@@ -96,7 +88,7 @@
 				<td width="1%" style="font-weight:bold;"><span style="color:blue;"></span></td>
 			</tr>
 		</table>-->
-		<table class="tbl-wo" border="1" align="center" style="border: 1px solid black;">
+		<table class="tbl-wo font-12" border="1" align="center" style="border: 1px solid black;">
 			<tr>
 				<td style="width:50%; padding:1px;">
 					<!-- <table class="tbl-wo-1" border="0" align="left">
@@ -140,10 +132,10 @@
 							</td>
 						</tr>
 					</table> -->
-					<table class="tbl-wo-1" border="0" align="left">
+					<table class="tbl-wo-1 font-10" border="0" align="left">
 						<tr>
 							<td valign="top" width="50%">
-								<table class="tbl-wo-1">
+								<table class="tbl-wo-1 font-10">
 									<tr>
 										<td style="width:20%;" valign="top">Requestor</td>
 										<td style="width:50%;" valign="top">: <span style="color:blue;"><?= ($woinfo[0]->V_requestor) ? $woinfo[0]->V_requestor : 'NA' ?></span></td>
@@ -167,7 +159,7 @@
 								</table>
 							</td>
 							<td valign="top" width="50%">
-								<table class="tbl-wo-1">
+								<table class="tbl-wo-1 font-10">
 									<tr>
 										<td valign="top">Designation:</td>
 										<td> <span style="color:blue;"><?= ($woinfo[0]->V_MohDesg) ? $woinfo[0]->V_MohDesg : 'NA' ?></span></td>
@@ -181,7 +173,7 @@
 						</tr>
 						<tr>
 							<td valign="top" width="50%">
-								<table class="tbl-wo-1" width="100%">
+								<table class="tbl-wo-1 font-10" width="100%">
 									<tr>
 										<td style="width: 45%">Model </td>
 										<td><span style="color:blue;">: <?= ($woinfo[0]->V_Model_no) ? $woinfo[0]->V_Model_no : 'NA' ?></span></td>
@@ -194,7 +186,7 @@
 								</table>
 							</td>
 							<td valign="top" width="50%">
-								<table class="tbl-wo-1">
+								<table class="tbl-wo-1 font-10">
 									<tr>
 										<?php if(($this->session->userdata('usersess') == 'SEC') or ($this->session->userdata('usersess') == 'HKS')){?>
 
@@ -209,7 +201,7 @@
 					</table>
 				</td>
 				<td style="width:50%; padding:1px;" valign="top" colspan="0"> 
-					<table class="tbl-wo-1" border="0" align="left">
+					<table class="tbl-wo-1 font-10" border="0" align="left">
 						<tr>
 							<td class="tbl-wo-data">Taken By </td>
 							<td>: <span style="color:blue;"><?= ($woinfo[0]->takenby) ? $woinfo[0]->takenby : 'NA' ?></span></td>
@@ -229,7 +221,7 @@
 						<tr>
 						<td class="tbl-wo-data">Priority </td>
 						<td> 
-							<table class="tbl-wo" border="0" align="left">
+							<table class="tbl-wo font-12" border="0" align="left">
 								<tr>
 									<td style="width:33.33%;"> :
 									<div class="box2">
@@ -253,7 +245,7 @@
 						<tr>
 						<td style="width: 29%">Warranty Status</td>
 						<td style="width: 69%"> 
-							<table class="tbl-wo" border="0" align="left">
+							<table class="tbl-wo font-12" border="0" align="left">
 								<tr>
 									<td style="width:55%;"> : <div class="box2">
 									<?php if((strtotime($woinfo2[0]->V_Wrn_end_code) > strtotime(date("d/m/Y")))) {?>
@@ -279,7 +271,7 @@
 			</tr>
 			<tr>
 				<td colspan="2" style="padding:1px;"> 
-					<table class="tbl-wo-1" border="0" align="bottom">
+					<table class="tbl-wo-1 font-10" border="0" align="bottom">
 						<tr>
 							<td> Request Description : 
 								<?php if(in_array($this->session->userdata("usersess"), array("FES", "BES")) ){?>
@@ -312,20 +304,20 @@
 				</td>
 			</tr>
 		</table>
-		<table class="tbl-wo-1" border="0" align="center">
+		<table class="tbl-wo-1 font-10" border="0" align="center">
 			<tr>
 				<td align="center" height="5px"></td>
 			</tr>
 		</table>
-		<table class="tbl-wo" border="0" align="center" style="background-color:black; color:white;">
+		<table class="tbl-wo font-12" border="0" align="center" style="background-color:black; color:white;">
 			<tr>
 				<td align="center"><span style="font-weight:bold; text-transform: uppercase;">RESPONSE Findings</span></td>
 			</tr>
 		</table>
-		<table class="tbl-wo" border="1" align="center" style="border: 1px solid black;">
+		<table class="tbl-wo font-12" border="1" align="center" style="border: 1px solid black;">
 			<tr>
 				<td style="width:50%; padding:1px;" rowspan="2" valign="top">
-					<table class="tbl-wo-1" border="0" align="left">
+					<table class="tbl-wo-1 font-10" border="0" align="left">
 						<tr>
 							<td> Assigned To : <?=($personallist[0][0]) ? $personallist[0][0] : ''?><br /> <i>( Name )</i></td>
 						</tr>
@@ -348,7 +340,7 @@
 					</table> 
 				</td>
 				<td style="width:50%; padding:1px;" valign="top" style="" colspan="">
-					<table class="tbl-wo-1" border="0" align="left">
+					<table class="tbl-wo-1 font-10" border="0" align="left">
 						<tr>
 							<td colspan="3" height="40px" valign="top"> Requestor Verification : <br /> <i>(Name,sign &amp; stamp)</i></td>
 						</tr>
@@ -372,10 +364,10 @@
 			<?php }else{ ?>
 			<tr>
 				<td style="width:50%; padding:1px;" valign="top" style="" colspan="">
-					<table class="tbl-wo-1" border="0" align="left">
+					<table class="tbl-wo-1 font-10" border="0" align="left">
 						<tr>
 							<td>
-							<table class="tbl-wo-1" border="0" align="left">
+							<table class="tbl-wo-1 font-10" border="0" align="left">
 								<tr>
 									<td style="width:21%;" valign="top"> Equipment :</td>
 									<td style="width:33%;" valign="top"><div class="box2"></div> Remained on-side </td>
@@ -386,7 +378,7 @@
 						</tr>
 						<tr>
 							<td>
-							<table class="tbl-wo-1" border="0" align="left">
+							<table class="tbl-wo-1 font-10" border="0" align="left">
 								<tr>
 									<td style="width:41%;"> Physical Condition :</td>
 									<td style="width:21%;"><div class="box2"></div> Good </td>
@@ -399,17 +391,17 @@
 			</tr>
 		<?php } ?>
 		</table>
-		<table class="tbl-wo-1" border="0" align="center">
+		<table class="tbl-wo-1 font-10" border="0" align="center">
 			<tr>
 				<td align="center" height="5px"></td>
 			</tr>
 		</table>
-		<table class="tbl-wo" border="0" align="center" style="background-color:black; color:white;">
+		<table class="tbl-wo font-12" border="0" align="center" style="background-color:black; color:white;">
 			<tr>
 				<td align="center"><span style="font-weight:bold; text-transform: uppercase;">Corrective Actions</span></td>
 			</tr>
 		</table>
-		<table class="tbl-wo" border="" style="border: 1px solid black; ">
+		<table class="tbl-wo font-12" border="" style="border: 1px solid black; ">
 			<tr>
 				<td rowspan="2" align="center">Assign to: <br />(Name / Staff No)</td>
 				<td colspan="2" align="center">Start</td>
@@ -482,7 +474,7 @@
 			</tr>			
 			<tr>
 				<td valign="top" height="60px" colspan="9" >
-					<table class="tbl-wo-1" border="0" align="left">
+					<table class="tbl-wo-1 font-10" border="0" align="left">
 						<tr>
 							<td style="padding:1px;">Actual Work Done / Recommendation :</td>
 						</tr>
@@ -505,7 +497,7 @@
 			<?php if(($this->session->userdata('usersess') == 'SEC') or ($this->session->userdata('usersess') == 'HKS')){?>
 			<tr>
 			    <td valign="top" height="60px" colspan="9" >
-					<table class="tbl-wo-1" border="0" align="left">
+					<table class="tbl-wo-1 font-10" border="0" align="left">
 						<tr>
 							<td style="padding:5px 5px 5px 25px; width:55px;">Remarks :</td>
 							<td style="padding:3px;"><hr class='dotted' style="margin:10px 5px 5px 5px;"/></td>
@@ -526,7 +518,7 @@
 				<td style=" height:0px;border-bottom:1px solid white;border-right:1px solid black;border-left:1px solid black;margin:0px;padding:0px;" colspan="5" rowspan=""></td>
 			<?php }else{ ?>
 				<td style="width:50%; padding:0px 0px 0px 3px;" colspan="5" valign="top" heigth="10px" rowspan="">
-					<table class="tbl-wo" border="0" align="left">
+					<table class="tbl-wo font-12" border="0" align="left">
 						<tr>
 							<td style="width:30%;"> Out-sourcing :</td>
 							<td style="width:37%;"><div class="box2"></div> Not Required</td>
@@ -540,7 +532,7 @@
 				</td>
 			<?php } ?>
 			    <td style="width:50%; padding:1px;" colspan="5" valign="top"  rowspan="4">
-					<table class="tbl-wo-1" border="0" align="left">
+					<table class="tbl-wo-1 font-10" border="0" align="left">
 					<?php if(($this->session->userdata('usersess') == 'SEC') or ($this->session->userdata('usersess') == 'HKS')){?>
 						<tr>
 							<td colspan="3" height="30px">&nbsp;</td>
@@ -629,7 +621,7 @@
 			<?php }else{ ?>
 			<tr>
 			    <td style="width:50%; padding:0px 0px 0px 3px;" colspan="5">
-			    	<table class="tbl-wo" border="0" align="left">
+			    	<table class="tbl-wo font-12" border="0" align="left">
 						<tr>
 							<td style="width:30%;">Claim Status :</td>
 							<td style="width:37%;"><div class="box2"></div> Not Reimbursable</td>
@@ -645,7 +637,7 @@
 			<?php } ?>
 			<tr>
 			    <td style="width:50%; padding:0px 0px 0px 3px;" colspan="5" valign="top" heigth="10px" rowspan="2">
-			    	<table class="tbl-wo" border="0" align="left">
+			    	<table class="tbl-wo font-12" border="0" align="left">
 						<tr>
 							<td style="" colspan="3" valign="top" height="25px"> Recommendation / Report :</td>
 						</tr>
@@ -664,7 +656,7 @@
 						</tr>
 						<tr>
 							<td colspan="3" width="100%">
-								<table class="tbl-wo" border="0" align="left" width="100%">
+								<table class="tbl-wo font-12" border="0" align="left" width="100%">
 									<tr>
 										<td width="37%"><div class="box2"></div> Exemption</td>
 										<td align="left" width="33%"> <i>Reference No :</i></td>
@@ -677,24 +669,24 @@
 			    </td>
 			</tr>
 		</table>
-		<table class="tbl-wo-1" border="0" align="center">
+		<table class="tbl-wo-1 font-10" border="0" align="center">
 			<tr>
 				<td align="center" height="5px"></td>
 			</tr>
 		</table>
-		<table class="tbl-wo" border="0" align="center" style="background-color:black; color:white;">
+		<table class="tbl-wo font-12" border="0" align="center" style="background-color:black; color:white;">
 			<tr>
 				<td align="center"><span style="font-weight:bold;">WORK ORDER COMPLETION VALIDATION</span></td>
 			</tr>
 		</table>
-		<table class="tbl-wo" border="1" align="center" style="border: 1px solid black;">
+		<table class="tbl-wo font-12" border="1" align="center" style="border: 1px solid black;">
 			<tr>
 				<td style="width:50%;" align="center"> Acceptance by Customer</td>
 				<td style="width:50%;" valign="top" colspan="2" align="center"> For Office use only</td>
 			</tr>
 			<tr>
 				<td style="padding:10px 0px 0px 3px;" class="tb-class" colspan="" rowspan="2" valign="top">
-					<table class="tbl-wo" border="0" align="left" style="width:100%; height:100%;">
+					<table class="tbl-wo font-12" border="0" align="left" style="width:100%; height:100%;">
 						<tr>
 							<td valign="top">Signature :</td>
 						</tr>
@@ -712,7 +704,7 @@
 			</tr>
 			<tr>
 				<td style="padding:10px 0px 0px 3px;" class="tb-class" colspan="2">
-					<table class="tbl-wo" border="0" align="left" style="width:100%;">
+					<table class="tbl-wo font-12" border="0" align="left" style="width:100%;">
 						<tr>
 							<td valign="top">Signature :</td>
 						</tr>
@@ -730,7 +722,7 @@
 			</tr>
 			<tr>
 				<td style="padding-left:3px;" class="tb-class" colspan="2" valign="top">
-					<table class="tbl-wo-1" border="0" align="left" style="width:100%; height:100%;">
+					<table class="tbl-wo-1 font-10" border="0" align="left" style="width:100%; height:100%;">
 						<tr>
 							<td style="width:20%" valign="top">Quality Cause Code : QC</td>
 							<td style="" valign="top"><hr class='dotted' style="margin:10px 5px 5px 0px; width:5%;"/></td>
@@ -739,7 +731,7 @@
 				</td>
 			</tr>	
 		</table>
-		<table class="tbl-wo" border="0" align="">
+		<table class="tbl-wo font-12" border="0" align="">
 			<tr>
 				<td style="" valign="top" colspan="2"><span style="font-size:7px; padding-left:30px;"><i>Note: Tick (<span align="center" class="icon-check" style="font-size:7px;"></span>) where applicable.</i></span></td>
 			</tr>
