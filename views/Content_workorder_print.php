@@ -199,12 +199,12 @@
 								<tr>
 									<td style="width:33.33%;"> :
 									<div class="box2">
-									<?php if(isset($row[0][0]->V_priority_code) == 'Normal'){?>
+									<?php if($row[0][0]->V_priority_code == 'Normal'){?>
 									<img src="<?php echo base_url(); ?>images/tick2.png" class="img-tick"/>
 									<?php }else{ ?>
 									<?php } ?></div> Normal </td>
 									<td style="width:33.33%;"><div class="box2">
-									<?php if(isset($row[0][0]->V_priority_code) == 'Emergency'){?>
+									<?php if($row[0][0]->V_priority_code == 'Emergency'){?>
 									<img src="<?php echo base_url(); ?>images/tick2.png" class="img-tick"/>
 									<?php }else{ ?>
 									<?php } ?>
@@ -222,14 +222,14 @@
 							<table class="tbl-wo" border="0" align="left">
 								<tr>
 									<td style="width:55%;"> : <div class="box2">
-									<?php if((strtotime(isset($row[1][0]->V_Wrn_end_code)) > strtotime(date("d/m/Y")))) {?>
+									<?php if(strtotime($row[1][0]->V_Wrn_end_code) > strtotime(date("d/m/Y"))) {?>
 									<img src="<?php echo base_url(); ?>images/tick2.png" class="img-tick"/>
 									<?php }else{ ?>
 									
 									<?php } ?>
 									</div> Under Warranty</td>
 									<td style="width:40%;"><div class="box2">
-									<?php  if(strtotime(isset($row[1][0]->V_Wrn_end_code)) < strtotime(date("d/m/Y"))) {?>
+									<?php  if(strtotime($row[1][0]->V_Wrn_end_code) < strtotime(date("d/m/Y"))) {?>
 									<img src="<?php echo base_url(); ?>images/tick2.png" class="img-tick"/>
 									<?php }else{ ?>
 									
@@ -253,7 +253,7 @@
 								<?php } ?>
 							</td>
 						</tr>
-						<?php if(isset($row[0][0]->V_summary) == 'N/A'){?>
+						<?php if($row[0][0]->V_summary == 'N/A'){?>
 						<tr>
 							<td> <hr class='dotted' style="margin:10px 5px 5px 5px;" /></td>
 						</tr>
