@@ -2659,10 +2659,33 @@ function tbl_po($insert_data){
 	$this->db->insert('tbl_po',$insert_data);
 }
 function ins_itembaru($insert_data){
-
 $this->db->insert('tbl_invitem', $insert_data);
+}
+
+function ins_schbi_weekly($insert_data){
 
 
+    $query = $this->db->get_where('schbi_weekly', array(//making selection
+            'dept_code' => $insert_data['dept_code'],
+            'month' => $insert_data['month'],
+            'year' => $insert_data['year']
+        ));
+
+        $count = $query->num_rows(); //counting result from query
+
+        if ($count === 0) {
+      
+			$this->db->insert('schbi_weekly', $insert_data);
+        }else{
+            $update = array('week_2'=>$insert_data['week_2'],'week_4'=>$insert_data['week_4']);		
+		     $this->db->where('dept_code',$insert_data['dept_code']);
+		     $this->db->where('month',$insert_data['month']);
+		     $this->db->where('year',$insert_data['year']);
+	         $this->db->update('schbi_weekly', $update);
+			 $this->db->delete('schbi_weekly', array('week_2'=>NULL,'week_4'=>NULL));
+			/*  echo $this->db->last_query();
+			 exit(); */
+		}
 }
 
 }

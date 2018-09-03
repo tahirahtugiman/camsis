@@ -1,12 +1,15 @@
+
 <body>
 	<div id="Instruction" class="pr-printer">
 		<div class="header-pr"> Housekeeping Services </div>
-		<button onclick='myFunctionprint()' class="btn-button btn-primary-button">PRINT</button>
+		<button onclick="javascript:myFunction('sowr_joint_inspection?m=<?=$month?>&y=<?=$year?>&p=1')" class="btn-button btn-primary-button">PRINT</button>
 		<button type="cancel" class="btn-button btn-primary-button" onclick="window.location.href='contentcontroller/locationlist?parent=asset'">CANCEL</button>
 	</div>
 	<div class="form">
-		<?php $numrow=1; foreach($dept as $rows): ?>
-		<?php if ($numrow==1 OR $numrow%18==1) { ?>
+		<?php 
+		$lines = 26;
+		$numrow=1; foreach($dept as $rows): ?>
+		<?php if ($numrow==1 OR $numrow%$lines==1) { ?>
 		<table class="tbl-wo" border="1" align="center" style="border: 1px solid black;">
 			<tr>
 				<td style="padding-left:50px; width:160px;"><img src="<?php echo base_url(); ?>images/penmedic2.png" style="width:100px; height:40px;"/></td>
@@ -53,8 +56,10 @@
 							<a href="?y=<?= $year+1?>&m=<?= $month?>"><img src="<?php echo base_url(); ?>images/arrow-right2.png" alt="" class="ui-img-icon" style="padding-top:4px; padding-left:4px;"/></a>
 							</td>
 						</tr>
+
 			</table>
 		</div>
+		
 	<table class="tftable2" border="1" style="text-align:center;" align="center">
 		<tr>
 			<th rowspan="2">No</th>
@@ -72,27 +77,46 @@
 		<?php } ?>
 		<!--18lines-->
 		
-		<tr>
+		<tr><form method="get" action="<?php echo base_url();?>index.php/Sowr_joint_inspection/schbi_weekly">
+		     <?php 			 
+			 $data = array(
+        'dept'  => $rows->v_UserDeptCode,
+        'month' => ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m"),
+        'year' => ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y")			
+);
+echo form_hidden($data);
+			 ?>
 			<td><?=$numrow?>&nbsp;</td>
 			<td><?=$rows->v_UserDeptCode?></td>
 			<td><?=$rows->v_userdeptdesc?></td>
 			<?php if (isset($deptcode) AND in_array($rows->v_UserDeptCode,$deptcode)) { ?>
 			<?php foreach ($datedept as $dc): ?>
 			<?php if ($rows->v_UserDeptCode == $dc['dept']) { ?>
-			<td><?=isset($dc['time']) ? date('h:i A',strtotime($dc['time'])) : ''?></td>
-			<td></td>
-			<td></td>
+			<td><?=($rows->week_2) ? date('D', strtotime($rows->week_2)) : ''?></td>
+            <?php if ($this->input->get('p') <> 1) { ?>			
+			<td><input type="date" name="week2" id="myDate" value="<?php echo set_value("week_2", ($rows->week_2) <> '' ? date('Y-m-d',strtotime($rows->week_2)) : '')?>" style="width:80%; display:inline-block;" onchange="this.form.submit()"/></td>
+			<td><input type="date" name="week4" id="myDate" value="<?php echo set_value("week_4",($rows->week_4) <> '' ? date('Y-m-d',strtotime($rows->week_4)) : '')?>" style="width:80%; display:inline-block;" onchange="this.form.submit()"/></td>
+			<?php } else { ?>
+		    <td><?=($rows->week_2) <> '' ? date('d-m-Y',strtotime($rows->week_2)) : '' ?></td>
+			<td><?=($rows->week_4) <> '' ? date('d-m-Y',strtotime($rows->week_4)): '' ?></td>
+			<?php } ?>
 			<td></td>
 			<td></td>
 			<?php } ?>
 			<?php endforeach; ?>
 			<?php } else { ?>
-			<td></td>
-			<td></td>
-			<td></td>
+			<td><?=($rows->week_2) ? date('D', strtotime($rows->week_2)) : ''?></td>
+			  <?php if ($this->input->get('p') <> 1) { ?>		
+			<td><input type="date" name="week2" id="myDate" value="<?php echo set_value("week_2", ($rows->week_2) <> '' ? date('Y-m-d',strtotime($rows->week_2)) : '')?>" style="width:80%; display:inline-block;" onchange="this.form.submit()"/></td>
+			<td><input type="date" name="week4" id="myDate" value="<?php echo set_value("week_4",($rows->week_4) <> '' ? date('Y-m-d',strtotime($rows->week_4)) : '')?>" style="width:80%; display:inline-block;" onchange="this.form.submit()"/></td>
+			<?php } else { ?>
+			<td><?=($rows->week_2) <> '' ? date('d-m-Y',strtotime($rows->week_2)) : '' ?></td>
+			<td><?=($rows->week_4) <> '' ? date('d-m-Y',strtotime($rows->week_4)) : '' ?></td>
+			<?php } ?>
 			<td></td>
 			<td></td>
 			<?php } ?>
+			</form>
 		</tr>
 			<?php $numrow++?>
 		
@@ -100,7 +124,7 @@
 		<?php if (($numrow-1)==$count){ ?>
 		<?php $lastno = $numrow ?>
 		<?php //echo $lastno ?>
-		<?php for ($x = 0; $x <= (18 - ($lastno%18)); $x++) { ?>
+		<?php for ($x = 0; $x <= ($lines - ($lastno%$lines)); $x++) { ?>
 		<?php $numrow++?>
 		<tr>
 			<td>&nbsp;</td>
@@ -115,7 +139,7 @@
 		<?php  } ?>
 		<?php  } ?>
 
-		<?php if (($numrow-1)%18==0) { ?>	
+		<?php if (($numrow-1)%$lines==0) { ?>	
 	</table>
 	<table class="tbl-wo" border="0" align="center">
 			<tr height="50px">
