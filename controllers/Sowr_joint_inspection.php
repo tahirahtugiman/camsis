@@ -27,7 +27,9 @@ class sowr_joint_inspection extends CI_Controller {
 	}
 	public function index(){
    		$this->load->model("get_model");
-		$data['dept'] = $this->get_model->get_poploclistb();
+		$data['dept'] = $this->get_model->get_poploclistb("adanilai");
+		//$data['schbi_weekly'] = $this->get_model->get_schbi_weekly('WGS2');
+		//print_r($data['schbi_weekly']);
 		$data['count'] = count($data['dept']);
 	  	$data['tabber'] = ($this->input->get('work-a') <> 0) ? $this->input->get('work-a') : '0';	
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
@@ -45,6 +47,24 @@ class sowr_joint_inspection extends CI_Controller {
     								   'Duration_end_date'=>$r->Duration_end_date
     								   );
     	}
+		foreach ($data['dept'] as $key => $d){
+		
+    	 $schbi_weekly = $this->get_model->get_schbi_weekly($d->v_UserDeptCode,$data['month'],$data['year']);
+		
+		 $data['dept'][$key]->week_2 = isset($schbi_weekly[0]->week_2) ? $schbi_weekly[0]->week_2 : '' ;
+		 $data['dept'][$key]->week_4 = isset($schbi_weekly[0]->week_4) ? $schbi_weekly[0]->week_4 : '' ;
+		 //$data['dept'][$key]->schdddate = 'dasdd';
+    	}
+
+	
+	/* 	 if (($data['month'] == date('m')) AND ($data['year'] == date('Y'))) {
+        isset($_GET['jobdate']) ? $data['job_D'] = $_GET['jobdate'] : $data['job_D'] = date("Y-m-d");
+        }
+        else {
+        isset($_GET['jobdate']) ? $data['job_D'] = $_GET['jobdate'] : $data['job_D'] = date("Y-m-d",strtotime($data['year'].'-'.$data['month'].'-01'));    
+        } */
+	     //echo "<pre>";
+        //print_r($data['dept']);
     	if (isset($data['schdata'])){
     	foreach ($data['schdata'] as $schdata){
     		$beginday = date('Y-m-d',strtotime($schdata['Duration_start_date']));
@@ -99,8 +119,30 @@ class sowr_joint_inspection extends CI_Controller {
 				}
 			}
 		}
-    	} 
+    	}
+
+  
 		$this ->load->view("headprinter");
 		$this ->load->view("content_sowr_joint_inspection", $data);
-   	}	
+   	}
+
+    public function schbi_weekly(){
+
+		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
+		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
+	     $week2 = (($this->input->get('week2')) != '') ? $this->input->get('week2') : NULL;
+	     $week4 = (($this->input->get('week4')) != '') ? $this->input->get('week4') : NULL;
+		
+        if(isset($_GET['week2']) || isset($_GET['week4'])){	
+      
+		   $date_cap = array('dept_code'=>$_GET['dept'],'week_2'=>$week2,'week_4'=>$week4,'month'=>$_GET['month'],'year'=>$_GET['year']);
+		   echo "<pre>";
+		   //print_r($date_cap);
+		  //exit();
+			$this->insert_model->ins_schbi_weekly($date_cap);
+			
+			redirect('sowr_joint_inspection?m='.$_GET['month'].'&y='.$_GET['year']);
+			}
+	
+	}	
 }

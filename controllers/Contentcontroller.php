@@ -3252,7 +3252,7 @@ class Contentcontroller extends CI_Controller {
 	public function print_workorder(){
 	  	$this->load->model("get_model");	
 	  	$this->load->model("display_model");
-			//echo "lklkllklklkk m: " . $this->input->get('wrk_ord');
+		//echo "lklkllklklkk m: " . $this->input->get('wrk_ord');
 		if ($this->input->get('wrk_ord') <> '') {
 		$data['wrk_ord'] = $this->input->get('wrk_ord');
 		$data['hosp'] = $this->display_model->list_hospinfo();
@@ -3262,7 +3262,7 @@ class Contentcontroller extends CI_Controller {
 		$data['resprec'] = $this->display_model->response_tab($data['wrk_ord']);
 		$data['rvisit1'] = $this->display_model->visit1_tab($data['wrk_ord']);
 		$data['recordjob'] = $this->display_model->jobclose_tab($data['wrk_ord']);
-		//print_r($data['woinfo2']);
+		//print_r($data['recordjob']);
 		//exit();
 		$count = 1;
 		$countpart = 1;
@@ -3314,8 +3314,9 @@ class Contentcontroller extends CI_Controller {
 			$data['actiontaken'][] = array(NULL);	
 			}
 		}
+		$data['record'][$data['wrk_ord']] = array($data['woinfo'],$data['woinfo2'],$data['personallist'],$data['partlist'],$data['actiontaken'],$data['recordjob'],$data['hosp'],$data['wrk_ord']);
 		//echo "<pre>";
-		//print_r($data['woinfo2']);
+		//print_r($data['personallist']);
 	    $this ->load->view("headprinter");
 		$this ->load->view("Content_workorder_print", $data);	
 		}else{
@@ -3386,9 +3387,9 @@ class Contentcontroller extends CI_Controller {
 	}
 	}	
 	    $this ->load->view("headprinter");
-		$this ->load->view("Content_rcm_print.php", $data);	
+		$this ->load->view("Content_workorder_print.php", $data);	
 		//echo "<pre>";
-     //	print_r($data['woinfo2']);
+     	//print_r($data['woinfo2']);
 		}
 		
 		
@@ -3397,6 +3398,7 @@ class Contentcontroller extends CI_Controller {
 		//exit();
 		
 	}
+	
 	
 	
 	public function testlaa(){
@@ -7826,7 +7828,7 @@ public function pop_fail(){
 		$this->load->model('display_model');
 		$data['recordlic']= $this->display_model->ttlexp($data['month'],$data['year'],$data['range']);
 		$data['recordsta']= $this->display_model->ttlexp2($data['month'],$data['year'],$data['range']);
-		for ($i=1;$i<=$data['range'];$i++){
+		for ($i=0;$i<=$data['range'];$i++){
 			$data['explistlic'.$i] = 0;
 			foreach ($data['recordlic'] as $row){
 				if($row->month == $i){
@@ -7835,7 +7837,7 @@ public function pop_fail(){
 			}
 		}
 
-		for ($j=1;$j<=$data['range'];$j++){
+		for ($j=0;$j<=$data['range'];$j++){
 			$data['expliststa'.$j] = 0;
 			foreach ($data['recordsta'] as $row){
 				if($row->month == $j){

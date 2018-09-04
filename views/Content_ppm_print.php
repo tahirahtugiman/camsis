@@ -1,14 +1,3 @@
-	<style type="text/css">
-		.tbl-wo-data1{
-			width: 29%;
-		}
-		.tbl-wo-databuzz{
-			width: 15%;
-		}
-		.tbl-wo, .tbl-wo1{
-			font-size: 9px;
-		}
-	</style>
 	<div id="Instruction" class="pr-printer">
 		<div class="header-pr">PREVENTIVE MAINTENANCE WORK ORDER</div>
 		<button onclick="javascript:myFunctionprint()" class="btn-button btn-primary-button" value="t">PRINT</button>
@@ -68,38 +57,38 @@
 			<td style="width:50%; padding:5px;" valign="top"> 
 				<table class="tbl-wo-1" border="0" align="left">
 					<tr>
-						<td class="tbl-wo-data1">Equipment</td>
+						<td class="tbl-wo-data4">Equipment</td>
 						<td style="width:75%;">: <span style="color:blue;"><?= ($row[0][0]->v_asset_name) ? $row[0][0]->v_asset_name : 'NA' ?> (<?= ($row[0][0]->new_asset_type) ? $row[0][0]->new_asset_type : 'NA' ?>) <?= ($row[0][0]->TASKDESC) ? $row[0][0]->TASKDESC : '' ?></span></td>
 					</tr>
 					<tr>
-						<td class="tbl-wo-data1">Asset No</td>
+						<td class="tbl-wo-data4">Asset No</td>
 						<td>: <span style="color:blue;"><?= ($row[0][0]->v_tag_no) ? $row[0][0]->v_tag_no : 'NA' ?></span></td>
 					</tr>
 					<tr>
-						<td class="tbl-wo-data1">Model </td>
+						<td class="tbl-wo-data4">Model </td>
 						<td><span style="color:blue;">: <?= ($row[0][0]->v_model_no) ? $row[0][0]->v_model_no : 'NA' ?></span></td>
 					</tr>
 					<tr>
-						<td class="tbl-wo-data1">Serial No. </td>
+						<td class="tbl-wo-data4">Serial No. </td>
 						<td><span style="color:blue;">: <?= ($row[0][0]->v_serial_no) ? $row[0][0]->v_serial_no : 'NA' ?></span></td>
 					</tr>
 					<tr>
-						<td class="tbl-wo-data1">Department </td>
+						<td class="tbl-wo-data4">Department </td>
 						<td><span style="color:blue;">: <?= ($row[0][0]->v_userdeptdesc) ? $row[0][0]->v_userdeptdesc : 'NA' ?></span></td>
 					</tr>
 					<tr>
-						<td class="tbl-wo-data1">Dept. Code </td>
+						<td class="tbl-wo-data4">Dept. Code </td>
 						<td><span style="color:blue;">: <?= ($row[0][0]->v_user_dept_code) ? $row[0][0]->v_user_dept_code : 'NA' ?></span></td>
 					</tr>
 					<tr>
-						<td class="tbl-wo-data1">Room Code </td>
+						<td class="tbl-wo-data4">Room Code </td>
 						<td><span style="color:blue;">: <?= ($row[0][0]->v_location_code) ? $row[0][0]->v_location_code : 'NA' ?>(<?= ($row[0][0]->v_Location_Name) ? $row[0][0]->v_Location_Name : 'NA' ?>)</span></td>
 					</tr>  
 					<tr>
-						<td class="tbl-wo-data1" colspan="2">&nbsp; </td>
+						<td class="tbl-wo-data4" colspan="2">&nbsp; </td>
 					</tr>
 					<tr>
-						<td class="tbl-wo-data1">Warranty Status </td>
+						<td class="tbl-wo-data4">Warranty Status </td>
 						<td>
 							<span style="color:blue; display:inline-block; width:2px; float:left;">: </span>
 							<table class="tbl-wo" border="0" align="left" style="margin-left:7px;">

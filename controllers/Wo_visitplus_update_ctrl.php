@@ -25,8 +25,8 @@ class wo_visitplus_update_ctrl extends CI_Controller{
 	$vis = $this->input->post('visit') == '' ? 0 : $this->input->post('visit');
 	//echo "visssiiiiit".$this->input->post('visit');
 	$datas['record'] = $this->get_model->get_wodatelate($this->input->post('wrk_ord'),$vis);
-	$startdate = date_format(date_create($datas['record'][0]->latedt),'Y-m-d');
-	$vdate = date_format(date_create($this->input->post('n_Visit_Date')),'Y-m-d');
+	$startdate = date_format(date_create($datas['record'][0]->latedt),'Y-m-d H:i:s');
+	$vdate = date_format(date_create($this->input->post('n_Visit_Date'). " " .$this->input->post('n_Shour').':'.$this->input->post('n_Smin') ),'Y-m-d H:i:s');
 	//echo "dater : ".$startdate.' : '.$vdate;
 	$paramsdt = "{$startdate},{$vdate}";
 	}
@@ -276,7 +276,6 @@ class wo_visitplus_update_ctrl extends CI_Controller{
 	public function date_check($str = '', $params = '')
 	{
 		list($startdate,$enddate) = explode(',', $params);
-
 		if ($enddate < $startdate)
 		{
 			$this->form_validation->set_message('date_check', 'Visit date cannot be lesser than WO Date/Last Visit Date');
@@ -284,8 +283,8 @@ class wo_visitplus_update_ctrl extends CI_Controller{
 		}
 		else if ($enddate > date("Y-m-d"))
 		{
-			$this->form_validation->set_message('date_check', 'Visit date cannot exceed current date');
-			return FALSE;
+			//$this->form_validation->set_message('date_check', 'Visit date cannot exceed current date');
+			//return FALSE;
 		}
 		else
 		{

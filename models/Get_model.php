@@ -463,18 +463,27 @@ return $query->result();
 
 }
 
-function get_poploclistb()
+function get_poploclistb($adanilai = "")
 {
+
+$y= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
+$m= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
+$my = substr('0'.$m,-2).$y;
+
 $ignore = array('CP','CA','FES','LH','ME','SE','SRV','TCR','WS','BM','CH');
 $this->db->distinct();
-$this->db->select('pmis2_sa_userdept.v_userdeptdesc, pmis2_egm_assetlocation.v_UserDeptCode, count(pmis2_egm_assetlocation.v_UserDeptCode) as Totalloc');
-$this->db->join('pmis2_sa_userdept','pmis2_sa_userdept.v_hospitalcode = pmis2_egm_assetlocation.v_hospitalcode AND pmis2_sa_userdept.v_userdeptcode = pmis2_egm_assetlocation.v_UserDeptCode');
-$this->db->where('pmis2_egm_assetlocation.v_hospitalcode = ', $this->session->userdata('hosp_code'));
-$this->db->where('pmis2_egm_assetlocation.v_actionflag <> ', 'D');
-$this->db->where('pmis2_sa_userdept.v_actionflag <> ', 'D');
-$this->db->where_not_in('pmis2_egm_assetlocation.v_UserDeptCode', $ignore);
-$this->db->group_by('pmis2_sa_userdept.v_userdeptdesc, pmis2_egm_assetlocation.v_UserDeptCode');
-$query = $this->db->get('pmis2_egm_assetlocation');
+$this->db->select('b.v_userdeptdesc, a.v_UserDeptCode, count(a.v_UserDeptCode) as Totalloc');
+$this->db->join('pmis2_sa_userdept b','b.v_hospitalcode = a.v_hospitalcode AND b.v_userdeptcode = a.v_UserDeptCode');
+$this->db->where('a.v_hospitalcode = ', $this->session->userdata('hosp_code'));
+$this->db->where('a.v_actionflag <> ', 'D');
+$this->db->where('b.v_actionflag <> ', 'D');
+//echo "lklaklkalalka : ".$adanilai;
+if ($adanilai != ""){
+$this->db->join('set_hks_scheduler c',"c.hospital_code = a.v_hospitalcode AND c.Dept_Code = a.v_UserDeptCode ");
+$this->db->where('c.Month_Year ', $my);} else {
+$this->db->where_not_in('a.v_UserDeptCode', $ignore);}
+$this->db->group_by('b.v_userdeptdesc, a.v_UserDeptCode');
+$query = $this->db->get('pmis2_egm_assetlocation a');
 //echo "laalla".$query->DWRate;
 //echo $this->db->last_query();
 //exit();
@@ -3401,7 +3410,8 @@ function get_wodatelate($wono,$nvisit)
 	} else {
 	$nkx = '';
 	}
-  $this->db->select(" ifnull(b.d_date, a.d_date) as latedt ", FALSE);
+  //$this->db->select(" ifnull(b.d_date, a.d_date) as latedt ", FALSE);
+  $this->db->select("a.d_date as latedt ", FALSE);
 	$this->db->join('pmis2_emg_jobvisit1 b','a.v_request_no = b.v_wrkordno '.$nkx , 'LEFT OUTER');
   $this->db->where('a.v_request_no = ', $wono);
 	$this->db->protect_identifiers = FALSE;
@@ -3903,6 +3913,18 @@ $query=$this->db->where('a.ItemCode = ', $assetno)->get();
 
 return $query->result();
 
+}
+
+function get_schbi_weekly($DeptCode,$m,$y){
+	$this->db->select('*');
+    $this->db->from('schbi_weekly');
+	$this->db->where('dept_code =', $DeptCode);
+	$this->db->where('month =', $m);
+	$this->db->where('year =', $y);
+    $query=$this->db->get();
+	//echo $this->db->last_query();
+    return $query->result();
+	
 }
 
 }

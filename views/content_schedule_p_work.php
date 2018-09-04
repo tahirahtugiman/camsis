@@ -61,14 +61,14 @@
 		    <th class="td-r">Remark</th>
 		  </tr>
 			<tr>
-				<td>&nbsp;</td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
+				<td contenteditable="true">&nbsp;</td>
+				<td contenteditable="true"></td>
+				<td contenteditable="true"></td>
+				<td contenteditable="true"></td>
+				<td contenteditable="true"></td>
+				<td contenteditable="true"></td>
+				<td contenteditable="true"></td>
+				<td contenteditable="true"></td>
 			</tr>
 			<tr>
 				<td>&nbsp;</td>

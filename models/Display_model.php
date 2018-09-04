@@ -1051,6 +1051,15 @@ ORDER BY s.d_DueDt, s.v_WrkOrdNo
 			{
 			$this->db->where("((TIMESTAMPDIFF(MINUTE,s.d_date,IFNULL(s.v_respondate,NOW())) > $dn AND s.V_priority_code = 'Normal') OR (TIMESTAMPDIFF(MINUTE,s.d_date,IFNULL(s.v_respondate,NOW())) > $de AND s.V_priority_code = 'Emergency'))");
 			}
+			
+			
+			/*buzz add 3/9/18*/
+			$this->db->where('s.v_hospitalcode',$this->session->userdata('hosp_code'));
+			//if ($reqtype <> 'A2'){
+				$this->db->where('s.V_request_type !=','A2');
+			//}
+			/*./buzz add 3/9/18*/
+			
                         if (!function_exists('toArray')) {
 			function toArray($obj)
 			{
@@ -3403,16 +3412,31 @@ function deptrangebycode($deptcode){
 }
 
 function ttlexp($month,$year,$range){
-	$this->db->select('TIMESTAMPDIFF(MONTH, now(), IFNULL(v_ExpiryDate,now())) AS month,SUM(CASE WHEN v_ExpiryDate > now() THEN 1 ELSE 0 END) AS notlicsat');
-	$this->db->from('pmis2_egm_lnc_lincense_details');
+	$this->db->select('TIMESTAMPDIFF(MONTH, now(), IFNULL(A.v_ExpiryDate,now())) AS month,SUM(CASE WHEN A.v_ExpiryDate > now() THEN 1 ELSE 0 END) AS notlicsat');
+	$this->db->from('pmis2_egm_lnc_lincense_details A');
+	$this->db->join("(SELECT 
+        `a`.`v_CertificateNo` AS `v_CertificateNo`,
+        `a`.`v_RegistrationNo` AS `v_RegistrationNo`,
+        `a`.`v_LicenseCategoryCode` AS `v_LicenseCategoryCode`,
+        `a`.`v_ServiceCode` AS `v_ServiceCode`,
+        MAX(`a`.`v_ExpiryDate`) AS `v_ExpiryDate`
+    FROM
+        (`pmis2_egm_lnc_lincense_details` `a`
+        JOIN `pmis2_egm_lnc_license_category_code` `b` ON ((`a`.`v_LicenseCategoryCode` = `b`.`v_LicenceCategoryCode`)))
+    WHERE
+        ((`a`.`v_hospitalcode` = 'IIUM')
+            AND (year(`a`.`v_StartDate`) <= ". ($year) .")
+            AND (`a`.`v_actionflag` <> 'D')
+            AND (`b`.`v_actionflag` <> 'D')) 
+    GROUP BY `a`.`v_CertificateNo` , `a`.`v_RegistrationNo` , `a`.`v_LicenseCategoryCode`)`g`",'concat(concat(A.v_CertificateNo,A.v_RegistrationNo),A.v_ExpiryDate) = concat(concat(g.v_CertificateNo,g.v_RegistrationNo),g.v_ExpiryDate)');
 	//$this->db->where('MONTH(v_StartDate)',$month);
 	//$this->db->where('YEAR(v_StartDate)',$year);
-	$this->db->where('v_ServiceCode =', $this->session->userdata('usersess'));
-	$this->db->where('v_actionflag <>','D');
-	$this->db->where('V_hospitalcode',$this->session->userdata('hosp_code'));
-	$this->db->where('TIMESTAMPDIFF(MONTH, now(), IFNULL(v_ExpiryDate,now())) > 0');
-	$this->db->where('TIMESTAMPDIFF(MONTH, now(), IFNULL(v_ExpiryDate,now())) <=',$range);
-	$this->db->group_by('TIMESTAMPDIFF(MONTH, now(), IFNULL(v_ExpiryDate,now()))');
+	$this->db->where('A.v_ServiceCode =', $this->session->userdata('usersess'));
+	$this->db->where('A.v_actionflag <>','D');
+	$this->db->where('A.V_hospitalcode',$this->session->userdata('hosp_code'));
+	$this->db->where('TIMESTAMPDIFF(MONTH, now(), IFNULL(A.v_ExpiryDate,now())) > 0');
+	$this->db->where('TIMESTAMPDIFF(MONTH, now(), IFNULL(A.v_ExpiryDate,now())) <=',$range);
+	$this->db->group_by('TIMESTAMPDIFF(MONTH, now(), IFNULL(A.v_ExpiryDate,now()))');
 	$query = $this->db->get();
 	//echo $this->db->last_query();
 	//exit();
