@@ -107,9 +107,17 @@ foreach ($array as $list) {
 						stack: '2'
 					}
 					, {
+						name: 'Completed < 15 Days',
+						data: [<?php if ($rqsum[0]->compin15d == 0){ echo '0';}else{echo $rqsum[0]->compin15d;}?>],
+						stack: '3'
+					}, {
+						name: 'Completed > 15 Days',
+						data: [<?php if ($rqsum[0]->compm15d == 0){ echo '0';}else{echo $rqsum[0]->compm15d;}?>],
+						stack: '4'
+					}, {
 						name: 'Total Outstanding',
 						data: [<?php if ($rqsum[0]->notcomp == 0){ echo '0';}else{echo $rqsum[0]->notcomp;}?>],
-						stack: '3'
+						stack: '5'
 					}]
 
 					<?php }elseif ($this->uri->slash_segment(1) .$this->uri->slash_segment(2) == 'contentcontroller/report_cwos/') {?>
