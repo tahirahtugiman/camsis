@@ -82,8 +82,8 @@ header('Content-Disposition: attachment; filename='.$filename);
 	    				<?php echo ($numrow%2==0) ? '<tr class="ui-color-color-color">' : '<tr>'; ?>
 	    					
     						<td><?= $numrow ?></td>
-			<td><?= ($row->d_date) ? date("d/m/Y",strtotime($row->d_date)) : 'N/A' ?></td>
-			<td><?= ($row->d_time) ? $row->d_time : 'N/A' ?></td>
+			<td><?= ($row->D_date) ? date("d/m/Y",strtotime($row->D_date)) : 'N/A' ?></td>
+			<td><?= ($row->D_time) ? $row->D_time : 'N/A' ?></td>
 			<?php if  ($this->input->get('ex') != 'excel'){ ?>
 			<td><span style="color:#0000FF;"><?=($row->v_request_no) ? anchor ('contentcontroller/AssetRegis?wrk_ord='.$row->v_request_no.'&assetno='.$row->v_asset_no.'&m='.$this->input->get('m').'&y='.$this->input->get('y').'&stat='.$this->input->get('stat').'&resch='.$this->input->get('resch'),''.$row->v_request_no.'' ) : 'N/A' ?></span></td>
 			<td><span style="color:#0000FF;"><?=($row->v_asset_no) && $row->v_asset_no != 'N/A' ? anchor ('contentcontroller/AssetRegis?tab=Maintenance&assetno='.$row->v_asset_no.'&m='.$this->input->get('m').'&y='.$this->input->get('y').'&stat='.$this->input->get('stat').'&resch='.$this->input->get('resch'),''.$row->V_Tag_no.'' ) : 'N/A' ?></span></td>

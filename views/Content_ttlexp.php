@@ -24,11 +24,12 @@ header('Content-Disposition: attachment; filename='.$filename);
 <center>
 <form method="get" action="">
 		<?php 
-			$month_list = array(
-			'1' => '1 Month',
-			'2' => '2 Month',
-			'3' => '3 Month',
-		 );
+		$month_list = array(
+			'cur'	=> 'Current Month',
+			'1' 	=> '1 Month',
+			'2' 	=> '2 Month',
+			'3' 	=> '3 Month',
+		);
 		?>
 		<?php echo form_dropdown('range', $month_list , set_value('range',$range) , 'style="width: 90px;" id="cs_month"'); ?>
 		<input type="hidden" value="<?php echo set_value('m', $month) ?>" name="m">
@@ -50,10 +51,13 @@ header('Content-Disposition: attachment; filename='.$filename);
 			<th>Total Expiring</th>
 		</tr>
 		<?php if ($recordlic || $recordsta) { ?>
-		<?php for($numrow=1;$numrow<=$range;$numrow++){ ?>
+		<?php $numrow=0;//( $this->input->get("range")=="cur" ) ? $numrow=0 : $numrow=1;?>
+		<?php $plus=1;//( $this->input->get("range")=="cur" ) ? $plus=1 : $plus=0;?>
+		<?php for($numrow;$numrow<=$range;$numrow++){ ?>
 		<tr class="ui-color-color-color">
-			<td><?=$numrow?></td>
-			<td><?=$numrow.' month(s)'?></td>
+			<td><?=$numrow+$plus;?></td>
+			<!-- <td><?=( $this->input->get("range")=="cur" ) ? "Curent Month" : $numrow.' month(s)'?></td> -->
+			<td><?=( $numrow==0 ) ? "Curent Month" : $numrow.' month(s)'?></td>
 			<?php 
 			$totallic = 'explistlic'.$numrow;
 			$totalsta = 'expliststa'.$numrow;

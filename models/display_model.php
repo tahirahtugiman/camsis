@@ -41,7 +41,7 @@
 			return $query_result;
         }
 				
-				function list_hospinfo()
+		function list_hospinfo()
         {
             $this->db->where('v_hospitalcode = ',$this->session->userdata('hosp_code'));
             $query = $this->db->get("pmis2_sa_hospital");
@@ -154,7 +154,7 @@
 			return $query_result;
         }
 		
-		function request_tab()
+		function request_tab($wrk_ord)
 		{
 			$RN = $this->input->get('wrk_ord');
 			
@@ -169,7 +169,8 @@
 			$this->db->join('pmis2_egm_assetmaintenance m','r.V_Asset_no = m.v_AssetNo AND r.V_hospitalcode = m.v_Hospitalcode','left outer'); 
 			$this->db->join('pmis2_egm_assetreg_general g','m.v_AssetNo = g.V_Asset_no AND m.v_Hospitalcode = g.V_Hospital_code','left outer');
 			$this->db->join('pmis2_egm_sharedowntime lw','s.V_Request_no = lw.ori_wo','left');
-			$this->db->where('s.V_Request_no',$RN);
+			$this->db->where('s.V_Request_no',$RN ? $RN : $wrk_ord);
+			//$this->db->where('s.V_Request_no',$RN);
 			$this->db->where('s.V_servicecode = ',$this->session->userdata('usersess'));
 			$this->db->group_by('s.V_Asset_no');
 			$query = $this->db->get();
@@ -312,7 +313,7 @@
 			$this->db->where('s.v_Actionflag <>','D');
 			$this->db->where('s.v_ServiceCode = ',$this->session->userdata('usersess'));
 			$query = $this->db->get();
-			// echo $this->db->last_query();
+			echo $this->db->last_query();
 			//exit();
 			$query_result = $query->result();
 			return $query_result;
@@ -936,26 +937,26 @@ ORDER BY s.d_DueDt, s.v_WrkOrdNo
 		}
 		
 		function rpt_volsmar($month, $year, $stat = "apo2", $resch = "resch",$grpsel, $bystak=""){
-		/*
-		SELECT     s.v_WrkOrdNo AS sv_wrkordno, s.v_Asset_no AS sv_asset_no, s.v_Month AS sv_month, s.v_HospitalCode AS sv_hospitalcode, 
-                      s.d_DueDt AS sd_duedt, s.v_jobtype AS sv_jobtype, s.v_year AS sv_year, s.v_ServiceCode AS sv_servicecode, a.V_Tag_no AS av_tag_no, 
-                      a.V_User_Dept_code AS av_user_dept_code, a.V_Asset_name AS av_asset_name
-FROM         pmis2_egm_schconfirmmon s INNER JOIN
-                      pmis2_EGM_AssetRegistration a ON s.v_Asset_no = a.V_Asset_no AND s.v_HospitalCode = a.V_Hospitalcode
-WHERE     (s.v_HospitalCode = 'MKA') AND (s.v_ServiceCode = 'BEMS') AND (s.v_year = 2015) AND (s.v_Actionflag <> 'D') AND (a.V_Actionflag <> 'D') AND 
-                      (MONTH(s.d_DueDt) = 3) AND (YEAR(s.d_DueDt) = 2015)
-ORDER BY s.d_DueDt, s.v_WrkOrdNo
-		*/
+			/*
+			SELECT     s.v_WrkOrdNo AS sv_wrkordno, s.v_Asset_no AS sv_asset_no, s.v_Month AS sv_month, s.v_HospitalCode AS sv_hospitalcode, 
+			s.d_DueDt AS sd_duedt, s.v_jobtype AS sv_jobtype, s.v_year AS sv_year, s.v_ServiceCode AS sv_servicecode, a.V_Tag_no AS av_tag_no, 
+			a.V_User_Dept_code AS av_user_dept_code, a.V_Asset_name AS av_asset_name
+			FROM         pmis2_egm_schconfirmmon s INNER JOIN
+			pmis2_EGM_AssetRegistration a ON s.v_Asset_no = a.V_Asset_no AND s.v_HospitalCode = a.V_Hospitalcode
+			WHERE     (s.v_HospitalCode = 'MKA') AND (s.v_ServiceCode = 'BEMS') AND (s.v_year = 2015) AND (s.v_Actionflag <> 'D') AND (a.V_Actionflag <> 'D') AND 
+			(MONTH(s.d_DueDt) = 3) AND (YEAR(s.d_DueDt) = 2015)
+			ORDER BY s.d_DueDt, s.v_WrkOrdNo
+			*/
 
 
-                  if ($bystak == "IIUM C") {
-		  $bystak = " AND left(a.v_tag_no,6) = 'IIUM C'"; }
-	          elseif ($bystak == "IIUM M") {
-		  $bystak = " AND left(a.v_tag_no,6) = 'IIUM M'"; }
-		  elseif ($bystak == "IIUM E") {
-		  $bystak = " AND left(a.v_tag_no,6) = 'IIUM E'"; }
+			if ($bystak == "IIUM C") {
+				$bystak = " AND left(a.v_tag_no,6) = 'IIUM C'"; }
+			elseif ($bystak == "IIUM M") {
+				$bystak = " AND left(a.v_tag_no,6) = 'IIUM M'"; }
+			elseif ($bystak == "IIUM E") {
+				$bystak = " AND left(a.v_tag_no,6) = 'IIUM E'"; }
 
-		  $this->db->distinct();
+			$this->db->distinct();
 			$this->db->select('a.V_Location_code, s.v_Wrkordstatus, s.v_WrkOrdNo AS sv_wrkordno, s.v_Asset_no AS sv_asset_no, s.v_Month AS sv_month, s.v_HospitalCode AS sv_hospitalcode, s.d_DueDt AS sd_duedt, s.v_jobtype AS sv_jobtype, s.v_year AS sv_year, s.v_ServiceCode AS sv_servicecode, a.V_Tag_no AS av_tag_no, a.V_User_Dept_code AS av_user_dept_code, a.V_Asset_name AS av_asset_name, b.v_stest, b.v_ptest, b.d_DateDone, CONCAT(IFNULL(s.v_Remarks,"")," ", ifnull(b.v_summary,"")) AS v_summary, b.d_last_resch_date, c.d_Date, IFNULL(s.d_Reschdt,c.d_Reschdt) AS d_Reschdt, d.v_UserDeptDesc,a.v_asset_grp', FALSE);
 			//$this->db->select('a.V_Location_code, s.v_Wrkordstatus, s.v_WrkOrdNo AS sv_wrkordno, s.v_Asset_no AS sv_asset_no, s.v_Month AS sv_month, s.v_HospitalCode AS sv_hospitalcode, s.d_DueDt AS sd_duedt, s.v_jobtype AS sv_jobtype, s.v_year AS sv_year, s.v_ServiceCode AS sv_servicecode, a.V_Tag_no AS av_tag_no, a.V_User_Dept_code AS av_user_dept_code, a.V_Asset_name AS av_asset_name, b.v_stest, b.v_ptest, b.d_DateDone, b.v_summary, b.d_last_resch_date, b.d_DateDone AS d_Date, IFNULL(s.d_Reschdt,b.d_last_resch_date) AS d_Reschdt, d.v_UserDeptDesc,a.v_asset_grp', FALSE);
 			$this->db->from('pmis2_egm_schconfirmmon s');
@@ -981,18 +982,18 @@ ORDER BY s.d_DueDt, s.v_WrkOrdNo
 			}
 			*/
 			if (($resch == "nt") && ($stat == "A")) {
-			$this->db->where("s.v_wrkordstatus LIKE '%C%'", NULL, FALSE);
+				$this->db->where("s.v_wrkordstatus LIKE '%C%'", NULL, FALSE);
 			} elseif (($resch == "ys") && ($stat == "A"))
 			{
-			//$this->db->where("s.d_reschdt is not NULL AND s.v_wrkordstatus = 'AR'", NULL, FALSE);
-			$this->db->where("s.d_reschdt is not NULL AND s.v_wrkordstatus = 'AR' AND d_DueDt > now()", NULL, FALSE);
+				//$this->db->where("s.d_reschdt is not NULL AND s.v_wrkordstatus = 'AR'", NULL, FALSE);
+				$this->db->where("s.d_reschdt is not NULL AND s.v_wrkordstatus = 'AR' AND d_DueDt > now()", NULL, FALSE);
 			} elseif (($resch == "nt") && ($stat == "C"))
 			{
-			//$this->db->where("s.v_wrkordstatus = 'A' ", NULL, FALSE);
-			$this->db->where("(s.v_wrkordstatus = 'A' OR (s.v_wrkordstatus = 'AR' AND d_DueDt < now()))", NULL, FALSE);
+				//$this->db->where("s.v_wrkordstatus = 'A' ", NULL, FALSE);
+				$this->db->where("(s.v_wrkordstatus = 'A' OR (s.v_wrkordstatus = 'AR' AND d_DueDt < now()))", NULL, FALSE);
 			} else
 			{
-			$this->db->not_like('s.v_wrkordstatus', $stat);
+				$this->db->not_like('s.v_wrkordstatus', $stat);
 			}
 			//$this->db->not_like('s.v_wrkordstatus', $stat);
 			//$this->db->where('s.v_year', $year);
@@ -1008,62 +1009,68 @@ ORDER BY s.d_DueDt, s.v_WrkOrdNo
 			return $query_result;
 		}
 		
-		function rpt_rtlu($month,$year, $stat = "apo2",$grpsel){
-		/*
-		SELECT v_request_no, v_asset_no, d_date, d_time, v_servicecode, v_requestor, v_user_dept_code, v_summary, 
-				v_priority_code, v_hospitalcode, v_respondate, v_respontime 
-					FROM apbesys..pmis2_egm_service_request 
-						WHERE MONTH(d_date)=3
-							AND YEAR(d_date)=2015
-							AND v_servicecode='BEMS' 
-							AND v_hospitalcode='MKA' 
-							AND v_actionflag!='D' 
-								ORDER BY d_date, d_time
-		*/
-               if ($this->session->userdata('usersess') == "FES") {
-			$dn = 180;
-			$de = 30;
+		function rpt_rtlu($month,$year, $stat = "apo2",$grpsel,$reqtype){
+			/*
+			SELECT v_request_no, v_asset_no, d_date, d_time, v_servicecode, v_requestor, v_user_dept_code, v_summary, 
+			v_priority_code, v_hospitalcode, v_respondate, v_respontime 
+			FROM apbesys..pmis2_egm_service_request 
+			WHERE MONTH(d_date)=3
+			AND YEAR(d_date)=2015
+			AND v_servicecode='BEMS' 
+			AND v_hospitalcode='MKA' 
+			AND v_actionflag!='D' 
+			ORDER BY d_date, d_time
+			*/
+			if ($this->session->userdata('usersess') == "FES") {
+				$dn = 180;
+				$de = 30;
 			} elseif ($this->session->userdata('usersess') == "BES") {
-			$dn = 120;
-			$de = 30;
+				$dn = 120;
+				$de = 30;
 			} else {
-			$dn = 15;
-			$de = 5;
+				$dn = 15;
+				$de = 5;
 			}             
-			$this->db->select('s.v_request_no, s.v_asset_no, s.d_date, s.d_time, s.v_servicecode, s.v_requestor, s.v_user_dept_code, s.v_summary, s.v_priority_code, s.v_hospitalcode, s.v_respondate, s.v_respontime, a.V_Tag_no, TIMESTAMPDIFF(MINUTE,s.D_date,IFNULL(s.v_respondate,now())) AS mint,a.v_asset_grp', FALSE);
+			$this->db->select('s.v_request_no, s.v_asset_no, s.D_date, s.D_time, s.V_servicecode, s.v_requestor, s.v_user_dept_code, s.v_summary, s.v_priority_code, s.v_hospitalcode, s.v_respondate, s.v_respontime, a.V_Tag_no, TIMESTAMPDIFF(MINUTE,s.D_date,IFNULL(s.v_respondate,now())) AS mint,a.v_asset_grp', FALSE);
 			$this->db->from('pmis2_egm_service_request s');
 			$this->db->join('pmis2_egm_assetregistration a','s.v_Asset_no = a.V_Asset_no AND s.v_HospitalCode = a.V_Hospitalcode AND a.V_Actionflag <> "D"', 'LEFT OUTER');
-			$this->db->where('s.v_servicecode', $this->session->userdata('usersess'));
+			$this->db->where('s.V_servicecode', $this->session->userdata('usersess'));
 			$this->db->where('s.v_actionflag <> ', 'D');
 			//$this->db->where('a.v_actionflag <> ', 'D');
 			//$this->db->where('YEAR(s.d_date)', $year);
 			//$this->db->where('MONTH(s.d_date)', $month);
-			$this->db->where('s.d_date >=', $this->dater(1,$month,$year));
-			$this->db->where('s.d_date <=', $this->dater(2,$month,$year).'  23:59:59');
-			$this->db->where('s.v_hospitalcode',$this->session->userdata('hosp_code'));
+			$this->db->where('s.D_date >=', $this->dater(1,$month,$year));
+			$this->db->where('s.D_date <=', $this->dater(2,$month,$year).'  23:59:59');
 			if ($grpsel <> ''){
 				$this->db->where('a.v_asset_grp',$grpsel);
 			}
 			if ($stat == "ys") {
-			$this->db->where("((TIMESTAMPDIFF(MINUTE,s.d_date,IFNULL(s.v_respondate,NOW())) <= $dn AND s.V_priority_code = 'Normal') OR (TIMESTAMPDIFF(MINUTE,s.d_date,IFNULL(s.v_respondate,NOW())) <= $de AND s.V_priority_code = 'Emergency'))");
-			} elseif ($stat == "no")
-			{
-			$this->db->where("((TIMESTAMPDIFF(MINUTE,s.d_date,IFNULL(s.v_respondate,NOW())) > $dn AND s.V_priority_code = 'Normal') OR (TIMESTAMPDIFF(MINUTE,s.d_date,IFNULL(s.v_respondate,NOW())) > $de AND s.V_priority_code = 'Emergency'))");
+				$this->db->where("((TIMESTAMPDIFF(MINUTE,s.D_date,IFNULL(s.v_respondate,NOW())) <= $dn AND s.V_priority_code = 'Normal') OR (TIMESTAMPDIFF(MINUTE,s.D_date,IFNULL(s.v_respondate,NOW())) <= $de AND s.V_priority_code = 'Emergency'))");
+			} elseif ($stat == "no"){
+				$this->db->where("((TIMESTAMPDIFF(MINUTE,s.D_date,IFNULL(s.v_respondate,NOW())) > $dn AND s.V_priority_code = 'Normal') OR (TIMESTAMPDIFF(MINUTE,s.D_date,IFNULL(s.v_respondate,NOW())) > $de AND s.V_priority_code = 'Emergency'))");
 			}
-                        if (!function_exists('toArray')) {
-			function toArray($obj)
-			{
-    	$obj = (array) $obj;//cast to array, optional
-    	return $obj['path'];
+
+			/*buzz add 3/9/18*/
+			$this->db->where('s.v_hospitalcode',$this->session->userdata('hosp_code'));
+			if ($reqtype <> 'A2'){
+				$this->db->where('s.V_request_type !=','A2');
 			}
-                        }
+			/*./buzz add 3/9/18*/
+
+			if (!function_exists('toArray')) {
+				function toArray($obj)
+				{
+					$obj = (array) $obj;//cast to array, optional
+					return $obj['path'];
+				}
+			}
 			$idArray = array_map('toArray', $this->session->userdata('accessr'));
 			//if ((in_array("contentcontroller/Schedule(main)", $idArray)) && ($this->session->userdata('Ser_Code')=="IIUM")) {
-			if ((in_array("contentcontroller/Schedule(main)", $idArray)) && (in_array("useriium", $idArray))) {
-			$this->db->where('s.V_request_type <> ', 'A9');
-	 		}
+			if( (in_array("contentcontroller/Schedule(main)", $idArray) ) && ( in_array("useriium", $idArray) ) ) {
+				$this->db->where('s.V_request_type <> ', 'A9');
+			}
 			$query = $this->db->get();
-			//echo $this->db->last_query();
+			// echo "<pre>".$this->db->last_query();
 			//exit();
 			$query_result = $query->result();
 			return $query_result;
@@ -1072,23 +1079,23 @@ ORDER BY s.d_DueDt, s.v_WrkOrdNo
 		
 		
 		function rpt_agl($month,$year,$grpsel){
-		/*
-		SELECT     m.new_asset_type, a.V_Equip_code, a.V_Asset_name, COUNT(a.V_Equip_code) AS assetcount
-FROM         pmis2_EGM_AssetRegistration a INNER JOIN
-                      pmis2_EGM_AssetReg_General b ON a.V_Asset_no = b.V_Asset_no AND a.V_Hospitalcode = b.V_Hospital_code INNER JOIN
-                      Pmis2_Egm_AssetMaintenance c ON a.V_Asset_no = c.v_AssetNo AND a.V_Hospitalcode = c.v_Hospitalcode AND b.V_Asset_no = c.v_AssetNo AND 
-                      b.V_Hospital_code = c.v_Hospitalcode INNER JOIN
-                      PMIS2_SA_EQUIP_CODE f ON a.V_Equip_code = f.v_Equip_Code INNER JOIN
-                      pmis2_SA_asset_mapping m ON a.V_Equip_code = m.old_asset_type AND a.V_Equip_code = m.old_asset_type AND 
-                      a.V_Equip_code = m.old_asset_type INNER JOIN
-                      pmis2_SA_MOH_Asset_type e ON m.new_asset_type = e.Asset_Type INNER JOIN
-                      pmis2_SA_UserDept g ON a.V_User_Dept_code = g.v_UserDeptCode AND a.V_Hospitalcode = g.v_HospitalCode INNER JOIN
-                      pmis2_EGM_AssetLocation h ON a.V_Location_code = h.V_location_code AND a.V_Hospitalcode = h.V_Hospitalcode LEFT OUTER JOIN
-                      pmis2_sa_vendor z ON ISNULL(b.V_Vendor_code, 'NA') = z.v_vendorcode
-WHERE     (a.V_Actionflag <> 'D') AND (a.V_Hospitalcode = 'MER') AND (a.V_service_code = 'BEMS') AND (b.V_ActionFlag <> 'D')
-GROUP BY a.V_Equip_code, m.new_asset_type, a.V_Asset_name
-ORDER BY a.V_Asset_name
-		*/
+			/*
+			SELECT     m.new_asset_type, a.V_Equip_code, a.V_Asset_name, COUNT(a.V_Equip_code) AS assetcount
+			FROM         pmis2_EGM_AssetRegistration a INNER JOIN
+			pmis2_EGM_AssetReg_General b ON a.V_Asset_no = b.V_Asset_no AND a.V_Hospitalcode = b.V_Hospital_code INNER JOIN
+			Pmis2_Egm_AssetMaintenance c ON a.V_Asset_no = c.v_AssetNo AND a.V_Hospitalcode = c.v_Hospitalcode AND b.V_Asset_no = c.v_AssetNo AND 
+			b.V_Hospital_code = c.v_Hospitalcode INNER JOIN
+			PMIS2_SA_EQUIP_CODE f ON a.V_Equip_code = f.v_Equip_Code INNER JOIN
+			pmis2_SA_asset_mapping m ON a.V_Equip_code = m.old_asset_type AND a.V_Equip_code = m.old_asset_type AND 
+			a.V_Equip_code = m.old_asset_type INNER JOIN
+			pmis2_SA_MOH_Asset_type e ON m.new_asset_type = e.Asset_Type INNER JOIN
+			pmis2_SA_UserDept g ON a.V_User_Dept_code = g.v_UserDeptCode AND a.V_Hospitalcode = g.v_HospitalCode INNER JOIN
+			pmis2_EGM_AssetLocation h ON a.V_Location_code = h.V_location_code AND a.V_Hospitalcode = h.V_Hospitalcode LEFT OUTER JOIN
+			pmis2_sa_vendor z ON ISNULL(b.V_Vendor_code, 'NA') = z.v_vendorcode
+			WHERE     (a.V_Actionflag <> 'D') AND (a.V_Hospitalcode = 'MER') AND (a.V_service_code = 'BEMS') AND (b.V_ActionFlag <> 'D')
+			GROUP BY a.V_Equip_code, m.new_asset_type, a.V_Asset_name
+			ORDER BY a.V_Asset_name
+			*/
 			$this->db->select('m.new_asset_type, a.V_Equip_code, f.v_Equip_Desc AS V_Asset_name , COUNT(a.V_Equip_code) AS assetcount');
 			$this->db->from('pmis2_egm_assetregistration a');
 			$this->db->join('pmis2_egm_assetreg_general b','a.V_Asset_no = b.V_Asset_no AND a.V_Hospitalcode = b.V_Hospital_code');
@@ -1119,30 +1126,30 @@ ORDER BY a.V_Asset_name
 		}
 		
 		function rpt_alr($month,$year,$grpsel,$dept){
-		/*
-		SELECT DISTINCT 
-                      a.V_Hospitalcode, a.V_Tag_no, e.Asset_Type, e.Type_Desc, a.V_Asset_no, a.V_Equip_code, f.v_Equip_Desc, c.v_AssetStatus, c.v_AssetVStatus, 
-                      CONVERT(varchar, c.d_RefDate, 106) AS BER_DATE, c.v_AssetCondition, YEAR(GETDATE()) - YEAR(b.D_commission) AS Age, b.V_PO_no, 
-                      CONVERT(varchar, b.V_PO_date, 106) AS V_PO_date, ISNULL(b.N_Cost, 0) AS N_Cost, c.v_ChecklistCode, a.V_User_Dept_code, g.v_mohdesc, 
-                      g.v_UserDeptDesc, a.V_Location_code, CONVERT(varchar, a.D_Register_date, 106) AS RegisterDate, CONVERT(varchar, b.D_commission, 106) 
-                      AS CommissionDate, a.V_Make, a.V_Manufacturer, a.V_Model_no, a.V_Serial_no, a.V_Brandname, CONVERT(varchar, b.V_Wrn_end_code, 106) 
-                      AS WarrantyEndDate, b.V_Vendor_code, z.v_vendorcode, z.v_vendorname, b.V_File_Ref_no, b.V_Depreciation, b.V_Lifespan, b.V_Oper_Hr_code, 
-                      b.V_Job_Type_code, b.V_Agent, b.V_Check_list_code
-FROM         pmis2_EGM_AssetRegistration a INNER JOIN
-                      pmis2_EGM_AssetReg_General b ON a.V_Asset_no = b.V_Asset_no AND a.V_Hospitalcode = b.V_Hospital_code INNER JOIN
-                      Pmis2_Egm_AssetMaintenance c ON a.V_Asset_no = c.v_AssetNo AND a.V_Hospitalcode = c.v_Hospitalcode AND b.V_Asset_no = c.v_AssetNo AND 
-                      b.V_Hospital_code = c.v_Hospitalcode INNER JOIN
-                      PMIS2_SA_EQUIP_CODE f ON a.V_Equip_code = f.v_Equip_Code INNER JOIN
-                      pmis2_SA_asset_mapping d ON a.V_Equip_code = d.old_asset_type INNER JOIN
-                      pmis2_SA_MOH_Asset_type e ON d.new_asset_type = e.Asset_Type INNER JOIN
-                      pmis2_SA_UserDept g ON a.V_User_Dept_code = g.v_UserDeptCode AND a.V_Hospitalcode = g.v_HospitalCode INNER JOIN
-                      pmis2_EGM_AssetLocation h ON a.V_Location_code = h.V_location_code AND a.V_Hospitalcode = h.V_Hospitalcode LEFT OUTER JOIN
-                      pmis2_sa_vendor z ON ISNULL(b.V_Vendor_code, 'NA') = z.v_vendorcode
-WHERE     (a.V_Actionflag <> 'D') AND (b.V_ActionFlag <> 'D') AND (c.v_Actionflag <> 'D') AND (g.v_ActionFlag <> 'D') AND (h.V_Actionflag <> 'D') AND 
-                      (f.v_Actionflag <> 'D') AND (a.V_Hospitalcode IN ('MER')) AND (a.V_service_code = 'bems') AND (a.V_Asset_no NOT LIKE '%B8888%')
-ORDER BY a.V_Asset_no
-		*/
-		  $this->db->distinct();
+			/*
+			SELECT DISTINCT 
+			a.V_Hospitalcode, a.V_Tag_no, e.Asset_Type, e.Type_Desc, a.V_Asset_no, a.V_Equip_code, f.v_Equip_Desc, c.v_AssetStatus, c.v_AssetVStatus, 
+			CONVERT(varchar, c.d_RefDate, 106) AS BER_DATE, c.v_AssetCondition, YEAR(GETDATE()) - YEAR(b.D_commission) AS Age, b.V_PO_no, 
+			CONVERT(varchar, b.V_PO_date, 106) AS V_PO_date, ISNULL(b.N_Cost, 0) AS N_Cost, c.v_ChecklistCode, a.V_User_Dept_code, g.v_mohdesc, 
+			g.v_UserDeptDesc, a.V_Location_code, CONVERT(varchar, a.D_Register_date, 106) AS RegisterDate, CONVERT(varchar, b.D_commission, 106) 
+			AS CommissionDate, a.V_Make, a.V_Manufacturer, a.V_Model_no, a.V_Serial_no, a.V_Brandname, CONVERT(varchar, b.V_Wrn_end_code, 106) 
+			AS WarrantyEndDate, b.V_Vendor_code, z.v_vendorcode, z.v_vendorname, b.V_File_Ref_no, b.V_Depreciation, b.V_Lifespan, b.V_Oper_Hr_code, 
+			b.V_Job_Type_code, b.V_Agent, b.V_Check_list_code
+			FROM         pmis2_EGM_AssetRegistration a INNER JOIN
+			pmis2_EGM_AssetReg_General b ON a.V_Asset_no = b.V_Asset_no AND a.V_Hospitalcode = b.V_Hospital_code INNER JOIN
+			Pmis2_Egm_AssetMaintenance c ON a.V_Asset_no = c.v_AssetNo AND a.V_Hospitalcode = c.v_Hospitalcode AND b.V_Asset_no = c.v_AssetNo AND 
+			b.V_Hospital_code = c.v_Hospitalcode INNER JOIN
+			PMIS2_SA_EQUIP_CODE f ON a.V_Equip_code = f.v_Equip_Code INNER JOIN
+			pmis2_SA_asset_mapping d ON a.V_Equip_code = d.old_asset_type INNER JOIN
+			pmis2_SA_MOH_Asset_type e ON d.new_asset_type = e.Asset_Type INNER JOIN
+			pmis2_SA_UserDept g ON a.V_User_Dept_code = g.v_UserDeptCode AND a.V_Hospitalcode = g.v_HospitalCode INNER JOIN
+			pmis2_EGM_AssetLocation h ON a.V_Location_code = h.V_location_code AND a.V_Hospitalcode = h.V_Hospitalcode LEFT OUTER JOIN
+			pmis2_sa_vendor z ON ISNULL(b.V_Vendor_code, 'NA') = z.v_vendorcode
+			WHERE     (a.V_Actionflag <> 'D') AND (b.V_ActionFlag <> 'D') AND (c.v_Actionflag <> 'D') AND (g.v_ActionFlag <> 'D') AND (h.V_Actionflag <> 'D') AND 
+			(f.v_Actionflag <> 'D') AND (a.V_Hospitalcode IN ('MER')) AND (a.V_service_code = 'bems') AND (a.V_Asset_no NOT LIKE '%B8888%')
+			ORDER BY a.V_Asset_no
+			*/
+			$this->db->distinct();
 			$this->db->select('a.V_Hospitalcode, a.V_Tag_no, e.Asset_Type, e.Type_Desc, a.V_Asset_no, a.V_Equip_code, f.v_Equip_Desc, c.v_AssetStatus, c.v_AssetVStatus, c.d_RefDate AS BER_DATE, c.v_AssetCondition, (YEAR(NOW()) - YEAR(b.D_commission)) AS Age, b.V_PO_no, b.V_PO_date AS V_PO_date, IFNULL(b.N_Cost, 0) AS N_Cost, c.v_ChecklistCode, a.V_User_Dept_code, g.v_mohdesc, g.v_UserDeptDesc, a.V_Location_code, a.D_Register_date AS RegisterDate, b.D_commission AS CommissionDate, a.V_Make, a.V_Manufacturer, a.V_Model_no, a.V_Serial_no, a.V_Brandname, b.V_Wrn_end_code AS WarrantyEndDate, b.V_Vendor_code, z.v_vendorcode, z.v_vendorname, b.V_File_Ref_no, b.V_Depreciation, b.V_Lifespan, b.V_Oper_Hr_code,b.V_Job_Type_code, b.V_Agent, b.V_Check_list_code,a.v_asset_grp', false);
 			//$this->db->select('a.V_Equip_code, m.new_asset_type, a.V_Asset_name', false);
 			$this->db->from('pmis2_egm_assetregistration a');
@@ -1177,19 +1184,19 @@ ORDER BY a.V_Asset_no
 		}
 		
 		function rpt_ppmp($month,$year){
-		/*
-		SELECT IFNULL(SUM(CASE WHEN c.qap_type = 'Y' THEN 1 ELSE 0 END),0) AS qtotal, COUNT(*) AS Total,
- IFNULL(SUM(CASE WHEN a.v_Wrkordstatus = 'C' AND (v_closeddate = d_DueDt) THEN 1 ELSE 0 END),0) AS cstotal, 
- IFNULL(SUM(CASE WHEN a.v_Wrkordstatus = 'C' THEN 1 ELSE 0 END),0) AS ctotal, 
- IFNULL(SUM(CASE WHEN a.v_Wrkordstatus = 'C' AND c.qap_type = 'Y' THEN 1 ELSE 0 END),0) AS qctotal, 
- IFNULL(SUM(CASE WHEN a.v_Wrkordstatus = 'C' AND (v_closeddate <> d_DueDt) THEN 1 ELSE 0 END),0) AS cnstota, 
- IFNULL(SUM(CASE WHEN a.v_Wrkordstatus = 'C' AND (v_closeddate <> d_DueDt) AND c.qap_type = 'Y' THEN 1 ELSE 0 END),0) AS qcnstota, 
- IFNULL(SUM(CASE WHEN a.v_Wrkordstatus <> 'C' THEN 1 ELSE 0 END),0) AS nctotal, 
- IFNULL(SUM(CASE WHEN a.v_Wrkordstatus <> 'C' AND c.qap_type = 'Y' THEN 1 ELSE 0 END),0) AS qnctotal 
- FROM fmis.mis_asset_type_master c RIGHT OUTER JOIN pmis2_SA_asset_mapping b INNER JOIN 
- pmis2_egm_schconfirmmon a ON b.old_asset_type = LEFT(a.v_Asset_no, 7) ON c.type_code = b.new_asset_type 
- WHERE (YEAR(a.d_DueDt) = 2015) AND (MONTH(a.d_DueDt) = 1) AND (a.v_Actionflag <> 'D') AND (a.v_HospitalCode = 'IIUM')
-		*/
+			/*
+			SELECT IFNULL(SUM(CASE WHEN c.qap_type = 'Y' THEN 1 ELSE 0 END),0) AS qtotal, COUNT(*) AS Total,
+			IFNULL(SUM(CASE WHEN a.v_Wrkordstatus = 'C' AND (v_closeddate = d_DueDt) THEN 1 ELSE 0 END),0) AS cstotal, 
+			IFNULL(SUM(CASE WHEN a.v_Wrkordstatus = 'C' THEN 1 ELSE 0 END),0) AS ctotal, 
+			IFNULL(SUM(CASE WHEN a.v_Wrkordstatus = 'C' AND c.qap_type = 'Y' THEN 1 ELSE 0 END),0) AS qctotal, 
+			IFNULL(SUM(CASE WHEN a.v_Wrkordstatus = 'C' AND (v_closeddate <> d_DueDt) THEN 1 ELSE 0 END),0) AS cnstota, 
+			IFNULL(SUM(CASE WHEN a.v_Wrkordstatus = 'C' AND (v_closeddate <> d_DueDt) AND c.qap_type = 'Y' THEN 1 ELSE 0 END),0) AS qcnstota, 
+			IFNULL(SUM(CASE WHEN a.v_Wrkordstatus <> 'C' THEN 1 ELSE 0 END),0) AS nctotal, 
+			IFNULL(SUM(CASE WHEN a.v_Wrkordstatus <> 'C' AND c.qap_type = 'Y' THEN 1 ELSE 0 END),0) AS qnctotal 
+			FROM fmis.mis_asset_type_master c RIGHT OUTER JOIN pmis2_SA_asset_mapping b INNER JOIN 
+			pmis2_egm_schconfirmmon a ON b.old_asset_type = LEFT(a.v_Asset_no, 7) ON c.type_code = b.new_asset_type 
+			WHERE (YEAR(a.d_DueDt) = 2015) AND (MONTH(a.d_DueDt) = 1) AND (a.v_Actionflag <> 'D') AND (a.v_HospitalCode = 'IIUM')
+			*/
 			$this->db->select('a.v_hospitalcode, IFNULL(SUM(CASE WHEN c.qap_type = "Y" THEN 1 ELSE 0 END),0) AS qtotal, COUNT(*) AS Total, IFNULL(SUM(CASE WHEN a.v_Wrkordstatus = "C" AND (v_closeddate = d_DueDt) THEN 1 ELSE 0 END),0) AS cstotal, IFNULL(SUM(CASE WHEN a.v_Wrkordstatus = "C" THEN 1 ELSE 0 END),0) AS ctotal, IFNULL(SUM(CASE WHEN a.v_Wrkordstatus = "C" AND c.qap_type = "Y" THEN 1 ELSE 0 END),0) AS qctotal, IFNULL(SUM(CASE WHEN a.v_Wrkordstatus = "C" AND (v_closeddate <> d_DueDt) THEN 1 ELSE 0 END),0) AS cnstota, IFNULL(SUM(CASE WHEN a.v_Wrkordstatus = "C" AND (v_closeddate <> d_DueDt) AND c.qap_type = "Y" THEN 1 ELSE 0 END),0) AS qcnstota, IFNULL(SUM(CASE WHEN a.v_Wrkordstatus <> "C" THEN 1 ELSE 0 END),0) AS nctotal, IFNULL(SUM(CASE WHEN a.v_Wrkordstatus <> "C" AND c.qap_type = "Y" THEN 1 ELSE 0 END),0) AS qnctotal', false);
 			$this->db->from('mis_asset_type_master c');
 			$this->db->join('pmis2_sa_asset_mapping b','c.type_code = b.new_asset_type', 'right outer');
@@ -1209,21 +1216,21 @@ ORDER BY a.V_Asset_no
 		}
 		
 		function rpt_rcmp($month,$year){
-		/*
-		SELECT     IFNULL(SUM(CASE WHEN c.qap_type = 'Y' THEN 1 ELSE 0 END), 0) AS qtotal, COUNT(*) AS Total, 
-                      IFNULL(SUM(CASE WHEN a.v_request_status = 'C' AND (a.v_closeddate - a.D_date < 16) THEN 1 ELSE 0 END), 0) AS cstotal, 
-                      IFNULL(SUM(CASE WHEN a.v_request_status = 'C' THEN 1 ELSE 0 END), 0) AS ctotal, IFNULL(SUM(CASE WHEN a.v_request_status = 'C' AND 
-                      c.qap_type = 'Y' THEN 1 ELSE 0 END), 0) AS qctotal, IFNULL(SUM(CASE WHEN a.v_request_status = 'C' AND (v_closeddate - D_date > 15) 
-                      THEN 1 ELSE 0 END), 0) AS cnstota, IFNULL(SUM(CASE WHEN a.v_request_status = 'C' AND (v_closeddate - D_date > 15) AND 
-                      c.qap_type = 'Y' THEN 1 ELSE 0 END), 0) AS qcnstota, IFNULL(SUM(CASE WHEN a.v_request_status <> 'C' THEN 1 ELSE 0 END), 0) AS nctotal, 
-                      IFNULL(SUM(CASE WHEN a.v_request_status <> 'C' AND c.qap_type = 'Y' THEN 1 ELSE 0 END), 0) AS qnctotal
-FROM         fmis.mis_asset_type_master c RIGHT OUTER JOIN
-                      pmis2_SA_asset_mapping b INNER JOIN
-                      pmis2_egm_service_request a ON b.old_asset_type = LEFT(a.V_Asset_no, 7) ON c.type_code = b.new_asset_type
-WHERE     (YEAR(a.D_date) = 2015) AND (MONTH(a.D_date) = 3) AND (a.V_request_type = 'A4' OR
-                      a.V_request_type = 'A5' OR
-                      a.V_request_type = 'A8') AND (a.V_actionflag <> 'D') AND (a.V_hospitalcode = 'IIUM')
-		*/
+			/*
+			SELECT     IFNULL(SUM(CASE WHEN c.qap_type = 'Y' THEN 1 ELSE 0 END), 0) AS qtotal, COUNT(*) AS Total, 
+			IFNULL(SUM(CASE WHEN a.v_request_status = 'C' AND (a.v_closeddate - a.D_date < 16) THEN 1 ELSE 0 END), 0) AS cstotal, 
+			IFNULL(SUM(CASE WHEN a.v_request_status = 'C' THEN 1 ELSE 0 END), 0) AS ctotal, IFNULL(SUM(CASE WHEN a.v_request_status = 'C' AND 
+			c.qap_type = 'Y' THEN 1 ELSE 0 END), 0) AS qctotal, IFNULL(SUM(CASE WHEN a.v_request_status = 'C' AND (v_closeddate - D_date > 15) 
+			THEN 1 ELSE 0 END), 0) AS cnstota, IFNULL(SUM(CASE WHEN a.v_request_status = 'C' AND (v_closeddate - D_date > 15) AND 
+			c.qap_type = 'Y' THEN 1 ELSE 0 END), 0) AS qcnstota, IFNULL(SUM(CASE WHEN a.v_request_status <> 'C' THEN 1 ELSE 0 END), 0) AS nctotal, 
+			IFNULL(SUM(CASE WHEN a.v_request_status <> 'C' AND c.qap_type = 'Y' THEN 1 ELSE 0 END), 0) AS qnctotal
+			FROM         fmis.mis_asset_type_master c RIGHT OUTER JOIN
+			pmis2_SA_asset_mapping b INNER JOIN
+			pmis2_egm_service_request a ON b.old_asset_type = LEFT(a.V_Asset_no, 7) ON c.type_code = b.new_asset_type
+			WHERE     (YEAR(a.D_date) = 2015) AND (MONTH(a.D_date) = 3) AND (a.V_request_type = 'A4' OR
+			a.V_request_type = 'A5' OR
+			a.V_request_type = 'A8') AND (a.V_actionflag <> 'D') AND (a.V_hospitalcode = 'IIUM')
+			*/
 			$this->db->select('a.v_hospitalcode, IFNULL(SUM(CASE WHEN c.qap_type = "Y" THEN 1 ELSE 0 END), 0) AS qtotal, COUNT(*) AS Total, IFNULL(SUM(CASE WHEN a.v_request_status = "C" AND (a.v_closeddate - a.D_date < 16) THEN 1 ELSE 0 END), 0) AS cstotal, IFNULL(SUM(CASE WHEN a.v_request_status = "C" THEN 1 ELSE 0 END), 0) AS ctotal, IFNULL(SUM(CASE WHEN a.v_request_status = "C" AND c.qap_type = "Y" THEN 1 ELSE 0 END), 0) AS qctotal, IFNULL(SUM(CASE WHEN a.v_request_status = "C" AND (v_closeddate - D_date > 15) THEN 1 ELSE 0 END), 0) AS cnstota, IFNULL(SUM(CASE WHEN a.v_request_status = "C" AND (v_closeddate - D_date > 15) AND c.qap_type = "Y" THEN 1 ELSE 0 END), 0) AS qcnstota, IFNULL(SUM(CASE WHEN a.v_request_status <> "C" THEN 1 ELSE 0 END), 0) AS nctotal, IFNULL(SUM(CASE WHEN a.v_request_status <> "C" AND c.qap_type = "Y" THEN 1 ELSE 0 END), 0) AS qnctotal', false);
 			$this->db->from('mis_asset_type_master c');
 			$this->db->join('pmis2_sa_asset_mapping b','c.type_code = b.new_asset_type', 'right outer');
@@ -1246,32 +1253,32 @@ WHERE     (YEAR(a.D_date) = 2015) AND (MONTH(a.D_date) = 3) AND (a.V_request_typ
 		}
 		
 		function rpt_qc($month,$year){
-		/*
-		SELECT     i.v_respontime, i.V_requestor, i.V_MohDesg, i.V_phone_no, a.V_Hospitalcode, a.V_Tag_no, e.Asset_Type, e.Type_Desc, 
-                      CONCAT(a.V_Hospitalcode,'-',a.V_Asset_no) AS asset_no, a.V_Asset_no, i.v_respondate AS Respondate, YEAR(i.D_date) AS Year, 
-                      MONTH(i.D_date) AS Month, i.D_time, i.V_summary, i.v_closeddate AS v_closeddate, i.D_date
-                      AS Requestdate, DATEDIFF(i.v_closeddate, i.D_date ) AS Duration, i.V_hospitalcode AS Expr1, i.V_Request_no, i.V_request_type, 
-                      i.V_request_status, DATEDIFF(now(),i.D_date) AS Ageing, a.V_Equip_code, f.v_Equip_Desc, c.v_AssetStatus, c.v_AssetVStatus, 
-                      c.v_AssetCondition, YEAR(now()) - YEAR(b.D_commission) AS Age, b.N_Cost, c.v_ChecklistCode, a.V_User_Dept_code, g.v_UserDeptDesc, 
-                      a.V_Location_code,  a.D_Register_date AS RegisterDate,  b.D_commission AS CommissionDate, 
-                      a.V_Make, a.V_Manufacturer, a.V_Model_no, a.V_Serial_no, a.V_Brandname,  b.V_Wrn_end_code AS WarrantyEndDate, 
-                      b.V_Vendor_code
-FROM         pmis2_egm_service_request i INNER JOIN
-                      pmis2_EGM_AssetRegistration a INNER JOIN
-                      pmis2_EGM_AssetReg_General b ON a.V_Asset_no = b.V_Asset_no AND a.V_Hospitalcode = b.V_Hospital_code INNER JOIN
-                      Pmis2_Egm_AssetMaintenance c ON a.V_Asset_no = c.v_AssetNo AND a.V_Hospitalcode = c.v_Hospitalcode AND b.V_Asset_no = c.v_AssetNo AND 
-                      b.V_Hospital_code = c.v_Hospitalcode INNER JOIN
-                      PMIS2_SA_EQUIP_CODE f ON a.V_Equip_code = f.v_Equip_Code INNER JOIN
-                      pmis2_SA_asset_mapping d ON a.V_Equip_code = d.old_asset_type INNER JOIN
-                      pmis2_SA_MOH_Asset_type e ON d.new_asset_type = e.Asset_Type INNER JOIN
-                      pmis2_SA_UserDept g ON a.V_User_Dept_code = g.v_UserDeptCode AND a.V_Hospitalcode = g.v_HospitalCode INNER JOIN
-                      pmis2_EGM_AssetLocation h ON a.V_Location_code = h.V_location_code AND a.V_Hospitalcode = h.V_Hospitalcode and
-                      i.V_hospitalcode = a.V_Hospitalcode AND i.V_Asset_no = a.V_Asset_no
-WHERE     (i.V_request_type IN ('A3', 'A4', 'A5', 'A6', 'A7', 'A8')) AND (i.V_actionflag <> 'D') AND (a.V_Actionflag <> 'D') AND (b.V_ActionFlag <> 'D') AND 
-                      (c.v_Actionflag <> 'D') AND (g.v_ActionFlag <> 'D') AND (h.V_Actionflag <> 'D') AND (f.v_Actionflag <> 'D') AND (a.V_service_code = 'BES') AND 
-                      (i.V_servicecode IN ('BES')) AND (i.v_closeddate IS NULL) AND (DATEDIFF(now(),i.D_date) > 14)
-ORDER BY YEAR(i.D_date), MONTH(i.D_date), DAY(i.D_date), i.V_hospitalcode
-		*/
+			/*
+			SELECT     i.v_respontime, i.V_requestor, i.V_MohDesg, i.V_phone_no, a.V_Hospitalcode, a.V_Tag_no, e.Asset_Type, e.Type_Desc, 
+			CONCAT(a.V_Hospitalcode,'-',a.V_Asset_no) AS asset_no, a.V_Asset_no, i.v_respondate AS Respondate, YEAR(i.D_date) AS Year, 
+			MONTH(i.D_date) AS Month, i.D_time, i.V_summary, i.v_closeddate AS v_closeddate, i.D_date
+			AS Requestdate, DATEDIFF(i.v_closeddate, i.D_date ) AS Duration, i.V_hospitalcode AS Expr1, i.V_Request_no, i.V_request_type, 
+			i.V_request_status, DATEDIFF(now(),i.D_date) AS Ageing, a.V_Equip_code, f.v_Equip_Desc, c.v_AssetStatus, c.v_AssetVStatus, 
+			c.v_AssetCondition, YEAR(now()) - YEAR(b.D_commission) AS Age, b.N_Cost, c.v_ChecklistCode, a.V_User_Dept_code, g.v_UserDeptDesc, 
+			a.V_Location_code,  a.D_Register_date AS RegisterDate,  b.D_commission AS CommissionDate, 
+			a.V_Make, a.V_Manufacturer, a.V_Model_no, a.V_Serial_no, a.V_Brandname,  b.V_Wrn_end_code AS WarrantyEndDate, 
+			b.V_Vendor_code
+			FROM         pmis2_egm_service_request i INNER JOIN
+			pmis2_EGM_AssetRegistration a INNER JOIN
+			pmis2_EGM_AssetReg_General b ON a.V_Asset_no = b.V_Asset_no AND a.V_Hospitalcode = b.V_Hospital_code INNER JOIN
+			Pmis2_Egm_AssetMaintenance c ON a.V_Asset_no = c.v_AssetNo AND a.V_Hospitalcode = c.v_Hospitalcode AND b.V_Asset_no = c.v_AssetNo AND 
+			b.V_Hospital_code = c.v_Hospitalcode INNER JOIN
+			PMIS2_SA_EQUIP_CODE f ON a.V_Equip_code = f.v_Equip_Code INNER JOIN
+			pmis2_SA_asset_mapping d ON a.V_Equip_code = d.old_asset_type INNER JOIN
+			pmis2_SA_MOH_Asset_type e ON d.new_asset_type = e.Asset_Type INNER JOIN
+			pmis2_SA_UserDept g ON a.V_User_Dept_code = g.v_UserDeptCode AND a.V_Hospitalcode = g.v_HospitalCode INNER JOIN
+			pmis2_EGM_AssetLocation h ON a.V_Location_code = h.V_location_code AND a.V_Hospitalcode = h.V_Hospitalcode and
+			i.V_hospitalcode = a.V_Hospitalcode AND i.V_Asset_no = a.V_Asset_no
+			WHERE     (i.V_request_type IN ('A3', 'A4', 'A5', 'A6', 'A7', 'A8')) AND (i.V_actionflag <> 'D') AND (a.V_Actionflag <> 'D') AND (b.V_ActionFlag <> 'D') AND 
+			(c.v_Actionflag <> 'D') AND (g.v_ActionFlag <> 'D') AND (h.V_Actionflag <> 'D') AND (f.v_Actionflag <> 'D') AND (a.V_service_code = 'BES') AND 
+			(i.V_servicecode IN ('BES')) AND (i.v_closeddate IS NULL) AND (DATEDIFF(now(),i.D_date) > 14)
+			ORDER BY YEAR(i.D_date), MONTH(i.D_date), DAY(i.D_date), i.V_hospitalcode
+			*/
 			$this->db->select("i.v_respontime, i.V_requestor, i.V_MohDesg, i.V_phone_no, a.V_Hospitalcode, a.V_Tag_no, e.Asset_Type, e.Type_Desc, CONCAT(a.V_Hospitalcode,'-',a.V_Asset_no) AS asset_no, a.V_Asset_no, i.v_respondate AS Respondate, YEAR(i.D_date) AS Year, MONTH(i.D_date) AS Month, i.D_time, i.V_summary, i.v_closeddate AS v_closeddate, i.D_date AS Requestdate, DATEDIFF(i.v_closeddate, i.D_date ) AS Duration, i.V_hospitalcode AS Expr1, i.V_Request_no, i.V_request_type, i.V_request_status, DATEDIFF(now(),i.D_date) AS Ageing, a.V_Equip_code, f.v_Equip_Desc, c.v_AssetStatus, c.v_AssetVStatus,c.v_AssetCondition, YEAR(now()) - YEAR(b.D_commission) AS Age, b.N_Cost, c.v_ChecklistCode, a.V_User_Dept_code, g.v_UserDeptDesc, a.V_Location_code,  a.D_Register_date AS RegisterDate,  b.D_commission AS CommissionDate, a.V_Make, a.V_Manufacturer, a.V_Model_no, a.V_Serial_no, a.V_Brandname,  b.V_Wrn_end_code AS WarrantyEndDate, b.V_Vendor_code", false);
 			$this->db->from('pmis2_egm_service_request i');
 			$this->db->join('pmis2_egm_assetregistration a','i.V_hospitalcode = a.V_Hospitalcode AND i.V_Asset_no = a.V_Asset_no');
@@ -1304,15 +1311,15 @@ ORDER BY YEAR(i.D_date), MONTH(i.D_date), DAY(i.D_date), i.V_hospitalcode
 		}
 		
 		function rpt_qapc($month,$year){
-		/*
-		SELECT     WO.*, ASSET.trpi AS Expr1, ASSET.uptime_pct, IFNULL(WO.downtime_total, 0) AS downtime_totals, IFNULL(WO.completed_date, 
-                      '01/01/1911') AS completed_dates, IFNULL(WO.wo_date, '01/01/1911') AS wo_dates
-FROM         mis_qap_work_orders$candidate WO LEFT OUTER JOIN
-                      mis_qap_inc_assets$candidate ASSET ON WO.asset_no = ASSET.asset_no AND WO.qap_period = ASSET.qap_period
-WHERE     (WO.qap_period = '201305') AND (LEN(WO.siquptime_no) > 0 OR
-                      LEN(WO.siqppm_no) > 0) AND (ASSET.uptime_pct < ASSET.trpi) AND (WO.hospital_code = 'MKA')
-ORDER BY WO.hospital_code, ASSET.uptime_pct DESC
-		*/
+			/*
+			SELECT     WO.*, ASSET.trpi AS Expr1, ASSET.uptime_pct, IFNULL(WO.downtime_total, 0) AS downtime_totals, IFNULL(WO.completed_date, 
+			'01/01/1911') AS completed_dates, IFNULL(WO.wo_date, '01/01/1911') AS wo_dates
+			FROM         mis_qap_work_orders$candidate WO LEFT OUTER JOIN
+			mis_qap_inc_assets$candidate ASSET ON WO.asset_no = ASSET.asset_no AND WO.qap_period = ASSET.qap_period
+			WHERE     (WO.qap_period = '201305') AND (LEN(WO.siquptime_no) > 0 OR
+			LEN(WO.siqppm_no) > 0) AND (ASSET.uptime_pct < ASSET.trpi) AND (WO.hospital_code = 'MKA')
+			ORDER BY WO.hospital_code, ASSET.uptime_pct DESC
+			*/
 			$this->db->select("WO.*, ASSET.trpi AS trpi, ASSET.uptime_pct, IFNULL(WO.downtime_total, 0) AS downtime_totals, IFNULL(WO.completed_date, '01/01/1911') AS completed_dates, IFNULL(WO.wo_date, '01/01/1911') AS wo_dates", false);
 			$this->db->from('mis_qap_work_orders$candidate WO');
 			$this->db->join('mis_qap_inc_assets$candidate ASSET','WO.asset_no = ASSET.asset_no AND WO.qap_period = ASSET.qap_period', 'LEFT OUTER');
@@ -1329,23 +1336,23 @@ ORDER BY WO.hospital_code, ASSET.uptime_pct DESC
 		}
 		
 		function rpt_qapac($month,$year,$grpsel){
-		/*
-		SELECT     m.new_asset_type, a.V_Equip_code, a.V_Asset_name, COUNT(a.V_Equip_code) AS assetcount
-FROM         pmis2_EGM_AssetRegistration a INNER JOIN
-                      pmis2_EGM_AssetReg_General b ON a.V_Asset_no = b.V_Asset_no AND a.V_Hospitalcode = b.V_Hospital_code INNER JOIN
-                      Pmis2_Egm_AssetMaintenance c ON a.V_Asset_no = c.v_AssetNo AND a.V_Hospitalcode = c.v_Hospitalcode AND b.V_Asset_no = c.v_AssetNo AND 
-                      b.V_Hospital_code = c.v_Hospitalcode INNER JOIN
-                      PMIS2_SA_EQUIP_CODE f ON a.V_Equip_code = f.v_Equip_Code INNER JOIN
-                      pmis2_SA_asset_mapping m ON a.V_Equip_code = m.old_asset_type AND a.V_Equip_code = m.old_asset_type AND 
-                      a.V_Equip_code = m.old_asset_type INNER JOIN
-                      pmis2_SA_MOH_Asset_type e ON m.new_asset_type = e.Asset_Type INNER JOIN
-                      pmis2_SA_UserDept g ON a.V_User_Dept_code = g.v_UserDeptCode AND a.V_Hospitalcode = g.v_HospitalCode INNER JOIN
-                      pmis2_EGM_AssetLocation h ON a.V_Location_code = h.V_location_code AND a.V_Hospitalcode = h.V_Hospitalcode LEFT OUTER JOIN
-                      pmis2_sa_vendor z ON ISNULL(b.V_Vendor_code, 'NA') = z.v_vendorcode
-WHERE     (a.V_Actionflag <> 'D') AND (a.V_Hospitalcode = 'MER') AND (a.V_service_code = 'BEMS') AND (b.V_ActionFlag <> 'D')
-GROUP BY a.V_Equip_code, m.new_asset_type, a.V_Asset_name
-ORDER BY a.V_Asset_name
-		*/
+			/*
+			SELECT     m.new_asset_type, a.V_Equip_code, a.V_Asset_name, COUNT(a.V_Equip_code) AS assetcount
+			FROM         pmis2_EGM_AssetRegistration a INNER JOIN
+			pmis2_EGM_AssetReg_General b ON a.V_Asset_no = b.V_Asset_no AND a.V_Hospitalcode = b.V_Hospital_code INNER JOIN
+			Pmis2_Egm_AssetMaintenance c ON a.V_Asset_no = c.v_AssetNo AND a.V_Hospitalcode = c.v_Hospitalcode AND b.V_Asset_no = c.v_AssetNo AND 
+			b.V_Hospital_code = c.v_Hospitalcode INNER JOIN
+			PMIS2_SA_EQUIP_CODE f ON a.V_Equip_code = f.v_Equip_Code INNER JOIN
+			pmis2_SA_asset_mapping m ON a.V_Equip_code = m.old_asset_type AND a.V_Equip_code = m.old_asset_type AND 
+			a.V_Equip_code = m.old_asset_type INNER JOIN
+			pmis2_SA_MOH_Asset_type e ON m.new_asset_type = e.Asset_Type INNER JOIN
+			pmis2_SA_UserDept g ON a.V_User_Dept_code = g.v_UserDeptCode AND a.V_Hospitalcode = g.v_HospitalCode INNER JOIN
+			pmis2_EGM_AssetLocation h ON a.V_Location_code = h.V_location_code AND a.V_Hospitalcode = h.V_Hospitalcode LEFT OUTER JOIN
+			pmis2_sa_vendor z ON ISNULL(b.V_Vendor_code, 'NA') = z.v_vendorcode
+			WHERE     (a.V_Actionflag <> 'D') AND (a.V_Hospitalcode = 'MER') AND (a.V_service_code = 'BEMS') AND (b.V_ActionFlag <> 'D')
+			GROUP BY a.V_Equip_code, m.new_asset_type, a.V_Asset_name
+			ORDER BY a.V_Asset_name
+			*/
 			$this->db->select('m.new_asset_type, a.V_Equip_code, a.V_Asset_name, COUNT(a.V_Equip_code) AS assetcount');
 			$this->db->from('pmis2_egm_assetregistration a');
 			$this->db->join('pmis2_egm_assetreg_general b','a.V_Asset_no = b.V_Asset_no AND a.V_Hospitalcode = b.V_Hospital_code');
@@ -1376,35 +1383,35 @@ ORDER BY a.V_Asset_name
 			}
 			
 		function rpt_vl($month,$year,$keyword){
-		/*
-		SELECT * FROM apbesys..pmis2_sa_vendor 
-		WHERE v_vendorcode LIKE '%" & search_box & "%' OR 
-		v_vendorname LIKE '%" & search_box & "%' OR 
-		v_phone LIKE '%" & search_box & "%' OR 
-		v_fax LIKE '%" & search_box & "%' OR 
-		v_grade LIKE '%" & search_box & "%' OR 
-		v_address1 LIKE '%" & search_box & "%' OR 
-		v_address2 LIKE '%" & search_box & "%' OR 
-		v_address3 LIKE '%" & search_box & "%' OR 
-		v_contact LIKE '%" & search_box & "%' OR 
-		v_hphone LIKE '%" & search_box & "%' OR 
-		v_email LIKE '%" & search_box & "%' OR 
-		v_regtype LIKE '%" & search_box & "%'
-		*/
+			/*
+			SELECT * FROM apbesys..pmis2_sa_vendor 
+			WHERE v_vendorcode LIKE '%" & search_box & "%' OR 
+			v_vendorname LIKE '%" & search_box & "%' OR 
+			v_phone LIKE '%" & search_box & "%' OR 
+			v_fax LIKE '%" & search_box & "%' OR 
+			v_grade LIKE '%" & search_box & "%' OR 
+			v_address1 LIKE '%" & search_box & "%' OR 
+			v_address2 LIKE '%" & search_box & "%' OR 
+			v_address3 LIKE '%" & search_box & "%' OR 
+			v_contact LIKE '%" & search_box & "%' OR 
+			v_hphone LIKE '%" & search_box & "%' OR 
+			v_email LIKE '%" & search_box & "%' OR 
+			v_regtype LIKE '%" & search_box & "%'
+			*/
 			$this->db->select('*', false);
 			$this->db->from('pmis2_sa_vendor');
 			$this->db->like('v_vendorcode',$keyword,'both');
-      $this->db->or_like('v_vendorname',$keyword,'both');
-      $this->db->or_like('v_phone',$keyword,'both');
-      $this->db->or_like('v_fax',$keyword,'both');
-      $this->db->or_like('v_grade',$keyword,'both');
-      $this->db->or_like('v_address1',$keyword,'both');
-      $this->db->or_like('v_address2',$keyword,'both');
-      $this->db->or_like('v_address3',$keyword,'both');
-      $this->db->or_like('v_contact',$keyword,'both');
-      $this->db->or_like('v_hphone',$keyword,'both');
-      $this->db->or_like('v_email',$keyword,'both');
-      $this->db->or_like('v_regtype',$keyword,'both');
+			$this->db->or_like('v_vendorname',$keyword,'both');
+			$this->db->or_like('v_phone',$keyword,'both');
+			$this->db->or_like('v_fax',$keyword,'both');
+			$this->db->or_like('v_grade',$keyword,'both');
+			$this->db->or_like('v_address1',$keyword,'both');
+			$this->db->or_like('v_address2',$keyword,'both');
+			$this->db->or_like('v_address3',$keyword,'both');
+			$this->db->or_like('v_contact',$keyword,'both');
+			$this->db->or_like('v_hphone',$keyword,'both');
+			$this->db->or_like('v_email',$keyword,'both');
+			$this->db->or_like('v_regtype',$keyword,'both');
 			//$this->db->where('a.V_Actionflag != ', 'D');
 			//$this->db->where('b.V_Hospital_code' ,$this->session->userdata('hosp_code'));
 			$query = $this->db->get();
@@ -1412,9 +1419,9 @@ ORDER BY a.V_Asset_name
 			//exit();
 			$query_result = $query->result();
 			return $query_result;
-			}	
-			
-			function rpt_rp1($month,$year){
+		}	
+		
+		function rpt_rp1($month,$year){
 		/*
 		SELECT COUNT(*) AS Total FROM pmis2_egm_service_request 
 		WHERE (V_request_type = 'A4' OR V_request_type = 'A5' OR V_request_type = 'A8') AND 
@@ -2434,20 +2441,20 @@ return $query->result();
 		function sumppm($month,$year,$grpsel,$bystak = "",$fon = "")
 		{//echo "nlailafonmodel : ".$fon;
 			if ($bystak == "IIUM C") {
-			$bystak = " AND left(a.v_tag_no,6) = 'IIUM C'"; }
+				$bystak = " AND left(a.v_tag_no,6) = 'IIUM C'"; }
 			elseif ($bystak == "IIUM M") {
-			$bystak = " AND left(a.v_tag_no,6) = 'IIUM M'"; }
+				$bystak = " AND left(a.v_tag_no,6) = 'IIUM M'"; }
 			elseif ($bystak == "IIUM E") {
-			$bystak = " AND left(a.v_tag_no,6) = 'IIUM E'"; }
+				$bystak = " AND left(a.v_tag_no,6) = 'IIUM E'"; }
 
 			//$this->db->select("COUNT(*) as total, SUM(CASE WHEN sc.v_wrkordstatus = 'A'  THEN 1 ELSE 0 END) AS notcomp, SUM(CASE WHEN sc.v_wrkordstatus = 'C' OR sc.v_wrkordstatus = 'CR' THEN 1 ELSE 0 END) AS comp, SUM(CASE WHEN sc.d_reschdt is not NULL AND sc.v_wrkordstatus = 'AR' THEN 1 ELSE 0 END) AS resch");
 			//$this->db->select("COUNT(*) as total, SUM(CASE WHEN sc.v_wrkordstatus = 'A'  OR (sc.v_wrkordstatus = 'AR') THEN 1 ELSE 0 END) AS notcomp, SUM(CASE WHEN (sc.v_wrkordstatus = 'C' OR sc.v_wrkordstatus = 'CR') THEN 1 ELSE 0 END) AS comp, SUM(CASE WHEN sc.d_reschdt is not NULL THEN 1 ELSE 0 END) AS resch", FALSE);
 			if ($fon == "") {
-			$this->db->select("COUNT(*) as total, SUM(CASE WHEN sc.v_wrkordstatus = 'A'  OR (sc.v_wrkordstatus = 'AR') THEN 1 ELSE 0 END) AS notcomp, SUM(CASE WHEN (sc.v_wrkordstatus = 'C' OR sc.v_wrkordstatus = 'CR') THEN 1 ELSE 0 END) AS comp, SUM(CASE WHEN sc.d_reschdt is not NULL AND sc.d_DueDt < '".$this->dater(1,$month,$year)."' THEN 1 ELSE 0 END) AS resch", FALSE);
-      //$this->db->select("COUNT(*) as total, SUM(CASE WHEN sc.v_wrkordstatus = 'A'  OR (sc.v_wrkordstatus = 'AR') THEN 1 ELSE 0 END) AS notcomp, SUM(CASE WHEN (sc.v_wrkordstatus = 'C' OR sc.v_wrkordstatus = 'CR') THEN 1 ELSE 0 END) AS comp, SUM(CASE WHEN sc.d_reschdt is not NULL AND month(sc.d_reschdt) > month(d_startdt) THEN 1 ELSE 0 END) AS resch", FALSE);
+				$this->db->select("COUNT(*) as total, SUM(CASE WHEN sc.v_wrkordstatus = 'A'  OR (sc.v_wrkordstatus = 'AR') THEN 1 ELSE 0 END) AS notcomp, SUM(CASE WHEN (sc.v_wrkordstatus = 'C' OR sc.v_wrkordstatus = 'CR') THEN 1 ELSE 0 END) AS comp, SUM(CASE WHEN sc.d_reschdt is not NULL AND sc.d_DueDt < '".$this->dater(1,$month,$year)."' THEN 1 ELSE 0 END) AS resch", FALSE);
+				//$this->db->select("COUNT(*) as total, SUM(CASE WHEN sc.v_wrkordstatus = 'A'  OR (sc.v_wrkordstatus = 'AR') THEN 1 ELSE 0 END) AS notcomp, SUM(CASE WHEN (sc.v_wrkordstatus = 'C' OR sc.v_wrkordstatus = 'CR') THEN 1 ELSE 0 END) AS comp, SUM(CASE WHEN sc.d_reschdt is not NULL AND month(sc.d_reschdt) > month(d_startdt) THEN 1 ELSE 0 END) AS resch", FALSE);
 			} else {
-			//$this->db->select("COUNT(*) as total, SUM(CASE WHEN (sc.v_wrkordstatus = 'A' OR sc.v_wrkordstatus = 'AR') OR ((sc.v_wrkordstatus = 'C' OR sc.v_wrkordstatus = 'CR') AND sc.v_closeddate > '" . $this->daterfreeze(1,$month,$year) . "') THEN 1 ELSE 0 END) AS notcomp, SUM(CASE WHEN (sc.v_wrkordstatus = 'C' OR sc.v_wrkordstatus = 'CR') AND sc.v_closeddate <= '" . $this->daterfreeze(1,$month,$year) . "' THEN 1 ELSE 0 END) AS comp, SUM(CASE WHEN sc.d_reschdt is not NULL THEN 1 ELSE 0 END) AS resch", FALSE);
-        $this->db->select("COUNT(*) as total, SUM(CASE WHEN (sc.v_wrkordstatus = 'A' OR sc.v_wrkordstatus = 'AR') OR ((sc.v_wrkordstatus = 'C' OR sc.v_wrkordstatus = 'CR') AND sc.v_closeddate > '" . $this->daterfreeze(1,$month,$year) . "') THEN 1 ELSE 0 END) AS notcomp, SUM(CASE WHEN (sc.v_wrkordstatus = 'C' OR sc.v_wrkordstatus = 'CR') AND sc.v_closeddate <= '" . $this->daterfreeze(1,$month,$year) . "' THEN 1 ELSE 0 END) AS comp, SUM(CASE WHEN sc.d_reschdt is not NULL AND sc.d_DueDt < '".$this->dater(1,$month,$year)."' THEN 1 ELSE 0 END) AS resch", FALSE);
+				//$this->db->select("COUNT(*) as total, SUM(CASE WHEN (sc.v_wrkordstatus = 'A' OR sc.v_wrkordstatus = 'AR') OR ((sc.v_wrkordstatus = 'C' OR sc.v_wrkordstatus = 'CR') AND sc.v_closeddate > '" . $this->daterfreeze(1,$month,$year) . "') THEN 1 ELSE 0 END) AS notcomp, SUM(CASE WHEN (sc.v_wrkordstatus = 'C' OR sc.v_wrkordstatus = 'CR') AND sc.v_closeddate <= '" . $this->daterfreeze(1,$month,$year) . "' THEN 1 ELSE 0 END) AS comp, SUM(CASE WHEN sc.d_reschdt is not NULL THEN 1 ELSE 0 END) AS resch", FALSE);
+				$this->db->select("COUNT(*) as total, SUM(CASE WHEN (sc.v_wrkordstatus = 'A' OR sc.v_wrkordstatus = 'AR') OR ((sc.v_wrkordstatus = 'C' OR sc.v_wrkordstatus = 'CR') AND sc.v_closeddate > '" . $this->daterfreeze(1,$month,$year) . "') THEN 1 ELSE 0 END) AS notcomp, SUM(CASE WHEN (sc.v_wrkordstatus = 'C' OR sc.v_wrkordstatus = 'CR') AND sc.v_closeddate <= '" . $this->daterfreeze(1,$month,$year) . "' THEN 1 ELSE 0 END) AS comp, SUM(CASE WHEN sc.d_reschdt is not NULL AND sc.d_DueDt < '".$this->dater(1,$month,$year)."' THEN 1 ELSE 0 END) AS resch", FALSE);
 			}
 			$this->db->from('pmis2_egm_schconfirmmon sc');
 			$this->db->join('pmis2_egm_assetregistration a','sc.v_Asset_no = a.V_Asset_no AND sc.v_HospitalCode = a.V_Hospitalcode '.$bystak,'left outer');
@@ -2465,9 +2472,9 @@ return $query->result();
 			$this->db->where('IFNULL(sc.d_reschdt,d_DueDt) <=', $this->dater(2,$month,$year));
 			$query = $this->db->get();
 			//echo "dater : ".$this->dater(1,$month,$year);
-			//echo $this->db->last_query();
+			// echo $this->db->last_query();
 			//exit();
-            
+
 			$query_result = $query->result();
 			return $query_result;
 		}
@@ -2476,40 +2483,39 @@ return $query->result();
 		{
 			
 			if ($this->session->userdata('usersess') == "FES") {
-			$dn = 180;
-			$de = 30;
+				$dn = 180;
+				$de = 30;
 			} elseif ($this->session->userdata('usersess') == "BES") {
-			$dn = 120;
-			$de = 30;
+				$dn = 120;
+				$de = 30;
 			} else {
-			$dn = 15;
-			$de = 5;
+				$dn = 15;
+				$de = 5;
 			}
 			
 			//$fon = "lal";
 
-                        if ($bystak == "IIUM C") {
-			$this->db->where('left(a.v_tag_no,6)', 'IIUM C');
-			//$bystak = " AND left(a.v_tag_no,6) = 'IIUM C'"; 
-			}
-			elseif ($bystak == "IIUM M") {
-			$this->db->where('left(a.v_tag_no,6)', 'IIUM M');
-			//$bystak = " AND left(a.v_tag_no,6) = 'IIUM M'"; 
-			}
-			elseif ($bystak == "IIUM E") {
-			$this->db->where('left(a.v_tag_no,6)', 'IIUM E');
-			//$bystak = " AND left(a.v_tag_no,6) = 'IIUM E'"; 
+			if ($bystak == "IIUM C") {
+				$this->db->where('left(a.v_tag_no,6)', 'IIUM C');
+				//$bystak = " AND left(a.v_tag_no,6) = 'IIUM C'"; 
+			}elseif ($bystak == "IIUM M") {
+				$this->db->where('left(a.v_tag_no,6)', 'IIUM M');
+				//$bystak = " AND left(a.v_tag_no,6) = 'IIUM M'"; 
+			}elseif ($bystak == "IIUM E") {
+				$this->db->where('left(a.v_tag_no,6)', 'IIUM E');
+				//$bystak = " AND left(a.v_tag_no,6) = 'IIUM E'"; 
 			}
 
 			//$this->db->select("COUNT(*) as total,SUM(CASE WHEN sr.v_request_status <> 'C' THEN 1 ELSE 0 END) AS notcomp,SUM(CASE WHEN sr.v_request_status = 'C' THEN 1 ELSE 0 END) AS comp,SUM(CASE WHEN (TIMESTAMPDIFF(MINUTE,sr.d_date,IFNULL(sr.v_respondate,NOW())) <= $dn AND sr.V_priority_code = 'Normal') OR (TIMESTAMPDIFF(MINUTE,sr.d_date,IFNULL(sr.v_respondate,NOW())) <= $de AND sr.V_priority_code = 'Emergency') THEN 1 ELSE 0 END) AS resp,SUM(CASE WHEN (TIMESTAMPDIFF(MINUTE,sr.d_date,IFNULL(sr.v_respondate,NOW())) > $dn AND sr.V_priority_code = 'Normal') OR (TIMESTAMPDIFF(MINUTE,sr.d_date,IFNULL(sr.v_respondate,NOW())) > $de AND sr.V_priority_code = 'Emergency') THEN 1 ELSE 0 END) AS resplate , SUM(CASE WHEN (TIMESTAMPDIFF(DAY, sr.d_date, sr.v_closeddate ) <= 15 ) THEN 1 ELSE 0 END) AS compin15d, SUM(CASE WHEN (TIMESTAMPDIFF(DAY, sr.d_date, sr.v_closeddate ) > 15 ) THEN 1 ELSE 0 END) AS compm15d");
 			if ($fon == "") {
-			$this->db->select("COUNT(*) as total,SUM(CASE WHEN sr.v_request_status <> 'C' THEN 1 ELSE 0 END) AS notcomp,SUM(CASE WHEN sr.v_request_status = 'C' THEN 1 ELSE 0 END) AS comp,SUM(CASE WHEN (TIMESTAMPDIFF(MINUTE,sr.d_date,IFNULL(sr.v_respondate,NOW())) <= $dn AND sr.V_priority_code = 'Normal') OR (TIMESTAMPDIFF(MINUTE,sr.d_date,IFNULL(sr.v_respondate,NOW())) <= $de AND sr.V_priority_code = 'Emergency') THEN 1 ELSE 0 END) AS resp,SUM(CASE WHEN (TIMESTAMPDIFF(MINUTE,sr.d_date,IFNULL(sr.v_respondate,NOW())) > $dn AND sr.V_priority_code = 'Normal') OR (TIMESTAMPDIFF(MINUTE,sr.d_date,IFNULL(sr.v_respondate,NOW())) > $de AND sr.V_priority_code = 'Emergency') THEN 1 ELSE 0 END) AS resplate , SUM(CASE WHEN (TIMESTAMPDIFF(DAY, sr.d_date, sr.v_closeddate ) <= 15 ) THEN 1 ELSE 0 END) AS compin15d, SUM(CASE WHEN (TIMESTAMPDIFF(DAY, sr.d_date, sr.v_closeddate ) AND sr.V_request_type <> 'A10' > 15 ) THEN 1 ELSE 0 END) AS compm15d");
+				$this->db->select("COUNT(*) as total,SUM(CASE WHEN sr.v_request_status <> 'C' THEN 1 ELSE 0 END) AS notcomp,SUM(CASE WHEN sr.v_request_status = 'C' THEN 1 ELSE 0 END) AS comp,SUM(CASE WHEN (TIMESTAMPDIFF(MINUTE,sr.D_date,IFNULL(sr.v_respondate,NOW())) <= $dn AND sr.V_priority_code = 'Normal') OR (TIMESTAMPDIFF(MINUTE,sr.D_date,IFNULL(sr.v_respondate,NOW())) <= $de AND sr.V_priority_code = 'Emergency') THEN 1 ELSE 0 END) AS resp,SUM(CASE WHEN (TIMESTAMPDIFF(MINUTE,sr.D_date,IFNULL(sr.v_respondate,NOW())) > $dn AND sr.V_priority_code = 'Normal') OR (TIMESTAMPDIFF(MINUTE,sr.D_date,IFNULL(sr.v_respondate,NOW())) > $de AND sr.V_priority_code = 'Emergency') THEN 1 ELSE 0 END) AS resplate , SUM(CASE WHEN (TIMESTAMPDIFF(DAY, sr.D_date, sr.v_closeddate ) <= 15 ) THEN 1 ELSE 0 END) AS compin15d, SUM(CASE WHEN (TIMESTAMPDIFF(DAY, sr.D_date, sr.v_closeddate ) AND sr.V_request_type <> 'A10' > 15 ) THEN 1 ELSE 0 END) AS compm15d");
 			} else {
-			$this->db->select("COUNT(*) as total,SUM(CASE WHEN sr.v_request_status <> 'C' OR sr.v_closeddate > '" . $this->daterfreeze(1,$month,$year) . "' THEN 1 ELSE 0 END) AS notcomp,SUM(CASE WHEN sr.v_request_status = 'C' AND sr.v_closeddate <= '" . $this->daterfreeze(1,$month,$year) . "' THEN 1 ELSE 0 END) AS comp,SUM(CASE WHEN (TIMESTAMPDIFF(MINUTE,sr.d_date,IFNULL(sr.v_respondate,NOW())) <= $dn AND sr.V_priority_code = 'Normal') OR (TIMESTAMPDIFF(MINUTE,sr.d_date,IFNULL(sr.v_respondate,NOW())) <= $de AND sr.V_priority_code = 'Emergency') THEN 1 ELSE 0 END) AS resp,SUM(CASE WHEN (TIMESTAMPDIFF(MINUTE,sr.d_date,IFNULL(sr.v_respondate,NOW())) > $dn AND sr.V_priority_code = 'Normal') OR (TIMESTAMPDIFF(MINUTE,sr.d_date,IFNULL(sr.v_respondate,NOW())) > $de AND sr.V_priority_code = 'Emergency') THEN 1 ELSE 0 END) AS resplate , SUM(CASE WHEN (TIMESTAMPDIFF(DAY, sr.d_date, sr.v_closeddate ) <= 15 ) THEN 1 ELSE 0 END) AS compin15d, SUM(CASE WHEN (TIMESTAMPDIFF(DAY, sr.d_date, sr.v_closeddate ) > 15 ) AND sr.V_request_type <> 'A10' THEN 1 ELSE 0 END) AS compm15d");
+				$this->db->select("COUNT(*) as total,SUM(CASE WHEN sr.v_request_status <> 'C' OR sr.v_closeddate > '" . $this->daterfreeze(1,$month,$year) . "' THEN 1 ELSE 0 END) AS notcomp,SUM(CASE WHEN sr.v_request_status = 'C' AND sr.v_closeddate <= '" . $this->daterfreeze(1,$month,$year) . "' THEN 1 ELSE 0 END) AS comp,SUM(CASE WHEN (TIMESTAMPDIFF(MINUTE,sr.D_date,IFNULL(sr.v_respondate,NOW())) <= $dn AND sr.V_priority_code = 'Normal') OR (TIMESTAMPDIFF(MINUTE,sr.D_date,IFNULL(sr.v_respondate,NOW())) <= $de AND sr.V_priority_code = 'Emergency') THEN 1 ELSE 0 END) AS resp,SUM(CASE WHEN (TIMESTAMPDIFF(MINUTE,sr.D_date,IFNULL(sr.v_respondate,NOW())) > $dn AND sr.V_priority_code = 'Normal') OR (TIMESTAMPDIFF(MINUTE,sr.D_date,IFNULL(sr.v_respondate,NOW())) > $de AND sr.V_priority_code = 'Emergency') THEN 1 ELSE 0 END) AS resplate , SUM(CASE WHEN (TIMESTAMPDIFF(DAY, sr.D_date, sr.v_closeddate ) <= 15 ) THEN 1 ELSE 0 END) AS compin15d, SUM(CASE WHEN (TIMESTAMPDIFF(DAY, sr.D_date, sr.v_closeddate ) > 15 ) AND sr.V_request_type <> 'A10' THEN 1 ELSE 0 END) AS compm15d");
 			}
 			$this->db->from('pmis2_egm_service_request sr');
-			$this->db->join('pmis2_egm_assetregistration a','sr.V_Asset_no = a.V_Asset_no AND sr.V_hospitalcode = a.V_Hospitalcode AND a.V_Actionflag <> "D"','left outer');
-			$this->db->where('sr.v_Actionflag <> ','D');
+			$this->db->join('pmis2_egm_assetregistration a','sr.V_Asset_no = a.V_Asset_no AND sr.V_hospitalcode = a.V_Hospitalcode AND a.V_actionflag <> "D"','left outer');
+			$this->db->where('sr.V_actionflag <> ','D');
+			$this->db->where('sr.v_hospitalcode',$this->session->userdata('hosp_code'));
 			//$this->db->where('a.V_Actionflag <> ','D');
 			$this->db->where('sr.v_ServiceCode = ',$this->session->userdata('usersess'));
 			if ($grpsel <> ''){
@@ -2518,55 +2524,55 @@ return $query->result();
 			//$this->db->where("month(d_date) = ",$month);
 			//$this->db->where("year(d_date) = ",$year);
 			if ($reqtype <> 'A2'){
-			   $this->db->where('sr.V_request_type !=','A2');
+				$this->db->where('sr.V_request_type !=','A2');
 			}
 			if ($reqtype <> ''){
 				 if ($reqtype == 'F') {
-				 //$this->db->like('sr.V_summary', 'floor');
-				 //$this->db->or_like('sr.V_summary', 'lantai');
-				 $this->db->where("(sr.V_summary LIKE '%floor%' OR sr.V_summary LIKE '%lantai%')", NULL, FALSE);
-				 } elseif ($reqtype == 'WD') {
-				 //$this->db->like('sr.V_summary', 'wall');
-				 //$this->db->or_like('sr.V_summary', 'door');
-				 //$this->db->or_like('sr.V_summary', 'dinding');
-				 //$this->db->or_like('sr.V_summary', 'pintu');
-				 $this->db->where("(sr.V_summary LIKE '%wall%' OR sr.V_summary LIKE '%door%' OR sr.V_summary LIKE '%dinding%' OR sr.V_summary LIKE '%pintu%')", NULL, FALSE);
-				 } elseif ($reqtype == 'C') {
-				 //$this->db->like('sr.V_summary', 'ceiling');
-				 //$this->db->or_like('sr.V_summary', 'siling');
-				 $this->db->where("(sr.V_summary LIKE '%ceiling%' OR sr.V_summary LIKE '%siling%')", NULL, FALSE);
-				 } elseif ($reqtype == 'W') {
-				 //$this->db->like('sr.V_summary', 'window');
-				 //$this->db->or_like('sr.V_summary', 'tingkap');
-				 $this->db->where("(sr.V_summary LIKE '%window%' OR sr.V_summary LIKE '%tingkap%')", NULL, FALSE);
-				 } elseif ($reqtype == 'FIX') {
-				 //$this->db->like('sr.V_summary', 'fixture');
-				 //$this->db->or_like('sr.V_summary', 'pemasangan');
-				 $this->db->where("(sr.V_summary LIKE '%fixture%' OR sr.V_summary LIKE '%pemasangan%')", NULL, FALSE);
-				 } elseif ($reqtype == 'FUR') {
-				 $this->db->like('sr.V_summary', 'furniture');
-				 //$this->db->or_like('sr.V_summary', 'perabot');
-				 //$this->db->or_like('sr.V_summary', 'kemasan');
-				 //$this->db->or_like('sr.V_summary', 'fitting');
-				 $this->db->where("(sr.V_summary LIKE '%furniture%' OR sr.V_summary LIKE '%perabot%' OR sr.V_summary LIKE '%kemasan%' OR sr.V_summary LIKE '%fitting%')", NULL, FALSE);
-				 } else {
+					 //$this->db->like('sr.V_summary', 'floor');
+					 //$this->db->or_like('sr.V_summary', 'lantai');
+					 $this->db->where("(sr.V_summary LIKE '%floor%' OR sr.V_summary LIKE '%lantai%')", NULL, FALSE);
+				} elseif ($reqtype == 'WD') {
+					//$this->db->like('sr.V_summary', 'wall');
+					//$this->db->or_like('sr.V_summary', 'door');
+					//$this->db->or_like('sr.V_summary', 'dinding');
+					//$this->db->or_like('sr.V_summary', 'pintu');
+					$this->db->where("(sr.V_summary LIKE '%wall%' OR sr.V_summary LIKE '%door%' OR sr.V_summary LIKE '%dinding%' OR sr.V_summary LIKE '%pintu%')", NULL, FALSE);
+				} elseif ($reqtype == 'C') {
+					//$this->db->like('sr.V_summary', 'ceiling');
+					//$this->db->or_like('sr.V_summary', 'siling');
+					$this->db->where("(sr.V_summary LIKE '%ceiling%' OR sr.V_summary LIKE '%siling%')", NULL, FALSE);
+				} elseif ($reqtype == 'W') {
+					//$this->db->like('sr.V_summary', 'window');
+					//$this->db->or_like('sr.V_summary', 'tingkap');
+					$this->db->where("(sr.V_summary LIKE '%window%' OR sr.V_summary LIKE '%tingkap%')", NULL, FALSE);
+				} elseif ($reqtype == 'FIX') {
+					//$this->db->like('sr.V_summary', 'fixture');
+					//$this->db->or_like('sr.V_summary', 'pemasangan');
+					$this->db->where("(sr.V_summary LIKE '%fixture%' OR sr.V_summary LIKE '%pemasangan%')", NULL, FALSE);
+				} elseif ($reqtype == 'FUR') {
+					$this->db->like('sr.V_summary', 'furniture');
+					//$this->db->or_like('sr.V_summary', 'perabot');
+					//$this->db->or_like('sr.V_summary', 'kemasan');
+					//$this->db->or_like('sr.V_summary', 'fitting');
+					$this->db->where("(sr.V_summary LIKE '%furniture%' OR sr.V_summary LIKE '%perabot%' OR sr.V_summary LIKE '%kemasan%' OR sr.V_summary LIKE '%fitting%')", NULL, FALSE);
+				} else {
 				 	 $this->db->where('sr.V_request_type',$reqtype);
-					 }
 				}
-			
-			$this->db->where('sr.d_date >=', $this->dater(1,$month,$year));
-			$this->db->where('sr.d_date <=', $this->dater(2,$month,$year).'  23:59:59');
-                        if (!function_exists('toArray')) {
-			function toArray($obj)
-			{
-    	$obj = (array) $obj;//cast to array, optional
-    	return $obj['path'];
 			}
-                        }
+			
+			$this->db->where('sr.D_date >=', $this->dater(1,$month,$year));
+			$this->db->where('sr.D_date <=', $this->dater(2,$month,$year).'  23:59:59');
+			if (!function_exists('toArray')) {
+				function toArray($obj)
+				{
+					$obj = (array) $obj;//cast to array, optional
+					return $obj['path'];
+				}
+			}
 			$idArray = array_map('toArray', $this->session->userdata('accessr'));//$this->session->userdata('v_UserName')
 			//if ((in_array("contentcontroller/Schedule(main)", $idArray)) && ($this->session->userdata('Ser_Code')=="IIUM")) {
 			if ((in_array("contentcontroller/Schedule(main)", $idArray)) && (in_array("useriium", $idArray))) {
-			$this->db->where('V_request_type <> ', 'A9');
+				$this->db->where('V_request_type <> ', 'A9');
 	 		}
 			$query = $this->db->get();
 			//echo $this->db->last_query();
@@ -2649,33 +2655,33 @@ return $query->result();
 			$this->db->select("COUNT(*) AS total, COUNT(*) AS notlicsat, SUM(CASE WHEN A.v_ExpiryDate < '".$this->dater(2,$month,$year)."' THEN 1 ELSE 0 END) AS licsat ");
 			//$this->db->from('Inc_Lic_Det');
 			$this->db->from("(SELECT 
-        `a`.`v_CertificateNo` AS `v_CertificateNo`,
-        `a`.`v_RegistrationNo` AS `v_RegistrationNo`,
-        `a`.`v_LicenseCategoryCode` AS `v_LicenseCategoryCode`,
-        `a`.`v_ServiceCode` AS `v_ServiceCode`,
-        MAX(`a`.`v_ExpiryDate`) AS `v_ExpiryDate`
-    FROM
-        (`pmis2_egm_lnc_lincense_details` `a`
-        JOIN `pmis2_egm_lnc_license_category_code` `b` ON ((`a`.`v_LicenseCategoryCode` = `b`.`v_LicenceCategoryCode`)))
-    WHERE
-        ((`a`.`v_hospitalcode` = 'IIUM')
-            AND (year(`a`.`v_StartDate`) <= ". ($year) .")
-            AND (`a`.`v_actionflag` <> 'D')
-            AND (`b`.`v_actionflag` <> 'D')) 
-    GROUP BY `a`.`v_CertificateNo` , `a`.`v_RegistrationNo` , `a`.`v_LicenseCategoryCode`)`A`", false);
-		
+			`a`.`v_CertificateNo` AS `v_CertificateNo`,
+			`a`.`v_RegistrationNo` AS `v_RegistrationNo`,
+			`a`.`v_LicenseCategoryCode` AS `v_LicenseCategoryCode`,
+			`a`.`v_ServiceCode` AS `v_ServiceCode`,
+			MAX(`a`.`v_ExpiryDate`) AS `v_ExpiryDate`
+			FROM
+			(`pmis2_egm_lnc_lincense_details` `a`
+			JOIN `pmis2_egm_lnc_license_category_code` `b` ON ((`a`.`v_LicenseCategoryCode` = `b`.`v_LicenceCategoryCode`)))
+			WHERE
+			((`a`.`v_hospitalcode` = 'IIUM')
+			AND (year(`a`.`v_StartDate`) <= ". ($year) .")
+			AND (`a`.`v_actionflag` <> 'D')
+			AND (`b`.`v_actionflag` <> 'D')) 
+			GROUP BY `a`.`v_CertificateNo` , `a`.`v_RegistrationNo` , `a`.`v_LicenseCategoryCode`)`A`", false);
+
 			$this->db->where('A.v_ServiceCode =', $this->session->userdata('usersess'));
 			//$this->db->where('YEAR(v_StartDate) <=', $year);
 			//$this->db->where('MONTH(v_StartDate) <=', $month);
 			$query = $this->db->get();
 			//echo $this->db->last_query();
 			//exit();
-            
+
 			$query_result = $query->result();
 			return $query_result;
 		}
 		
-function sumsat($month,$year,$grpsel)
+		function sumsat($month,$year,$grpsel)
 		{
 			
 			//$this->db->select('v_asset_no');
@@ -2754,7 +2760,6 @@ function sumsat($month,$year,$grpsel)
 		}
 		
 		function rpt_rsls($month,$year, $stat = "apo2",$expiring){
-		
 			/*$this->db->select('v_CertificateNo, v_AgencyCode, v_LicenseCategoryCode, v_registrationno, v_Identification, v_StartDate, v_ExpiryDate, v_GradeID, v_Remarks');
 			$this->db->from('pmis2_egm_lnc_lincense_details');
 			$this->db->where('v_ServiceCode', $this->session->userdata('usersess'));
@@ -2762,25 +2767,27 @@ function sumsat($month,$year,$grpsel)
 			//$this->db->where('YEAR(d_date)', $year);
 			//$this->db->where('MONTH(d_date)', $month);
 			$this->db->where('v_hospitalcode',$this->session->userdata('hosp_code'));*/
-			$this->db->select("A.v_CertificateNo, A.v_ServiceCode, A.v_AgencyCode, A.v_registrationno, A.v_LicenseCategoryCode, B.v_LicenceCategoryDesc, A.v_IdentificationType, A.v_Identification, A.v_RegistrationNo, A.v_StartDate, A.v_ExpiryDate, A.v_GradeID, A.v_Remarks, A.v_hospitalcode, A.v_key, A.CMIS_Action_Flag, A.d_timestamp,A.id,i.file_name,C.V_Location_code,l.v_Location_Name",FALSE);
+			$this->db->select("A.v_CertificateNo, A.v_ServiceCode, A.v_AgencyCode, A.v_registrationno, A.v_LicenseCategoryCode, 
+								B.v_LicenceCategoryDesc, A.v_IdentificationType, A.v_Identification, A.v_RegistrationNo, A.v_StartDate, A.v_ExpiryDate, 
+								A.v_GradeID, A.v_Remarks, A.v_hospitalcode, A.v_key, A.CMIS_Action_Flag, A.d_timestamp,A.id,i.file_name,C.V_Location_code,
+								l.v_Location_Name",FALSE);
 			//SELECT (case when DWRate = 999 then (case when 500 <= 2000000 then 0.0075 * 100 else 0.0050 * 100 end) else DWRate end) as DWRate, PWRate, (case when DWRate = 999 then (case when 500 <= 2000000 then (500 * 0.0075) / 12 else (500 * 0.0050) / 12 end) else (500 * ( DWRate / 100)) / 12 end) as 'FeeDW', (500 * ( PWRate / 100) / 12) as 'FeePW'
 			$this->db->from('pmis2_egm_lnc_lincense_details A');
 			$this->db->join('pmis2_egm_lnc_license_category_code B','A.v_LicenseCategoryCode=B.v_LicenceCategoryCode');
 			$this->db->join("(SELECT 
-        `a`.`v_CertificateNo` AS `v_CertificateNo`,
-        `a`.`v_RegistrationNo` AS `v_RegistrationNo`,
-        `a`.`v_LicenseCategoryCode` AS `v_LicenseCategoryCode`,
-        `a`.`v_ServiceCode` AS `v_ServiceCode`,
-        MAX(`a`.`v_ExpiryDate`) AS `v_ExpiryDate`
-    FROM
-        (`pmis2_egm_lnc_lincense_details` `a`
-        JOIN `pmis2_egm_lnc_license_category_code` `b` ON ((`a`.`v_LicenseCategoryCode` = `b`.`v_LicenceCategoryCode`)))
-    WHERE
-        ((`a`.`v_hospitalcode` = 'IIUM')
-            AND (year(`a`.`v_StartDate`) <= ". ($year) .")
-            AND (`a`.`v_actionflag` <> 'D')
-            AND (`b`.`v_actionflag` <> 'D')) 
-    GROUP BY `a`.`v_CertificateNo` , `a`.`v_RegistrationNo` , `a`.`v_LicenseCategoryCode`)`g`",'concat(concat(A.v_CertificateNo,A.v_RegistrationNo),A.v_ExpiryDate) = concat(concat(g.v_CertificateNo,g.v_RegistrationNo),g.v_ExpiryDate)');
+									`a`.`v_CertificateNo` AS `v_CertificateNo`,
+									`a`.`v_RegistrationNo` AS `v_RegistrationNo`,
+									`a`.`v_LicenseCategoryCode` AS `v_LicenseCategoryCode`,
+									`a`.`v_ServiceCode` AS `v_ServiceCode`,
+									MAX(`a`.`v_ExpiryDate`) AS `v_ExpiryDate`
+							FROM
+								(`pmis2_egm_lnc_lincense_details` `a`
+								JOIN `pmis2_egm_lnc_license_category_code` `b` ON ((`a`.`v_LicenseCategoryCode` = `b`.`v_LicenceCategoryCode`)))
+							WHERE ((`a`.`v_hospitalcode` = 'IIUM')
+							AND (year(`a`.`v_StartDate`) <= ". ($year) .")
+							AND (`a`.`v_actionflag` <> 'D')
+							AND (`b`.`v_actionflag` <> 'D')) 
+							GROUP BY `a`.`v_CertificateNo` , `a`.`v_RegistrationNo` , `a`.`v_LicenseCategoryCode`)`g`",'concat(concat(A.v_CertificateNo,A.v_RegistrationNo),A.v_ExpiryDate) = concat(concat(g.v_CertificateNo,g.v_RegistrationNo),g.v_ExpiryDate)');
 			$this->db->join('license_images i','A.id = i.licenses_no AND A.v_ServiceCode = service_code','left');
 			//$this->db->join('pmis2_egm_assetregistration C','A.v_key = C.V_Tag_no OR A.v_RegistrationNo = C.V_Tag_no','left outer');
 			$this->db->join('pmis2_egm_assetregistration C','A.v_key = C.V_Tag_no','left outer');
@@ -2795,96 +2802,104 @@ function sumsat($month,$year,$grpsel)
 			$this->db->where('B.v_ActionFlag <> ', 'D');
 			//$query = $this->db->get();
 			if ($stat == "ys") {
-			//$this->db->where("A.v_ExpiryDate > now()");
+				//$this->db->where("A.v_ExpiryDate > now()");
 			} elseif ($stat == "no")
 			{
-			//$this->db->where("A.v_ExpiryDate < now()");
-      $this->db->where('A.v_ExpiryDate < ', $this->dater(2,$month,$year));
-      //$this->db->where('A.v_ExpiryDate < ', "DATE_SUB('" .$this->dater(2,$month,$year) ."', INTERVAL 70 DAY)", false);
+				//$this->db->where("A.v_ExpiryDate < now()");
+				$this->db->where('A.v_ExpiryDate < ', $this->dater(2,$month,$year));
+      			//$this->db->where('A.v_ExpiryDate < ', "DATE_SUB('" .$this->dater(2,$month,$year) ."', INTERVAL 70 DAY)", false);
 			}
 			if ($expiring <> ''){
-				$this->db->where('TIMESTAMPDIFF(MONTH, now(), IFNULL(A.v_ExpiryDate,now())) =',$expiring);
+				if( $expiring == 0 ){
+					$this->db->where('MONTH(A.v_ExpiryDate) = MONTH(NOW())');
+				}else{
+					$this->db->where('TIMESTAMPDIFF(MONTH, now(), IFNULL(A.v_ExpiryDate,now())) =',$expiring);
+				}
 			}
 			$this->db->order_by("A.v_ExpiryDate", "asc");
 			$this->db->group_by('A.v_CertificateNo, A.v_RegistrationNo,A.v_LicenseCategoryCode');
 			$query = $this->db->get();
-			//echo $this->db->last_query();
+			// echo "<pre>".$this->db->last_query();
 			//echo '<br>';
 			//exit();
 			$query_result = $query->result();
 			return $query_result;
 		}
 		
-function rpt_rsls2($month,$year, $stat = "apo2",$expiring,$grpsel){
-		
-	    //$this->db->select('v_asset_no');
-			//$this->db->from('pmis2_egm_assetregistration');
-			//$this->db->where('v_service_code',$this->session->userdata('usersess'));
-			//$this->db->where('v_actionflag <>','D');
-			//$subQuery = $this->db->_compile_select();
-			/*if ($expiring <> ''){
-				$wstring = ' AND TIMESTAMPDIFF(MONTH, now(), IFNULL(D_end,now())) = '.$expiring;
-			}	
-			else{
-				$wstring = '';
-			}
-			if ($grpsel <> ''){
-				$where = ' AND v_asset_grp = '.$grpsel;
-			}	
-			else{
-				$where = '';
-			}
-			$query = $this->db->query("SELECT * 
-									   FROM (pmis2_egm_statutory st) 
-									   INNER JOIN
-									   (SELECT v_asset_no
-									   	FROM pmis2_egm_assetregistration a
-									   	WHERE v_service_code =".$this->db->escape($this->session->userdata('usersess'))."
-									   	AND v_actionflag <> 'D'".$this->db->escape_str($where).") a
-									   ON st.v_asset_no = a.V_Asset_no
-									   WHERE v_actionflag <> 'D' 
-									   AND YEAR(D_start) <=".$this->db->escape($year)." 
-									   AND MONTH(D_start) <= ".$this->db->escape($month)." 
-									   AND `v_hospitalcode` = ".$this->db->escape($this->session->userdata('hosp_code'))."
-									   AND IF (".$this->db->escape($stat)." = 'ys',d_end > now(),d_end < now())".$this->db->escape_str($wstring)."
-									   
-									   "); //AND `v_asset_no` IN (SELECT `v_asset_no` FROM pmis2_egm_assetregistration where `v_service_code` = 'BES' AND v_actionflag <> 'D')
-			//AND IF (".$this->db->escape($expiring)." <> 0,TIMESTAMPDIFF(MONTH, now(), IFNULL(D_end,now())) = ".$this->db->escape($expiring).",'')
-			echo $this->db->last_query();
-			exit();
-			return $query->result();*/
+	function rpt_rsls2($month,$year, $stat = "apo2",$expiring,$grpsel){
 
-			$this->db->select('st.*,a.V_Tag_no,a.V_Location_code,l.v_Location_Name');
-			$this->db->from('pmis2_egm_statutory st');
-			$this->db->join('pmis2_egm_assetregistration a','st.v_asset_no = a.V_Asset_no AND a.v_service_code = '.$this->db->escape($this->session->userdata('usersess')).' AND a.v_actionflag <> "D"');
-			$this->db->join('pmis2_egm_assetlocation l','a.V_Location_code = l.V_location_code AND l.V_Actionflag <> "D"');
-			//$this->db->where('v_ServiceCode', $this->session->userdata('usersess'));
-			$this->db->where('st.v_actionflag <> ', 'D');
-			$this->db->where('YEAR(st.D_start) <=', $year);
-			$this->db->where('MONTH(st.D_start) <=', $month);
-			//$this->db->where("`v_asset_no` IN (SELECT `v_asset_no` FROM fmis.pmis2_egm_assetregistration where `v_service_code` = '".$this->session->userdata('usersess')."') AND v_actionflag <> 'D'", NULL, FALSE);
-			$this->db->where('st.v_hospitalcode',$this->session->userdata('hosp_code'));
-			
-			if ($stat == "ys") {
-			$this->db->where("st.d_end > now()");
-			} elseif ($stat == "no")
-			{
-			$this->db->where("st.d_end < now()");
-			}
-			
-			if ($expiring <> ''){
+		//$this->db->select('v_asset_no');
+		//$this->db->from('pmis2_egm_assetregistration');
+		//$this->db->where('v_service_code',$this->session->userdata('usersess'));
+		//$this->db->where('v_actionflag <>','D');
+		//$subQuery = $this->db->_compile_select();
+		/*if ($expiring <> ''){
+			$wstring = ' AND TIMESTAMPDIFF(MONTH, now(), IFNULL(D_end,now())) = '.$expiring;
+		}	
+		else{
+			$wstring = '';
+		}
+		if ($grpsel <> ''){
+			$where = ' AND v_asset_grp = '.$grpsel;
+		}	
+		else{
+			$where = '';
+		}
+		$query = $this->db->query("SELECT * 
+								   FROM (pmis2_egm_statutory st) 
+								   INNER JOIN
+								   (SELECT v_asset_no
+								   	FROM pmis2_egm_assetregistration a
+								   	WHERE v_service_code =".$this->db->escape($this->session->userdata('usersess'))."
+								   	AND v_actionflag <> 'D'".$this->db->escape_str($where).") a
+								   ON st.v_asset_no = a.V_Asset_no
+								   WHERE v_actionflag <> 'D' 
+								   AND YEAR(D_start) <=".$this->db->escape($year)." 
+								   AND MONTH(D_start) <= ".$this->db->escape($month)." 
+								   AND `v_hospitalcode` = ".$this->db->escape($this->session->userdata('hosp_code'))."
+								   AND IF (".$this->db->escape($stat)." = 'ys',d_end > now(),d_end < now())".$this->db->escape_str($wstring)."
+								   
+								   "); //AND `v_asset_no` IN (SELECT `v_asset_no` FROM pmis2_egm_assetregistration where `v_service_code` = 'BES' AND v_actionflag <> 'D')
+		//AND IF (".$this->db->escape($expiring)." <> 0,TIMESTAMPDIFF(MONTH, now(), IFNULL(D_end,now())) = ".$this->db->escape($expiring).",'')
+		echo $this->db->last_query();
+		exit();
+		return $query->result();*/
+
+		$this->db->select('st.*,a.V_Tag_no,a.V_Location_code,l.v_Location_Name');
+		$this->db->from('pmis2_egm_statutory st');
+		$this->db->join('pmis2_egm_assetregistration a','st.v_asset_no = a.V_Asset_no AND a.v_service_code = '.$this->db->escape($this->session->userdata('usersess')).' AND a.v_actionflag <> "D"');
+		$this->db->join('pmis2_egm_assetlocation l','a.V_Location_code = l.V_location_code AND l.V_Actionflag <> "D"');
+		//$this->db->where('v_ServiceCode', $this->session->userdata('usersess'));
+		$this->db->where('st.v_actionflag <> ', 'D');
+		$this->db->where('YEAR(st.D_start) <=', $year);
+		$this->db->where('MONTH(st.D_start) <=', $month);
+		//$this->db->where("`v_asset_no` IN (SELECT `v_asset_no` FROM fmis.pmis2_egm_assetregistration where `v_service_code` = '".$this->session->userdata('usersess')."') AND v_actionflag <> 'D'", NULL, FALSE);
+		$this->db->where('st.v_hospitalcode',$this->session->userdata('hosp_code'));
+		
+		if ($stat == "ys") {
+			$this->db->where("st.D_end > now()");
+		} elseif ($stat == "no")
+		{
+			$this->db->where("st.D_end < now()");
+		}
+		
+		if ($expiring <> ''){
+			if( $expiring == 0 ){
+				$this->db->where('TIMESTAMPDIFF(MONTH, now(), IFNULL(st.D_end,now())) = MONTH(NOW())');
+			}else{
 				$this->db->where('TIMESTAMPDIFF(MONTH, now(), IFNULL(st.D_end,now())) =',$expiring);
 			}
-
-			if ($grpsel <> ''){
-				$this->db->where('v_asset_grp',$grpsel);
-			}
-			$query = $this->db->get();
-			//echo $this->db->last_query();
-			//exit();
-			$query_result = $query->result();
-			return $query_result;
 		}
+
+		if ($grpsel <> ''){
+			$this->db->where('v_asset_grp',$grpsel);
+		}
+		$query = $this->db->get();
+		// echo "<pre>".$this->db->last_query();
+		//exit();
+		$query_result = $query->result();
+		return $query_result;
+	}
 		
 		function keyindicator($servcode,$month,$year){ 
 			$this->db->select('i.v_ServiceCode,i.v_IndicatorNo,i.v_IndicatorName,r.v_Month,r.v_Year,r.n_Parameters,r.n_Revenue,r.v_Paramval,r.Demerit_Point'); //r.v_ServiceCode,r.v_IndicatorNo,
@@ -3401,7 +3416,76 @@ function deptrangebycode($deptcode){
 
 }
 
+/*function ttlexp($month,$year,$range){
+	if( $range>0 ){
+		$this->db->select('TIMESTAMPDIFF(MONTH, now(), IFNULL(v_ExpiryDate,now())) AS month,SUM(CASE WHEN v_ExpiryDate > now() THEN 1 ELSE 0 END) AS notlicsat');
+	}else{
+		$this->db->select('TIMESTAMPDIFF(MONTH, now(), IFNULL(v_ExpiryDate,now())) AS month,SUM(CASE WHEN MONTH(v_ExpiryDate) = MONTH(now()) THEN 1 ELSE 0 END) AS notlicsat');
+	}
+	$this->db->from('pmis2_egm_lnc_lincense_details');
+	//$this->db->where('MONTH(v_StartDate)',$month);
+	//$this->db->where('YEAR(v_StartDate)',$year);
+	$this->db->where('v_ServiceCode =', $this->session->userdata('usersess'));
+	$this->db->where('v_actionflag <>','D');
+	$this->db->where('V_hospitalcode',$this->session->userdata('hosp_code'));
+	if( $range=="0" ){
+		// $this->db->where('TIMESTAMPDIFF(MONTH, now(), IFNULL(v_ExpiryDate,now())) >= 0');
+		// $this->db->where('TIMESTAMPDIFF(MONTH, now(), IFNULL(v_ExpiryDate,now())) <',1);
+		$this->db->where("MONTH(v_ExpiryDate) = MONTH(NOW())");
+	}else{
+		$this->db->where('TIMESTAMPDIFF(MONTH, now(), IFNULL(v_ExpiryDate,now())) > 0');
+		$this->db->where('TIMESTAMPDIFF(MONTH, now(), IFNULL(v_ExpiryDate,now())) <=',$range);
+	}
+	$this->db->group_by('TIMESTAMPDIFF(MONTH, now(), IFNULL(v_ExpiryDate,now()))');
+	$query = $this->db->get();
+	echo "<pre>".$this->db->last_query();
+	// exit();
+    
+	$query_result = $query->result();
+	return $query_result;
+}*/
+/*
+function ttlexp2($month,$year,$range){
+	if( $range>0 ){
+		$this->db->select('TIMESTAMPDIFF(MONTH, now(), IFNULL(D_end,now())) AS month,SUM(CASE WHEN D_end > now() THEN 1 ELSE 0 END) AS notlicsat');
+	}else {
+		$this->db->select('TIMESTAMPDIFF(MONTH, now(), IFNULL(D_end,now())) AS month,SUM(CASE WHEN MONTH(D_end) = MONTH(now()) THEN 1 ELSE 0 END) AS notlicsat');
+	}
+	$this->db->from('pmis2_egm_statutory');
+	//$this->db->where('MONTH(D_start)',$month);
+	//$this->db->where('YEAR(D_start)',$year);
+	$this->db->where('v_actionflag <>','D');
+	$this->db->where('V_hospitalcode',$this->session->userdata('hosp_code'));
+	if( $range=="0" ){
+		// $this->db->where('TIMESTAMPDIFF(MONTH, now(), IFNULL(D_end,now())) >= 0');
+		// $this->db->where('TIMESTAMPDIFF(MONTH, now(), IFNULL(D_end,now())) <',1);
+		$this->db->where("MONTH(D_end) = MONTH(NOW())");
+	}else{
+		$this->db->where('TIMESTAMPDIFF(MONTH, now(), IFNULL(D_end,now())) > 0');
+		$this->db->where('TIMESTAMPDIFF(MONTH, now(), IFNULL(D_end,now())) <=',$range);
+	}
+	$this->db->group_by('TIMESTAMPDIFF(MONTH, now(), IFNULL(D_end,now()))');
+	$query = $this->db->get();
+	// echo $this->db->last_query();
+	//exit();
+    
+	$query_result = $query->result();
+	return $query_result;
+}*/
 function ttlexp($month,$year,$range){
+	$this->db->select('TIMESTAMPDIFF(MONTH, now(), IFNULL(v_ExpiryDate,now())) AS month,SUM(CASE WHEN MONTH(v_ExpiryDate) = MONTH(now()) THEN 1 ELSE 0 END) AS notlicsat');
+	$this->db->from('pmis2_egm_lnc_lincense_details');
+	//$this->db->where('MONTH(v_StartDate)',$month);
+	//$this->db->where('YEAR(v_StartDate)',$year);
+	$this->db->where('v_ServiceCode =', $this->session->userdata('usersess'));
+	$this->db->where('v_actionflag <>','D');
+	$this->db->where('V_hospitalcode',$this->session->userdata('hosp_code'));
+	$this->db->where("MONTH(v_ExpiryDate) = MONTH(NOW())");
+	$this->db->group_by('TIMESTAMPDIFF(MONTH, now(), IFNULL(v_ExpiryDate,now()))');
+	$this->db->get();
+	$currentmonth = $this->db->last_query();
+
+
 	$this->db->select('TIMESTAMPDIFF(MONTH, now(), IFNULL(v_ExpiryDate,now())) AS month,SUM(CASE WHEN v_ExpiryDate > now() THEN 1 ELSE 0 END) AS notlicsat');
 	$this->db->from('pmis2_egm_lnc_lincense_details');
 	//$this->db->where('MONTH(v_StartDate)',$month);
@@ -3412,15 +3496,28 @@ function ttlexp($month,$year,$range){
 	$this->db->where('TIMESTAMPDIFF(MONTH, now(), IFNULL(v_ExpiryDate,now())) > 0');
 	$this->db->where('TIMESTAMPDIFF(MONTH, now(), IFNULL(v_ExpiryDate,now())) <=',$range);
 	$this->db->group_by('TIMESTAMPDIFF(MONTH, now(), IFNULL(v_ExpiryDate,now()))');
-	$query = $this->db->get();
-	//echo $this->db->last_query();
-	//exit();
-    
+	$this->db->get();
+	$defaultquery = $this->db->last_query();
+
+	$query = $this->db->query($currentmonth." UNION ".$defaultquery);
 	$query_result = $query->result();
+	// echo "<pre>".$this->db->last_query();
+	//exit();
 	return $query_result;
 }
 
 function ttlexp2($month,$year,$range){
+	$this->db->select('TIMESTAMPDIFF(MONTH, now(), IFNULL(D_end,now())) AS month,SUM(CASE WHEN MONTH(D_end) = MONTH(now()) THEN 1 ELSE 0 END) AS notlicsat');
+	$this->db->from('pmis2_egm_statutory');
+	//$this->db->where('MONTH(D_start)',$month);
+	//$this->db->where('YEAR(D_start)',$year);
+	$this->db->where('v_actionflag <>','D');
+	$this->db->where('V_hospitalcode',$this->session->userdata('hosp_code'));
+	$this->db->where("MONTH(D_end) = MONTH(NOW())");
+	$this->db->group_by('TIMESTAMPDIFF(MONTH, now(), IFNULL(D_end,now()))');
+	$this->db->get();
+	$currentmonth = $this->db->last_query();
+
 	$this->db->select('TIMESTAMPDIFF(MONTH, now(), IFNULL(D_end,now())) AS month,SUM(CASE WHEN D_end > now() THEN 1 ELSE 0 END) AS notlicsat');
 	$this->db->from('pmis2_egm_statutory');
 	//$this->db->where('MONTH(D_start)',$month);
@@ -3430,10 +3527,10 @@ function ttlexp2($month,$year,$range){
 	$this->db->where('TIMESTAMPDIFF(MONTH, now(), IFNULL(D_end,now())) > 0');
 	$this->db->where('TIMESTAMPDIFF(MONTH, now(), IFNULL(D_end,now())) <=',$range);
 	$this->db->group_by('TIMESTAMPDIFF(MONTH, now(), IFNULL(D_end,now()))');
-	$query = $this->db->get();
-	//echo $this->db->last_query();
-	//exit();
-    
+	$this->db->get();
+	$defaultquery = $this->db->last_query();
+
+	$query = $this->db->query($currentmonth." UNION ".$defaultquery);
 	$query_result = $query->result();
 	return $query_result;
 }
@@ -4217,6 +4314,9 @@ ORDER BY r.D_date, r.D_time
 			$this->db->where('r.V_actionflag <> ', 'D');
 			$this->db->where('r.V_hospitalcode',$this->session->userdata('hosp_code'));
 			$this->db->group_by('r.V_Request_no');
+
+			//30.08.2018 by buzz
+			$this->db->order_by('r.D_date', 'DESC');
 
 		$query = $this->db->get();
 		//echo $this->db->last_query();
@@ -5055,7 +5155,7 @@ return $obj['path'];
 		$query = $this->db->get();
 		
 		$query_result = $query->result(); 
-		//echo $this->db->last_query();
+		// echo $this->db->last_query();
 		//exit();
 		return $query_result;
 		
@@ -5085,7 +5185,7 @@ return $obj['path'];
 			return $query->result();
 		}
 		
-				function sumpp_m($month,$year,$pecat)
+		function sumpp_m($month,$year,$pecat)
 		{
 		
 			$this->db->select("*");
@@ -5096,9 +5196,24 @@ return $obj['path'];
 			$this->db->where('v_year = ',$year);			
 			$query = $this->db->get();
 			$query_result = $query->result();
-		/* 	echo $this->db->last_query();
-			exit(); */
+			/*echo $this->db->last_query();
+			exit();*/
 			return $query_result;
+		}
+		
+			function rcmbulkprint($startdate,$enddate){
+			$this->db->select('s.V_Request_no,s.v_Asset_no,r.V_Tag_no,r.V_User_Dept_code,s.D_date,s.v_closeddate');
+			$this->db->from('pmis2_egm_service_request s');
+			$this->db->join('pmis2_egm_assetregistration r','s.v_Asset_no = r.V_Asset_no AND s.v_HospitalCode = r.V_Hospitalcode');
+			$this->db->where('v_ServiceCode',$this->session->userdata('usersess'));
+			$this->db->where('s.v_Actionflag <>','D');
+			$this->db->where('D_date >=',$startdate);
+			$this->db->where('D_date <=',$enddate);
+			$query = $this->db->get();
+			//echo $this->db->last_query();
+			//exit();
+			return $query->result();
+		
 		}
 
 }

@@ -1,8 +1,8 @@
 <?php
 if ($this->input->get('ex') == 'excel'){
-$filename ="Response Work Order Summary - ".date('F', mktime(0, 0, 0, $month, 10)) .$year.".xls";
-header('Content-type: application/ms-excel');
-header('Content-Disposition: attachment; filename='.$filename);
+	$filename ="Response Work Order Summary - ".date('F', mktime(0, 0, 0, $month, 10)) .$year.".xls";
+	header('Content-type: application/ms-excel');
+	header('Content-Disposition: attachment; filename='.$filename);
 }
 ?>
 <?php if ($this->input->get('ex') == ''){?>
@@ -33,59 +33,68 @@ function barchart(a,b,c,d,e){
 
 <?php if ($this->input->get('ex') == ''){?>
 <div id="Instruction" >
-<center>View List : 
-<form method="get" action="">
-		<?php 
+	<center>View List : 
+		<form method="get" action="">
+			<?php 
 			$month_list = array(
-			'01' => 'January',
-			'02' => 'February',
-			'03' => 'March',
-			'04' => 'April',
-			'05' => 'May',
-			'06' => 'June',
-			'07' => 'July',
-			'08' => 'August',
-			'09' => 'September',
-			'10' => 'October',
-			'11' => 'November',
-			'12' => 'December'
-		 );
-		?>
-		<?php echo form_dropdown('m', $month_list, set_value('m', isset($record[0]->Month) ? $record[0]->Month : $month) , 'style="width: 90px;" id="cs_month"'); ?>
+				'01' => 'January',
+				'02' => 'February',
+				'03' => 'March',
+				'04' => 'April',
+				'05' => 'May',
+				'06' => 'June',
+				'07' => 'July',
+				'08' => 'August',
+				'09' => 'September',
+				'10' => 'October',
+				'11' => 'November',
+				'12' => 'December'
+			);
+			?>
+			<?php echo form_dropdown('m', $month_list, set_value('m', isset($record[0]->Month) ? $record[0]->Month : $month) , 'style="width: 90px;" id="cs_month"'); ?>
 		
-		<?php 
+			<?php 
 			for ($dyear = '2015';$dyear <= date("Y");$dyear++){
 				$year_list[$dyear] = $dyear;
 			}
-		?>
-		<?php echo form_dropdown('y', $year_list, set_value('y', isset($record[0]->Year) ? $record[0]->Year : $year) , 'style="width: 65px;" id="cs_year"'); ?>
-<input type="hidden" value="<?php echo set_value('grp', ($this->input->get('grp')) ? $this->input->get('grp') : ''); ?>" name="grp">     
-<input type="submit" value="Apply" onchange="javascript: submit()"/></center>
-</form>
+			?>
+			<?php echo form_dropdown('y', $year_list, set_value('y', isset($record[0]->Year) ? $record[0]->Year : $year) , 'style="width: 65px;" id="cs_year"'); ?>
+			<input type="hidden" value="<?php echo set_value('grp', ($this->input->get('grp')) ? $this->input->get('grp') : ''); ?>" name="grp">     
+			<input type="submit" value="Apply" onchange="javascript: submit()"/>
+		</form>
+	</center>
 </div>
 <?php } ?>
 
 <div class="m-div">
 	<table class="rport-header">
 		<tr>
-			<td colspan="5">Response Work Order Summary <?=date('F', mktime(0, 0, 0, $month, 10))?> <?=$year?> - <?php echo $this->session->userdata('usersessn');?> ( <?php if ($this->input->get('grp') == ''){echo 'ALL'; }else{ echo 'Group '.$this->input->get('grp');} ?> )</td>
+			<td colspan="5">
+				Response Work Order Summary <?=date('F', mktime(0, 0, 0, $month, 10))?> <?=$year?> - <?php echo $this->session->userdata('usersessn');?> ( <?php if ($this->input->get('grp') == ''){echo 'ALL'; }else{ echo 'Group '.$this->input->get('grp');} ?> )
+			</td>
 		</tr>
 	</table>
 	
 	<table class="tftable" border="1" style="text-align:center; width:70%;" align="center">
 		
 		<tr style="text-align:center;font-weight:bold;">
-				<th>Period</th>
-				<th>Total Work Order Request</th>
-				<th>Total Responded</th>
-				<th>Total Responded Late</th>
-			</tr>
-			<tr style="text-align:center;">
-				<td><?=date('F', mktime(0, 0, 0, $month, 10))?> <?=$year?></td>
-			  <td><?php if ($rqsum[0]->total == 0) { echo "0"; } else {echo anchor('contentcontroller/report_rtlu?m='.$month.'&y='.$year.'&stat=fbfb&resch=bfbf&grp=&btp=1'.$this->input->get('grp'),$rqsum[0]->total);} ?></td>
-			  <td><?php if ($rqsum[0]->resp == 0) { echo "0"; } else {echo anchor('contentcontroller/report_rtlu?m='.$month.'&y='.$year.'&stat=ys&grp=&btp=1'.$this->input->get('grp'),$rqsum[0]->resp);} ?></td>
-			  <td><?php if ($rqsum[0]->resplate == 0) { echo "0"; } else {echo anchor('contentcontroller/report_rtlu?m='.$month.'&y='.$year.'&stat=no&grp=&btp=1'.$this->input->get('grp'),$rqsum[0]->resplate,'style="color:red;"');} ?></td>
-			</tr>
+			<th>Period</th>
+			<th>Total Work Order Request</th>
+			<th>Total Responded</th>
+			<th>Total Responded Late</th>
+		</tr>
+		<tr style="text-align:center;">
+			<td><?=date('F', mktime(0, 0, 0, $month, 10))?> <?=$year?></td>
+			<td>
+				<?=($rqsum[0]->total == 0) ? "0" : anchor("contentcontroller/report_rtlu?m=".$month."&y=".$year."&stat=fbfb&resch=bfbf&grp=&btp=1".$this->input->get('grp'),$rqsum[0]->total); ?>
+			</td>
+			<td>
+				<?=($rqsum[0]->resp == 0) ? "0" : anchor("contentcontroller/report_rtlu?m=".$month."&y=".$year."&stat=ys&grp=&btp=1".$this->input->get('grp'),$rqsum[0]->resp); ?>
+			</td>
+			<td>
+				<?=($rqsum[0]->resplate == 0) ? "0" : anchor("contentcontroller/report_rtlu?m=".$month."&y=".$year."&stat=no&grp=&btp=1".$this->input->get('grp'),$rqsum[0]->resplate,"style='color:red;'"); ?>
+			</td>
+		</tr>
 	</table>
 	<?php if ($this->input->get('ex') != 'excel'){?>
 	<div id="container" class="qapgraf2"></div>
