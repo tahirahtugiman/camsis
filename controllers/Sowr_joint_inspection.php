@@ -63,7 +63,7 @@ class sowr_joint_inspection extends CI_Controller {
         else {
         isset($_GET['jobdate']) ? $data['job_D'] = $_GET['jobdate'] : $data['job_D'] = date("Y-m-d",strtotime($data['year'].'-'.$data['month'].'-01'));    
         } */
-	     //echo "<pre>";
+	    //echo "<pre>";
         //print_r($data['dept']);
     	if (isset($data['schdata'])){
     	foreach ($data['schdata'] as $schdata){
@@ -126,23 +126,5 @@ class sowr_joint_inspection extends CI_Controller {
 		$this ->load->view("content_sowr_joint_inspection", $data);
    	}
 
-    public function schbi_weekly(){
 
-		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
-		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
-	     $week2 = (($this->input->get('week2')) != '') ? $this->input->get('week2') : NULL;
-	     $week4 = (($this->input->get('week4')) != '') ? $this->input->get('week4') : NULL;
-		
-        if(isset($_GET['week2']) || isset($_GET['week4'])){	
-      
-		   $date_cap = array('dept_code'=>$_GET['dept'],'week_2'=>$week2,'week_4'=>$week4,'month'=>$_GET['month'],'year'=>$_GET['year']);
-		   echo "<pre>";
-		   print_r($date_cap);
-		  //exit();
-			$this->insert_model->ins_schbi_weekly($date_cap);
-			
-			redirect('sowr_joint_inspection?m='.$_GET['month'].'&y='.$_GET['year']);
-			}
-	
-	}	
 }
