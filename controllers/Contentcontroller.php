@@ -6721,7 +6721,7 @@ class Contentcontroller extends CI_Controller {
 			}
 		}
 		else{
-			if (substr($data['wrk_ord'],0,2) != 'PP'){
+			if ( !in_array(substr($data['wrk_ord'],0,2), array("PP","RI")) ){
 				$data['records'] = $this->get_model->wodet($data['wrk_ord'],$data['assetno']);
 				$data['parts'] = $this->get_model->partrep($data['wrk_ord']);
 				if ($data['parts']) {
