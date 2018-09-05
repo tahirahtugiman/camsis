@@ -3434,7 +3434,7 @@ function ttlexp($month,$year,$range){
 	$this->db->where('A.v_ServiceCode =', $this->session->userdata('usersess'));
 	$this->db->where('A.v_actionflag <>','D');
 	$this->db->where('A.V_hospitalcode',$this->session->userdata('hosp_code'));
-	$this->db->where('TIMESTAMPDIFF(MONTH, now(), IFNULL(A.v_ExpiryDate,now())) > 0');
+	$this->db->where('TIMESTAMPDIFF(MONTH, now(), IFNULL(A.v_ExpiryDate,now())) > -1');
 	$this->db->where('TIMESTAMPDIFF(MONTH, now(), IFNULL(A.v_ExpiryDate,now())) <=',$range);
 	$this->db->group_by('TIMESTAMPDIFF(MONTH, now(), IFNULL(A.v_ExpiryDate,now()))');
 	$query = $this->db->get();

@@ -1,4 +1,3 @@
-
 <body>
 	<div id="Instruction" class="pr-printer">
 		<div class="header-pr"> Housekeeping Services </div>
@@ -8,7 +7,11 @@
 	<div class="form">
 		<?php 
 		$lines = 26;
+		$numberid = 0; 
+		//$week4 = 0; 
+		//$numberdate4 = 0; 
 		$numrow=1; foreach($dept as $rows): ?>
+		<?php $numberid++;?>
 		<?php if ($numrow==1 OR $numrow%$lines==1) { ?>
 		<table class="tbl-wo" border="1" align="center" style="border: 1px solid black;">
 			<tr>
@@ -56,10 +59,9 @@
 							<a href="?y=<?= $year+1?>&m=<?= $month?>"><img src="<?php echo base_url(); ?>images/arrow-right2.png" alt="" class="ui-img-icon" style="padding-top:4px; padding-left:4px;"/></a>
 							</td>
 						</tr>
-
 			</table>
 		</div>
-		
+
 	<table class="tftable2" border="1" style="text-align:center;" align="center">
 		<tr>
 			<th rowspan="2">No</th>
@@ -77,25 +79,17 @@
 		<?php } ?>
 		<!--18lines-->
 		
-		<tr><form method="get" action="<?php echo base_url();?>index.php/Sowr_joint_inspection/schbi_weekly">
-		     <?php 			 
-			 $data = array(
-        'dept'  => $rows->v_UserDeptCode,
-        'month' => ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m"),
-        'year' => ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y")			
-);
-echo form_hidden($data);
-			 ?>
+		<tr>
 			<td><?=$numrow?>&nbsp;</td>
 			<td><?=$rows->v_UserDeptCode?></td>
 			<td><?=$rows->v_userdeptdesc?></td>
 			<?php if (isset($deptcode) AND in_array($rows->v_UserDeptCode,$deptcode)) { ?>
 			<?php foreach ($datedept as $dc): ?>
-			<?php if ($rows->v_UserDeptCode == $dc['dept']) { ?>
-			<td><?=($rows->week_2) ? date('D', strtotime($rows->week_2)) : ''?></td>
-            <?php if ($this->input->get('p') <> 1) { ?>			
-			<td><input type="date" name="week2" id="myDate" value="<?php echo set_value("week_2", ($rows->week_2) <> '' ? date('Y-m-d',strtotime($rows->week_2)) : '')?>" style="width:80%; display:inline-block;" onchange="this.form.submit()"/></td>
-			<td><input type="date" name="week4" id="myDate" value="<?php echo set_value("week_4",($rows->week_4) <> '' ? date('Y-m-d',strtotime($rows->week_4)) : '')?>" style="width:80%; display:inline-block;" onchange="this.form.submit()"/></td>
+			<?php if ($rows->v_UserDeptCode == $dc['dept']) { ?>			
+			<td><p id="day_<?=$numberid?>"><?=($rows->week_2) ? date('D', strtotime($rows->week_2)) : ''?></p></td>
+			  <?php if ($this->input->get('p') <> 1) { ?>	
+			<td><input type="date" name="week2" id="week2_<?=$numberid?>" value="<?php echo set_value("week_2", ($rows->week_2) <> '' ? date('Y-m-d',strtotime($rows->week_2)) : '')?>" style="width:80%; display:inline-block;" onchange="myfungsi('<?=$rows->v_UserDeptCode?>','<?=$numberid?>')"/></td>
+			<td><input type="date" name="week4" id="week4_<?=$numberid?>" value="<?php echo set_value("week_4", ($rows->week_4) <> '' ? date('Y-m-d',strtotime($rows->week_4)) : '')?>" style="width:80%; display:inline-block;" onchange="myfungsi('<?=$rows->v_UserDeptCode?>','<?=$numberid?>')"/></td>
 			<?php } else { ?>
 		    <td><?=($rows->week_2) <> '' ? date('d-m-Y',strtotime($rows->week_2)) : '' ?></td>
 			<td><?=($rows->week_4) <> '' ? date('d-m-Y',strtotime($rows->week_4)): '' ?></td>
@@ -105,18 +99,17 @@ echo form_hidden($data);
 			<?php } ?>
 			<?php endforeach; ?>
 			<?php } else { ?>
-			<td><?=($rows->week_2) ? date('D', strtotime($rows->week_2)) : ''?></td>
-			  <?php if ($this->input->get('p') <> 1) { ?>		
-			<td><input type="date" name="week2" id="myDate" value="<?php echo set_value("week_2", ($rows->week_2) <> '' ? date('Y-m-d',strtotime($rows->week_2)) : '')?>" style="width:80%; display:inline-block;" onchange="this.form.submit()"/></td>
-			<td><input type="date" name="week4" id="myDate" value="<?php echo set_value("week_4",($rows->week_4) <> '' ? date('Y-m-d',strtotime($rows->week_4)) : '')?>" style="width:80%; display:inline-block;" onchange="this.form.submit()"/></td>
-			<?php } else { ?>
-			<td><?=($rows->week_2) <> '' ? date('d-m-Y',strtotime($rows->week_2)) : '' ?></td>
-			<td><?=($rows->week_4) <> '' ? date('d-m-Y',strtotime($rows->week_4)) : '' ?></td>
+			<td><p id="day_<?=$numberid?>"><?=($rows->week_2) ? date('D', strtotime($rows->week_2)) : ''?></p></td>
+			 <?php if ($this->input->get('p') <> 1) { ?>	
+			<td><input type="date" name="week2" id="week2_<?=$numberid?>" value="<?php echo set_value("week_2", ($rows->week_2) <> '' ? date('Y-m-d',strtotime($rows->week_2)) : '')?>" style="width:80%; display:inline-block;" onchange="myfungsi('<?=$rows->v_UserDeptCode?>','<?=$numberid?>')"/></td>
+			<td><input type="date" name="week4" id="week4_<?=$numberid?>" value="<?php echo set_value("week_4", ($rows->week_4) <> '' ? date('Y-m-d',strtotime($rows->week_4)) : '')?>" style="width:80%; display:inline-block;" onchange="myfungsi('<?=$rows->v_UserDeptCode?>','<?=$numberid?>')"/></td>
+				<?php } else { ?>
+		    <td><?=($rows->week_2) <> '' ? date('d-m-Y',strtotime($rows->week_2)) : '' ?></td>
+			<td><?=($rows->week_4) <> '' ? date('d-m-Y',strtotime($rows->week_4)): '' ?></td>
 			<?php } ?>
 			<td></td>
 			<td></td>
 			<?php } ?>
-			</form>
 		</tr>
 			<?php $numrow++?>
 		
@@ -141,6 +134,7 @@ echo form_hidden($data);
 
 		<?php if (($numrow-1)%$lines==0) { ?>	
 	</table>
+
 	<table class="tbl-wo" border="0" align="center">
 			<tr height="50px">
 				<td style="padding-left:10px;">Prepared : </td>
@@ -156,5 +150,41 @@ echo form_hidden($data);
 	<?php } ?>
 	<?php endforeach; ?>
 	</body>
+	<script>
+function myfungsi(nilai,wek) {
+   var dept = nilai;
+
+  var week2 = document.getElementById("week2_" + wek).value;
+  var week4 = document.getElementById("week4_" + wek).value;
+  
+  var d = new Date(week2);
+  var days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+//var j =  days[d.getDay()];
+  if(week2){
+	document.getElementById("day_" + wek).innerHTML = days[d.getDay()];
+	}
+	
+  else if (week2 == ''){
+    document.getElementById("day_" + wek).innerHTML = "";
+  }
+		//var nameValue = "lalalalala";
+      //alert('week2 ' + week2 + 'week 4 '+ week4);
+	  
+  $.post("<?php echo base_url('index.php/ajaxsch'); ?>",
+        {
+          dept: dept,
+          week2: week2,
+          week4: week4,
+		  m : <?=$month;?>,
+		  y : <?=$year;?>
+		  
+         
+        },
+        function(data,status){
+            //alert("Data: " + JSON.parse(data).dept_code + "\nStatus: " + status);
+        });	  
+
+}
+</script>
 </html>
 
