@@ -1,0 +1,148 @@
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+
+class sowr_joint_inspection extends CI_Controller {
+	function __construct(){
+	     	parent::__construct();
+	//echo 'ade1';
+			$this->load->model('loginModel','',TRUE);
+	//echo 'ade2';
+			$this->load->model('insert_model');
+	                //$this->load->model('test_ler');
+	//echo 'ade3';
+			$this->load->library('session');
+	//echo 'ade4';	
+			$this->is_logged_in();
+	//echo 'ade5';
+		
+		
+	}
+	
+		function is_logged_in()
+	{
+		
+		$is_logged_in = $this->session->userdata('v_UserName');
+		
+		if(!isset($is_logged_in) || $is_logged_in !=TRUE)
+		redirect('LoginController/index');
+	}
+	public function index(){
+   		$this->load->model("get_model");
+		$data['dept'] = $this->get_model->get_poploclistb("adanilai");
+		//$data['schbi_weekly'] = $this->get_model->get_schbi_weekly('WGS2');
+		//print_r($data['schbi_weekly']);
+		$data['count'] = count($data['dept']);
+	  	$data['tabber'] = ($this->input->get('work-a') <> 0) ? $this->input->get('work-a') : '0';	
+		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
+		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
+
+		$data['SWRJI'] = $this->get_model->SWRJI_period();
+		foreach ($data['SWRJI'] as $r){
+    		$data['sn'] = explode('-',$r->Scheduler_Name);
+    		$data['deptcode'][] = $data['sn'][0];
+    		$data['schdata'][] = array('dept'=>$data['sn'][0],
+    								   'Occurs'=>$r->Occurs,
+    								   //'Daily_freq_time_1'=>$r->Daily_freq_time_1,
+											 'Daily_freq_time_1'=>$r->Monthly_days,
+    								   'Duration_start_date'=>$r->Duration_start_date,
+    								   'Duration_end_date'=>$r->Duration_end_date
+    								   );
+    	}
+		foreach ($data['dept'] as $key => $d){
+		
+    	 $schbi_weekly = $this->get_model->get_schbi_weekly($d->v_UserDeptCode,$data['month'],$data['year']);
+		
+		 $data['dept'][$key]->week_2 = isset($schbi_weekly[0]->week_2) ? $schbi_weekly[0]->week_2 : '' ;
+		 $data['dept'][$key]->week_4 = isset($schbi_weekly[0]->week_4) ? $schbi_weekly[0]->week_4 : '' ;
+		 //$data['dept'][$key]->schdddate = 'dasdd';
+    	}
+
+	
+	/* 	 if (($data['month'] == date('m')) AND ($data['year'] == date('Y'))) {
+        isset($_GET['jobdate']) ? $data['job_D'] = $_GET['jobdate'] : $data['job_D'] = date("Y-m-d");
+        }
+        else {
+        isset($_GET['jobdate']) ? $data['job_D'] = $_GET['jobdate'] : $data['job_D'] = date("Y-m-d",strtotime($data['year'].'-'.$data['month'].'-01'));    
+        } */
+	     //echo "<pre>";
+        //print_r($data['dept']);
+    	if (isset($data['schdata'])){
+    	foreach ($data['schdata'] as $schdata){
+    		$beginday = date('Y-m-d',strtotime($schdata['Duration_start_date']));
+    		$lastday  = isset($schdata['Duration_end_date']) ? date('Y-m-d',strtotime($schdata['Duration_end_date'])) : NULL;
+    		$begin = strtotime($beginday);
+    			
+    		$lastday = is_null($lastday) ? date("Y-m-t", strtotime($data['year'].'-'.$data['month'].'-01')) : $lastday;
+			$end   = strtotime($lastday);
+			$begining = strtotime(date('Y',$begin).'-'.date('m',$begin).'-01');
+			$ending = strtotime(date('Y-m-t',$end));
+    			while ($begining < $ending){
+    				if (date('m',$begining) == $data['month'] AND date('Y',$begining) == $data['year']){
+    					$data['time'][$schdata['dept']] = $schdata['Daily_freq_time_1'];
+    				}
+    				$begining = strtotime(date('Y-m-d',strtotime("+1 months",$begining)));
+    			}
+    				if (isset($data['time'])) {
+	    				if (date('Y',strtotime($beginday)) < $data['year']){
+							if (array_key_exists($schdata['dept'],$data['time'])){
+							$data['time'] = $data['time'];
+							}
+							else{
+									$data['time'][$schdata['dept']] = NULL;
+								}
+						}
+						elseif (date('Y',strtotime($beginday)) == $data['year']){
+							if(date('m',strtotime($beginday)) <= $data['month']){
+								if (array_key_exists($schdata['dept'],$data['time'])){
+								$data['time'] = $data['time'];
+								}
+								else{
+									$data['time'][$schdata['dept']] = NULL;
+								}
+							}
+							else{
+								$data['time'][$schdata['dept']] = NULL;
+							}
+						}
+						else{
+							$data['time'][$schdata['dept']] = NULL;
+						}
+					}
+					else{
+						$data['time'][$schdata['dept']] = NULL;
+					}
+    	}
+    	foreach ($data['schdata'] as $sd){
+			foreach ($data['time'] as $key=>$val){
+				if ($key == $sd['dept']){
+			$data['datedept'][] = array('dept'=>$sd['dept'],
+		    							'time'=>$val);
+				}
+			}
+		}
+    	}
+
+  
+		$this ->load->view("headprinter");
+		$this ->load->view("content_sowr_joint_inspection", $data);
+   	}
+
+    public function schbi_weekly(){
+
+		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
+		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
+	     $week2 = (($this->input->get('week2')) != '') ? $this->input->get('week2') : NULL;
+	     $week4 = (($this->input->get('week4')) != '') ? $this->input->get('week4') : NULL;
+		
+        if(isset($_GET['week2']) || isset($_GET['week4'])){	
+      
+		   $date_cap = array('dept_code'=>$_GET['dept'],'week_2'=>$week2,'week_4'=>$week4,'month'=>$_GET['month'],'year'=>$_GET['year']);
+		   echo "<pre>";
+		   //print_r($date_cap);
+		  //exit();
+			$this->insert_model->ins_schbi_weekly($date_cap);
+			
+			redirect('sowr_joint_inspection?m='.$_GET['month'].'&y='.$_GET['year']);
+			}
+	
+	}	
+}
