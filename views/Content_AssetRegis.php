@@ -131,20 +131,23 @@
 				  </tr>
 				  <tr>
 				    <td>Hospital</td>
-				    <?php if ( substr($this->input->get('wrk_ord'),0,2) != 'PP' ){ ?>
+				    <?php //if ( substr($this->input->get('wrk_ord'),0,2) != 'PP' ){ ?>
+				    <?php if ( !in_array(substr($this->input->get('wrk_ord'),0,2), array('PP','RI')) ){ ?><!-- buzz -->
 				    <td><?=isset($list->V_hospitalcode) ? $list->V_hospitalcode : ''?></td>
 				    <?php } else { ?>
 					<td><?=isset($list->v_HospitalCode) ? $list->v_HospitalCode : ''?></td>
 					<?php } ?>
 					<td>Work Order No</td>
-					<?php if ( substr($this->input->get('wrk_ord'),0,2) != 'PP' ){ ?>
+					<?php //if ( substr($this->input->get('wrk_ord'),0,2) != 'PP' ){ ?>
+				    <?php if ( !in_array(substr($this->input->get('wrk_ord'),0,2), array('PP','RI')) ){ ?><!-- buzz -->
 				    <td><?=isset($list->V_Request_no) ? $list->V_Request_no : ''?></td>
 				    <?php } else { ?>
 					<td><?=isset($list->v_WrkOrdNo) ? $list->v_WrkOrdNo : ''?></td>
 					<?php } ?>
 				  </tr>
 
-				  <?php if ( substr($this->input->get('wrk_ord'),0,2) != 'PP' ){?>
+					<?php //if ( substr($this->input->get('wrk_ord'),0,2) != 'PP' ){?>
+				    <?php if ( !in_array(substr($this->input->get('wrk_ord'),0,2), array('PP','RI')) ){ ?><!-- buzz -->
 				  <tr>
 				    <td>Service Request No</td>
 					<td><?=isset($list->V_Request_no) ? $list->V_Request_no : ''?></td>
@@ -163,7 +166,8 @@
 					<td>WO Date</td>
 					<td><?=isset($list->D_date) ? date("d-m-Y",strtotime($list->D_date)) : ''?></td>
 				  </tr>
-				  <?php } elseif (substr($this->input->get('wrk_ord'),0,2) == 'PP') { ?>
+				  <?php //} elseif (substr($this->input->get('wrk_ord'),0,2) == 'PP') { ?>
+				  <?php } elseif ( in_array(substr($this->input->get('wrk_ord'),0,2), array('PP','RI')) ){ ?><!-- buzz -->
 				  <tr>
 				    <td>Work Order Type</td>
 					<td><?=isset($list->v_jobtype) ? $list->v_jobtype : ''?></td>
@@ -180,7 +184,8 @@
 				  </tr>
 				  <tr>
 				    <td>Asset No</td>
-				    <?php if ( substr($this->input->get('wrk_ord'),0,2) != 'PP' ){ ?>
+				    <?php //if ( substr($this->input->get('wrk_ord'),0,2) != 'PP' ){ ?>
+				    <?php if ( !in_array(substr($this->input->get('wrk_ord'),0,2), array('PP','RI')) ){ ?><!-- buzz -->
 				    <td><?=($list->V_Asset_no) && $list->V_Asset_no != 'N/A' ? anchor ('contentcontroller/AssetRegis?tab=Maintenance&assetno='.$assetno.'&m='.$this->input->get('m').'&y='.$this->input->get('y').'&stat='.$this->input->get('stat').'&resch='.$this->input->get('resch').'&state='.$this->input->get('state'),''.$list->v_tag_no.'' ) : ''?></td>
 					<!--<td><?php echo anchor ('contentcontroller/AssetRegis?tab=Maintenance&assetno='.$assetno.'&m='.$this->input->get('m').'&y='.$this->input->get('y').'&stat='.$this->input->get('stat').'&resch='.$this->input->get('resch').'&state='.$this->input->get('state'), isset($list->V_Asset_no) ? $list->V_Asset_no : ''); ?></td>-->
 					<?php } else { ?>
@@ -191,7 +196,8 @@
 					<td><?=isset($list->V_Asset_name) ? $list->V_Asset_name : ''?></td>
 				  </tr>
 
-				  <?php if (substr($this->input->get('wrk_ord'),0,2) != 'PP'){//pulaupinang?>
+				  <?php //if (substr($this->input->get('wrk_ord'),0,2) != 'PP'){//pulaupinang?>
+				  <?php if ( !in_array(substr($this->input->get('wrk_ord'),0,2), array('PP','RI')) ){ ?><!-- buzz -->
 				  <tr>
 				    <td>Scheduled Date</td>
 					<td><?=isset($list->schedule_d) ? date("d-m-Y",strtotime($list->schedule_d)) : ''?></td>
@@ -296,7 +302,8 @@
 					<td></td>
 					<td></td>
 				  </tr>
-				  <?php } elseif (substr($this->input->get('wrk_ord'),0,2) == 'PP') { ?>
+				  <?php //} elseif (substr($this->input->get('wrk_ord'),0,2) == 'PP') { ?>
+				  <?php } elseif ( in_array(substr($this->input->get('wrk_ord'),0,2), array('PP','RI')) ){ ?>
 				  	<tr>
 				    <td>Scheduled Date</td>
 					<td><?=isset($list->d_DueDt) ? date("d-m-Y",strtotime($list->d_DueDt)) : ''?></td>
