@@ -3399,6 +3399,8 @@ class Contentcontroller extends CI_Controller {
 		
 	}
 	
+	
+	
 	public function testlaa(){
 		//$this ->load->view("headprinter");
 		$this ->load->view("head");
@@ -5612,10 +5614,15 @@ class Contentcontroller extends CI_Controller {
 	
 	
 	public function schedule_p_work(){
+	  $this->load->model("get_model");
 	  $data['dept']=$this->input->get('dept', TRUE);
-    $data['loc']=$this->input->get('loc', TRUE);
-		$this ->load->view("headprinter");
-		$this ->load->view("content_schedule_p_work", $data);
+      $data['loc']=$this->input->get('loc', TRUE);
+	  $data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
+	  $data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
+	  $data['records'] = $this->get_model->get_sch_spw($data['dept'],$data['loc'],$data['month'],$data['year']);
+	  $data['count'] = count($data['records']);
+	  $this ->load->view("headprinter");
+      $this ->load->view("content_schedule_p_work", $data);
 	}
 	
 	public function job_schedule(){
@@ -7826,7 +7833,7 @@ public function pop_fail(){
 		$this->load->model('display_model');
 		$data['recordlic']= $this->display_model->ttlexp($data['month'],$data['year'],$data['range']);
 		$data['recordsta']= $this->display_model->ttlexp2($data['month'],$data['year'],$data['range']);
-		for ($i=1;$i<=$data['range'];$i++){
+		for ($i=0;$i<=$data['range'];$i++){
 			$data['explistlic'.$i] = 0;
 			foreach ($data['recordlic'] as $row){
 				if($row->month == $i){
@@ -7835,7 +7842,7 @@ public function pop_fail(){
 			}
 		}
 
-		for ($j=1;$j<=$data['range'];$j++){
+		for ($j=0;$j<=$data['range'];$j++){
 			$data['expliststa'.$j] = 0;
 			foreach ($data['recordsta'] as $row){
 				if($row->month == $j){
@@ -8379,6 +8386,8 @@ public function print_kewpa(){
 
 		}
 	}
+	
+	
 	public function report_rcmbulk(){
 		isset($_REQUEST['n_startdate']) ? $data['startdate'] = $_REQUEST['n_startdate'] : $data['startdate'] = "";
 		isset($_REQUEST['n_enddate']) ? $data['enddate'] = $_REQUEST['n_enddate'] : $data['enddate'] = "";
