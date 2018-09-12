@@ -7,7 +7,7 @@
 	</div>
 	<?php if ($this->input->get('p') == 1){ ?>
 	 <?php 
-		$lines = 12;
+		$lines = 18;
 		//$week4 = 0; 
 		//$numberdate4 = 0; 
 		$numrow=1; foreach($records as $rows): ?>
@@ -229,16 +229,7 @@
 			</tr>
 		</table>
 	</div>
-	   <table class="tbl-wo" border="0" align="center" style="font-weight:bold; margin-top:10px; margin-bottom:10px;">
-			<!--<tr height="50px">
-				<td style="padding-left:10px;" Colspan="3"><b>PROJECT : IIUM TEACHING HOSPITAL, KUANTAN</b></td>
-			</tr>-->
-			<tr height="30px">
-				<td style="padding-left:10px;"><b>User Department : <?= $loc ?></b></td>
-				<!--<td style="padding-left:10px;">Department Code: <?= $dept ?></td>-->
-				<td style="padding-left:10px;">Month : <?= date('F', mktime(0, 0, 0, $month, 10)) ?></td>
-			</tr>
-		</table>
+	 
 
 	
 	<table class="tftable2 font-size" border="1" style="text-align:center;" align="center">
