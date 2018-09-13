@@ -82,44 +82,7 @@ function barchart(a,b,c,d,e,f){
 				<th>Total Rescheduled Brought Out</th>
 				<th>Total Not Done</th>
 			</tr>
-			<tr style="text-align:center;">
-				<td><?=date('F', mktime(0, 0, 0, $month, 10))?> <?=$year?></td>
-				<?php if  ($this->input->get('ex') != 'excel'){ ?>
-				<?php if (isset($total[0]->PeCat)){?>
-			  <td><?= isset($total[0]->TPPMWO) == TRUE ? $total[0]->TPPMWO : '0'?></td>
-			  <td><?= isset($total[0]->TC) == TRUE ? $total[0]->TC : '0'?></td>
-			  <td><?= isset($total[0]->TRBI) == TRUE ? $total[0]->TRBI : '0'?></td>
-			  <td><?= isset($total[0]->TRBO) == TRUE ? $total[0]->TRBO : '0'?></td>
-			  <td><?= isset($total[0]->TND) == TRUE ? $total[0]->TND : '0'?></td>
-			  
-			  <?php } else { ?>
-				  <td><?php if (($ppmsum[0]->total + $reschout[0]->reschout == 0)) { echo "0"; } else {echo $ppmsum[0]->total + $reschout[0]->reschout ;} ?></td>
-				  <!--<td><?php if (($ppmsum[0]->total == 0)) { echo "0"; } else {echo anchor('contentcontroller/report_vols?m='.$month.'&y='.$year.'&stat=fbfb&resch=nt&grp=&btp=1'.$this->input->get('grp'),$ppmsum[0]->total);} ?></td>-->
-			  <td><?php if (($ppmsum[0]->comp == 0)) { echo "0"; } else {echo anchor('contentcontroller/report_vols?m='.$month.'&y='.$year.'&stat=A&resch=nt&btp=1&grp='.$this->input->get('grp').'&fon='.$this->input->get('fon'),$ppmsum[0]->comp);} ?></td>
-			  <td><?php if ($ppmsum[0]->resch == 0) { echo "0"; } else {echo anchor('contentcontroller/report_vols?m='.$month.'&y='.$year.'&stat=A&resch=ys&btp=1&grp='.$this->input->get('grp').'&fon='.$this->input->get('fon'),$ppmsum[0]->resch);} ?></td>
-			  <td><?php if (($reschout[0]->reschout == 0)) { echo "0"; } else {echo anchor('contentcontroller/report_vols?m='.$month.'&y='.$year.'&stat=E&resch=nt&btp=1&grp='.$this->input->get('grp').'&fon='.$this->input->get('fon'),$reschout[0]->reschout);} ?></td>
-			  <td><?php if (($ppmsum[0]->notcomp == 0)) { echo "0"; } else {echo anchor('contentcontroller/report_vols?m='.$month.'&y='.$year.'&stat=C&resch=nt&btp=1&grp='.$this->input->get('grp').'&fon='.$this->input->get('fon'),$ppmsum[0]->notcomp);} ?></td>		
-			<?php } ?>
-
-				 <?php }else{ ?>
-			<?php if (isset($total[0]->PeCat)){?>
-			  <td><?= isset($total[0]->TPPMWO) == TRUE ? $total[0]->TPPMWO : '0'?></td>
-			  <td><?= isset($total[0]->TC) == TRUE ? $total[0]->TC : '0'?></td>
-			  <td><?= isset($total[0]->TRBI) == TRUE ? $total[0]->TRBI : '0'?></td>
-			  <td><?= isset($total[0]->TRBO) == TRUE ? $total[0]->TRBO : '0'?></td>
-			  <td><?= isset($total[0]->TND) == TRUE ? $total[0]->TND : '0'?></td>
-			  
-			  <?php } else { ?>
-				  <td><?php if (($ppmsum[0]->total + $reschout[0]->reschout == 0)) { echo "0"; } else {echo $ppmsum[0]->total + $reschout[0]->reschout ;} ?></td>
-				  <!--<td><?php if (($ppmsum[0]->total == 0)) { echo "0"; } else {echo $ppmsum[0]->total;} ?></td>-->
-			  <td><?php if (($ppmsum[0]->comp == 0)) { echo "0"; } else {echo $ppmsum[0]->comp;} ?></td>
-			  <td><?php if ($ppmsum[0]->resch == 0) { echo "0"; } else {echo $ppmsum[0]->resch;} ?></td>
-			  <td><?php if (($reschout[0]->reschout == 0)) { echo "0"; } else {echo $reschout[0]->reschout;} ?></td>
-			  <td><?php if (($ppmsum[0]->notcomp == 0)) { echo "0"; } else {echo $ppmsum[0]->notcomp;} ?></td>		
-			<?php } ?>
-				  <?php } ?>
-			 
-			</tr>
+			
 			<?php if ($this->session->userdata('usersess') == 'FES'){ ?>
 				<tr style="text-align:center;">
 					<td>Electrical</td>
@@ -170,6 +133,44 @@ function barchart(a,b,c,d,e,f){
 				<?php } ?>	
 				</tr>
 			<?php } ?>
+			<tr style="text-align:center;">
+				<td><?=date('F', mktime(0, 0, 0, $month, 10))?> <?=$year?></td>
+				<?php if  ($this->input->get('ex') != 'excel'){ ?>
+				<?php if (isset($total[0]->PeCat)){?>
+			  <td><?= isset($total[0]->TPPMWO) == TRUE ? $total[0]->TPPMWO : '0'?></td>
+			  <td><?= isset($total[0]->TC) == TRUE ? $total[0]->TC : '0'?></td>
+			  <td><?= isset($total[0]->TRBI) == TRUE ? $total[0]->TRBI : '0'?></td>
+			  <td><?= isset($total[0]->TRBO) == TRUE ? $total[0]->TRBO : '0'?></td>
+			  <td><?= isset($total[0]->TND) == TRUE ? $total[0]->TND : '0'?></td>
+			  
+			  <?php } else { ?>
+				  <td><?php if (($ppmsum[0]->total + $reschout[0]->reschout == 0)) { echo "0"; } else {echo $ppmsum[0]->total + $reschout[0]->reschout ;} ?></td>
+				  <!--<td><?php if (($ppmsum[0]->total == 0)) { echo "0"; } else {echo anchor('contentcontroller/report_vols?m='.$month.'&y='.$year.'&stat=fbfb&resch=nt&grp=&btp=1'.$this->input->get('grp'),$ppmsum[0]->total);} ?></td>-->
+			  <td><?php if (($ppmsum[0]->comp == 0)) { echo "0"; } else {echo anchor('contentcontroller/report_vols?m='.$month.'&y='.$year.'&stat=A&resch=nt&btp=1&grp='.$this->input->get('grp').'&fon='.$this->input->get('fon'),$ppmsum[0]->comp);} ?></td>
+			  <td><?php if ($ppmsum[0]->resch == 0) { echo "0"; } else {echo anchor('contentcontroller/report_vols?m='.$month.'&y='.$year.'&stat=A&resch=ys&btp=1&grp='.$this->input->get('grp').'&fon='.$this->input->get('fon'),$ppmsum[0]->resch);} ?></td>
+			  <td><?php if (($reschout[0]->reschout == 0)) { echo "0"; } else {echo anchor('contentcontroller/report_vols?m='.$month.'&y='.$year.'&stat=E&resch=nt&btp=1&grp='.$this->input->get('grp').'&fon='.$this->input->get('fon'),$reschout[0]->reschout);} ?></td>
+			  <td><?php if (($ppmsum[0]->notcomp == 0)) { echo "0"; } else {echo anchor('contentcontroller/report_vols?m='.$month.'&y='.$year.'&stat=C&resch=nt&btp=1&grp='.$this->input->get('grp').'&fon='.$this->input->get('fon'),$ppmsum[0]->notcomp);} ?></td>		
+			<?php } ?>
+
+				 <?php }else{ ?>
+			<?php if (isset($total[0]->PeCat)){?>
+			  <td><?= isset($total[0]->TPPMWO) == TRUE ? $total[0]->TPPMWO : '0'?></td>
+			  <td><?= isset($total[0]->TC) == TRUE ? $total[0]->TC : '0'?></td>
+			  <td><?= isset($total[0]->TRBI) == TRUE ? $total[0]->TRBI : '0'?></td>
+			  <td><?= isset($total[0]->TRBO) == TRUE ? $total[0]->TRBO : '0'?></td>
+			  <td><?= isset($total[0]->TND) == TRUE ? $total[0]->TND : '0'?></td>
+			  
+			  <?php } else { ?>
+				  <td><?php if (($ppmsum[0]->total + $reschout[0]->reschout == 0)) { echo "0"; } else {echo $ppmsum[0]->total + $reschout[0]->reschout ;} ?></td>
+				  <!--<td><?php if (($ppmsum[0]->total == 0)) { echo "0"; } else {echo $ppmsum[0]->total;} ?></td>-->
+			  <td><?php if (($ppmsum[0]->comp == 0)) { echo "0"; } else {echo $ppmsum[0]->comp;} ?></td>
+			  <td><?php if ($ppmsum[0]->resch == 0) { echo "0"; } else {echo $ppmsum[0]->resch;} ?></td>
+			  <td><?php if (($reschout[0]->reschout == 0)) { echo "0"; } else {echo $reschout[0]->reschout;} ?></td>
+			  <td><?php if (($ppmsum[0]->notcomp == 0)) { echo "0"; } else {echo $ppmsum[0]->notcomp;} ?></td>		
+			<?php } ?>
+				  <?php } ?>
+			 
+			</tr>
 	</table>
 	<?php if ($this->input->get('ex') != 'excel'){?>
 	<div id="container" class="qapgraf2"></div>
