@@ -2691,5 +2691,39 @@ function ins_schbi_weekly($insert_data){
 		}
 }
 
+function ins_spw($insert_data){
+
+
+    $query = $this->db->get_where('sch_spw', array(//making selection
+            'dept_code' => $insert_data['dept_code'],
+            'loc_code' => $insert_data['loc_code'],
+            'id' => $insert_data['id'],
+        ));
+
+        $count = $query->num_rows(); //counting result from query
+
+        if ($count === 0) {
+			$this->db->insert('sch_spw', $insert_data);
+        }else{
+		if(isset($insert_data['work_scope'])){
+            $update = array('work_scope'=>$insert_data['work_scope']);
+           }
+        else if(isset($insert_data['frequency'])){		   
+            $update = array('frequency'=>$insert_data['frequency']);
+         }  
+		 else if(isset($insert_data['remarks'])){		   
+             $update = array('remarks'=>$insert_data['remarks']);
+         }else {
+		     $update = array('week_1'=>$insert_data['week_1'],'week_2'=>$insert_data['week_2'],'week_3'=>$insert_data['week_3'],'week_4'=>$insert_data['week_4']);
+		 }
+		 
+		     $this->db->where('id',$insert_data['id']);
+	         $this->db->update('sch_spw', $update);
+			 $this->db->delete('sch_spw', array('work_scope'=>'del'));
+			/*  echo $this->db->last_query();
+			 exit(); */
+		}
+}
+
 }
 ?>

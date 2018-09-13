@@ -3927,6 +3927,21 @@ function get_schbi_weekly($DeptCode,$m,$y){
 	
 }
 
+
+function get_sch_spw($DeptCode,$loc,$m,$y){
+	$this->db->select('*');
+    $this->db->from('sch_spw');
+	$this->db->where('dept_code =', $DeptCode);
+	$this->db->where('loc_code =', $loc);
+	$this->db->where('month =', $m);
+	$this->db->where('year =', $y);
+    $query=$this->db->get();
+	//echo $this->db->last_query();
+	//exit();
+    return $query->result();
+	
+}
+
 }
 ?>
  	

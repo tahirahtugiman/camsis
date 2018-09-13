@@ -103,9 +103,11 @@
 				  </tr>
 				  <tr>
 				    <td>Cummulative Parts Cost(RM</td>
-					<td><?=isset($row->parttotal) ? 'RM'.number_format($row->parttotal,2) : 'RM0.00' ?></td>
+					<!-- <td><?=isset($row->parttotal) ? 'RM'.number_format($row->parttotal,2) : 'RM0.00' ?></td> -->
+					<td><?=isset($row->parttotal) ? 'RM'.$row->parttotal : 'RM0.00' ?></td><!-- buzz -->
 					<td>Cummulative Labour Cost(RM)</td>
-					<td><?=isset($row->labourtotal) ? 'RM'.number_format($row->labourtotal,2) : 'RM0.00' ?></td>
+					<!-- <td><?=isset($row->labourtotal) ? 'RM'.number_format($row->labourtotal,2) : 'RM0.00' ?></td> -->
+					<td><?=isset($row->labourtotal) ? 'RM'.$row->labourtotal : 'RM0.00' ?></td>
 				  </tr>
 				  <tr>
 				    <td>Department Name</td>
@@ -475,7 +477,8 @@
 				  
 				  <tr>
 				    <td>Parts Cost(RM)</td>
-					<td><?=isset($list->parttotal) ? number_format($list->parttotal,2) : ''?></td>
+					<!-- <td><?=isset($list->parttotal) ? number_format($list->parttotal,2) : ''?></td> -->
+					<td><?=isset($list->parttotal) ? $list->parttotal : ''?></td><!-- buzz -->
 					<td>Labour Cost(RM)</td>
 					<td><?=isset($list->labourtotal) ? number_format($list->labourtotal,2) : ''?></td>
 				  </tr>

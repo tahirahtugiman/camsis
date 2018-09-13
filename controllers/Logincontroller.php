@@ -21,7 +21,7 @@ class LoginController extends CI_Controller {
   	$this->session->sess_destroy();
   	$this->index();
 	}
-	
+
 	function validate_credentials()
 	{
 		$this->load->model('loginModel');
@@ -84,7 +84,7 @@ class LoginController extends CI_Controller {
 			redirect('contentcontroller/select_two');
 			
 		}*/
-		
+	
 		else
 		{
 		
@@ -105,6 +105,9 @@ class LoginController extends CI_Controller {
 		}
 	
 	}
+
+	
+
 	
 	function signup()
 		{

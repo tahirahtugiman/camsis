@@ -65,6 +65,8 @@ class Contentcontroller extends CI_Controller {
 		
 	}
 
+
+
 	function do_upload(){
 		$url = $this->input->post('continue') ? $this->input->post('continue') : site_url('contentcontroller/select');
 		$config['upload_path'] = 'C:\inetpub\wwwroot\FEMSHospital_v3\uploadfile'; 
@@ -5614,10 +5616,15 @@ class Contentcontroller extends CI_Controller {
 	
 	
 	public function schedule_p_work(){
+	  $this->load->model("get_model");
 	  $data['dept']=$this->input->get('dept', TRUE);
-    $data['loc']=$this->input->get('loc', TRUE);
-		$this ->load->view("headprinter");
-		$this ->load->view("content_schedule_p_work", $data);
+      $data['loc']=$this->input->get('loc', TRUE);
+	  $data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
+	  $data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
+	  $data['records'] = $this->get_model->get_sch_spw($data['dept'],$data['loc'],$data['month'],$data['year']);
+	  $data['count'] = count($data['records']);
+	  $this ->load->view("headprinter");
+      $this ->load->view("content_schedule_p_work", $data);
 	}
 	
 	public function job_schedule(){
@@ -6721,6 +6728,7 @@ class Contentcontroller extends CI_Controller {
 			}
 		}
 		else{
+			//if (substr($data['wrk_ord'],0,2) != 'PP'){
 			if ( !in_array(substr($data['wrk_ord'],0,2), array("PP","RI")) ){
 				$data['records'] = $this->get_model->wodet($data['wrk_ord'],$data['assetno']);
 				$data['parts'] = $this->get_model->partrep($data['wrk_ord']);
