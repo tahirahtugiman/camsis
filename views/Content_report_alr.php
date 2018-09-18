@@ -36,7 +36,7 @@ header('Content-Disposition: attachment; filename='.$filename);
 	<table class="tbl-wo-3">
 		<tr>
 			<td>Department</td>
-			<td>Group (UMDNS Code)</td>
+			<td>Group</td>
 			<td></td>
 		</tr>
 		<tr>
@@ -51,7 +51,6 @@ header('Content-Disposition: attachment; filename='.$filename);
 			</td>
 			<td>
 				<?php 
-				// echo "<pre>";var_export($assetgroup);die;
 				$assetgroup_list = array('' => 'All');
 				foreach ($assetgroup as $r){
 					// $assetgroup_list[$r->v_Equip_Code] = $r->v_workgroupdesc;

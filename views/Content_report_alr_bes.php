@@ -36,7 +36,7 @@ header('Content-Disposition: attachment; filename='.$filename);
 	<table class="tbl-wo-3">
 		<tr>
 			<td>Department</td>
-			<td>Group (UMDNS Code)</td>
+			<td>Group</td>
 			<td></td>
 		</tr>
 		<tr>
@@ -53,7 +53,8 @@ header('Content-Disposition: attachment; filename='.$filename);
 				<?php 
 				$assetgroup_list = array('' => 'All');
 				foreach ($assetgroup as $r){
-					$assetgroup_list[$r->v_Equip_Code] = $r->v_Equip_Code;
+					// $assetgroup_list[$r->v_Equip_Code] = $r->v_workgroupdesc;
+					$assetgroup_list[$r->v_Equip_Code] = $r->v_Equip_Desc;
 				}
 				?>
 				<?php echo form_dropdown('group', $assetgroup_list , set_value('group',$assetgrp) , 'style="width: 300px;" id="cs_month"'); ?>
