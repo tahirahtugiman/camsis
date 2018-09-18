@@ -36,14 +36,27 @@ header('Content-Disposition: attachment; filename='.$filename);
 	<table class="tbl-wo-3">
 		<tr>
 			<td>Department</td>
+			<td>Group (UMDNS Code)</td>
+			<td></td>
+		</tr>
+		<tr>
 			<td>
 				<?php 
-					$dept_list = array('' => 'All');
-					foreach ($dept as $row){
-						$dept_list[$row->v_UserDeptCode] = $row->v_UserDeptDesc.' ('.$row->v_UserDeptCode.')';
-					}
+				$dept_list = array('' => 'All');
+				foreach ($dept as $row){
+					$dept_list[$row->v_UserDeptCode] = $row->v_UserDeptDesc.' ('.$row->v_UserDeptCode.')';
+				}
 				?>
 				<?php echo form_dropdown('dept', $dept_list , set_value('dept',$deptdp) , 'style="width: 300px;" id="cs_month"'); ?>
+			</td>
+			<td>
+				<?php 
+				$assetgroup_list = array('' => 'All');
+				foreach ($assetgroup as $r){
+					$assetgroup_list[$r->v_Equip_Code] = $r->v_Equip_Code;
+				}
+				?>
+				<?php echo form_dropdown('group', $assetgroup_list , set_value('group',$assetgrp) , 'style="width: 300px;" id="cs_month"'); ?>
 			</td>
 			
 			<td><button type="submit"  onclick="javascript: submit()">Generate</button></td>

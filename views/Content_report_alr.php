@@ -36,14 +36,29 @@ header('Content-Disposition: attachment; filename='.$filename);
 	<table class="tbl-wo-3">
 		<tr>
 			<td>Department</td>
+			<td>Group (UMDNS Code)</td>
+			<td></td>
+		</tr>
+		<tr>
 			<td>
 				<?php 
-					$dept_list = array('' => 'All');
-					foreach ($dept as $row){
-						$dept_list[$row->v_UserDeptCode] = $row->v_UserDeptDesc.' ('.$row->v_UserDeptCode.')';
-					}
+				$dept_list = array('' => 'All');
+				foreach ($dept as $row){
+					$dept_list[$row->v_UserDeptCode] = $row->v_UserDeptDesc.' ('.$row->v_UserDeptCode.')';
+				}
 				?>
 				<?php echo form_dropdown('dept', $dept_list , set_value('dept',$deptdp) , 'style="width: 300px;" id="cs_month"'); ?>
+			</td>
+			<td>
+				<?php 
+				// echo "<pre>";var_export($assetgroup);die;
+				$assetgroup_list = array('' => 'All');
+				foreach ($assetgroup as $r){
+					// $assetgroup_list[$r->v_Equip_Code] = $r->v_workgroupdesc;
+					$assetgroup_list[$r->v_Equip_Code] = $r->v_Equip_Desc;
+				}
+				?>
+				<?php echo form_dropdown('group', $assetgroup_list , set_value('group',$assetgrp) , 'style="width: 300px;" id="cs_month"'); ?>
 			</td>
 			
 			<td><button type="submit"  onclick="javascript: submit()">Generate</button></td>
@@ -99,41 +114,41 @@ header('Content-Disposition: attachment; filename='.$filename);
             <table class="tbl-fixed-td">
                <?php  if (!empty($record)) {?>
 				<?php $numrow = 1; foreach($record as $row):?>
-		<tr>
-			<td><?= $numrow ?></td>
-			<td><?= ($row->V_Tag_no) ? anchor ('contentcontroller/AssetRegis?tab=Maintenance&assetno='.$row->V_Asset_no.'&state='.$this->input->get('state'),''.$row->V_Tag_no.'' ) : 'N/A' ?></td>
-			<td><?= ($row->Asset_Type) ? $row->Asset_Type : 'N/A' ?></td>
-			<!--<td><?= ($row->V_Equip_code) ? $row->V_Equip_code : 'N/A' ?></td>-->
-			<td><?= ($row->v_Equip_Desc) ? $row->v_Equip_Desc : 'N/A' ?></td>
-			<td><?= ($row->V_PO_date) ? ($row->V_PO_date != '0000-00-00 00:00:00' ? date("d/m/Y",strtotime($row->V_PO_date)) : '-' ) : 'N/A' ?></td>
-			<td><?= ($row->CommissionDate) ? ($row->CommissionDate != '0000-00-00 00:00:00' ? date("d/m/Y",strtotime($row->CommissionDate)) : '-' ) : 'N/A' ?></td>
-			<td><?= ($row->BER_DATE) ? ($row->BER_DATE != '0000-00-00 00:00:00' ? date("d/m/Y",strtotime($row->BER_DATE)) : '-' ) : 'N/A' ?></td>
-			<!--<td><?= ($row->v_AssetCondition) ? $row->v_AssetCondition : 'N/A' ?></td>-->
-			<td><?= ($row->v_UserDeptDesc) ? $row->v_UserDeptDesc : 'N/A' ?></td>
-			<td><?= ($row->V_User_Dept_code) ? $row->V_User_Dept_code : 'N/A' ?></td>
-			<td><?= ($row->V_Location_code) ? $row->V_Location_code : 'N/A' ?></td>
-			<td><?= ($row->v_AssetStatus) ? $row->v_AssetStatus : 'N/A' ?></td>
-			<td><?= ($row->v_AssetVStatus) ? $row->v_AssetVStatus : 'N/A' ?></td>
-			<td><?= ($row->V_Make) ? $row->V_Make : 'N/A' ?></td>
-			<td><?= ($row->V_Manufacturer) ? $row->V_Manufacturer : 'N/A' ?></td>
-			<td><?= ($row->V_Brandname) ? $row->V_Brandname : 'N/A' ?></td>
-			<td><?= ($row->V_Model_no) ? $row->V_Model_no : 'N/A' ?></td>
-			<td class="fra"><?= ($row->V_Serial_no) ? $row->V_Serial_no : 'N/A' ?></td>
-			<td><?= ($row->Age) ? $row->Age : 'N/A' ?></td>
-			<td><?= ($row->WarrantyEndDate) ? ($row->WarrantyEndDate != '0000-00-00 00:00:00' ? date("d/m/Y",strtotime($row->WarrantyEndDate)) : '-' ) : 'N/A' ?></td>
-			<td><?= ($row->v_vendorname) ? $row->v_vendorname : 'N/A' ?></td>
-			<!--<td><?= ($row->V_PO_no) ? $row->V_PO_no : 'N/A' ?></td>
-			<td><?= ($row->V_PO_date) ? ($row->V_PO_date != '0000-00-00 00:00:00' ? date("d/m/Y",strtotime($row->V_PO_date)) : '-' ) : 'N/A' ?></td>-->
-			<td><?= ($row->N_Cost) ? printf("RM%01.1f", $row->N_Cost) : 'N/A' ?></td>
-			<!--<td><?= ($row->V_File_Ref_no) ? $row->V_File_Ref_no : 'N/A' ?></td>-->
-			<td><?= ($row->V_Depreciation) ? $row->V_Depreciation : 'N/A' ?></td>
-			<td><?= ($row->V_Lifespan) ? $row->V_Lifespan : 'N/A' ?></td>
-			<td><?= ($row->V_Oper_Hr_code) ? $row->V_Oper_Hr_code : 'N/A' ?></td>
-			<!--<td><?= ($row->V_Job_Type_code) ? $row->V_Job_Type_code : 'N/A' ?></td>-->
-			<td><?= ($row->V_Agent) ? $row->V_Agent : 'N/A' ?></td>
-			<td><?= ($row->v_asset_grp) ? $row->v_asset_grp : 'N/A' ?></td>
-			<!--<td><?= ($row->V_Check_list_code) ? $row->V_Check_list_code : 'N/A' ?></td>-->
-		</tr>
+				<tr>
+					<td><?= $numrow ?></td>
+					<td><?= ($row->V_Tag_no) ? anchor ('contentcontroller/AssetRegis?tab=Maintenance&assetno='.$row->V_Asset_no.'&state='.$this->input->get('state'),''.$row->V_Tag_no.'' ) : 'N/A' ?></td>
+					<td><?= ($row->Asset_Type) ? $row->Asset_Type : 'N/A' ?></td>
+					<!--<td><?= ($row->V_Equip_code) ? $row->V_Equip_code : 'N/A' ?></td>-->
+					<td><?= ($row->v_Equip_Desc) ? $row->v_Equip_Desc : 'N/A' ?></td>
+					<td><?= ($row->V_PO_date) ? ($row->V_PO_date != '0000-00-00 00:00:00' ? date("d/m/Y",strtotime($row->V_PO_date)) : '-' ) : 'N/A' ?></td>
+					<td><?= ($row->CommissionDate) ? ($row->CommissionDate != '0000-00-00 00:00:00' ? date("d/m/Y",strtotime($row->CommissionDate)) : '-' ) : 'N/A' ?></td>
+					<td><?= ($row->BER_DATE) ? ($row->BER_DATE != '0000-00-00 00:00:00' ? date("d/m/Y",strtotime($row->BER_DATE)) : '-' ) : 'N/A' ?></td>
+					<!--<td><?= ($row->v_AssetCondition) ? $row->v_AssetCondition : 'N/A' ?></td>-->
+					<td><?= ($row->v_UserDeptDesc) ? $row->v_UserDeptDesc : 'N/A' ?></td>
+					<td><?= ($row->V_User_Dept_code) ? $row->V_User_Dept_code : 'N/A' ?></td>
+					<td><?= ($row->V_Location_code) ? $row->V_Location_code : 'N/A' ?></td>
+					<td><?= ($row->v_AssetStatus) ? $row->v_AssetStatus : 'N/A' ?></td>
+					<td><?= ($row->v_AssetVStatus) ? $row->v_AssetVStatus : 'N/A' ?></td>
+					<td><?= ($row->V_Make) ? $row->V_Make : 'N/A' ?></td>
+					<td><?= ($row->V_Manufacturer) ? $row->V_Manufacturer : 'N/A' ?></td>
+					<td><?= ($row->V_Brandname) ? $row->V_Brandname : 'N/A' ?></td>
+					<td><?= ($row->V_Model_no) ? $row->V_Model_no : 'N/A' ?></td>
+					<td class="fra"><?= ($row->V_Serial_no) ? $row->V_Serial_no : 'N/A' ?></td>
+					<td><?= ($row->Age) ? $row->Age : 'N/A' ?></td>
+					<td><?= ($row->WarrantyEndDate) ? ($row->WarrantyEndDate != '0000-00-00 00:00:00' ? date("d/m/Y",strtotime($row->WarrantyEndDate)) : '-' ) : 'N/A' ?></td>
+					<td><?= ($row->v_vendorname) ? $row->v_vendorname : 'N/A' ?></td>
+					<!--<td><?= ($row->V_PO_no) ? $row->V_PO_no : 'N/A' ?></td>
+					<td><?= ($row->V_PO_date) ? ($row->V_PO_date != '0000-00-00 00:00:00' ? date("d/m/Y",strtotime($row->V_PO_date)) : '-' ) : 'N/A' ?></td>-->
+					<td><?= ($row->N_Cost) ? printf("RM%01.1f", $row->N_Cost) : 'N/A' ?></td>
+					<!--<td><?= ($row->V_File_Ref_no) ? $row->V_File_Ref_no : 'N/A' ?></td>-->
+					<td><?= ($row->V_Depreciation) ? $row->V_Depreciation : 'N/A' ?></td>
+					<td><?= ($row->V_Lifespan) ? $row->V_Lifespan : 'N/A' ?></td>
+					<td><?= ($row->V_Oper_Hr_code) ? $row->V_Oper_Hr_code : 'N/A' ?></td>
+					<!--<td><?= ($row->V_Job_Type_code) ? $row->V_Job_Type_code : 'N/A' ?></td>-->
+					<td><?= ($row->V_Agent) ? $row->V_Agent : 'N/A' ?></td>
+					<td><?= ($row->v_asset_grp) ? $row->v_asset_grp : 'N/A' ?></td>
+					<!--<td><?= ($row->V_Check_list_code) ? $row->V_Check_list_code : 'N/A' ?></td>-->
+				</tr>
 		<?php $numrow++; ?>
 			    		<?php endforeach;?>
 			    		 </tbody>

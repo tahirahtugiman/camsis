@@ -3792,7 +3792,7 @@ class Contentcontroller extends CI_Controller {
 		}
 	}
 	public function report_vols(){
-	  $this->load->model("display_model");
+		$this->load->model("display_model");
 		$data['fon']= ($this->input->get('fon')) ? $this->input->get('fon') : "";	
 		$data['records'] = $this->display_model->list_hospinfo();
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
@@ -3828,7 +3828,7 @@ class Contentcontroller extends CI_Controller {
 		
 	}
 	public function report_rtlu(){
-	  $this->load->model("display_model");
+		$this->load->model("display_model");
 		$data['records'] = $this->display_model->list_hospinfo();
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
@@ -3844,7 +3844,7 @@ class Contentcontroller extends CI_Controller {
 		}
 	}
 	public function report_rsls(){
-	  $this->load->model("display_model");
+		$this->load->model("display_model");
 		$data['records'] = $this->display_model->list_hospinfo();
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
@@ -3852,10 +3852,10 @@ class Contentcontroller extends CI_Controller {
 		$data['record2'] = $this->display_model->rpt_rsls2($data['month'],$data['year'], $this->input->get('stat'),$this->input->get('expiring'),$this->input->get('grp'));
 		
 		if ($this->input->get('pdf') == 1){
-		$this ->load->view("Content_report_rsls_pdf", $data);
+			$this ->load->view("Content_report_rsls_pdf", $data);
 		}else{
-		$this ->load->view("headprinter");
-		$this ->load->view("Content_report_rsls", $data);
+			$this ->load->view("headprinter");
+			$this ->load->view("Content_report_rsls", $data);
 		}
 		//$this ->load->view("headprinter");
 		//$this ->load->view("Content_report_rsls", $data);
@@ -4048,21 +4048,21 @@ class Contentcontroller extends CI_Controller {
 	
 	public function report_cwos(){
 	
-	  $this->load->model("display_model");
+		$this->load->model("display_model");
 		$data['records'] = $this->display_model->list_hospinfo();
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
 		//$data['ppmsum'] = $this->display_model->sumppm($data['month'],$data['year']);
 		//$data['rqsum'] = $this->display_model->sumrq($data['month'],$data['year']);
 		$data['complntsum'] = $this->display_model->sumcomplnt($data['month'],$data['year'],$this->input->get('grp'));
-		
-	  $this ->load->view("headprinter");
+
+		$this ->load->view("headprinter");
 		$this ->load->view("Content_report_cwos", $data);
 	}
 	
 	public function report_reswos(){
 	
-	  $this->load->model("display_model");
+		$this->load->model("display_model");
 		$data['records'] = $this->display_model->list_hospinfo();
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
@@ -4070,14 +4070,14 @@ class Contentcontroller extends CI_Controller {
 		//$data['ppmsum'] = $this->display_model->sumppm($data['month'],$data['year']);
 		$data['rqsum'] = $this->display_model->sumrq($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'));
 		//$data['complntsum'] = $this->display_model->sumcomplnt($data['month'],$data['year']);
-		
-	  $this ->load->view("headprinter");
+
+		$this ->load->view("headprinter");
 		$this ->load->view("Content_report_reswos", $data);
 	}
 	
 	public function report_sls(){
 	
-	  $this->load->model("display_model");
+		$this->load->model("display_model");
 		$data['records'] = $this->display_model->list_hospinfo();
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
@@ -4086,23 +4086,25 @@ class Contentcontroller extends CI_Controller {
 		//$data['complntsum'] = $this->display_model->sumcomplnt($data['month'],$data['year']);
 		$data['licsatsum'] = $this->display_model->sumlicsat($data['month'],$data['year']);
 		$data['satsum'] = $this->display_model->sumsat($data['month'],$data['year'],$this->input->get('grp'));
-	  $this ->load->view("headprinter");
+		$this ->load->view("headprinter");
 		$this ->load->view("Content_report_sls", $data);
 	}
 	
 	public function report_alr(){
-	  $this->load->model("display_model");
+		$this->load->model("display_model");
 		$data['records'] = $this->display_model->list_hospinfo();
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
 		$data['grpsel']= $this->input->get('grp') ? $this->input->get('grp') : '';
 		$data['dept'] = $this->display_model->deptdp();
 		$data['deptdp']= $this->input->get('dept') ? $this->input->get('dept') : '';
+		$data['assetgroup']	= $this->display_model->assetEquip();
+		$data['assetgrp']	= $this->input->get('group') ? $this->input->get('group') : '';
 		if ($this->session->userdata('usersess') != 'BES'){
-			$data['record'] = $this->display_model->rpt_alr($data['month'],$data['year'],$data['grpsel'],$data['deptdp']);
+			$data['record'] = $this->display_model->rpt_alr($data['month'],$data['year'],$data['grpsel'],$data['deptdp'],$data['assetgrp']);
 		}
 		else{
-			$data['record'] = $this->display_model->rpt_alr_bes($data['month'],$data['year'],$data['grpsel'],$data['deptdp']);
+			$data['record'] = $this->display_model->rpt_alr_bes($data['month'],$data['year'],$data['grpsel'],$data['deptdp'],$data['assetgrp']);
 		}
 		$this ->load->view("headprinter");
 		if ($this->session->userdata('usersess') != 'BES'){
@@ -4113,7 +4115,7 @@ class Contentcontroller extends CI_Controller {
 		}
 	}
 	public function report_ppmp(){
-	  $this->load->model("display_model");
+		$this->load->model("display_model");
 		$data['records'] = $this->display_model->list_hospinfo();
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
@@ -4122,7 +4124,7 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("Content_report_ppmp", $data);
 	}
 	public function report_rcmp(){
-	  $this->load->model("display_model");
+		$this->load->model("display_model");
 		$data['records'] = $this->display_model->list_hospinfo();
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
@@ -4131,7 +4133,7 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("Content_report_rcmp", $data);
 	}
 	public function report_qc(){
-	  $this->load->model("display_model");
+		$this->load->model("display_model");
 		$data['records'] = $this->display_model->list_hospinfo();
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
@@ -4140,7 +4142,7 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("Content_report_qc", $data);
 	}
 	public function report_qapc(){
-	  $this->load->model("display_model");
+		$this->load->model("display_model");
 		$data['records'] = $this->display_model->list_hospinfo();
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
