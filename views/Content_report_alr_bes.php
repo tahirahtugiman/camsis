@@ -11,10 +11,10 @@ header('Content-Disposition: attachment; filename='.$filename);
 <?php if ($this->input->get('ex') == ''){?>
 <div id="Instruction" class="pr-printer">
     <div class="header-pr">Asset Listing Report</div>
-    <button onclick="javascript:myFunction('report_alr?m=<?=$month?>&y=<?=$year?>&none=closed&grp=<?=$this->input->get('grp');?>');" class="btn-button btn-primary-button">PRINT</button>
+    <button onclick="javascript:myFunction('report_alr?m=<?=$month?>&y=<?=$year?>&none=closed&grp=<?=$this->input->get('grp');?>&dept=<?=$this->input->get('dept');?>&group=<?=$this->input->get('group');?>');" class="btn-button btn-primary-button">PRINT</button>
     <button type="cancel" class="btn-button btn-primary-button" onclick="location.href = '<?php base_url();?>Schedule?<?php echo '&grp='.$this->input->get('grp');?>';">CANCEL</button>
 	<?php if (($this->input->get('ex') == '') or ($this->input->get('none') == '')){?>
-	<a href="<?php echo base_url();?>index.php/contentcontroller/report_alr?m=<?=$this->input->get('m');?>&y=<?=$this->input->get('y');?>&stat=<?=$this->input->get('stat');?>&ex=excel&none=close&grp=<?=$this->input->get('grp');?>&dept=<?=$this->input->get('dept');?>" style="float:right; margin-right:40px;"><img src="<?php echo base_url();?>images/excel.png" style="width:40px; height:38px; position:absolute;" title="export to excel"></a>
+	<a href="<?php echo base_url();?>index.php/contentcontroller/report_alr?m=<?=$this->input->get('m');?>&y=<?=$this->input->get('y');?>&stat=<?=$this->input->get('stat');?>&ex=excel&none=close&grp=<?=$this->input->get('grp');?>&dept=<?=$this->input->get('dept');?>&group=<?=$this->input->get('group');?>" style="float:right; margin-right:40px;"><img src="<?php echo base_url();?>images/excel.png" style="width:40px; height:38px; position:absolute;" title="export to excel"></a>
 	<?php } ?>
 </div>
 <?php } ?>
