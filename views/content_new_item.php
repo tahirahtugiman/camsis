@@ -83,6 +83,7 @@
 
 }
 </style>
+
 <div class="ui-middle-screen">
 	<div class="content-workorder">
 		<div class="div-p">&nbsp;</div>
@@ -646,10 +647,10 @@
 						<div class="paginatediv ui-left_web">
 					  <ul class="paginate pag2 clearfix">
 					  	<?php if ($rec[0]->jumlah > $limit){ ?>
-					  	<li class="single">Page <?=($this->input->get('pa') ? $this->input->get('pa') : 1)?> of <?php echo $page?></li>
+					  	<li class="single">Page <?=($this->input->get('pa') ? $this->input->get('pa') : 1)?> of <?php echo ceil($rec[0]->jumlah/$limit);?></li>
 						<li><a href="?tabIndex=1&pa=1"> << First Page </a></li>
 						<?php if ($this->input->get('pa') != ''){ ?>
-					  	<li><a href="?tabIndex=1&pa=<?=($this->input->get('pa') < 1 ? $this->input->get('pa')-1 : 1 )?>">Prev</a></li> 
+					  	<li><a href="?tabIndex=1&pa=<?=($this->input->get('pa') > 1 ? $this->input->get('pa')-1 : 1 )?>">Prev</a></li> 
 						<?php } ?>
 						<li><a href=""><?=($this->input->get('pa') ? $this->input->get('pa') : 1)?></a></li>
 		              	<li><a href="?tabIndex=1&pa=<?php echo $page?>">Next</a></li>
@@ -662,7 +663,7 @@
 					
 					  <ul class="paginate pag2 clearfix">
 					  	<?php if ($rec[0]->jumlah > $limit){ ?>
-					  	<li class="single">Page <?=($this->input->get('pa') ? $this->input->get('pa') : 1)?> of <?php echo $page?></li>
+					  	<li class="single">Page <?=($this->input->get('pa') ? $this->input->get('pa') : 1)?> of <?php echo ceil($rec[0]->jumlah/$limit);?></li>
 						<li><a href="?tabIndex=1&pa=1"> << </a></li>
 						<?php if ($this->input->get('pa') != ''){ ?>
 					  	<li><a href="?tabIndex=1&pa=<?=($this->input->get('pa') < 1 ? $this->input->get('pa')-1 : 1 )?>"><</a></li> 
