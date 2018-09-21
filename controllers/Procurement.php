@@ -9,22 +9,52 @@ class Procurement extends CI_Controller {
 	}
 
 	public function index(){
-		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
-		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
+		$data['tab']	= '';
+		$data['year']	= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
+		$data['month']	= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
 		$this ->load->view("head");
 		$this ->load->view("left");
 		if ($this->input->get('pro') == 'mrin'){
 			$data['mrintype']= $this->input->get('tab') != '' ? $this->input->get('tab') : 0;
 			if ($data['mrintype'] == 0) {
-				 $data['mrintype'] = 3;
+				$data['mrintype'] = 3;
 			} elseif ($data['mrintype'] == 3) {
-				 $data['mrintype'] = 0;
+				$data['mrintype'] = 0;
 			}
 			//echo "lalalal : ".$data['mrintype'];
+			$data['msg_nodata'] = '';
+			$search = '';
+			if( isset($_POST['searchquestion']) ){
+				if( $this->input->post("searchquestion") == "" ){
+					$data['msg_nodata'] = "NO MRIN SELECTED";
+				}else{
+					$data['msg_nodata'] = $this->input->post('searchquestion')." NOT FOUND";
+				}
+				$search = $this->input->post('searchquestion');
+			}
 			$this->load->model('display_model');
 			$data['user'] = $this->display_model->user_class($this->session->userdata('v_UserName'));
-			$data['record']= $this->display_model->mrinlist($data['month'],$data['year'],$data['mrintype'], $data['user'][0]->class_id);
+			$data['record']= $this->display_model->mrinlist($data['month'],$data['year'],$data['mrintype'], $data['user'][0]->class_id,$search);
 			$data['status'] = $this->display_model->status_table();
+
+
+			$data['tab'] = 0;
+			$status = array(5,107,128);
+			if( isset($_POST['searchquestion'])){
+				if( $data['record'] ){
+					$data['year'] = date("Y", strtotime($data['record'][0]->DateCreated));
+					$data['month'] = date("m", strtotime($data['record'][0]->DateCreated));
+					if( in_array(4, array($data['record'][0]->ApprStatusID,$data['record'][0]->ApprStatusIDx,$data['record'][0]->ApprStatusIDxx) ) ){
+						$data['tab'] = 1;
+					}elseif( in_array($data['record'][0]->ApprStatusID, $status) || in_array($data['record'][0]->ApprStatusIDx, $status) || in_array($data['record'][0]->ApprStatusIDxx, $status) ){
+						$data['tab'] = 2;
+					}elseif( in_array(6, array($data['record'][0]->ApprStatusID,$data['record'][0]->ApprStatusIDx,$data['record'][0]->ApprStatusIDxx) ) ){
+						$data['tab'] = 3;
+					}/*elseif( !in_array($data['record'][0]->ApprStatusID, array(4,5,6,107,128)) || !in_array($data['record'][0]->ApprStatusIDx, array(4,5,6,107,128)) || !in_array($data['record'][0]->ApprStatusIDxx, array(4,5,6,107,128)) ){
+						$data['tab'] = 0;
+					}*/
+				}
+			}
 			//print_r($data['status']);
 			//exit();
 			$this ->load->view("Content_mrin",$data);
@@ -869,6 +899,39 @@ class Procurement extends CI_Controller {
 		$this ->load->view("Content_e_pr_print",$data);
 	}
 	
+	public function searchmrin(){
+		$data['msg_nodata'] = "No MRIN selected";
+		$cari['cari_apa'] = $this->input->post('searchquestion');
+		$this->load->model("display_model");
+		if (strlen($this->input->post('searchquestion')) > 0) {
+			//echo 'masuk 1';
+			$cari['search_result'] = $this->display_model->searchmrin($this->input->post('searchquestion'));
+		} else {
+			// echo 'masuk 2';
+			$cari['search_result'] = $this->display_model->searchmrin('taknkjmp');
+		}
+		// echo "<pre>";var_export($cari['search_result']);
+		if( !empty($cari['search_result'][0]) ){
+			$data['user'] = $this->display_model->user_class($this->session->userdata('v_UserName'));
+			$data['status'] = $this->display_model->status_table();
+
+			$y = date("Y", strtotime($cari['search_result'][0]->DateCreated));
+			$m = date("m", strtotime($cari['search_result'][0]->DateCreated));
+			// redirect("Procurement?pro=mrin&y=".$y."&m=".$m);
+			$data['year']	= $y;	
+			$data['month']	= $m;
+			$data['record'] = $cari['search_result'];
+
+			$this ->load->view("head");
+			$this ->load->view("left");
+			$this ->load->view("Content_mrin", $data);
+		}else{
+			$data[''];
+			$year = ($this->input->get('y') <> 0) ? "&y=".$this->input->get('y') : "";
+			$month= ($this->input->get('m') <> 0) ? "&m=".sprintf("%02d", $this->input->get('m')) : "";
+			redirect('Procurement?pro=mrin&tab='.$this->input->get("tab").$year.$month);
+		}
+	}
 	
 	
 }
