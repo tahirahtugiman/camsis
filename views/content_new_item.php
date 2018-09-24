@@ -427,7 +427,10 @@
  .paginatedivm{
 					 
 					  display: none;}
-				.ui-content-middle-menu-workorder2 tr td {padding:8px;font-size:14px;		
+				.ui-content-middle-menu-workorder2 tr td {
+					/*padding:8px;*/
+					padding:4px;
+					font-size:14px;		
 			 /*width:100%;*/
 			
 			  }
@@ -452,14 +455,21 @@
 	/** page structure **/
 
 					 .paginatediv{
-					  text-align:center;
+                     text-align:center;						 
 					  width: 100%;
-					  display: block;}
-					.paginate {
-					  display: block;
-					  width: 50%;
+					  display: inline-block;}
+					.paginate {	                     									 
+					  width: 40%;
 					  font-size: 12px;
 					  margin: 0 auto;
+			       
+					}
+					.count {					
+					  float:right;
+					  width: 20%;
+					  font-size: 12px;
+					  margin: 0 auto;
+			       
 					}
 					/** clearfix **/
 					.clearfix:after { content: "."; display: block; clear: both; visibility: hidden; line-height: 0; height: 0; }
@@ -547,7 +557,7 @@
 					      			
 	    				<?php echo ($numrow%2==0) ? '<tr class="ui-color-color-color">' : '<tr>'; ?>
 	    					<td style="text-transform: capitalize;"><a href="?edit=<?=$row->ItemCode?>" style="font-size:14px;"><?=$row->ItemCode?></a></td>
-		        			<td><?=$row->ItemName?></td>
+		        			<td style="padding:0px"><?=$row->ItemName?></td>
 		        			<td><?=$row->ItemLoc?></td>
 		        			<td><?=$row->PartNumber?></td>
 		        			<td><?=$row->PartDescription?></td>
@@ -644,7 +654,7 @@
 					</table>
 				</div>
 		
-						<div class="paginatediv ui-left_web">
+						<div class="paginatediv ui-left_web" style="inline-block;">
 					  <ul class="paginate pag2 clearfix">
 					  	<?php if ($rec[0]->jumlah > $limit){ ?>
 					  	<li class="single">Page <?=($this->input->get('pa') ? $this->input->get('pa') : 1)?> of <?php echo ceil($rec[0]->jumlah/$limit);?></li>
@@ -655,10 +665,15 @@
 						<li><a href=""><?=($this->input->get('pa') ? $this->input->get('pa') : 1)?></a></li>
 		              	<li><a href="?tabIndex=1&pa=<?php echo $page?>">Next</a></li>
 						<li><a href="?tabIndex=1&pa=<?php echo ceil($rec[0]->jumlah/$limit);?>">Last Page >></a></li>
-		              	<?php } ?>
-				
+           						
+		              	<?php } ?>				
 					  </ul>
+                       <div class="count">
+                        <p style="padding-right:12px;color:#676767;"><b>Total <?=$rec[0]->jumlah?> Registered Item </b></p>						
+		              			
+					  </div>						  
 					</div>
+				
 					<div class="paginatedivm">
 					
 					  <ul class="paginate pag2 clearfix">
