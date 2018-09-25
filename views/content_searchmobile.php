@@ -24,4 +24,10 @@ elseif ($this->input->get('ppm') or 'contentcontroller/catalogppm/' == $this->ur
     echo "<span class='icon-search' onclick='myform.submit()' aria-hidden='true'></span>
 </form>";
 }
+elseif ('Procurement?pro=mrin' == str_replace("/", "", $this->uri->slash_segment(1)).'?pro='.$this->input->get('pro')){
+	echo "<form action=".$url = site_url('Procurement?pro=mrin')." method='post' name='myform'>";
+	echo "<input type='text' class='phone-search' style='' placeholder='Search' id='searchquestion' name='searchquestion' autofocus/>";
+    echo "<span class='icon-search' onclick='myform.submit()' aria-hidden='true'></span>
+</form>";
+}
 ?>

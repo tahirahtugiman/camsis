@@ -12,4 +12,7 @@ elseif ($this->input->get('parent') == 'wrkodr' or $this->input->get('work-a') o
 elseif ($this->input->get('ppm') or 'contentcontroller/catalogppm/' == $this->uri->slash_segment(1) .$this->uri->slash_segment(2)  or 'contentcontroller/ppmsearch/' == $this->uri->slash_segment(1) .$this->uri->slash_segment(2)){
 	echo "<div class='main-head-m4 bg-aqua' id='show2'><span class='icon-search' onclick='showDiv()'></span></div>";
 }
+elseif ('Procurement?pro=mrin' == str_replace("/", "", $this->uri->slash_segment(1)).'?pro='.$this->input->get('pro')){
+	echo "<div class='main-head-m4 bg-aqua' id='show2'><span class='icon-search' onclick='showDiv()'></span></div>";
+}
 ?>

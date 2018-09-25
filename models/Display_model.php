@@ -4252,7 +4252,7 @@ ORDER BY r.D_date, r.D_time
 		$query_result = $query->result();
 		return $query_result;
 	}
-
+/*
 	function mrinlist($month,$year,$type,$kelas){
 	//echo "nilai kelas : " . $kelas . " type : " . $type;
 	  $inter = (int)$month;
@@ -4325,6 +4325,81 @@ ORDER BY r.D_date, r.D_time
 		$query_result = $query->result();
 		return $query_result;
 	}
+  */
+
+  	function mrinlist($month,$year,$type,$kelas, $search){
+  		//echo "nilai kelas : " . $kelas . " type : " . $type;
+  		$inter = (int)$month;
+  		$this->db->select('m.*,IFNULL(s.V_Asset_no,p.v_Asset_no) AS V_Asset_no,st.Status, IFNULL(IFNULL(IFNULL(ApprCommentsxx,ApprCommentsx),ApprComments),Comments) AS Commentsx',FALSE);
+  		$this->db->from('tbl_materialreq m');
+  		$this->db->join('pmis2_egm_service_request s','m.WorkOfOrder = s.V_Request_no AND s.V_actionflag <> "D"','left outer');
+  		$this->db->join('pmis2_egm_schconfirmmon p','m.WorkOfOrder = p.v_WrkOrdNo AND p.v_Actionflag <> "D"','left outer');
+  		$this->db->join('tbl_status st','m.ApprStatusID = st.StatusID');
+  		//$this->db->where('MONTH(DATE(m.DateCreated))',$inter);
+  		//$this->db->where('YEAR(DATE(m.DateCreated))',$year);
+  		$this->db->where('service_code',$this->session->userdata('usersess'));
+
+  		if( $search!="" ){
+  			$this->db->like('m.DocReferenceNo', trim(strtoupper($search)));
+  		}else{
+  			if ($type <> 0){
+  				if ($type == 1){
+  					$this->db->where('MONTH(DATE(m.DateCreated))',$inter);
+  					$this->db->where('YEAR(DATE(m.DateCreated))',$year);
+  					if ($kelas == 1) {
+  						$this->db->where('m.ApprStatusID = 4');
+  					} else if ($kelas == 3) {
+  						$this->db->where('m.ApprStatusIDx = 4');
+  						$this->db->where('m.ApprStatusIDxx = 4');
+  					} else {
+  						$this->db->where('m.ApprStatusID = 4');
+  						$this->db->where('m.ApprStatusIDx = 4');
+  						$this->db->where('m.ApprStatusIDxx = 4');
+  					}
+  				}else if ($type == 2){
+  					$this->db->where('MONTH(DATE(m.DateCreated))',$inter);
+  					$this->db->where('YEAR(DATE(m.DateCreated))',$year);
+  					$status = array(5,107,128);
+  					$this->db->where_in('m.ApprStatusID',$status);
+  					//$this->db->or_where('m.ApprStatusID = 107');
+  					//$this->db->or_where('m.ApprStatusID = 128');
+  					$this->db->or_where_in('m.ApprStatusIDx',$status);
+  					//$this->db->or_where('m.ApprStatusIDx = 107');
+  					//$this->db->or_where('m.ApprStatusIDx = 128');
+  					$this->db->or_where_in('m.ApprStatusIDxx',$status);
+  					//$this->db->or_where('m.ApprStatusIDxx = 107');
+  					//$this->db->or_where('m.ApprStatusIDxx = 128');
+  				}else if ($type == 3){
+  					if ($kelas == 1) {
+  						$this->db->where('m.ApprStatusID','6');
+  					} else if ($kelas == 3) {
+  						$this->db->where('m.ApprStatusIDx','6');
+  						$this->db->or_where('m.ApprStatusIDxx','6');
+  					} else {
+  						$this->db->where('m.ApprStatusID','6');
+  						$this->db->or_where('m.ApprStatusIDx','6');
+  						$this->db->or_where('m.ApprStatusIDxx','6');
+  					}
+  				}else{
+  					$this->db->where('MONTH(DATE(m.DateCreated))',$inter);
+  					$this->db->where('YEAR(DATE(m.DateCreated))',$year);
+  					$this->db->where('m.ApprStatusID = 6');
+  					$this->db->or_where('m.ApprStatusIDx = 6');
+  					$this->db->or_where('m.ApprStatusIDxx = 6');
+  				}
+  			} else{
+  				$this->db->where('MONTH(DATE(m.DateCreated))',$inter);
+  				$this->db->where('YEAR(DATE(m.DateCreated))',$year);
+  			}
+  		}
+  		$this->db->order_by('DocReferenceNo','ASC');
+  		$query = $this->db->get();
+  		// echo "$type<pre>".$this->db->last_query();//die;
+  		//exit();
+  		$query_result = $query->result();
+  		return $query_result;
+  	}
+    
 
 function mrindet($mrinno){
 		$this->db->select('m.*,s.V_Asset_no,u.Name');
