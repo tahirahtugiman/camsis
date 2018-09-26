@@ -167,7 +167,7 @@ for ($dyear = '2015';$dyear <= date("Y");$dyear++){
 					<td><?php if ($rqcivil[0]->total == 0) { echo "0"; } else {echo anchor('contentcontroller/report_a2?m='.$month.'&y='.$year.'&req='.$reqtype.'&stat=fbfb&grp='.$this->input->get('grp').'&btp=1&serv=civ',$rqcivil[0]->total);} ?></td>
 					<td><?php if ($rqcivil[0]->comp == 0) { echo "0"; } else {echo anchor('contentcontroller/report_a2?m='.$month.'&y='.$year.'&req='.$reqtype.'&stat=A&grp='.$this->input->get('grp').'&btp=1&serv=civ',$rqcivil[0]->comp);} ?></td>
 					<td><?php if ($rqcivil[0]->resch == 0) {echo "0";} else {echo anchor('contentcontroller/report_a2?m='.$month.'&y='.$year.'&req='.$reqtype.'&stat=fbfb&grp='.$this->input->get('grp').'&btp=1&resch=in&serv=civ',$rqcivil[0]->resch);} ?></td>
-					<td><?php if ($reschoutcivil[0]->reschout == 0) {echo "0";} else {echo anchor('contentcontroller/report_a2?m='.$month.'&y='.$year.'&req='.$reqtype.'&stat=fbfb&grp='.$this->input->get('grp').'&btp=1&resch=in&serv=civ',$reschoutcivil[0]->reschout);} ?></td>
+					<td><?php if ($reschoutcivil[0]->reschout == 0) {echo "0";} else {echo anchor('contentcontroller/report_a2?m='.$month.'&y='.$year.'&req='.$reqtype.'&stat=fbfb&grp='.$this->input->get('grp').'&btp=1&resch=out&serv=civ',$reschoutcivil[0]->reschout);} ?></td>
 					<td><?php if ($rqcivil[0]->notcomp == 0) { echo "0"; } else {echo anchor('contentcontroller/report_a2?m='.$month.'&y='.$year.'&req='.$reqtype.'&stat=C&grp='.$this->input->get('grp').'&btp=1&serv=civ',$rqcivil[0]->notcomp);} ?></td>
 				</tr>
 				<?php } ?>
