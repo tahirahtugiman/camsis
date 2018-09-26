@@ -8161,7 +8161,7 @@ public function pop_fail(){
 		$data['tag'] = '';
 		$data['cm']= '';
 		$data['limab']= '0';
-		$data['recordrq'] = $this->display_model->rpt_volu($data['month'],$data['year'],$this->input->get('stat'),$data['reqtype'],$this->input->get('broughtfwd'),$data['grpsel'],$pilape,$data['tag'],$data['cm'],$data['limab']);
+		$data['recordrq'] = $this->display_model->rpt_volu($data['month'],$data['year'],$this->input->get('stat'),$data['reqtype'],$this->input->get('broughtfwd'),$data['grpsel'],$pilape,$data['tag'],$data['cm'],$data['limab'],"","",$this->input->get('resch'));
 		if($this->input->get('pdf') == 1){
 		$this ->load->view("Content_report_A2_pdf", $data);
 		}else{
@@ -8247,15 +8247,19 @@ public function report_reqwosbya2(){
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
 		$data['reqtype']=  'A2';
-		//$data['ppmsum'] = $this->display_model->sumppm($data['month'],$data['year']);
 		$data['rqsum'] = $this->display_model->sumrq_a2($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'));
-		//$data['complntsum'] = $this->display_model->sumcomplnt($data['month'],$data['year']);
+        $data['reschout'] = $this->display_model->a2_reschout($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'));
 
 
-                if ($this->session->userdata('usersess') == 'FES') {
+        if ($this->session->userdata('usersess') == 'FES') {
 		$data['rqcivil'] = $this->display_model->sumrq_a2($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'),"IIUM C");
 		$data['rqmech'] = $this->display_model->sumrq_a2($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'),"IIUM M");
 		$data['rqelec'] = $this->display_model->sumrq_a2($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'),"IIUM E");
+		$data['reschoutcivil'] = $this->display_model->a2_reschout($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'),"IIUM C");
+		$data['reschoutmech'] = $this->display_model->a2_reschout($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'),"IIUM M");
+		$data['reschoutelec'] = $this->display_model->a2_reschout($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'),"IIUM E");
+		/* echo $this->db->last_query();
+		exit(); */
 		}
 		$this ->load->view("headprinter");
 		$this ->load->view("Content_report_reqwosbya2", $data);
