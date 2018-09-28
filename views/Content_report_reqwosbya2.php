@@ -34,9 +34,9 @@ if ($this->input->get('ex') == 'excel'){
 <?php } ?>
 <?php if (($this->input->get('ex') == '') or ($this->input->get('none') == 'closed')){?>
 		<div id="Instruction" >
-			<center>View List : 
+			<center>View List :
 				<form method="get" action="">
-					<?php 
+					<?php
 					$month_list = array(
 						'01' => 'January',
 						'02' => 'February',
@@ -101,7 +101,7 @@ for ($dyear = '2015';$dyear <= date("Y");$dyear++){
 							break;
 						case "F":
 							$tulis = "Floor - Related Report";
-							break;	
+							break;
 						case "WD":
 							$tulis = "Wall / Door - Related Report";
 							break;
@@ -110,15 +110,15 @@ for ($dyear = '2015';$dyear <= date("Y");$dyear++){
 							break;
 						case "W":
 							$tulis = "Window - Related Report";
-							break;	
+							break;
 						case "FIX":
 							$tulis = "Fixtures - Related Report";
 							break;
 						case "FUR":
 							$tulis = "Furniture / Fitting - Related Report";
-							break;					
+							break;
 						default:
-							$tulis = "A1 - Breakdown Maintenance (BM)";	
+							$tulis = "A1 - Breakdown Maintenance (BM)";
 							break;
 					} ?>
 					<?php if ($this->input->get('req') == $req) {?>
@@ -126,19 +126,23 @@ for ($dyear = '2015';$dyear <= date("Y");$dyear++){
 					<?php } ?>
 				</tr>
 			</table>
-	
+
 			<table class="tftable" border="1" style="text-align:center; width:70%;" align="center">
-		
+
 				<tr style="text-align:center;font-weight:bold;">
 					<th>Period <?php if ($this->session->userdata('usersess') == 'FES'){ echo '/ Categories';}?></th>
 					<th>Total Work Order Request</th>
 					<th>Total Completed</th>
+					<th>Total Rescheduled Brought In</th>
+				    <th>Total Rescheduled Brought Out</th>
 					<th>Total Outstanding</th>
 				</tr>
 				<tr style="text-align:center;">
 					<td><?=$year?></td>
 					<td><?php if ($rqsum[0]->total == 0) { echo "0"; } else {echo anchor('contentcontroller/report_a2?m='.$month.'&y='.$year.'&req='.$reqtype.'&stat=fbfb&grp='.$this->input->get('grp').'&btp=1',$rqsum[0]->total);} ?></td>
 					<td><?php if ($rqsum[0]->comp == 0) { echo "0"; } else {echo anchor('contentcontroller/report_a2?m='.$month.'&y='.$year.'&req='.$reqtype.'&stat=A&grp='.$this->input->get('grp').'&btp=1',$rqsum[0]->comp);} ?></td>
+					<td><?php if ($rqsum[0]->resch == 0) {echo "0";} else {echo anchor('contentcontroller/report_a2?m='.$month.'&y='.$year.'&req='.$reqtype.'&stat=fbfb&grp='.$this->input->get('grp').'&btp=1&resch=in',$rqsum[0]->resch);} ?></td>
+					<td><?php if ($reschout[0]->reschout == 0) {echo "0";} else {echo anchor('contentcontroller/report_a2?m='.$month.'&y='.$year.'&req='.$reqtype.'&stat=fbfb&grp='.$this->input->get('grp').'&btp=1&resch=out', $reschout[0]->reschout);} ?></td>
 					<td><?php if ($rqsum[0]->notcomp == 0) { echo "0"; } else {echo anchor('contentcontroller/report_a2?m='.$month.'&y='.$year.'&req='.$reqtype.'&stat=C&grp='.$this->input->get('grp').'&btp=1',$rqsum[0]->notcomp);} ?></td>
 				</tr>
 				<?php if ($this->session->userdata('usersess') == 'FES'){ ?>
@@ -146,18 +150,24 @@ for ($dyear = '2015';$dyear <= date("Y");$dyear++){
 					<td>Electrical</td>
 					<td><?php if ($rqelec[0]->total == 0) { echo "0"; } else {echo anchor('contentcontroller/report_a2?m='.$month.'&y='.$year.'&req='.$reqtype.'&stat=fbfb&grp='.$this->input->get('grp').'&btp=1&serv=ele',$rqelec[0]->total);} ?></td>
 				  	<td><?php if ($rqelec[0]->comp == 0) { echo "0"; } else {echo anchor('contentcontroller/report_a2?m='.$month.'&y='.$year.'&req='.$reqtype.'&stat=A&grp='.$this->input->get('grp').'&btp=1&serv=ele',$rqelec[0]->comp);} ?></td>
+					<td><?php if ($rqelec[0]->resch == 0) {echo "0";} else {echo anchor('contentcontroller/report_a2?m='.$month.'&y='.$year.'&req='.$reqtype.'&stat=fbfb&grp='.$this->input->get('grp').'&btp=1&resch=in&serv=ele', $rqelec[0]->resch);} ?></td>
+					<td><?php if ($reschoutelec[0]->reschout == 0) {echo "0";} else {echo anchor('contentcontroller/report_a2?m='.$month.'&y='.$year.'&req='.$reqtype.'&stat=fbfb&grp='.$this->input->get('grp').'&btp=1&resch=out&serv=ele', $reschoutelec[0]->reschout);} ?></td>
 					<td><?php if ($rqelec[0]->notcomp == 0) { echo "0"; } else {echo anchor('contentcontroller/report_a2?m='.$month.'&y='.$year.'&req='.$reqtype.'&stat=C&grp='.$this->input->get('grp').'&btp=1&serv=ele',$rqelec[0]->notcomp);} ?></td>
 				</tr>
 				<tr style="text-align:center;">
 					<td>Mechanical</td>
 					<td><?php if ($rqmech[0]->total == 0) { echo "0"; } else {echo anchor('contentcontroller/report_a2?m='.$month.'&y='.$year.'&req='.$reqtype.'&stat=fbfb&grp='.$this->input->get('grp').'&btp=1&serv=mec',$rqmech[0]->total);} ?></td>
 					<td><?php if ($rqmech[0]->comp == 0) { echo "0"; } else {echo anchor('contentcontroller/report_a2?m='.$month.'&y='.$year.'&req='.$reqtype.'&stat=A&grp='.$this->input->get('grp').'&btp=1&serv=mec',$rqmech[0]->comp);} ?></td>
+					<td><?php if ($rqmech[0]->resch == 0) {echo "0";} else {echo anchor('contentcontroller/report_a2?m='.$month.'&y='.$year.'&req='.$reqtype.'&stat=fbfb&grp='.$this->input->get('grp').'&btp=1&resch=in&serv=mec',$rqmech[0]->resch);} ?></td>
+					<td><?php if ($reschoutmech[0]->reschout == 0) {echo "0";} else {echo anchor('contentcontroller/report_a2?m='.$month.'&y='.$year.'&req='.$reqtype.'&stat=fbfb&grp='.$this->input->get('grp').'&btp=1&resch=out&serv=mec', $reschoutmech[0]->reschout);} ?></td>
 					<td><?php if ($rqmech[0]->notcomp == 0) { echo "0"; } else {echo anchor('contentcontroller/report_a2?m='.$month.'&y='.$year.'&req='.$reqtype.'&stat=C&grp='.$this->input->get('grp').'&btp=1&serv=mec',$rqmech[0]->notcomp);} ?></td>
 				</tr>
 				<tr style="text-align:center;">
 					<td>Civil</td>
 					<td><?php if ($rqcivil[0]->total == 0) { echo "0"; } else {echo anchor('contentcontroller/report_a2?m='.$month.'&y='.$year.'&req='.$reqtype.'&stat=fbfb&grp='.$this->input->get('grp').'&btp=1&serv=civ',$rqcivil[0]->total);} ?></td>
 					<td><?php if ($rqcivil[0]->comp == 0) { echo "0"; } else {echo anchor('contentcontroller/report_a2?m='.$month.'&y='.$year.'&req='.$reqtype.'&stat=A&grp='.$this->input->get('grp').'&btp=1&serv=civ',$rqcivil[0]->comp);} ?></td>
+					<td><?php if ($rqcivil[0]->resch == 0) {echo "0";} else {echo anchor('contentcontroller/report_a2?m='.$month.'&y='.$year.'&req='.$reqtype.'&stat=fbfb&grp='.$this->input->get('grp').'&btp=1&resch=in&serv=civ',$rqcivil[0]->resch);} ?></td>
+					<td><?php if ($reschoutcivil[0]->reschout == 0) {echo "0";} else {echo anchor('contentcontroller/report_a2?m='.$month.'&y='.$year.'&req='.$reqtype.'&stat=fbfb&grp='.$this->input->get('grp').'&btp=1&resch=out&serv=civ',$reschoutcivil[0]->reschout);} ?></td>
 					<td><?php if ($rqcivil[0]->notcomp == 0) { echo "0"; } else {echo anchor('contentcontroller/report_a2?m='.$month.'&y='.$year.'&req='.$reqtype.'&stat=C&grp='.$this->input->get('grp').'&btp=1&serv=civ',$rqcivil[0]->notcomp);} ?></td>
 				</tr>
 				<?php } ?>

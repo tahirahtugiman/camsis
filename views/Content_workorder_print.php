@@ -692,13 +692,13 @@
 							<td valign="top">Signature :</td>
 						</tr>
 						<tr>
-							<td valign="top">Name :</td>
+							<td valign="top">Name : <?=($recordjob) && isset($recordjob[0]->v_AcceptedBy) ? $recordjob[0]->v_AcceptedBy : ''?></td>
 						</tr>
 						<tr>
-							<td valign="top">Designation :</td>
+							<td valign="top">Designation : <?=($recordjob) && isset($recordjob[0]->V_ACCEPTED_Designation) ? $recordjob[0]->V_ACCEPTED_Designation : ''?></td>
 						</tr>
 						<tr>
-							<td valign="top">Date :</td>
+							<td valign="top">Date : <?= ($recordjob) && isset($recordjob[0]->v_AcceptedBy) ? date("d-m-Y", strtotime($recordjob[0]->d_AcceptedDt)) :''?></td>
 						</tr>
 					</table>
 				</td>
