@@ -5094,58 +5094,57 @@ return $obj['path'];
 
 		}
 
-		function s_item_detail($limit,$start){
-	     if($limit != 0){
+	function s_item_detail($limit,$start){
+		if($limit != 0){
 			$this->db->select('a.*, b.v_vendorname');
 			$this->db->from('tbl_invitem a');
 			$this->db->join('pmis2_sa_vendor b','a.VendorID = b.id','left');
-	        $this->db->where('Dept =', $this->session->userdata('usersess'));
+			$this->db->where('Dept =', $this->session->userdata('usersess'));
 			$this->db->order_by('DateCreated','DESC');
 			$this->db->limit($limit,$start);
-
-          }else {
-	       $this->db->select('count(a.ItemCode) as jumlah');
-		   $this->db->from('tbl_invitem a');
-		   $this->db->join('pmis2_sa_vendor b','a.VendorID = b.id','left');
-	       $this->db->where('Dept =', $this->session->userdata('usersess'));
-         }
+		}else {
+			$this->db->select('count(a.ItemCode) as jumlah');
+			$this->db->from('tbl_invitem a');
+			$this->db->join('pmis2_sa_vendor b','a.VendorID = b.id','left');
+			$this->db->where('Dept =', $this->session->userdata('usersess'));
+		}
 		$query = $this->db->get();
-			/* echo $this->db->last_query();
-			exit(); */
-			//$this->getcurrency(query);
-			return $query->result();
-		}
+		/* echo $this->db->last_query();
+		exit(); */
+		//$this->getcurrency(query);
+		return $query->result();
+	}
 
-				function sumpp_m($month,$year,$pecat)
-		{
+	function sumpp_m($month,$year,$pecat)
+	{
 
-			$this->db->select("*");
-			$this->db->from('freezerpt');
-			$this->db->where('v_servicecode = ',$this->session->userdata('usersess'));
-			$this->db->where('PeCat = ',$pecat);
-			$this->db->where('v_month = ',$month);
-			$this->db->where('v_year = ',$year);
-			$query = $this->db->get();
-			$query_result = $query->result();
+		$this->db->select("*");
+		$this->db->from('freezerpt');
+		$this->db->where('v_servicecode = ',$this->session->userdata('usersess'));
+		$this->db->where('PeCat = ',$pecat);
+		$this->db->where('v_month = ',$month);
+		$this->db->where('v_year = ',$year);
+		$query = $this->db->get();
+		$query_result = $query->result();
 		/* 	echo $this->db->last_query();
-			exit(); */
-			return $query_result;
-		}
+		exit(); */
+		return $query_result;
+	}
 
-		function rcmbulkprint($startdate,$enddate){
-			$this->db->select('s.V_Request_no,s.v_Asset_no,r.V_Tag_no,r.V_User_Dept_code,s.D_date,s.v_closeddate');
-			$this->db->from('pmis2_egm_service_request s');
-			$this->db->join('pmis2_egm_assetregistration r','s.v_Asset_no = r.V_Asset_no AND s.v_HospitalCode = r.V_Hospitalcode');
-			$this->db->where('v_ServiceCode',$this->session->userdata('usersess'));
-			$this->db->where('s.v_Actionflag <>','D');
-			$this->db->where('D_date >=',$startdate);
-			$this->db->where('D_date <=',$enddate);
-			$query = $this->db->get();
-			//echo $this->db->last_query();
-			//exit();
-			return $query->result();
+	function rcmbulkprint($startdate,$enddate){
+		$this->db->select('s.V_Request_no,s.v_Asset_no,r.V_Tag_no,r.V_User_Dept_code,s.D_date,s.v_closeddate');
+		$this->db->from('pmis2_egm_service_request s');
+		$this->db->join('pmis2_egm_assetregistration r','s.v_Asset_no = r.V_Asset_no AND s.v_HospitalCode = r.V_Hospitalcode');
+		$this->db->where('v_ServiceCode',$this->session->userdata('usersess'));
+		$this->db->where('s.v_Actionflag <>','D');
+		$this->db->where('D_date >=',$startdate);
+		$this->db->where('D_date <=',$enddate);
+		$query = $this->db->get();
+		//echo $this->db->last_query();
+		//exit();
+		return $query->result();
 
-		}
+	}
 
   	function assetEquip(){
   		$this->db->select("*");
@@ -5169,6 +5168,22 @@ return $obj['path'];
 
 		$query = $this->db->get();
 		// echo "<pre>".$this->db->last_query();die();
+		$query_result = $query->result();
+		return $query_result;
+	}
+
+	function wo_no_mrin($year, $month){
+		$this->db->select("wo.*");
+		$this->db->from("pmis2_egm_service_request wo");
+		$this->db->join("tbl_materialreq mrin", "mrin.WorkOfOrder <> wo.V_Request_no", "left outer");
+		$this->db->where("DATEDIFF(DATE(NOW()), wo.D_date) >", 7);
+		$this->db->where("wo.V_servicecode", $this->session->userdata("usersess"));
+		$this->db->where("wo.V_request_status <>", "C");
+		$this->db->where("YEAR(wo.D_date)", $year);
+		$this->db->where("MONTH(wo.D_date)", $month);
+		$this->db->group_by("wo.V_request_no");
+		$query = $this->db->get();
+		// echo $this->db->last_query();exit;
 		$query_result = $query->result();
 		return $query_result;
 	}

@@ -15,13 +15,13 @@ class Procurement extends CI_Controller {
 		$this ->load->view("head");
 		$this ->load->view("left");
 		if ($this->input->get('pro') == 'mrin'){
-			$data['mrintype']= $this->input->get('tab') != '' ? $this->input->get('tab') : 0;
+			$data['mrintype']= $this->input->get('tab') != '' ? $this->input->get('tab') : 3;
 			if ($data['mrintype'] == 0) {
 				$data['mrintype'] = 3;
 			} elseif ($data['mrintype'] == 3) {
 				$data['mrintype'] = 0;
 			}
-			//echo "lalalal : ".$data['mrintype'];
+			// echo "lalalal : ".$data['mrintype'];
 			$data['msg_nodata'] = '';
 			$search = '';
 			if( isset($_POST['searchquestion']) ){
@@ -510,6 +510,8 @@ class Procurement extends CI_Controller {
 	public function pr_report(){
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
+		$this->load->model("display_model");
+
 		$this ->load->view("headprinter");
 		if ($this->input->get('pr') == 'rs'){ 
 			$this ->load->view("Content_rs_report_print",$data);
@@ -517,6 +519,9 @@ class Procurement extends CI_Controller {
 			$this ->load->view("Content_vc_report_print",$data);
 		}elseif ($this->input->get('pr') == 'vr'){ 
 			$this ->load->view("Content_vr_report_print",$data);
+		}elseif ($this->input->get('pr') == 'wo'){
+			$data['record'] = $this->display_model->wo_no_mrin($data['year'], $data['month']);
+			$this ->load->view("Content_wo_report_print",$data);
 		}
 	}
 	public function e_request(){

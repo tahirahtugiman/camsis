@@ -1,7 +1,15 @@
 <tr class="ui-left_web">
 	<?php 
-	$selectedtab = $this->input->get('tab');
+	// $selectedtab = $this->input->get('tab');
+	$selectedtab = $mrintype;
+	if ($selectedtab == 0) {
+		$selectedtab = 3;
+	} elseif ($selectedtab == 3) {
+		$selectedtab = 0;
+	}
+
 	if( $tab ) $selectedtab = $tab;
+	// echo "<p style='color:black'>$selectedtab</p>";
 	?>
 	<?= ($selectedtab == '0') ? '<td class="ui-highlight" align="center" colspan="0" style=" height:30px; width:25%;">' : '<td class="ui-content-menu-desk-color" align="center" colspan="0" style=" height:30px; width:25%;">'?>
 	<?php echo anchor ('Procurement?pro=mrin&tab=0'.'&y='.$year.'&m='.$month, 'Pending MRIN'); ?></td>
@@ -17,7 +25,7 @@
 <?php
 
 
-if (!is_null($this->input->get('desk'))){
+// if (!is_null($this->input->get('desk'))){//buzlee comment this statement on 01/10/2018
 	/*if ($this->input->get('desk') == 0){ 
 		// echo "<table class='ui-mobile-content-header' border='0' align='center'>";
 		// echo "<tr>";
@@ -89,7 +97,7 @@ if (!is_null($this->input->get('desk'))){
 		echo "</div>";
 	}*/
 
-	echo $tab;die();
+	// echo $tab;die();
 	if ($selectedtab == 0){
 		echo "<div class='divmenu'>";
 		echo "<div class='divmenuleft'>";
@@ -129,7 +137,7 @@ if (!is_null($this->input->get('desk'))){
 		echo "</div>";
 		echo "</div>";
 	}
-}
+// }
 ?>
 	</td>
 </tr>

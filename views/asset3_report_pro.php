@@ -42,6 +42,7 @@
 					<td><?php echo anchor ('Procurement/pr_report?pr=rs&m='.$this->input->get('m').'&y='.$this->input->get('y'),'<span class="icon-file-text2" style="color:'.$autocolor[0].';"></span> <br />Report Status'); ?></td>
 					<td><?php echo anchor ('Procurement/pr_report?pr=vc','<span class="icon-cart" style="color:'.$autocolor[2].';"></span> <br />Vendor Cost'); ?></td>
 					<td><?php echo anchor ('Procurement/pr_report?pr=vr','<span class="icon-stats-bars" style="color:'.$autocolor[1].';"></span> <br />Monthly Report'); ?></td>
+					<td><?php echo anchor ('Procurement/pr_report?pr=wo&m='.$this->input->get("m").'&y='.$this->input->get("y"),'<span class="icon-stats-bars" style="color:'.$autocolor[3].';"></span> <br />Work Order'); ?></td>
 					</tr>
 					</table>
 				</td>	
