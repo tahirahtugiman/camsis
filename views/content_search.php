@@ -54,6 +54,15 @@ elseif ('Procurement?pro=mrin' == str_replace("/", "", $this->uri->slash_segment
 	echo "</div>";
 	echo "</div></form>";
 }
+elseif ('contentcontroller/new_item/' == $this->uri->slash_segment(1) .$this->uri->slash_segment(2)){
+	echo "<form action=".$url = site_url('contentcontroller/new_item')." method='post' id='myform'>";
+	echo "<div class='search-form'>";
+	echo "<div class='form-group'>";
+	echo "<input type='text' class='form-control login-field' autofocus='autofocus' id='searchquestion' placeholder='Search Item Catalog' name='searchquestion' size='22' style='height:50px;' value='".$this->input->post('searchquestion')."' />"; 
+	echo "<label class='login-field-icon' for='login-pass' style='margin-top:10px;'><span align='center' class='icon-search' style='color:; margin-left:-35px;' id='mylink'></span></label>";
+	echo "</div>";
+	echo "</div></form>";
+}
 ?>
 <?php $array = [['contentcontroller/assets/'],
 				['contentcontroller/assetsearch/'],
@@ -63,6 +72,7 @@ elseif ('Procurement?pro=mrin' == str_replace("/", "", $this->uri->slash_segment
 				['contentcontroller/ppmsearch/'],
 				['contentcontroller/catalogppm/'],
 				['contentcontroller/Store/'],
+				['contentcontroller/new_item/'],
 				['Procurement?pro=mrin'],
 ]?>
 <?php //echo str_replace("/", "", $this->uri->slash_segment(1)).'?pro='.$this->input->get('pro');die;//echo "<pre>";var_export($array);die;?>

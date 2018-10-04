@@ -15,4 +15,7 @@ elseif ($this->input->get('ppm') or 'contentcontroller/catalogppm/' == $this->ur
 elseif ('Procurement?pro=mrin' == str_replace("/", "", $this->uri->slash_segment(1)).'?pro='.$this->input->get('pro')){
 	echo "<div class='main-head-m4 bg-aqua' id='show2'><span class='icon-search' onclick='showDiv()'></span></div>";
 }
+elseif ( 'contentcontroller/new_item/' == $this->uri->slash_segment(1) .$this->uri->slash_segment(2) ){
+	echo "<div class='main-head-m4 bg-aqua' id='show2'><span class='icon-search' onclick='showDiv()'></span></div>";
+}
 ?>

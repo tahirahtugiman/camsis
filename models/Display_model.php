@@ -5094,12 +5094,16 @@ return $obj['path'];
 
 		}
 
-	function s_item_detail($limit,$start){
+	function s_item_detail($limit,$start, $search=''){
 		if($limit != 0){
 			$this->db->select('a.*, b.v_vendorname');
 			$this->db->from('tbl_invitem a');
 			$this->db->join('pmis2_sa_vendor b','a.VendorID = b.id','left');
 			$this->db->where('Dept =', $this->session->userdata('usersess'));
+			if($search!=''){
+				$this->db->like('a.ItemCode', trim(strtoupper($_POST['searchquestion'])));
+				$this->db->or_like('a.ItemName', trim(strtoupper($_POST['searchquestion'])));
+			}
 			$this->db->order_by('DateCreated','DESC');
 			$this->db->limit($limit,$start);
 		}else {
@@ -5109,8 +5113,8 @@ return $obj['path'];
 			$this->db->where('Dept =', $this->session->userdata('usersess'));
 		}
 		$query = $this->db->get();
-		/* echo $this->db->last_query();
-		exit(); */
+		 // echo $this->db->last_query();
+		// exit();
 		//$this->getcurrency(query);
 		return $query->result();
 	}
