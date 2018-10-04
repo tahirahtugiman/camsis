@@ -4710,7 +4710,7 @@ function findvencd($mri){
 }
 
 function findven($vencd){
-	$this->db->select('SELECT VENDOR_NAME, ADDRESS, ADDRESS2, ADDRESS3, TELEPHONE_NO, FAX_NO, CONTACT_PERSON ');
+	$this->db->select('VENDOR_NAME, ADDRESS, ADDRESS2, ADDRESS3, TELEPHONE_NO, FAX_NO, CONTACT_PERSON ');
 	$this->db->from('tbl_vendor_info');
 	$this->db->where('VENDOR_CODE ',$vencd);
 	$query = $this->db->get();
