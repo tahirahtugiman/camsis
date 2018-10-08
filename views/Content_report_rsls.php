@@ -35,7 +35,7 @@ if ($this->input->get('ex') == 'excel'){
 	</div>
 </div>
 
-<div id="constrainer">
+<div id="constrainer" style="height: 55%;">
 	<div class="scrolltable1">
 		<table class="header-alr" border="1" style="text-align:center; font-size: 12px;">
 		<?php } ?>
@@ -111,12 +111,12 @@ if ($this->input->get('ex') == 'excel'){
 			<div id="caption"></div>
 		</div>
 	</div>
-	<table width="99%" border="0">
+	<table width="99%" border="0" style="margin-top: 15px;">
 		<tr>
 			<td valign="top" colspan="2"><hr color="black" size="1Px"></td>
 		</tr>
 		<tr>
-			<td width="50%">Statutory & License Summary <br><i>Computer Generated - CAMSIS</i></td>
+			<td width="50%">Statutory &amp; License Summary <br><i>Computer Generated - CAMSIS</i></td>
 			<td width="50%" align="right"></td>
 		</tr>
 	</table>
