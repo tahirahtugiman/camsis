@@ -37,7 +37,7 @@ if ($this->input->get('ex') == 'excel'){
 
 <div id="constrainer">
 	<div class="scrolltable1">
-		<table class="header-alr" style="text-align:center; font-size: 12px;">
+		<table class="header-alr" border="1" style="text-align:center; font-size: 12px;">
 		<?php } ?>
 			<tr>
 				<th>No</th>
