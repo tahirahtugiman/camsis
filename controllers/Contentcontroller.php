@@ -8164,77 +8164,84 @@ public function pop_fail(){
 		}
 }
 
-public function new_item (){
+	public function new_item (){
 		$this ->load->view("head");
 		$this ->load->view("left");
 		$this->load->model("display_model");
     	$this->load->model("get_model");
 		$this->load->model('update_model');
-         if (isset($_GET['edit'])){
 
-		$data['edititem'] = $this->get_model->get_asset_list($_GET['edit']);
-	    // print_r ($data['edititem']);
+		$data['msg_nodata'] = '';
+		$search = '';
+		if( isset($_POST['searchquestion']) ){
+			if( $this->input->post("searchquestion") == "" ){
+				$data['msg_nodata'] = "NO RECORD FOUND";
+			}else{
+				$data['msg_nodata'] = $this->input->post('searchquestion')." NOT FOUND";
+			}
+			$search = $this->input->post('searchquestion');
+		}
+
+        if (isset($_GET['edit'])){
+			$data['edititem'] = $this->get_model->get_asset_list($_GET['edit']);
+		    // print_r ($data['edititem']);
 		}
 		$data['limit'] = 10;
         isset($_GET['pa']) ? $data['page'] = $_GET['pa'] : $data['page'] = 1;
 	    $data['start'] = ($data['page'] * $data['limit']) - $data['limit'];
 
-     	$data['records'] = $this->display_model->s_item_detail($data['limit'],$data['start']);
+     	$data['records'] = $this->display_model->s_item_detail($data['limit'],$data['start'], $search);
 
 		$data['count'] = count($data['records']);
         $data['rec'] =  $this->display_model->s_item_detail('0','0');
 		if($data['rec'][0]->jumlah > ($data['page'] * $data['limit']) ){
-	    $data['next'] = ++$data['page'];
+	    	$data['next'] = ++$data['page'];
 		}
 
 
 		if($this->input->get('p') == 'confirm'){
-		$this ->load->view("content_new_item_confirm");
+			$this ->load->view("content_new_item_confirm");
 		}elseif($this->input->get('p') == 'save'){
+			$this->db->select('id');
+			$this->db->from('pmis2_sa_vendor');
+			$this->db->where('v_vendorcode',$this->input->post('n_vendor_code'));
+			$result_array = $this->db->get()->result_array();
+			$insert_data = array(
+				'ItemCode'=>$this->input->post('n_code'),
+				'ItemName'=>$this->input->post('n_description'),
+				'ItemLoc'=>$this->input->post('n_location'),
+				'PartNumber'=>$this->input->post('n_partno'),
+				'PartDescription'=>$this->input->post('n_pdescription'),
+				'UnitPrice'=>$this->input->post('n_unitprice'),
+				'CurrencyID'=>$this->input->post('n_currency'),
+				'MeasurementID'=>$this->input->post('n_Unit_of_measurement'),
+				'VendorID'=>$result_array[0]['id'],
+				'Comments'=>$this->input->post('n_comments'),
+				'CodeCat'=>$this->input->post('n_codecat'),
+				'EquipCat'=>$this->input->post('n_equipcat'),
+				'Brand'=>$this->input->post('n_brand'),
+				'Model'=>$this->input->post('n_model'),
 
-     	$this->db->select('id');
-        $this->db->from('pmis2_sa_vendor');
-        $this->db->where('v_vendorcode',$this->input->post('n_vendor_code'));
-        $result_array = $this->db->get()->result_array();
-		$insert_data = array(
+				'Dept'=>$this->session->userdata('usersess'),
+				'DateCreated'=>date('Y-m-d H:i:s'),
+				//'DateCreated'=>date("Y-m-d"),
+			);
+			/* 	print_r($insert_data);
+			exit(); */
 
-		'ItemCode'=>$this->input->post('n_code'),
-		'ItemName'=>$this->input->post('n_description'),
-		'ItemLoc'=>$this->input->post('n_location'),
-		'PartNumber'=>$this->input->post('n_partno'),
-		'PartDescription'=>$this->input->post('n_pdescription'),
-	      'UnitPrice'=>$this->input->post('n_unitprice'),
-		'CurrencyID'=>$this->input->post('n_currency'),
-		'MeasurementID'=>$this->input->post('n_Unit_of_measurement'),
-		'VendorID'=>$result_array[0]['id'],
-		'Comments'=>$this->input->post('n_comments'),
-		'CodeCat'=>$this->input->post('n_codecat'),
-		'EquipCat'=>$this->input->post('n_equipcat'),
-		'Brand'=>$this->input->post('n_brand'),
-		'Model'=>$this->input->post('n_model'),
-
-		'Dept'=>$this->session->userdata('usersess'),
-		'DateCreated'=>date('Y-m-d H:i:s'),
-		//'DateCreated'=>date("Y-m-d"),
-
-
-		);
-/* 		print_r($insert_data);
-		exit(); */
-
-		if($this->input->post('editid')){
-		 $this->load->model('update_model');
-		 $this->update_model->updateitems($insert_data,$this->input->post('editid'));
-		 }else{
-          $this->insert_model->ins_itembaru($insert_data);
-		 }
-	/* 	 echo $this->db->last_query();
-		 exit(); */
-		 redirect('contentcontroller/new_item?itemname='.$this->input->post('n_description').'&itemcode='.$this->input->post('n_code'));
+			if($this->input->post('editid')){
+				$this->load->model('update_model');
+				$this->update_model->updateitems($insert_data,$this->input->post('editid'));
+			}else{
+				$this->insert_model->ins_itembaru($insert_data);
+			}
+			/* 	 echo $this->db->last_query();
+			exit(); */
+			redirect('contentcontroller/new_item?itemname='.$this->input->post('n_description').'&itemcode='.$this->input->post('n_code'));
 		}else{
-		$this ->load->view("content_new_item",$data);
+			$this ->load->view("content_new_item",$data);
 		}
-}
+	}
 
 public function report_reqwosbya2(){
 		  $this->load->model("display_model");

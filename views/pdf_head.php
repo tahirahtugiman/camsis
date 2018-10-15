@@ -16,7 +16,7 @@ $obj_pdf->SetHeaderData(PDF_HEADER_LOGO2, PDF_HEADER_LOGO_WIDTH2);
 elseif ( $this->uri->slash_segment(1) .$this->uri->slash_segment(2) == 'Procurement/e_po_print/') {
 $obj_pdf = new TCPDF("P", PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 $obj_pdf->SetCreator(PDF_CREATOR);
-$obj_pdf->SetHeaderData(PDF_HEADER_LOGO3, PDF_HEADER_LOGO_WIDTH2);
+$obj_pdf->SetHeaderData(PDF_HEADER_LOGO4, PDF_HEADER_LOGO_WIDTH2);
 }
 
 else{
