@@ -141,10 +141,39 @@
             License_code.value = a_category;
             var License_desc = window.opener.document.getElementById("n_Description");
             License_desc.value = a_Description;
-
+			<?php if ($_POST['n_lic_type'] == 'Personnel') { ?>
+            var loc1 = window.opener.document.getElementById("loc1");
+            loc1.style.display = '';
+			var loc2 = window.opener.document.getElementById("loc2");
+            loc2.style.display = '';
+			var loc3 = window.opener.document.getElementById("loc3");
+            loc3.style.display = '';
+			var loc4 = window.opener.document.getElementById("loc4");
+            loc4.style.display = '';
+			var loc5 = window.opener.document.getElementById("loc5");
+            loc5.style.display = '';
+			<?php }else { ?>
+			var loc1 = window.opener.document.getElementById("loc1");
+            loc1.style.display = 'none';
+			var loc2 = window.opener.document.getElementById("loc2");
+            loc2.style.display = 'none';
+			var loc3 = window.opener.document.getElementById("loc3");
+            loc3.style.display = 'none';
+			var loc4 = window.opener.document.getElementById("loc4");
+            loc4.style.display = 'none';
+			var loc5 = window.opener.document.getElementById("loc5");
+            loc5.style.display = 'none';
+			var tester = window.opener.document.getElementById("tester");
+            tester.style.display = '';
+			var tester1 = window.opener.document.getElementById("tester1");
+            tester1.style.display = '';
+			var n_tester = window.opener.document.getElementById("n_tester");
+			 n_tester.value = '';
+			<?php } ?>
             //opener.document.f1.n1.value = document.n_tag_number.value;
 			//opener.document.f1.n2.value = document.frm.c_name2.value;
         }
+
         window.close();
     }
 </script>
@@ -154,6 +183,18 @@ function fPostFreeText()
 	 		window.opener.document.getElementById("n_Identification_Type").value = "Free Text";
  			window.opener.document.getElementById("n_Identification_Code").value = document.frmFree.n_Identification_Code.value;
  			window.opener.document.getElementById("n_Description").value = document.frmFree.n_Description.value;
+			<?php if ($_POST['n_lic_type'] != 'Personnel') { ?>
+		    var loc1 = window.opener.document.getElementById("loc1");
+            loc1.style.display = 'none';
+			var loc2 = window.opener.document.getElementById("loc2");
+            loc2.style.display = 'none';
+			var loc3 = window.opener.document.getElementById("loc3");
+            loc3.style.display = 'none';
+			var loc4 = window.opener.document.getElementById("loc4");
+            loc4.style.display = 'none';
+			var loc5 = window.opener.document.getElementById("loc5");
+            loc5.style.display = 'none';
+			<?php } ?>
 	 		self.close();
 		}
 </script>

@@ -3927,6 +3927,7 @@ function get_schbi_weekly($DeptCode,$m,$y){
 	
 }
 
+
 function get_sch_spw($DeptCode,$loc,$m,$y){
 	$this->db->select('*');
     $this->db->from('sch_spw');
@@ -3940,6 +3941,27 @@ function get_sch_spw($DeptCode,$loc,$m,$y){
     return $query->result();
 	
 }
+
+function get_poploc($loc)
+{
+
+$this->db->distinct();
+$this->db->select('pmis2_sa_userdept.v_userdeptdesc, pmis2_egm_assetlocation.*');
+$this->db->join('pmis2_sa_userdept','pmis2_sa_userdept.v_hospitalcode = pmis2_egm_assetlocation.v_hospitalcode AND pmis2_sa_userdept.v_userdeptcode = pmis2_egm_assetlocation.v_UserDeptCode');
+if (isset($loc)) {
+    $this->db->where('pmis2_egm_assetlocation.V_location_code = ', $loc);    
+}
+$this->db->where('pmis2_egm_assetlocation.v_hospitalcode = ', $this->session->userdata('hosp_code'));
+$this->db->where('pmis2_egm_assetlocation.v_actionflag <> ', 'D');
+$this->db->where('pmis2_sa_userdept.v_actionflag <> ', 'D');
+$query = $this->db->get('pmis2_egm_assetlocation');
+//echo "laalla".$query->DWRate;
+//echo $this->db->last_query();
+//exit();
+return $query->result();
+
+}
+
 }
 ?>
  	
