@@ -152,6 +152,10 @@
             loc4.style.display = '';
 			var loc5 = window.opener.document.getElementById("loc5");
             loc5.style.display = '';
+			var tester = window.opener.document.getElementById("tester");
+            tester.style.display = 'none';
+			var tester1 = window.opener.document.getElementById("tester1");
+            tester1.style.display = 'none';
 			<?php }else { ?>
 			var loc1 = window.opener.document.getElementById("loc1");
             loc1.style.display = 'none';
@@ -194,6 +198,12 @@ function fPostFreeText()
             loc4.style.display = 'none';
 			var loc5 = window.opener.document.getElementById("loc5");
             loc5.style.display = 'none';
+			var tester = window.opener.document.getElementById("tester");
+            tester.style.display = '';
+			var tester1 = window.opener.document.getElementById("tester1");
+            tester1.style.display = '';
+			var n_tester = window.opener.document.getElementById("n_tester");
+			 n_tester.value = '';
 			<?php } ?>
 	 		self.close();
 		}

@@ -3224,8 +3224,6 @@ class Contentcontroller extends CI_Controller {
 		//echo 'jjjj';
 		//exit();
 		$insert_data = array(
-
-
 					'v_CertificateNo'=>$this->input->post('n_Certificate_Number'),
 					'v_ServiceCode'=>$this->session->userdata('usersess'),
 					'v_AgencyCode'=>$this->input->post('n_Agency_Code'),
@@ -3241,7 +3239,7 @@ class Contentcontroller extends CI_Controller {
 					'v_actionflag'=>'I',
 					'd_timestamp'=>date('Y-m-d H:i:s'),
 					'v_Key'=>$this->input->post('n_Identification_Code'),//freetext
-					'v_TesterName' => $this->input->post('n_tester')                     //tester
+					'v_TesterName' => $vtest                     //tester
 
 		);
 			$this->load->model('insert_model');
@@ -4256,7 +4254,7 @@ class Contentcontroller extends CI_Controller {
 			$this->load->model("get_model");
 			$data['lic'] = $this->get_model->licensesandcertbycode($data['liccode']);
 			$data['loc'] = $this->get_model->get_poploc($data['lic'][0]->v_TesterName);
-			/* echo "<pre>";
+		/* 	echo "<pre>";
 			print_r($data['loc']);
 			exit(); */
 			$data['licimg'] = $this->get_model->licenseimage($data['liccode']);

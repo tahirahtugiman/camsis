@@ -120,9 +120,9 @@
 	<?php echo form_hidden('n_tester',$this->input->post('n_tester')) ?>
 	<?php echo form_hidden('n_Identification_Type',$this->input->post('n_Identification_Type')) ?>
 	<?php echo form_hidden('n_Identification_Code',$this->input->post('n_Identification_Code')) ?>
-	<?php echo form_hidden('n_Description',$this->input->post('n_Description')) ?>
+	<?php echo form_hidden('n_Description',$this->input->post('n_Description')) ?>	
+	<?php echo form_hidden('n_location',$this->input->post('n_location')) ?>	
 	<?php echo form_hidden('n_Remarks',$this->input->post('n_Remarks')) ?>
-
 	<?php echo form_hidden('upload_data',isset($upload_data) ? $upload_data : '') ?>
 </div>
 <?php echo form_close(); ?>
