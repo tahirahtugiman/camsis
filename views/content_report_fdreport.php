@@ -457,16 +457,16 @@ function doSomething(a){
 		<tr style="text-align:center;">
 			<td>3.1</td>
 			<td colspan="4">Planned Preventive Maintenance (PPM)</td>
-			<td><?=isset($recppm[0]->ppmplan) ? $recppm[0]->ppmplan : 0?></td>
-			<td colspan="3"><?=isset($recppm[0]->ppmc) ? $recppm[0]->ppmc : 0?></td>
-			<td colspan="4"><?=isset($recppm[0]->ppmo) ? $recppm[0]->ppmo : 0?></td>
+			<td><?=($recppm[0]->ppmplan > 0) ? anchor('contentcontroller/rcm_fdreport2?jobdate='.$date.'&x=1',$recppm[0]->ppmplan) : 0?></td>
+			<td colspan="3"><?=($recppm[0]->ppmc > 0) ? anchor('contentcontroller/rcm_fdreport2?jobdate='.$date.'&x=2',$recppm[0]->ppmc) : 0?></td>
+			<td colspan="4"><?=($recppm[0]->ppmo > 0) ? anchor('contentcontroller/rcm_fdreport2?jobdate='.$date.'&x=3',$recppm[0]->ppmo) : 0?></td>
 		</tr>
 		<tr style="text-align:center;">
 			<td>3.2</td>
 			<td colspan="4">Routine Inspection (RI)</td>
-			<td><?=isset($recppm[0]->riplan) ? $recppm[0]->riplan : 0?></td>
-			<td colspan="3"><?=isset($recppm[0]->ric) ? $recppm[0]->ric : 0?></td>
-			<td colspan="4"><?=isset($recppm[0]->rio) ? $recppm[0]->rio : 0?></td>
+			<td><?=($recppm[0]->riplan > 0) ? anchor('contentcontroller/rcm_fdreport2?jobdate='.$date.'&x=4',$recppm[0]->riplan) : 0?></td>
+			<td colspan="3"><?=($recppm[0]->ric > 0) ? anchor('contentcontroller/rcm_fdreport2?jobdate='.$date.'&x=5',$recppm[0]->ric) : 0?></td>
+			<td colspan="4"><?=($recppm[0]->rio > 0) ? anchor('contentcontroller/rcm_fdreport2?jobdate='.$date.'&x=6',$recppm[0]->rio) : 0?></td>
 		</tr>
 		<tr style="text-align:center;">
 			<td>3.3</td>

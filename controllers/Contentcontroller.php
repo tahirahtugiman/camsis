@@ -8112,6 +8112,7 @@ public function pop_fail(){
 	}
 
 	public function report_fdreport2(){
+	
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
 		$data['date']= ($this->input->get('jobdate') <> 0) ? $this->input->get('jobdate') : date("d-m-Y");
@@ -8125,7 +8126,6 @@ public function pop_fail(){
 
 		$this->load->model('display_model');
 		$data['record'] = $this->display_model->fdrepdet1(date("Y-m-d",strtotime($data['date'])),$this->input->get('x'),$this->input->get('v'));
-
 		$this ->load->view("headprinter");
 		$this ->load->view("content_report_fdreport2",$data);
 	}
@@ -8445,6 +8445,26 @@ public function print_kewpa(){
 		$this ->load->view("left");
 		$this ->load->view("content_report_rcmbulk",$data);
 	}
+	
+public function rcm_fdreport2(){
+	
+		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");
+		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
+		$data['date']= ($this->input->get('jobdate') <> 0) ? $this->input->get('jobdate') : date("d-m-Y");
+		if (strtotime($data['date']) >= strtotime(date("Y",strtotime($data['date'])).'-'.date("m",strtotime($data['date'])).'-09') && strtotime($data['date']) <= strtotime(date("Y",strtotime("+1 month",strtotime($data['date']))).'-'.date("m",strtotime("+1 month",strtotime($data['date']))).'-08')){
+			$month = date("m",strtotime($data['date']));
+			$year = date("Y",strtotime($data['date']));
+		} else {
+			$month = date("m",strtotime("-1 month",strtotime($data['date'])));
+			$year = date("Y",strtotime("-1 month",strtotime($data['date'])));
+		}
+
+		$this->load->model('display_model');	
+		$data['record'] = $this->display_model->fdrepdet_rcm(date("Y-m-d",strtotime($data['date'])),$this->input->get('x'));
+		$this ->load->view("headprinter");
+		$this ->load->view("content_rcm_fdreport2.php",$data);
+	}	
+	
 
 }
 ?>
