@@ -422,7 +422,7 @@ function doSomething(a){
 		</tr>
 		<tr style="text-align:center;">
 			<td>2.6</td>
-			<td>Total Out Standing</td>
+			<td>Total Outstanding</td>
 			<?php $to_A1 = (isset($recoutstanding[0]->m1_A1) ? $recoutstanding[0]->m1_A1 : 0) + (isset($recoutstanding[0]->m2_A1) ? $recoutstanding[0]->m2_A1 : 0) + (isset($recoutstanding[0]->m3_A1) ? $recoutstanding[0]->m3_A1 : 0) + (isset($recoutstanding[0]->m4_A1) ? $recoutstanding[0]->m4_A1 : 0) + (isset($recoutstanding[0]->m5_A1) ? $recoutstanding[0]->m5_A1 : 0)?>
 			<td><?= ($to_A1 > 0) ? anchor('contentcontroller/report_fdreport2?jobdate='.$date.'&x=14'.'&v=1',$to_A1) : 0 ?></td>
 			<?php $to_A2 = (isset($recoutstanding[0]->m1_A2) ? $recoutstanding[0]->m1_A2 : 0) + (isset($recoutstanding[0]->m2_A2) ? $recoutstanding[0]->m2_A2 : 0) + (isset($recoutstanding[0]->m3_A2) ? $recoutstanding[0]->m3_A2 : 0) + (isset($recoutstanding[0]->m4_A2) ? $recoutstanding[0]->m4_A2 : 0) + (isset($recoutstanding[0]->m5_A2) ? $recoutstanding[0]->m5_A2 : 0)?>

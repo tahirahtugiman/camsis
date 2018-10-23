@@ -44,7 +44,7 @@ switch ($x) {
 		break;
 
 		case "14":
-		$tulis = "Total Out Standing";
+		$tulis = "Total Outstanding";
 		break;
 	default:
 $tulis = "";	
@@ -135,7 +135,7 @@ if ($numrow==1 OR $numrow%18==1) {
 			<td><?= ($row->d_Date) ? date("d/m/Y",strtotime($row->d_Date)) : 'N/A' ?></td>
 			<td><?= ($row->v_Time) ? $row->v_Time : 'N/A' ?></td>
 			<td><?= ($row->v_Personal1) ? $row->v_Personal1 : 'N/A' ?></td>
-			<td><?= (($row->V_request_type == "A10") || ($row->V_request_type == "A3") || ($row->v_tag_no == $assetone) || ($row->v_location_code == $locationone) || ($row->linker != "none")) ? '0' : $row->DiffDate ?></td>
+			<td><?= (($row->V_request_type == "A10") || ($row->V_request_type == "A3") || (($row->v_tag_no == $assetone) && ($row->v_location_code == $locationone)) || ($row->linker != "none")) ? '0' : $row->DiffDate ?></td>
 			<?php  if (($row->v_tag_no) && $row->v_tag_no != 'N/A') {$assetone = $row->v_tag_no;} else {$assetone = $numrow;}
 						 if (($row->v_location_code) && $row->v_location_code != 'N/A') {$locationone = $row->v_location_code;} else {$locationone = $numrow;}					
 			?>
