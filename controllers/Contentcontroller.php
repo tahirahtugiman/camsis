@@ -3184,6 +3184,12 @@ class Contentcontroller extends CI_Controller {
 	//echo $this->input->post('liccd');
 	//exit();
 	if ($this->input->post('liccd') <> ''){
+		if ($this->input->post('n_Identification_Type') == 'Personnel')
+		{
+		 $vtest =  $this->input->post('n_location');
+        }else{
+		 $vtest =  $this->input->post('n_tester');
+	  }
 	$insert_data = array(
 
 					'v_IdentificationType'=>$this->input->post('n_Identification_Type'),
@@ -3199,7 +3205,8 @@ class Contentcontroller extends CI_Controller {
 					'd_timestamp'=>date('Y-m-d H:i:s'),
 					'v_Key'=>$this->input->post('n_Identification_Code'),
 					'v_CertificateNo'=>$this->input->post('n_Certificate_Number'),
-					'v_TesterName' => $this->input->post('n_tester')
+				   'v_TesterName' => $vtest
+					//'v_TesterName' => $this->input->post('n_tester')
 
 		);
 
@@ -3236,7 +3243,8 @@ class Contentcontroller extends CI_Controller {
 					'v_actionflag'=>'I',
 					'd_timestamp'=>date('Y-m-d H:i:s'),
 					'v_Key'=>$this->input->post('n_Identification_Code'),
-					'v_TesterName' => $this->input->post('n_tester')
+					'v_TesterName' => $vtest                     //tester
+					//'v_TesterName' => $this->input->post('n_tester')
 
 		);
 			$this->load->model('insert_model');
@@ -4250,6 +4258,7 @@ class Contentcontroller extends CI_Controller {
 		if ($data['liccode'] <> ''){
 			$this->load->model("get_model");
 			$data['lic'] = $this->get_model->licensesandcertbycode($data['liccode']);
+			$data['loc'] = $this->get_model->get_poploc($data['lic'][0]->v_TesterName);
 			$data['licimg'] = $this->get_model->licenseimage($data['liccode']);
 			$data['upload_data'] = NULL;
 		}
@@ -8438,6 +8447,25 @@ public function print_kewpa(){
 		$this ->load->view("left");
 		$this ->load->view("content_report_rcmbulk",$data);
 	}
+
+public function rcm_fdreport2(){
+
+		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");
+		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
+		$data['date']= ($this->input->get('jobdate') <> 0) ? $this->input->get('jobdate') : date("d-m-Y");
+		if (strtotime($data['date']) >= strtotime(date("Y",strtotime($data['date'])).'-'.date("m",strtotime($data['date'])).'-09') && strtotime($data['date']) <= strtotime(date("Y",strtotime("+1 month",strtotime($data['date']))).'-'.date("m",strtotime("+1 month",strtotime($data['date']))).'-08')){
+			$month = date("m",strtotime($data['date']));
+			$year = date("Y",strtotime($data['date']));
+		} else {
+			$month = date("m",strtotime("-1 month",strtotime($data['date'])));
+			$year = date("Y",strtotime("-1 month",strtotime($data['date'])));
+		}
+
+		$this->load->model('display_model');
+		$data['record'] = $this->display_model->fdrepdet_rcm(date("Y-m-d",strtotime($data['date'])),$this->input->get('x'));
+		$this ->load->view("headprinter");
+		$this ->load->view("content_rcm_fdreport2.php",$data);
+	}	
 
 }
 ?>

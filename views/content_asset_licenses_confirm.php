@@ -49,11 +49,13 @@
 				<td class="td-assest" valign="top">Category Description	 :  </td>
 				<td><textarea name="n_Category_Description" class="input n_com" readonly><?php echo $this->input->post('n_Category_Description'); ?></textarea></td>
 			</tr>
+			<?php if ($this->input->post('n_Identification_Type') != 'Personnel') { ?>
 			<tr><td colspan="3" class="ui-bottom-border-color" style="font-weight: bold;">License Representative</td></tr>
 			<tr>
 				<td class="td-assest">Tester Name	 :  </td>
 				<td><input type="text" name="n_tester" value="<?php echo set_value('n_tester')?>" class="form-control-button2 n_wi-date" style="" readonly></td>
 			</tr>
+			<?php } ?>
 			<tr><td colspan="3" class="ui-bottom-border-color" style="font-weight: bold;">License Holder</td></tr>
 			<tr>
 				<td class="td-assest">Identification Type	 :</td>
@@ -67,6 +69,31 @@
 				<td class="td-assest" valign="top">Description	 :</td>
 				<td><textarea name="n_Description" class="input n_com" readonly><?php echo $this->input->post('n_Description'); ?></textarea></td>
 			</tr>
+				<!--location-->
+			<?php if ($this->input->post('n_Identification_Type') == 'Personnel') { ?>
+			<tr>
+			<td colspan="3" class="ui-bottom-border-color" style="font-weight: bold;">Location</td>
+			</tr>
+			<tr>
+			<td class="td-assest">User Department :   </td>
+			<td><input type="text" id="n_user_department" name="n_user_department" value="<?php echo set_value('n_user_department'); ?>"  class="form-control-button2 n_user_d" readonly> <span class="icon-windows" onclick="fCalllocation()" ></td>
+			</tr>
+			<tr>
+			<td class="td-assest">&nbsp; </td>
+			<td><input type="text" id="n_user_department1" name="n_user_department1" value="<?php echo set_value('n_user_department1'); ?>" class="form-control-button n_user_d"  readonly></td>
+			</tr>
+			<tr>
+			<td class="td-assest">Location : </td>
+			<td><input type="text" id="n_location" name="n_location" value="<?php echo set_value('n_location'); ?>" class="form-control-button n_user_d" readonly></td>
+			</tr>
+			<tr>
+			<td class="td-assest">&nbsp; </td>
+			<td><input type="text" id="n_location2" name="n_location1" value="<?php echo set_value('n_location1'); ?>" class="form-control-button n_user_d" readonly></td>
+			</tr>
+           		
+			<?php } ?>
+		
+		    <!--</location-->
 			<tr><td colspan="3" class="ui-bottom-border-color" style="font-weight: bold;">Remarks</td></tr>
 			<tr>
 				<td class="td-assest" valign="top"></td>
@@ -93,9 +120,9 @@
 	<?php echo form_hidden('n_tester',$this->input->post('n_tester')) ?>
 	<?php echo form_hidden('n_Identification_Type',$this->input->post('n_Identification_Type')) ?>
 	<?php echo form_hidden('n_Identification_Code',$this->input->post('n_Identification_Code')) ?>
-	<?php echo form_hidden('n_Description',$this->input->post('n_Description')) ?>
+	<?php echo form_hidden('n_Description',$this->input->post('n_Description')) ?>	
+	<?php echo form_hidden('n_location',$this->input->post('n_location')) ?>	
 	<?php echo form_hidden('n_Remarks',$this->input->post('n_Remarks')) ?>
-
 	<?php echo form_hidden('upload_data',isset($upload_data) ? $upload_data : '') ?>
 </div>
 <?php echo form_close(); ?>

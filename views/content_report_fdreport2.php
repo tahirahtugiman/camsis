@@ -44,7 +44,7 @@ switch ($x) {
 		break;
 
 		case "14":
-		$tulis = "Total Out Standing";
+		$tulis = "Total Outstanding";
 		break;
 	default:
 $tulis = "";	
