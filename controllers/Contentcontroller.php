@@ -3181,20 +3181,19 @@ class Contentcontroller extends CI_Controller {
 		}
 	}
 	function confirmation_assetlicenses_updatesv(){
-		//echo $this->input->post('n_Identification_Type');
 	//echo $this->input->post('liccd');
 	//exit();
 	if ($this->input->post('liccd') <> ''){
 		if ($this->input->post('n_Identification_Type') == 'Personnel')
-		{	
+		{
 		 $vtest =  $this->input->post('n_location');
         }else{
-		 $vtest =  $this->input->post('n_tester');	
+		 $vtest =  $this->input->post('n_tester');
 	  }
 	$insert_data = array(
 
-					'v_IdentificationType'=>$this->input->post('n_Identification_Type'),
-					'v_Identification'=>$this->input->post('n_Description'),
+					'v_IdentificationType'=>$this->input->post('n_Identification_Type'),//freetext
+					'v_Identification'=>$this->input->post('n_Description'),//freetext
 					'v_RegistrationNo'=>$this->input->post('n_Registration_Number'),
 					'v_StartDate'=>$this->input->post('n_Start_On'),
 					'v_ExpiryDate'=>$this->input->post('n_Expire_On'),
@@ -3204,8 +3203,11 @@ class Contentcontroller extends CI_Controller {
 					'v_Remarks'=>$this->input->post('n_Remarks'),
 					'v_actionflag'=>'U',
 					'd_timestamp'=>date('Y-m-d H:i:s'),
-					'v_Key'=>$this->input->post('n_Identification_Code'),
-				    'v_TesterName' => $vtest
+					'v_Key'=>$this->input->post('n_Identification_Code'),//freetext
+					'v_CertificateNo'=>$this->input->post('n_Certificate_Number'),
+				   'v_TesterName' => $vtest//freetext
+					//'v_TesterName' => $this->input->post('n_tester')
+
 		);
 
 		$this->load->model('update_model');
@@ -3224,12 +3226,14 @@ class Contentcontroller extends CI_Controller {
 		//echo 'jjjj';
 		//exit();
 		$insert_data = array(
+
+
 					'v_CertificateNo'=>$this->input->post('n_Certificate_Number'),
 					'v_ServiceCode'=>$this->session->userdata('usersess'),
 					'v_AgencyCode'=>$this->input->post('n_Agency_Code'),
 					'v_LicenseCategoryCode'=>$this->input->post('n_Category_Code'),
 					'v_IdentificationType'=>$this->input->post('n_Identification_Type'),
-					'v_Identification'=>$this->input->post('n_Description'),             //identi
+					'v_Identification'=>$this->input->post('n_Description'),
 					'v_RegistrationNo'=>$this->input->post('n_Registration_Number'),
 					'v_StartDate'=>$this->input->post('n_Start_On'),
 					'v_ExpiryDate'=>$this->input->post('n_Expire_On'),
@@ -3238,8 +3242,9 @@ class Contentcontroller extends CI_Controller {
 					'v_hospitalcode'=>$this->session->userdata('hosp_code'),
 					'v_actionflag'=>'I',
 					'd_timestamp'=>date('Y-m-d H:i:s'),
-					'v_Key'=>$this->input->post('n_Identification_Code'),//freetext
+					'v_Key'=>$this->input->post('n_Identification_Code'),
 					'v_TesterName' => $vtest                     //tester
+					//'v_TesterName' => $this->input->post('n_tester')
 
 		);
 			$this->load->model('insert_model');
@@ -4254,9 +4259,6 @@ class Contentcontroller extends CI_Controller {
 			$this->load->model("get_model");
 			$data['lic'] = $this->get_model->licensesandcertbycode($data['liccode']);
 			$data['loc'] = $this->get_model->get_poploc($data['lic'][0]->v_TesterName);
-		/* 	echo "<pre>";
-			print_r($data['loc']);
-			exit(); */
 			$data['licimg'] = $this->get_model->licenseimage($data['liccode']);
 			$data['upload_data'] = NULL;
 		}
@@ -8112,7 +8114,6 @@ public function pop_fail(){
 	}
 
 	public function report_fdreport2(){
-	
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
 		$data['date']= ($this->input->get('jobdate') <> 0) ? $this->input->get('jobdate') : date("d-m-Y");
@@ -8126,6 +8127,7 @@ public function pop_fail(){
 
 		$this->load->model('display_model');
 		$data['record'] = $this->display_model->fdrepdet1(date("Y-m-d",strtotime($data['date'])),$this->input->get('x'),$this->input->get('v'));
+
 		$this ->load->view("headprinter");
 		$this ->load->view("content_report_fdreport2",$data);
 	}
@@ -8445,9 +8447,9 @@ public function print_kewpa(){
 		$this ->load->view("left");
 		$this ->load->view("content_report_rcmbulk",$data);
 	}
-	
+
 public function rcm_fdreport2(){
-	
+
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
 		$data['date']= ($this->input->get('jobdate') <> 0) ? $this->input->get('jobdate') : date("d-m-Y");
@@ -8459,12 +8461,11 @@ public function rcm_fdreport2(){
 			$year = date("Y",strtotime("-1 month",strtotime($data['date'])));
 		}
 
-		$this->load->model('display_model');	
+		$this->load->model('display_model');
 		$data['record'] = $this->display_model->fdrepdet_rcm(date("Y-m-d",strtotime($data['date'])),$this->input->get('x'));
 		$this ->load->view("headprinter");
 		$this ->load->view("content_rcm_fdreport2.php",$data);
 	}	
-	
 
 }
 ?>
