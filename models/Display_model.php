@@ -889,7 +889,7 @@ ORDER BY r.D_date, r.D_time
             $this->db->where("(`r`.`d_date` >= '".$this->dater(1,$month,$year)."' AND `r`.`d_date` <= '".$this->dater(2,$month,$year).'  23:59:59'."')", NULL, FALSE);
           } else {
             $this->db->where("(`r`.`d_date` >= '".$this->dater(1,$month,$year)."' AND `r`.`d_date` <= '".$this->dater(2,$month,$year).'  23:59:59'."'
-      			OR IFNULL(`jv`.`d_date`,`jv`.`d_reschdt`) >= '".$this->dater(1,$month,$year)."' AND IFNULL(`jv`.`d_date`,`jv`.`d_reschdt`) <= '".$this->dater(2,$month,$year).'  23:59:59'."')", NULL, FALSE);
+      			OR IFNULL(`r`.`v_closeddate`,IFNULL(`jv`.`d_reschdt`,`r`.`v_respondate`)) >= '".$this->dater(1,$month,$year)."' AND IFNULL(`r`.`v_closeddate`,IFNULL(`jv`.`d_reschdt`,`r`.`v_respondate`)) <= '".$this->dater(2,$month,$year).'  23:59:59'."')", NULL, FALSE);
           }
 
 			} else {
@@ -912,7 +912,7 @@ ORDER BY r.D_date, r.D_time
 			else if($resch == "out"){
 				//echo "test";
         if ($reqtype == 'A2'){
-			    $this->db->where('IFNULL(jv.d_date,jv.d_reschdt) >=', $this->dater(2,$month,$year));
+			    $this->db->where('IFNULL(r.v_closeddate,IFNULL(r.v_respondate,jv.d_reschdt)) >=', $this->dater(2,$month,$year));
         } else {
           $this->db->where('jv.d_reschdt >=', $this->dater(2,$month,$year));
         }
@@ -2993,7 +2993,9 @@ function sumsat($month,$year,$grpsel)
 			//$this->db->where('YEAR(d_date)', $year);
 			//$this->db->where('MONTH(d_date)', $month);
 			$this->db->where('v_hospitalcode',$this->session->userdata('hosp_code'));*/
-			$this->db->select("A.v_CertificateNo, A.v_ServiceCode, A.v_AgencyCode, A.v_registrationno, A.v_LicenseCategoryCode, B.v_LicenceCategoryDesc, A.v_IdentificationType, A.v_Identification, A.v_RegistrationNo, A.v_StartDate, A.v_ExpiryDate, A.v_GradeID, A.v_Remarks, A.v_hospitalcode, A.v_key, A.CMIS_Action_Flag, A.d_timestamp,A.id,i.file_name, IFNULL(C.V_Location_code,l.v_Location_code) as V_Location_code ,l.v_Location_Name",FALSE);
+			//$this->db->select("A.v_CertificateNo, A.v_ServiceCode, A.v_AgencyCode, A.v_registrationno, A.v_LicenseCategoryCode, B.v_LicenceCategoryDesc, A.v_IdentificationType, A.v_Identification, A.v_RegistrationNo, A.v_StartDate, A.v_ExpiryDate, A.v_GradeID, A.v_Remarks, A.v_hospitalcode, A.v_key, A.CMIS_Action_Flag, A.d_timestamp,A.id,i.file_name,C.V_Location_code,l.v_Location_Name",FALSE);
+			$this->db->select("A.v_CertificateNo, A.v_ServiceCode, A.v_AgencyCode, A.v_registrationno, A.v_LicenseCategoryCode, B.v_LicenceCategoryDesc, A.v_IdentificationType, A.v_Identification, A.v_RegistrationNo, A.v_StartDate, A.v_ExpiryDate, A.v_GradeID, A.v_Remarks, A.v_hospitalcode, A.v_key, A.CMIS_Action_Flag, A.d_timestamp,A.id,i.file_name,IFNULL(l.v_Location_code,(SELECT v_Location_code FROM pmis2_egm_assetlocation WHERE V_Location_code = A.v_TesterName OR V_Location_code = A.v_Remarks  LIMIT 1)) as V_Location_code,
+            IFNULL(l.v_Location_Name,(SELECT v_Location_Name FROM pmis2_egm_assetlocation WHERE V_Location_code = A.v_TesterName OR V_Location_code = A.v_Remarks LIMIT 1)) as v_Location_Name",FALSE);
 			//SELECT (case when DWRate = 999 then (case when 500 <= 2000000 then 0.0075 * 100 else 0.0050 * 100 end) else DWRate end) as DWRate, PWRate, (case when DWRate = 999 then (case when 500 <= 2000000 then (500 * 0.0075) / 12 else (500 * 0.0050) / 12 end) else (500 * ( DWRate / 100)) / 12 end) as 'FeeDW', (500 * ( PWRate / 100) / 12) as 'FeePW'
 			$this->db->from('pmis2_egm_lnc_lincense_details A');
 			$this->db->join('pmis2_egm_lnc_license_category_code B','A.v_LicenseCategoryCode=B.v_LicenceCategoryCode');
@@ -3015,7 +3017,8 @@ function sumsat($month,$year,$grpsel)
 			$this->db->join('license_images i','A.id = i.licenses_no AND A.v_ServiceCode = service_code','left');
 			//$this->db->join('pmis2_egm_assetregistration C','A.v_key = C.V_Tag_no OR A.v_RegistrationNo = C.V_Tag_no','left outer');
 			$this->db->join('pmis2_egm_assetregistration C','A.v_key = C.V_Tag_no','left outer');
-			$this->db->join('pmis2_egm_assetlocation l','C.V_Location_code = l.V_location_code OR `A`.`v_TesterName` = `l`.`V_location_code` AND l.V_Actionflag <> "D" ','left outer');
+			$this->db->join('pmis2_egm_assetlocation l','C.V_Location_code = l.V_location_code AND l.V_Actionflag <> "D" ','left outer');
+			//$this->db->join('pmis2_egm_assetlocation l','C.V_Location_code = l.V_location_code AND l.V_Actionflag <> "D"','left outer');
 			$this->db->where('A.v_ServiceCode =', $this->session->userdata('usersess'));
 			$this->db->where('A.v_HospitalCode =', $this->session->userdata('hosp_code'));
 			$this->db->where("year(A.v_ExpiryDate) >= ",$year-1);
@@ -3039,9 +3042,9 @@ function sumsat($month,$year,$grpsel)
 			$this->db->order_by("A.v_ExpiryDate", "asc");
 			$this->db->group_by('A.v_CertificateNo, A.v_RegistrationNo,A.v_LicenseCategoryCode');
 			$query = $this->db->get();
-			echo $this->db->last_query();
+			//echo $this->db->last_query();
 			//echo '<br>';
-			exit();
+			//exit();
 			$query_result = $query->result();
 			return $query_result;
 		}
@@ -3974,8 +3977,8 @@ function recppm($month,$year)
 	$this->db->where('IFNULL(sc.d_reschdt,d_DueDt) >=', $this->dater(1,$month,$year));
 	$this->db->where('IFNULL(sc.d_reschdt,d_DueDt) <=', $this->dater(2,$month,$year));
 	$query = $this->db->get();
-	/* echo $this->db->last_query();
-	exit(); */
+	//echo $this->db->last_query();
+	//exit();
 	$query_result = $query->result();
 	return $query_result;
 }
@@ -4338,9 +4341,8 @@ ORDER BY r.D_date, r.D_time
 			$year = date("Y",strtotime("-1 month",strtotime($date)));
 		}
 
-			$this->db->select("r.V_Request_no, e.v_location_name, r.v_location_code, r.V_hospitalcode, r.closedby, r.D_date, r.D_time, r.V_Asset_no, r.V_summary AS ReqSummary, r.V_User_dept_code, r.V_requestor, r.V_request_status, r.v_closeddate, r.v_closedtime, w.V_Wrn_end_code, a.v_summary, g.v_tag_no, d.v_UserDeptDesc, 
-			CASE WHEN r.V_request_status = 'C' AND r.v_closeddate <= DATE_ADD('".$year."-".$month."-08 23:59:59', INTERVAL 1 MONTH) THEN DATEDIFF(r.v_closeddate, r.D_date)+1 WHEN r.V_request_status <> 'C' AND DAY(LAST_DAY(".$this->db->escape($year."-".$month."-01").")) > DATEDIFF(now(), r.D_date) THEN DATEDIFF( now(),r.D_date)+1 ELSE DAY(LAST_DAY(".$this->db->escape($year."-".$month."-01").")) END AS DiffDate
-			,r.V_request_type,g.v_asset_grp,jr.d_Date,jr.v_Time,jr.v_Personal1,jr.v_ActionTaken,g.V_Asset_WG_code, IFNULL(dt.ori_wo,'none') AS linker", false);
+			//$this->db->select("r.V_Request_no, e.v_location_name, r.v_location_code, r.V_hospitalcode, r.closedby, r.D_date, r.D_time, r.V_Asset_no, r.V_summary AS ReqSummary, r.V_User_dept_code, r.V_requestor, r.V_request_status, r.v_closeddate, r.v_closedtime, w.V_Wrn_end_code, a.v_summary, g.v_tag_no, d.v_UserDeptDesc, CASE WHEN r.V_request_status = 'C' AND r.v_closeddate <= DATE_ADD('".$year."-".$month."-08 23:59:59', INTERVAL 1 MONTH) THEN DATEDIFF(r.v_closeddate, r.D_date)+1 WHEN r.V_request_status <> 'C' AND DAY(LAST_DAY(".$this->db->escape($year."-".$month."-01").")) > DATEDIFF(now(), r.D_date) THEN DATEDIFF( now(),r.D_date)+1 ELSE DAY(LAST_DAY(".$this->db->escape($year."-".$month."-01").")) END AS DiffDate,r.V_request_type,g.v_asset_grp,jr.d_Date,jr.v_Time,jr.v_Personal1,jr.v_ActionTaken,g.V_Asset_WG_code, IFNULL(dt.ori_wo,'none') AS linker", false);
+      $this->db->select("r.V_Request_no, e.v_location_name, r.v_location_code, r.V_hospitalcode, r.closedby, r.D_date, r.D_time, r.V_Asset_no, r.V_summary AS ReqSummary, r.V_User_dept_code, r.V_requestor, r.V_request_status, r.v_closeddate, r.v_closedtime, w.V_Wrn_end_code, a.v_summary, g.v_tag_no, d.v_UserDeptDesc, CASE WHEN r.V_request_status = 'C' AND r.v_closeddate <= DATE_ADD('".$year."-".$month."-08 23:59:59', INTERVAL 1 MONTH) THEN DATEDIFF(r.v_closeddate, r.D_date)+1 WHEN r.V_request_status <> 'C' AND DAY(LAST_DAY(DATE_FORMAT('2018-09-19','%Y-%m-08'))) > DATEDIFF(now(), r.D_date) THEN DATEDIFF( now(),r.D_date)+1 ELSE ( CASE WHEN  r.V_request_status <> 'C' AND MONTH(NOW()) = MONTH('".$date."') THEN  ABS(DATEDIFF('".$date."','".$year."-".$month."-09 23:59:59')) ELSE DAY(LAST_DAY(DATE_FORMAT('".$date."','%Y-%m-01'))) END ) END AS DiffDate,r.V_request_type,g.v_asset_grp,jr.d_Date,jr.v_Time,jr.v_Personal1,jr.v_ActionTaken,g.V_Asset_WG_code, IFNULL(dt.ori_wo,'none') AS linker", false);
 			$this->db->from('pmis2_egm_service_request r');
 			$this->db->join('pmis2_egm_assetregistration g','r.v_Asset_no = g.V_Asset_no AND r.v_HospitalCode = g.V_Hospitalcode AND g.V_Actionflag <> "D"', 'left outer');
 			$this->db->join('pmis2_egm_assetreg_general w','r.V_Asset_no = w.V_Asset_no AND r.V_hospitalcode = w.V_Hospital_code', 'left outer');
@@ -4461,11 +4463,6 @@ ORDER BY r.D_date, r.D_time
 				$this->db->where("TIMESTAMPDIFF(MONTH, CASE WHEN r.d_date BETWEEN concat(concat(year(r.d_date),'-'),concat(month(r.d_date)),'-08 23:59:59') AND DATE_ADD(concat(concat(year(r.d_date),'-'),concat(month(r.d_date)),'-09 23:59:59'), INTERVAL 1 MONTH) THEN concat(concat(year(r.d_date),'-'),concat(month(r.d_date)),'-08 23:59:59') ELSE DATE_SUB(concat(concat(year(r.d_date),'-'),concat(month(r.d_date)),'-08 23:59:59'), INTERVAL 1 MONTH) end,  DATE_ADD(concat(concat(year(now()),'-'),concat(month(now())),'-09 00:00:00'), INTERVAL 1 MONTH)) > ","0", false);
 				$this->db->where('r.d_date <=', $this->dater(2,$month,$year).'  23:59:59');
 			}
-		/* 	else if ($reptype == 15){
-				$this->db->where('r.v_request_status <>','C');
-				$this->db->where('sc.v_WrkOrdNo  LIKE','%PP%');
-				$this->db->where('r.d_date <=', $this->dater(2,$month,$year).'  23:59:59');
-			} */
 			$this->db->where('r.V_servicecode', $this->session->userdata('usersess'));
 			$this->db->where('r.V_actionflag <> ', 'D');
 			$this->db->where('r.V_hospitalcode',$this->session->userdata('hosp_code'));
@@ -5260,7 +5257,7 @@ function sumrq_a2($month,$year,$reqtype,$grpsel,$bystak="")
 	//IFNULL(sr.v_respondate,NOW())) > $de AND sr.V_priority_code = 'Emergency') THEN 1 ELSE 0 END) AS resplate,
 	//SUM(kira) AS resch");
 
-  $this->db->select("SUM(CASE WHEN `sr`.`d_date` >= '".$this->dater(1,$month,$year)."' AND `sr`.`d_date` <= '".$this->dater(2,$month,$year)."  23:59:59' THEN 1 ELSE 0 END) as total,SUM(CASE WHEN sr.v_request_status <> 'C' AND IFNULL(jv.D_date,jv.d_reschdt) >= '".$this->dater(1,$month,$year)."' AND IFNULL(jv.D_date,jv.d_reschdt) <= '".$this->dater(2,$month,$year)."  23:59:59' THEN 1 ELSE 0 END) AS notcomp,SUM(CASE WHEN sr.v_request_status = 'C' THEN 1 ELSE 0 END) AS comp,
+  $this->db->select("SUM(CASE WHEN `sr`.`d_date` >= '".$this->dater(1,$month,$year)."' AND `sr`.`d_date` <= '".$this->dater(2,$month,$year)."  23:59:59' THEN 1 ELSE 0 END) as total,SUM(CASE WHEN sr.v_request_status <> 'C' AND IFNULL(sr.v_respondate,jv.d_reschdt) >= '".$this->dater(1,$month,$year)."' AND IFNULL(sr.v_respondate,jv.d_reschdt) <= '".$this->dater(2,$month,$year)."  23:59:59' THEN 1 ELSE 0 END) AS notcomp,SUM(CASE WHEN sr.v_request_status = 'C' AND IFNULL(sr.v_closeddate,IFNULL(sr.v_respondate,jv.d_reschdt)) >= '".$this->dater(1,$month,$year)."' AND IFNULL(sr.v_closeddate,IFNULL(sr.v_respondate,jv.d_reschdt)) <= '".$this->dater(2,$month,$year)."  23:59:59' THEN 1 ELSE 0 END) AS comp,
 	SUM(CASE WHEN (TIMESTAMPDIFF(MINUTE,sr.d_date,IFNULL(sr.v_respondate,NOW())) <= $dn AND sr.V_priority_code = 'Normal') OR (TIMESTAMPDIFF(MINUTE,sr.d_date,
 	IFNULL(sr.v_respondate,NOW())) <= $de AND sr.V_priority_code = 'Emergency') THEN 1 ELSE 0 END) AS resp,
 	SUM(CASE WHEN (TIMESTAMPDIFF(MINUTE,sr.d_date,IFNULL(sr.v_respondate,NOW())) > $dn AND sr.V_priority_code = 'Normal') OR (TIMESTAMPDIFF(MINUTE,sr.d_date,
@@ -5319,7 +5316,7 @@ function sumrq_a2($month,$year,$reqtype,$grpsel,$bystak="")
 		}
 
 	$this->db->where("(`sr`.`d_date` >= '".$this->dater(1,$month,$year)."' AND `sr`.`d_date` <= '".$this->dater(2,$month,$year).'  23:59:59'."'
-	OR `jv`.`d_reschdt` >= '".$this->dater(1,$month,$year)."' AND `jv`.`d_reschdt` <= '".$this->dater(2,$month,$year).'  23:59:59'."')", NULL, FALSE);
+	OR IFNULL(jv.d_reschdt,`sr`.`v_respondate`) >= '".$this->dater(1,$month,$year)."' AND IFNULL(jv.d_reschdt,`sr`.`v_respondate`) <= '".$this->dater(2,$month,$year).'  23:59:59'."')", NULL, FALSE);
                 if (!function_exists('toArray')) {
 	function toArray($obj)
 	{
@@ -5593,7 +5590,7 @@ echo $this->db->last_query();
 
   		    //$this->db->select("SUM(CASE WHEN sc.d_reschdt is not NULL AND sc.v_wrkordstatus = 'AR' AND (IFNULL(sc.d_reschdt, d_DueDt) > now()) THEN 1 ELSE 0 END) AS reschout",FALSE);
   				//$this->db->select("SUM(CASE WHEN jv.d_reschdt is not NULL AND jv.d_reschdt >= '".$this->dater(2,$month,$year)."' THEN 1 ELSE 0 END) AS reschout",FALSE);
-          $this->db->select("SUM(CASE WHEN  IFNULL(sr.v_closeddate,IFNULL(jv.d_reschdt, jv.d_date)) >= '".$this->dater(2,$month,$year)."' THEN 1 ELSE 0 END) AS reschout",FALSE);
+          $this->db->select("SUM(CASE WHEN  IFNULL(sr.v_closeddate,IFNULL(jv.d_reschdt, sr.v_respondate)) >= '".$this->dater(2,$month,$year)."' THEN 1 ELSE 0 END) AS reschout",FALSE);
   			$this->db->from('pmis2_egm_service_request sr');
   			$this->db->join('pmis2_egm_assetregistration a','sr.V_Asset_no = a.V_Asset_no AND sr.V_hospitalcode = a.V_Hospitalcode AND a.V_Actionflag <> "D"'.$bystak,'left outer');
   		    $this->db->join('pmis2_emg_jobvisit1 jv','sr.V_Request_no = jv.v_WrkOrdNo','left outer');
@@ -5614,7 +5611,7 @@ echo $this->db->last_query();
   		$query = $this->db->get();
 
   		$query_result = $query->result();
-  	  echo $this->db->last_query();
+  	  //echo $this->db->last_query();
   		//exit();
   		return $query_result;
 
@@ -5638,7 +5635,7 @@ echo $this->db->last_query();
         $query_result = $query->result();
         return $query_result;
       }
-	  
+
 	  	function fdrepdet_rcm($date,$x){
 /* 	echo $x;
 	exit(); */
@@ -5650,10 +5647,10 @@ echo $this->db->last_query();
 			$year = date("Y",strtotime("-1 month",strtotime($date)));
 		}
 
-			$this->db->select("sc.v_WrkOrdNo,sc.d_StartDt,jr.v_ActionTaken,d.v_UserDeptDesc,g.v_asset_grp, e.v_location_name, g.V_Location_code,sc.v_Wrkordstatus, sc.v_HospitalCode, sc.closedby, sc.d_DueDt, sc.v_Asset_no, sc.v_Remarks AS ReqSummary,g.v_tag_no,sc.v_closeddate,sc.v_closedtime,
-			CASE WHEN sc.v_Wrkordstatus = 'C' AND sc.v_closeddate <= DATE_ADD('".$year."-".$month."-08 23:59:59', INTERVAL 1 MONTH) THEN DATEDIFF(sc.v_closeddate, sc.d_DueDt)+1 WHEN sc.v_Wrkordstatus <> 'C' 
-			AND DAY(LAST_DAY(".$this->db->escape($year."-".$month."-01").")) > DATEDIFF(now(), sc.d_DueDt) THEN DATEDIFF( now(),sc.d_DueDt)+1 ELSE DAY(LAST_DAY(".$this->db->escape($year."-".$month."-01").")) END AS DiffDate,
-			IFNULL(dt.ori_wo,'none') AS linker", false);
+    $this->db->select("sc.v_WrkOrdNo,sc.d_StartDt,jr.v_ActionTaken,d.v_UserDeptDesc,g.v_asset_grp, e.v_location_name, g.V_Location_code,sc.v_Wrkordstatus, sc.v_HospitalCode, sc.closedby, sc.d_DueDt, sc.v_Asset_no, sc.v_Remarks AS ReqSummary,g.v_tag_no,sc.v_closeddate,sc.v_closedtime,
+    CASE WHEN sc.v_Wrkordstatus = 'C' AND sc.v_closeddate <= DATE_ADD('".$year."-".$month."-08 23:59:59', INTERVAL 1 MONTH) THEN  CASE WHEN (DATEDIFF(sc.v_closeddate, sc.d_DueDt) + 1) < 0 THEN 0 ELSE (DATEDIFF(sc.v_closeddate, sc.d_DueDt) + 1) END WHEN sc.v_Wrkordstatus <> 'C'
+    AND DAY(LAST_DAY(".$this->db->escape($year."-".$month."-01").")) > DATEDIFF(now(), sc.d_DueDt) THEN CASE WHEN (DATEDIFF(NOW(), sc.d_DueDt) + 1) < 0 THEN 0 ELSE (DATEDIFF(NOW(), sc.d_DueDt) + 1) END ELSE DAY(LAST_DAY(".$this->db->escape($year."-".$month."-01").")) END AS DiffDate,
+    IFNULL(dt.ori_wo,'none') AS linker", false);
 			$this->db->from('pmis2_egm_schconfirmmon sc');
 			$this->db->join('pmis2_egm_assetregistration g','sc.v_Asset_no = g.V_Asset_no AND sc.v_HospitalCode = g.V_Hospitalcode AND g.v_Actionflag <> "D"', 'left outer');
 			$this->db->join('pmis2_egm_assetreg_general w','sc.v_Asset_no = w.V_Asset_no AND sc.v_HospitalCode = w.V_Hospital_code', 'left outer');
@@ -5662,7 +5659,7 @@ echo $this->db->last_query();
 			$this->db->join('pmis2_egm_assetlocation e','g.V_Location_code = e.v_location_code','left outer');
 			$this->db->join('pmis2_emg_jobresponse jr',"sc.v_WrkOrdNo = jr.v_WrkOrdNo",'left outer');
 			$this->db->join('pmis2_egm_sharedowntime dt',"sc.v_WrkOrdNo = dt.ori_wo",'left outer');
-			
+
 		 if ($x == 1){
 				$this->db->where('sc.v_WrkOrdNo  LIKE','%PP%');
 				$this->db->where('IFNULL(sc.d_reschdt,sc.d_DueDt) >=', $this->dater(1,$month,$year));
@@ -5699,16 +5696,17 @@ echo $this->db->last_query();
 		    }
 			$this->db->where('sc.v_Actionflag <> ', 'D');
 			$this->db->where('g.v_Actionflag <> ','D');
-			$this->db->where('sc.v_ServiceCode', $this->session->userdata('usersess'));			
+			$this->db->where('sc.v_ServiceCode', $this->session->userdata('usersess'));
 			//$this->db->where('sc.v_HospitalCode',$this->session->userdata('hosp_code'));
 			$this->db->group_by('sc.v_WrkOrdNo');
 
 		$query = $this->db->get();
-		echo $this->db->last_query();
-		exit();
+		//echo $this->db->last_query();
+		//exit();
 		$query_result = $query->result();
 		return $query_result;
 	}
+
 
 }
 ?>
