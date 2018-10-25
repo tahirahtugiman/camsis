@@ -15,7 +15,7 @@ function fToggle(elementId,te) {
         if (elementId == json[post][test].n_Visit){
 console.log(json);
       trHTML +="<tr>";
-      trHTML +='<td class="td-assest">Visit Date : </td>';
+      trHTML +='<td class="td-assest">Visit Date <?= (strstr($wrk_ord, '/A2/')) ? '/ Schedule Date' : ''?> : </td>';
       trHTML +='<td>'+json['visitD'][elementId]+'</td>';
       trHTML +='<td rowspan="6" align="center"><a href="visitplusupdate?wrk_ord='+te+'&visit='+elementId+'" class="btn-button btn-primary-button" style="width:200px;">Update</a></td>';
       trHTML +='</tr>';
@@ -213,8 +213,8 @@ console.log(json);
 	   <?php if (strstr($wrk_ord, '/A2/')) {	?>
 	   <?php include 'content_wrk_ord.php';?>
 	   <?php } else { ?>
-	     <?php include 'content_tab_woppm.php';?>
-		 <?php } ?>
+	   <?php include 'content_tab_woppm.php';?>
+	   <?php } ?>
       <tr class="ui-color-contents-style-1 ui-left_web">
         <td colspan="10" height="40px" style="padding-left:10px;">&nbsp;</td>
       </tr>

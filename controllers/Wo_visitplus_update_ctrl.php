@@ -8,9 +8,9 @@ class wo_visitplus_update_ctrl extends CI_Controller{
 
 	function is_logged_in()
 	{
-		
+
 		$is_logged_in = $this->session->userdata('v_UserName');
-		
+
 		if(!isset($is_logged_in) || $is_logged_in !=TRUE)
 		redirect('logincontroller/index');
 	}
@@ -19,18 +19,23 @@ class wo_visitplus_update_ctrl extends CI_Controller{
 	//latest date compare function
 	//echo "lalalalla : " . $this->input->post('wrk_ord');
 	//exit();
-	//if (substr($this->input->post('wrk_ord'),0,2) != 'PP'){	
-	if ((substr($this->input->post('wrk_ord'),0,2) != 'PP') && (substr($this->input->post('wrk_ord'),0,2) != 'RI')) {	
+	//if (substr($this->input->post('wrk_ord'),0,2) != 'PP'){
+	if ((substr($this->input->post('wrk_ord'),0,2) != 'PP') && (substr($this->input->post('wrk_ord'),0,2) != 'RI')) {
 	$this->load->model("get_model");
+	$this->load->model("display_model");
 	$vis = $this->input->post('visit') == '' ? 0 : $this->input->post('visit');
 	//echo "visssiiiiit".$this->input->post('visit');
+	$data['recordwo'] = $this->display_model->request_tab($this->input->post('wrk_ord'));
 	$datas['record'] = $this->get_model->get_wodatelate($this->input->post('wrk_ord'),$vis);
 	$startdate = date_format(date_create($datas['record'][0]->latedt),'Y-m-d');
 	$vdate = date_format(date_create($this->input->post('n_Visit_Date')),'Y-m-d');
+	$startdate2 = date_format(date_create($datas['record'][0]->latedt),'Y-m-d H:i:s');
+	$vdate2 = date_format(date_create($this->input->post('n_Visit_Date'). " " .$this->input->post('n_Shour').':'.$this->input->post('n_Smin') ),'Y-m-d H:i:s');
 	//echo "dater : ".$startdate.' : '.$vdate;
 	$paramsdt = "{$startdate},{$vdate}";
+	$paramsdt2 = "{$startdate2},{$vdate2}";
 	}
-	
+
 	$starttime = strtotime($this->input->post('n_Shour').':'.$this->input->post('n_Smin'));
 	$endtime = strtotime($this->input->post('n_Ehour').':'.$this->input->post('n_Emin'));
 	$params = "{$starttime},{$endtime}";
@@ -38,9 +43,8 @@ class wo_visitplus_update_ctrl extends CI_Controller{
     $this->load->helper(array('form', 'url'));
     // load library for form validation
     $this->load->library('form_validation');
-	
 	//validation rule
-	if ((substr($this->input->post('wrk_ord'),0,2) == 'PP') || (substr($this->input->post('wrk_ord'),0,2) == 'RI')) {	
+	if ((substr($this->input->post('wrk_ord'),0,2) == 'PP') || (substr($this->input->post('wrk_ord'),0,2) == 'RI') || (substr($this->input->post('wrk_ord'),3,2) == 'A2')) {
 	$this->form_validation->set_rules('n_Visit_Date','Visit Date','trim|required');
 	} else {
 	$this->form_validation->set_rules('n_Visit_Date','Visit Date','trim|required|callback_date_check['.$paramsdt.']');
@@ -51,12 +55,15 @@ class wo_visitplus_update_ctrl extends CI_Controller{
 	$this->form_validation->set_rules('n_Emin','End Minutes','trim|required|callback_time_check['.$params.']');
 	$this->form_validation->set_rules('n_Type_of_Work','Type of Work','trim|required');
 	$this->form_validation->set_rules('n_Action_Taken','Action Taken','trim|required');
-
+	
 	//$this->form_validation->set_rules('n_rschDate','Reschedule Date','trim');
+	if (($this->input->post('chkbox') == 'ON')&&(substr($this->input->post('wrk_ord'),3,2) != 'A2')){
+    $this->form_validation->set_rules('V_parttotal','Start Time','callback_date_check['.$paramsdt2.']');
 	$this->form_validation->set_rules('n_rschDate','Reschedule Date','trim|callback_date_check2['.$this->input->post('n_rschDate').']');
+	}
 	$this->form_validation->set_rules('n_rschReason','Reason','trim');
 	$this->form_validation->set_rules('n_rschReason1','Reason1','trim');
-	$this->form_validation->set_rules('n_rschAuth','Reschedule Authorised','trim');	
+	$this->form_validation->set_rules('n_rschAuth','Reschedule Authorised','trim');
 
 	$this->form_validation->set_rules('C_requestor1','Responder 1','trim|required');
 	$this->form_validation->set_rules('V_requestor1','Responder 1','trim|required');
@@ -64,66 +71,15 @@ class wo_visitplus_update_ctrl extends CI_Controller{
 	$this->form_validation->set_rules('n_End_Time_m1','Responder1 Minutes','trim|required');
 	$this->form_validation->set_rules('V_rate1','Rate1','trim|required');
 	$this->form_validation->set_rules('T_rate1','Total Rate1','trim|required');
-/*
-	if (substr($this->input->post('wrk_ord'),0,2) == 'PP'){
-	$this->form_validation->set_rules('C_requestor2','Responder 2','trim|required');
-	$this->form_validation->set_rules('V_requestor2','Responder 2','trim|required');
-	$this->form_validation->set_rules('n_End_Time_h2','Responder2 Hour','trim|required');
-	$this->form_validation->set_rules('n_End_Time_m2','Responder2 Minutes','trim|required');
-	$this->form_validation->set_rules('V_rate2','Rate2','trim|required');
-	$this->form_validation->set_rules('T_rate2','Total Rate2','trim|required');
-	}
-	else{
-	$this->form_validation->set_rules('C_requestor2','Responder 2','trim');
-	$this->form_validation->set_rules('V_requestor2','Responder 2','trim');
-	$this->form_validation->set_rules('n_End_Time_h2','Responder2 Hour','trim');
-	$this->form_validation->set_rules('n_End_Time_m2','Responder2 Minutes','trim');
-	$this->form_validation->set_rules('V_rate2','Rate2','trim');
-	$this->form_validation->set_rules('T_rate2','Total Rate2','trim');
-	}
 
-	if (substr($this->input->post('wrk_ord'),0,2) == 'PP'){
-	$this->form_validation->set_rules('C_requestor3','Responder 3','trim|required');
-	$this->form_validation->set_rules('V_requestor3','Responder 3','trim|required');
-	$this->form_validation->set_rules('n_End_Time_h3','Responder3 Hour','trim|required');
-	$this->form_validation->set_rules('n_End_Time_m3','Responder3 Minutes','trim|required');
-	$this->form_validation->set_rules('V_rate3','Rate3','trim|required');
-	$this->form_validation->set_rules('T_rate3','Total Rate3','trim|required');
-	}
-	else{
-	$this->form_validation->set_rules('C_requestor3','Responder 3','trim');
-	$this->form_validation->set_rules('V_requestor3','Responder 3','trim');
-	$this->form_validation->set_rules('n_End_Time_h3','Responder3 Hour','trim');
-	$this->form_validation->set_rules('n_End_Time_m3','Responder3 Minutes','trim');
-	$this->form_validation->set_rules('V_rate3','Rate3','trim');
-	$this->form_validation->set_rules('T_rate3','Total Rate3','trim');
-	}
-
-	if (substr($this->input->post('wrk_ord'),0,2) == 'PP'){
-	$this->form_validation->set_rules('V_part','Part Name','trim|required');
-	$this->form_validation->set_rules('V_partRM','Part RM','trim|required');
-	$this->form_validation->set_rules('V_partRate','Part Rate','trim|required');
-	$this->form_validation->set_rules('V_parttotal','Part Total','trim|required');
-	$this->form_validation->set_rules('C_Vendor','Vendor Parts','trim|required');
-	$this->form_validation->set_rules('V_Vendor','Vendor Name','trim|required');
-	}
-	else{
-	$this->form_validation->set_rules('V_part','Part Name','trim');
-	$this->form_validation->set_rules('V_partRM','Part RM','trim');
-	$this->form_validation->set_rules('V_partRate','Part Rate','trim');
-	$this->form_validation->set_rules('V_parttotal','Part Total','trim');
-	$this->form_validation->set_rules('C_Vendor','Vendor Parts','trim');
-	$this->form_validation->set_rules('V_Vendor','Vendor Name','trim');
-	}
-*/
 	$this->form_validation->set_rules('chkbox','checkbox','trim');
 
 	if ($this->input->post('chkbox') == 'ON') {
 		$this->form_validation->set_rules('n_performance_test','Performance Test','trim|required');
 		$this->form_validation->set_rules('n_safety_test','Safety Test','trim|required');
 		$this->form_validation->set_rules('n_safety_result','Safety Result','trim');
-		
-		//if (substr($this->input->post('wrk_ord'),0,2) == 'PP'){	
+
+		//if (substr($this->input->post('wrk_ord'),0,2) == 'PP'){
 		if ((substr($this->input->post('wrk_ord'),0,2) == 'PP') || (substr($this->input->post('wrk_ord'),0,2) == 'RI')) {
 		$this->form_validation->set_rules('n_job_type','Job Type Code','trim|required');
 		}
@@ -145,8 +101,8 @@ class wo_visitplus_update_ctrl extends CI_Controller{
 		$this->form_validation->set_rules('down_time','Down Time','trim');
 		$this->form_validation->set_rules('serv_time','Service Time','trim');
 		$this->form_validation->set_rules('comp_time','Completion Time','trim');
-		
-		//if (substr($this->input->post('wrk_ord'),0,2) == 'PP'){		
+
+		//if (substr($this->input->post('wrk_ord'),0,2) == 'PP'){
 		if ((substr($this->input->post('wrk_ord'),0,2) == 'PP') || (substr($this->input->post('wrk_ord'),0,2) == 'RI')) {
 		$this->form_validation->set_rules('QC_PPM','QC PPM','trim|required');
 		$this->form_validation->set_rules('n_QCUptime','QC Uptime','trim|required');
@@ -175,12 +131,12 @@ class wo_visitplus_update_ctrl extends CI_Controller{
 
 	$RN = $this->input->post('wrk_ord');
 		//if (substr($RN,0,2) == 'PP'){
-		if ((substr($RN,0,2) == 'PP') || (substr($RN,0,2) == 'RI')) {	
+		if ((substr($RN,0,2) == 'PP') || (substr($RN,0,2) == 'RI')) {
 			if($this->form_validation->run()==FALSE)
 			{
 			$data['wrk_ord'] = $this->input->get('wrk_ord');
 			$data['visit'] = $this->input->get('visit');
-			
+
 			if ($this->input->post('chkbox') == 'ON') {
 				$data['wrk_ord'] = $this->input->post('wrk_ord');
 				$this->load->model("display_model");
@@ -201,12 +157,12 @@ class wo_visitplus_update_ctrl extends CI_Controller{
 			{
 			$data['wrk_ord'] = $this->input->post('wrk_ord');
 			if ($this->input->post('chkbox') == 'ON') {
-				
+
 				$this->load->model("display_model");
 				$data['ppmrec'] = $this->display_model->woppm_disp($data['wrk_ord']);
 				$data['ppmasset'] = $this->display_model->wo_ppm($data['wrk_ord']);
 				$data['d_date'] = $data['ppmrec'][0]->d_StartDt;
-				$data['duedate'] = date('Y-m-d',strtotime($data['ppmrec'][0]->d_DueDt));	
+				$data['duedate'] = date('Y-m-d',strtotime($data['ppmrec'][0]->d_DueDt));
 			}
 
 			$this ->load->view("head");
@@ -245,7 +201,7 @@ class wo_visitplus_update_ctrl extends CI_Controller{
 			{
 			$data['wrk_ord'] = $this->input->post('wrk_ord');
 			if ($this->input->post('chkbox') == 'ON') {
-				
+
 				$this->load->model("display_model");
 				$data['disp'] = $this->display_model->list_display($data['wrk_ord']);
 				$data['dispasset'] = $this->display_model->request_tab($data['wrk_ord']);
@@ -277,7 +233,6 @@ class wo_visitplus_update_ctrl extends CI_Controller{
 	public function date_check($str = '', $params = '')
 	{
 		list($startdate,$enddate) = explode(',', $params);
-
 		if ($enddate < $startdate)
 		{
 			$this->form_validation->set_message('date_check', 'Visit date cannot be lesser than WO Date/Last Visit Date');
@@ -285,8 +240,8 @@ class wo_visitplus_update_ctrl extends CI_Controller{
 		}
 		else if ($enddate > date("Y-m-d"))
 		{
-			$this->form_validation->set_message('date_check', 'Visit date cannot exceed current date');
-			return FALSE;
+			//$this->form_validation->set_message('date_check', 'Visit date cannot exceed current date');
+			//return FALSE;
 		}
 		else
 		{
@@ -296,11 +251,12 @@ class wo_visitplus_update_ctrl extends CI_Controller{
 
 public function date_check2($shedule = '')
 {
+$date_now = new DateTime();
+$date2    = new DateTime($shedule);
 if ($shedule) {
-	     if (strtotime($shedule) < strtotime(date("d-m-Y")))
+	     //if ($shedule < date("d-m-Y"))
+			 if ($date2 < $date_now)
 			 		{
-					 //echo $shedule.'<br>';
-					 //echo date("d-m-Y");
 					 $this->form_validation->set_message('date_check2','Reschedule date cannot be less than current date');
 					 return FALSE;
 					 }
@@ -313,24 +269,24 @@ if ($shedule) {
 			return TRUE;
 		}
 }
-	
+
 	function confirmation(){
-	
+
 	$RN = $this->input->post('wrk_ord');
 	$visit = $this->input->post('visit');
-	
+
 	if ($visit == ''){
 		$this->load->model('get_model');
-		
+
 		//if(substr($RN,0,2) == 'PP')	{
 		if ((substr($RN,0,2) == 'PP') || (substr($RN,0,2) == 'RI'))	{
 		$latestvisit = $this->get_model->latestppmvisit($RN);
 		$visit = $latestvisit[0]->n_Visit + 1;
 		}
 		else{
-		
+
 		$latestvisit = $this->get_model->latestvisit($RN);
-		
+
 		$visit = $latestvisit[0]->n_Visit + 1;
 		print_r($latestvisit);
 		echo "masukxxcc ::::".$RN."::::::".$visit.$this->input->post('chkbox').$this->session->userdata('usersess').substr(substr($this->input->post('wrk_ord'),0,5),3,2);
@@ -339,21 +295,21 @@ if ($shedule) {
 	}
 
 	$this->load->model('insert_model');
-	
+
 	$wrk_ord_test = $this->insert_model->visitplus_woexist('v_WrkOrdNo',$RN,'n_Visit',$visit);
 	if ($this->input->post('chkbox') == 'ON'){
 					//$this->insert_model->job_woexist('v_WrkOrdNo',$variable);
 					echo "nk closed";
 					//exit();
-					
+
 		if (($this->session->userdata('usersess') == 'FES') && (substr(substr($this->input->post('wrk_ord'),0,5),3,2) == 'A4')) {
 		echo "dpt nama : ".$RN.":".$this->input->post('n_Action_Taken');
 		//exit();
 		//$this->send_mail_frmout('nezam@advancepact.com',$RN,$this->input->post('n_Action_Taken'));
                 }
-		
+
 		}
-	
+
 	if ((substr($RN,0,2) == 'PP') || (substr($RN,0,2) == 'RI')){
 	redirect('contentcontroller/visitplus?wrk_ord='.$RN. '&vppm=4');
 	}
@@ -363,23 +319,23 @@ if ($shedule) {
 }
 
 
-		
-		 public function send_mail_frmout($emailto, $wono="", $summary="") { 
-         $from_email = "camsis@advancepact.com"; 
-         //$to_email = $this->input->post('email'); 
-         $to_email = $emailto; 
-   
-         //Load email library 
-         $this->load->library('email'); 
-   
-         $this->email->from($from_email, 'CAMSIS System'); 
+
+		 public function send_mail_frmout($emailto, $wono="", $summary="") {
+         $from_email = "camsis@advancepact.com";
+         //$to_email = $this->input->post('email');
+         $to_email = $emailto;
+
+         //Load email library
+         $this->load->library('email');
+
+         $this->email->from($from_email, 'CAMSIS System');
          $this->email->to($to_email);
-         $this->email->subject('WO '.$wono.' was closed'); 
-         $this->email->message('WO '.$wono.' have been closed. Summary '.$summary); 
-   
-         //Send mail 
+         $this->email->subject('WO '.$wono.' was closed');
+         $this->email->message('WO '.$wono.' have been closed. Summary '.$summary);
+
+         //Send mail
          $this->email->send();
-      } 
+      }
 
 }
 ?>
