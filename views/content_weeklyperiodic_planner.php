@@ -171,7 +171,6 @@ function changeColor(elem, cellapo, date, dept, user, monthyear, userpriv)
 			</table>
 		</div>
 
-	<?php $v_UserName = $this->session->userdata('v_UserName');?>
 	<table class="tftable2" border="1" style="text-align:center;" align="center">
 		 <tr class="greyii">
 		    <th rowspan="2" class="td-r">No</th>
