@@ -3802,7 +3802,8 @@ class Contentcontroller extends CI_Controller {
 		}
 	}
 	public function report_vols(){
-	  $this->load->model("display_model");
+		$data['filby'] = $this->input->get('filby');
+	    $this->load->model("display_model");
 		$data['fon']= ($this->input->get('fon')) ? $this->input->get('fon') : "";
 		$data['records'] = $this->display_model->list_hospinfo();
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");
@@ -3816,12 +3817,11 @@ class Contentcontroller extends CI_Controller {
 		} elseif ($this->input->get('serv') == "civ"){
 		$pilape = "IIUM C";
 		}
-		//echo "lalalalalla : " . $this->session->userdata('v_UserName');
-//		if ($this->session->userdata('v_UserName') == "mariana") {
-//		$data['record'] = $this->display_model->rpt_volsmar($data['month'],$data['year'], $this->input->get('stat'), $this->input->get('resch'),$data['grpsel'],$pilape);
-//		} else {
+        if ($this->input->get('filby') == 'RI'){ 
+		$data['record'] = $this->display_model->rpt_vols($data['month'],$data['year'], $this->input->get('stat'), $this->input->get('resch'),$data['grpsel'],$pilape,$data['fon'],"RI");
+		}else{
 		$data['record'] = $this->display_model->rpt_vols($data['month'],$data['year'], $this->input->get('stat'), $this->input->get('resch'),$data['grpsel'],$pilape,$data['fon']);
-//		}
+        }
 		$data['reqtype'] = 'A2';
 		$data['tag'] = '';
 		$data['cm']= '';
@@ -3829,7 +3829,7 @@ class Contentcontroller extends CI_Controller {
 		//$data['recordrq'] = $this->display_model->rpt_volu($data['month'],$data['year'],$this->input->get('stat'),$data['reqtype'],$this->input->get('broughtfwd'),$data['grpsel'],$pilape,$data['tag'],$data['cm'],$data['limab']);
 		//$this ->load->view("headprinter");
 		//$this ->load->view("Content_report_vols", $data);
-                if($this->input->get('pdf') == 1){
+        if($this->input->get('pdf') == 1){
 		$this ->load->view("Content_report_vols_pdf", $data);
 		}else{
 		$this ->load->view("headprinter");
@@ -4004,6 +4004,27 @@ class Contentcontroller extends CI_Controller {
 		//echo "nilai fon : ".$data['fon'].":".$this->input->get('fon');
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
+		
+		if ($this->input->get('filby') == 'RI'){
+		$data['filby'] = $this->input->get('filby');	
+		$data['ppmsum'] = $this->display_model->sumppm($data['month'],$data['year'],$this->input->get('grp'),"",$data['fon'],"RI");
+		$data['reschout'] = $this->display_model->reschout($data['month'],$data['year'],$this->input->get('grp'),"","RI");
+		$data['reqtype'] = 'A2';
+		$data['total'] = $this->display_model->sumpp_m($data['month'],$data['year'],'total');
+		$data['totale'] = $this->display_model->sumpp_m($data['month'],$data['year'],'totale');
+		$data['totalm'] = $this->display_model->sumpp_m($data['month'],$data['year'],'totalm');
+		$data['totalc'] = $this->display_model->sumpp_m($data['month'],$data['year'],'totalc');
+
+        if ($this->session->userdata('usersess') == 'FES') {
+		$data['ppmcivil'] = $this->display_model->sumppm($data['month'],$data['year'],$this->input->get('grp'),"IIUM C",$data['fon'],"RI");
+		$data['ppmmech'] = $this->display_model->sumppm($data['month'],$data['year'],$this->input->get('grp'),"IIUM M",$data['fon'],"RI");
+		$data['ppmelec'] = $this->display_model->sumppm($data['month'],$data['year'],$this->input->get('grp'),"IIUM E",$data['fon'],"RI");
+		$data['reschoutcivil'] = $this->display_model->reschout($data['month'],$data['year'],$this->input->get('grp'),"IIUM C","RI");
+		$data['reschoutmech'] = $this->display_model->reschout($data['month'],$data['year'],$this->input->get('grp'),"IIUM M","RI");
+		$data['reschoutlec'] = $this->display_model->reschout($data['month'],$data['year'],$this->input->get('grp'),"IIUM E","RI");
+		    }
+			
+        }else {
 		$data['ppmsum'] = $this->display_model->sumppm($data['month'],$data['year'],$this->input->get('grp'),"",$data['fon']);
 		$data['reschout'] = $this->display_model->reschout($data['month'],$data['year'],$this->input->get('grp'));
 		$data['reqtype'] = 'A2';
@@ -4011,24 +4032,25 @@ class Contentcontroller extends CI_Controller {
 		$data['totale'] = $this->display_model->sumpp_m($data['month'],$data['year'],'totale');
 		$data['totalm'] = $this->display_model->sumpp_m($data['month'],$data['year'],'totalm');
 		$data['totalc'] = $this->display_model->sumpp_m($data['month'],$data['year'],'totalc');
-		//$data['rqsum'] = $this->display_model->sumrq($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'));
-                if ($this->session->userdata('usersess') == 'FES') {
+
+        if ($this->session->userdata('usersess') == 'FES') {
 		$data['ppmcivil'] = $this->display_model->sumppm($data['month'],$data['year'],$this->input->get('grp'),"IIUM C",$data['fon']);
 		$data['ppmmech'] = $this->display_model->sumppm($data['month'],$data['year'],$this->input->get('grp'),"IIUM M",$data['fon']);
 		$data['ppmelec'] = $this->display_model->sumppm($data['month'],$data['year'],$this->input->get('grp'),"IIUM E",$data['fon']);
 		$data['reschoutcivil'] = $this->display_model->reschout($data['month'],$data['year'],$this->input->get('grp'),"IIUM C");
 		$data['reschoutmech'] = $this->display_model->reschout($data['month'],$data['year'],$this->input->get('grp'),"IIUM M");
 		$data['reschoutlec'] = $this->display_model->reschout($data['month'],$data['year'],$this->input->get('grp'),"IIUM E");
-		//$data['rqcivil'] = $this->display_model->sumrq($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'),"IIUM C");
-		//$data['rqmech'] = $this->display_model->sumrq($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'),"IIUM M");
-		//$data['rqelec'] = $this->display_model->sumrq($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'),"IIUM E");
+		    }	
+			
 		}
-		//$data['rqsum'] = $this->display_model->sumrq($data['month'],$data['year']);
-		//$data['complntsum'] = $this->display_model->sumcomplnt($data['month'],$data['year']);
 
 	  $this ->load->view("headprinter");
-		//$this ->load->view("Content_report_ppmsum", $data);
+		if ($this->input->get('filby') == 'RI')
+		{
+		$this ->load->view("Content_report_riwos", $data);	
+		}else{
 		$this ->load->view("Content_report_ppmwos", $data);
+	    }
 	}
 
 	public function report_reqwos(){
@@ -8465,7 +8487,63 @@ public function rcm_fdreport2(){
 		$data['record'] = $this->display_model->fdrepdet_rcm(date("Y-m-d",strtotime($data['date'])),$this->input->get('x'));
 		$this ->load->view("headprinter");
 		$this ->load->view("content_rcm_fdreport2.php",$data);
-	}	
+	}
+  public function rptri_wos(){
+
+	  $this->load->model("display_model");
+		$data['records'] = $this->display_model->list_hospinfo();
+		$data['fon']= ($this->input->get('fon')) ? $this->input->get('fon') : "";
+		//echo "nilai fon : ".$data['fon'].":".$this->input->get('fon');
+		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");
+		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
+		$data['risum'] = $this->display_model->sumri($data['month'],$data['year'],$this->input->get('grp'),"",$data['fon']);
+		$data['reschout'] = $this->display_model->ri_reschout($data['month'],$data['year'],$this->input->get('grp'));
+		$data['total'] = $this->display_model->sumpp_m($data['month'],$data['year'],'total');
+		$data['totale'] = $this->display_model->sumpp_m($data['month'],$data['year'],'totale');
+		$data['totalm'] = $this->display_model->sumpp_m($data['month'],$data['year'],'totalm');
+		$data['totalc'] = $this->display_model->sumpp_m($data['month'],$data['year'],'totalc');
+	
+        if ($this->session->userdata('usersess') == 'FES') {
+		$data['ricivil'] = $this->display_model->sumri($data['month'],$data['year'],$this->input->get('grp'),"IIUM C",$data['fon']);
+		$data['rimech'] = $this->display_model->sumri($data['month'],$data['year'],$this->input->get('grp'),"IIUM M",$data['fon']);
+		$data['rielec'] = $this->display_model->sumri($data['month'],$data['year'],$this->input->get('grp'),"IIUM E",$data['fon']);
+		$data['reschoutcivil'] = $this->display_model->ri_reschout($data['month'],$data['year'],$this->input->get('grp'),"IIUM C");
+		$data['reschoutmech'] = $this->display_model->ri_reschout($data['month'],$data['year'],$this->input->get('grp'),"IIUM M");
+		$data['reschoutlec'] = $this->display_model->ri_reschout($data['month'],$data['year'],$this->input->get('grp'),"IIUM E");
+		}
+
+	  $this ->load->view("headprinter");
+	  $this ->load->view("Content_report_riwos.php", $data);
+	}
+/*     public function ri_vols(){
+	  $this->load->model("display_model");
+		$data['fon']= ($this->input->get('fon')) ? $this->input->get('fon') : "";
+		$data['records'] = $this->display_model->list_hospinfo();
+		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");
+		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
+		$data['grpsel']= $this->input->get('grp') ? $this->input->get('grp') : '';
+                $pilape = "";
+		if ($this->input->get('serv') == "ele"){
+		$pilape = "IIUM E";
+		} elseif ($this->input->get('serv') == "mec"){
+		$pilape = "IIUM M";
+		} elseif ($this->input->get('serv') == "civ"){
+		$pilape = "IIUM C";
+		}
+
+		$data['record'] = $this->display_model->rpt_vols($data['month'],$data['year'], $this->input->get('stat'), $this->input->get('resch'),$data['grpsel'],$pilape,$data['fon']);
+		$data['tag'] = '';
+		$data['cm']= '';
+		$data['limab']= '0';
+
+                if($this->input->get('pdf') == 1){
+		$this ->load->view("Content_report_vols_pdf", $data);
+		}else{
+		$this ->load->view("headprinter");
+		$this ->load->view("Content_report_vols", $data);
+		}
+
+	} */	
 
 }
 ?>
