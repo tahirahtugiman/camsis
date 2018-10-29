@@ -56,12 +56,13 @@ header('Content-Disposition: attachment; filename='.$filename);
 				$year_list[$dyear] = $dyear;
 			}
 		?>
-		<?php echo form_dropdown('y', $year_list, set_value('y', isset($record[0]->Year) ? $record[0]->Year : $year) , 'style="width: 65px;" id="cs_year"'); ?>
+<?php echo form_dropdown('y', $year_list, set_value('y', isset($record[0]->Year) ? $record[0]->Year : $year) , 'style="width: 65px;" id="cs_year"'); ?>
 <input type="hidden" value="<?php echo set_value('stat', ($this->input->get('stat')) ? $this->input->get('stat') : ''); ?>" name="stat">
 <input type="hidden" value="<?php echo set_value('resch', ($this->input->get('resch')) ? $this->input->get('resch') : ''); ?>" name="resch">
 <input type="hidden" value="<?php echo set_value('grp', ($this->input->get('grp')) ? $this->input->get('grp') : ''); ?>" name="grp">		
 <input type="hidden" value="<?php echo set_value('filby', ($this->input->get('filby')) ? $this->input->get('filby') : ''); ?>" name="filby">		
 <input type="submit" value="Apply" onchange="javascript: submit()"/></center>
+
 </form>
 </div>
 <?php } ?>
@@ -234,7 +235,8 @@ header('Content-Disposition: attachment; filename='.$filename);
 		<?php echo form_dropdown('y', $year_list, set_value('y', isset($record[0]->Year) ? $record[0]->Year : $year) , 'style="width: 65px;" id="cs_year"'); ?>
 <input type="hidden" value="<?php echo set_value('stat', ($this->input->get('stat')) ? $this->input->get('stat') : ''); ?>" name="stat">
 <input type="hidden" value="<?php echo set_value('resch', ($this->input->get('resch')) ? $this->input->get('resch') : ''); ?>" name="resch">
-<input type="hidden" value="<?php echo set_value('grp', ($this->input->get('grp')) ? $this->input->get('grp') : ''); ?>" name="grp">		
+<input type="hidden" value="<?php echo set_value('grp', ($this->input->get('grp')) ? $this->input->get('grp') : ''); ?>" name="grp">
+<input type="hidden" value="<?php echo set_value('filby', ($this->input->get('filby')) ? $this->input->get('filby') : ''); ?>" name="filby">		
 <input type="submit" value="Apply" onchange="javascript: submit()"/></center>
 </form>
 </div>
