@@ -313,7 +313,7 @@
 			$this->db->where('s.v_Actionflag <>','D');
 			$this->db->where('s.v_ServiceCode = ',$this->session->userdata('usersess'));
 			$query = $this->db->get();
-			echo $this->db->last_query();
+			//echo $this->db->last_query();
 			//exit();
 			$query_result = $query->result();
 			return $query_result;
@@ -1033,7 +1033,7 @@ ORDER BY r.D_date, r.D_time
 			return $query_result;
 		}
 
-    function rpt_vols($month, $year, $stat = "apo2", $resch = "resch",$grpsel, $bystak="", $fon=""){
+    function rpt_vols($month, $year, $stat = "apo2", $resch = "resch",$grpsel, $bystak="", $fon="",$filby=""){
     		/*
     		SELECT     s.v_WrkOrdNo AS sv_wrkordno, s.v_Asset_no AS sv_asset_no, s.v_Month AS sv_month, s.v_HospitalCode AS sv_hospitalcode,
                           s.d_DueDt AS sd_duedt, s.v_jobtype AS sv_jobtype, s.v_year AS sv_year, s.v_ServiceCode AS sv_servicecode, a.V_Tag_no AS av_tag_no,
@@ -1064,44 +1064,19 @@ ORDER BY r.D_date, r.D_time
 
     			$this->db->join('pmis2_sa_userdept d',"a.V_User_Dept_code = d.v_UserDeptCode AND d.v_actionflag <> 'D' ",'left');
     			$this->db->where('s.v_ServiceCode', $this->session->userdata('usersess'));
+				if($filby == 'RI')
+				{
+				$this->db->where('SUBSTRING(s.v_WrkOrdNo,1,2) = ','RI');	
+				}else{
+				$this->db->where('SUBSTRING(s.v_WrkOrdNo,1,2) <> ','RI');		
+				}
     			$this->db->where('s.v_Actionflag <> ', 'D');
     			$this->db->where('a.V_Actionflag <> ', 'D');
     			//$this->db->where('c.n_Visit ', '1');
     			if ($grpsel <> ''){
     				$this->db->where('a.v_asset_grp',$grpsel);
     			}
-    			//$this->db->where('s.v_wrkordstatus <> ', $stat);
-    			/*
-    			if ($resch == "ys") {
-    			$this->db->where("s.d_reschdt IS NOT NULL", NULL, FALSE);
-    			} else
-    			{
-    			$this->db->not_like('s.v_wrkordstatus', $stat);
-    			}
-    			*/
-                            /* latest ubah
-    			if (($resch == "nt") && ($stat == "A")) {
-    			$this->db->where("s.v_wrkordstatus LIKE '%C%'", NULL, FALSE);
-    			} elseif (($resch == "ys") && ($stat == "A"))
-    			{
-    			//$this->db->where("s.d_reschdt is not NULL AND s.v_wrkordstatus = 'AR'", NULL, FALSE);
-    			$this->db->where("s.d_reschdt is not NULL AND s.v_wrkordstatus = 'AR' AND IFNULL(s.d_reschdt,d_DueDt) > now()", NULL, FALSE);
-    			} elseif (($resch == "nt") && ($stat == "C"))
-    			{
-    			//$this->db->where("s.v_wrkordstatus = 'A' ", NULL, FALSE);
-    			//$this->db->where("(s.v_wrkordstatus = 'A' OR (s.v_wrkordstatus = 'AR' AND IFNULL(s.d_reschdt,d_DueDt) < now()))", NULL, FALSE);
-
-    			} else
-    			{
-    			$this->db->not_like('s.v_wrkordstatus', $stat);
-    			}
-    			//$this->db->not_like('s.v_wrkordstatus', $stat);
-    			//$this->db->where('s.v_year', $year);
-    			//$this->db->where('YEAR(s.d_DueDt)', $year);
-    			//$this->db->where('MONTH(s.d_DueDt)', $month);
-    			$this->db->where('IFNULL(s.d_reschdt,s.d_DueDt) >=', $this->dater(1,$month,$year));
-    			$this->db->where('IFNULL(s.d_reschdt,s.d_DueDt) <=', $this->dater(2,$month,$year));
-                            latest ubah */
+    	
     			if (($resch == "nt") && ($stat == "A")) {
     			//$this->db->where("s.v_wrkordstatus LIKE '%C%'", NULL, FALSE);
     				 if ($fon == "") {
@@ -1145,6 +1120,7 @@ ORDER BY r.D_date, r.D_time
     			$this->db->where('IFNULL(s.d_reschdt,s.d_DueDt) >=', $this->dater(1,$month,$year));
     			$this->db->where('IFNULL(s.d_reschdt,s.d_DueDt) <=', $this->dater(2,$month,$year));
     			}
+			
     			$this->db->where('s.v_HospitalCode',$this->session->userdata('hosp_code'));
                             $this->db->order_by("s.d_DueDt", "asc");
     			$query = $this->db->get();
@@ -2662,7 +2638,7 @@ return $query->result();
 			return $query_result;
 		}
 
-		function sumppm($month,$year,$grpsel,$bystak = "",$fon = "")
+		function sumppm($month,$year,$grpsel,$bystak = "",$fon = "",$filby="")
 		{//echo "nlailafonmodel : ".$fon;
 			if ($bystak == "IIUM C") {
 			$bystak = " AND left(a.v_tag_no,6) = 'IIUM C'"; }
@@ -2682,6 +2658,11 @@ return $query->result();
 			}
 			$this->db->from('pmis2_egm_schconfirmmon sc');
 			$this->db->join('pmis2_egm_assetregistration a','sc.v_Asset_no = a.V_Asset_no AND sc.v_HospitalCode = a.V_Hospitalcode '.$bystak,'left outer');
+			if($filby == 'RI'){
+			 $this->db->where('SUBSTRING(sc.v_WrkOrdNo,1,2) = ','RI');	
+		    }else{
+			  $this->db->where('SUBSTRING(sc.v_WrkOrdNo,1,2) <> ','RI');		
+			}
 			$this->db->where('sc.v_Actionflag <> ','D');
 			$this->db->where('a.v_Actionflag <> ','D');
 			$this->db->where('sc.v_ServiceCode = ',$this->session->userdata('usersess'));
@@ -2696,7 +2677,8 @@ return $query->result();
 			$this->db->where('IFNULL(sc.d_reschdt,d_DueDt) <=', $this->dater(2,$month,$year));
 			$query = $this->db->get();
 			//echo "dater : ".$this->dater(1,$month,$year);
-			//echo $this->db->last_query();
+		    //echo $this->db->last_query();
+			//echo "<br>";
 			//exit();
 
 			$query_result = $query->result();
@@ -5475,8 +5457,8 @@ echo $this->db->last_query();
 
 		}
 
-		function reschout($month,$year,$grpsel,$bystak = ""){
-
+		function reschout($month,$year,$grpsel,$bystak = "",$filby =""){
+       
 		if ($bystak == "IIUM C") {
 			$bystak = " AND left(a.v_tag_no,6) = 'IIUM C'"; }
 			elseif ($bystak == "IIUM M") {
@@ -5488,6 +5470,11 @@ echo $this->db->last_query();
 				$this->db->select("SUM(CASE WHEN sc.d_reschdt is not NULL AND sc.d_reschdt >= '".$this->dater(2,$month,$year)."' THEN 1 ELSE 0 END) AS reschout",FALSE);
 			$this->db->from('pmis2_egm_schconfirmmon sc');
 			$this->db->join('pmis2_egm_assetregistration a','sc.v_Asset_no = a.V_Asset_no AND sc.v_HospitalCode = a.V_Hospitalcode '.$bystak,'left outer');
+			if($filby == 'RI'){
+			 $this->db->where('SUBSTRING(sc.v_WrkOrdNo,1,2) = ','RI');	
+		    }else{
+			 $this->db->where('SUBSTRING(sc.v_WrkOrdNo,1,2) <> ','RI');		
+			}
 			$this->db->where('sc.v_Actionflag <> ','D');
 			$this->db->where('a.v_Actionflag <> ','D');
 			$this->db->where('sc.v_ServiceCode = ',$this->session->userdata('usersess'));
@@ -5706,6 +5693,8 @@ echo $this->db->last_query();
 		$query_result = $query->result();
 		return $query_result;
 	}
+	
+
 
 
 }

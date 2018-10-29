@@ -9,14 +9,14 @@ header('Content-Disposition: attachment; filename='.$filename);
 <?php if ($this->input->get('ex') == ''){?>
 <?php include 'content_btp.php';?>
 <div id="Instruction" class="pr-printer">
-    <div class="header-pr">PPM Listing Scheduled</div>
+    <div class="header-pr"><?=($filby == 'RI') ? 'RI' : 'PPM' ?> Listing Scheduled</div>
     <button onclick="javascript:myFunction('report_vols?m=<?=$month?>&y=<?=$year?>&stat=<?php echo $this->input->get('stat');?>&resch=<?php echo$this->input->get('resch');?>&grp=<?=$this->input->get('grp');?>&none=closed');" class="btn-button btn-primary-button">PRINT</button>
     <!--<button onclick="javascript:myFunction('report_vols?m=<?=$month?>&y=<?=$year?>&stat=<?php echo $this->input->get('stat');?>&resch=<?php echo$this->input->get('resch');?>&grp=<?=$this->input->get('grp');?>');" class="btn-button btn-primary-button">PRINT</button>-->
     <!--<button onclick="javascript:myFunction('report_vols?m=12&y=2016&stat=fbfb&resch=nt&grp=');" class="btn-button btn-primary-button">PRINT</button>-->
     <button type="cancel" class="btn-button btn-primary-button" onclick="location.href = '<?php echo $btp ;?>';">CANCEL</button>
 	<?php if (($this->input->get('ex') == '') or ($this->input->get('none') == '')){?>
 	<a href="<?php echo base_url();?>index.php/contentcontroller/report_vols?m=<?=$month?>&y=<?=$year?>&none=close&stat=<?php echo $this->input->get('stat');?>&resch=<?php echo $this->input->get('resch');?>&ex=excel&xxx=export&grp=<?=$this->input->get('grp');?>&btp=<?=$this->input->get('btp');?>" style="float:right; margin-right:40px;"><img src="<?php echo base_url();?>images/excel.png" style="width:40px; height:38px; position:absolute;" title="export to excel"></a>
-	<a href="<?php echo base_url();?>index.php/contentcontroller/report_vols?m=<?=$month?>&y=<?=$year?>&pdf=1&stat=<?php echo $this->input->get('stat');?>&resch=<?php echo $this->input->get('resch');?>&grp=<?=$this->input->get('grp');?>" style="float:right; margin-right:80px;"><img src="<?php echo base_url();?>images/pdf.png" style="width:40px; height:38px; position:absolute;" title="export to pdf"></a>
+	<a href="<?php echo base_url();?>index.php/contentcontroller/report_vols?m=<?=$month?>&y=<?=$year?>&pdf=1&filby=<?=$filby?>&stat=<?php echo $this->input->get('stat');?>&resch=<?php echo $this->input->get('resch');?>&grp=<?=$this->input->get('grp');?>" style="float:right; margin-right:80px;"><img src="<?php echo base_url();?>images/pdf.png" style="width:40px; height:38px; position:absolute;" title="export to pdf"></a>
 	<?php } ?>
 </div>
 <?php } ?>
@@ -60,6 +60,7 @@ header('Content-Disposition: attachment; filename='.$filename);
 <input type="hidden" value="<?php echo set_value('stat', ($this->input->get('stat')) ? $this->input->get('stat') : ''); ?>" name="stat">
 <input type="hidden" value="<?php echo set_value('resch', ($this->input->get('resch')) ? $this->input->get('resch') : ''); ?>" name="resch">
 <input type="hidden" value="<?php echo set_value('grp', ($this->input->get('grp')) ? $this->input->get('grp') : ''); ?>" name="grp">		
+<input type="hidden" value="<?php echo set_value('filby', ($this->input->get('filby')) ? $this->input->get('filby') : ''); ?>" name="filby">		
 <input type="submit" value="Apply" onchange="javascript: submit()"/></center>
 </form>
 </div>
@@ -68,14 +69,14 @@ header('Content-Disposition: attachment; filename='.$filename);
 
 	<table class="rport-header">
 		<tr>
-			<td colspan="5">PPM LISTING - <?=date('F', mktime(0, 0, 0, $month, 10))?> <?=$year?> - <?php echo $this->session->userdata('usersessn');?> ( <?php if ($this->input->get('grp') == ''){echo 'ALL'; }else{ echo 'Group '.$this->input->get('grp');} ?> )</td>
+			<td colspan="5"><?=($filby == 'RI') ? 'RI' : 'PPM' ?> LISTING - <?=date('F', mktime(0, 0, 0, $month, 10))?> <?=$year?> - <?php echo $this->session->userdata('usersessn');?> ( <?php if ($this->input->get('grp') == ''){echo 'ALL'; }else{ echo 'Group '.$this->input->get('grp');} ?> )</td>
 		</tr>
 	</table>
 	<table class="tftable" border="1" style="text-align:center;">
 		<tr>
 			<th rowspan=2>No</th>
-			<th rowspan=2>PPM Scheduled Date</th>
-			<th rowspan=2>PPM Work Order</th>
+			<th rowspan=2><?=($filby == 'RI') ? 'RI' : 'PPM' ?> Scheduled Date</th>
+			<th rowspan=2><?=($filby == 'RI') ? 'RI' : 'PPM' ?> Work Order</th>
 			<th rowspan=2>Asset No</th>	
 			<th rowspan=2 style="width:25%;">Equipment Name</th>
 			<th rowspan=2>UDP</th>
@@ -119,14 +120,14 @@ header('Content-Disposition: attachment; filename='.$filename);
 
 <table class="rport-header">
 		<tr>
-			<td colspan="5">PPM LISTING - <?=date('F', mktime(0, 0, 0, $month, 10))?> <?=$year?> - <?php echo $this->session->userdata('usersessn');?> ( <?php if ($this->input->get('grp') == ''){echo 'ALL'; }else{ echo 'Group '.$this->input->get('grp');} ?> )</td>
+			<td colspan="5"><?=($filby == 'RI') ? 'RI' : 'PPM' ?> LISTING - <?=date('F', mktime(0, 0, 0, $month, 10))?> <?=$year?> - <?php echo $this->session->userdata('usersessn');?> ( <?php if ($this->input->get('grp') == ''){echo 'ALL'; }else{ echo 'Group '.$this->input->get('grp');} ?> )</td>
 		</tr>
 	</table>
 	<table class="tftable" border="1" style="text-align:center;">
 		<tr>
 			<th rowspan=2>No</th>
-			<th rowspan=2>PPM Scheduled Date</th>
-			<th rowspan=2>PPM Work Order</th>
+			<th rowspan=2><?=($filby == 'RI') ? 'RI' : 'PPM' ?> Scheduled Date</th>
+			<th rowspan=2><?=($filby == 'RI') ? 'RI' : 'PPM' ?> Work Order</th>
 			<th rowspan=2>Asset No</th>	
 			<th rowspan=2 style="width:25%;">Equipment Name</th>
 			<th rowspan=2>UDP</th>
@@ -165,11 +166,11 @@ header('Content-Disposition: attachment; filename='.$filename);
 				<td><?= ($row->v_ptest) ? $row->v_ptest : 'N/A' ?></td>
 				<!--<td></td>-->
 				<td style="height: 52px;">
-				<?php if (($row->v_summary) ? $row->v_summary : 'N/A' != "N/A"){ ?>
+				<?php if (($row->v_summary) ? str_replace("N/A","",$row->v_summary) : 'N/A' != "N/A"){ ?>
 				<div style="overflow: hidden; text-overflow: ellipsis; height: 42px; overflow: hidden; text-overflow: ellipsis;">
 				<?php }?>
-				<?php  if ($row->v_summary == " ") {echo "N/A";}else{echo $row->v_summary;} ?>
-				<?php if (($row->v_summary) ? $row->v_summary : 'N/A' != "N/A"){ ?>
+				<?php  if ($row->v_summary == " ") {echo "N/A";}else{echo str_replace("N/A","",$row->v_summary);} ?>
+				<?php if (($row->v_summary) ? str_replace("N/A","",$row->v_summary) : 'N/A' != "N/A"){ ?>
 				</div>
 				<?php }?>
 				</td>
@@ -242,14 +243,14 @@ header('Content-Disposition: attachment; filename='.$filename);
 
 	<table class="rport-header">
 		<tr>
-			<td colspan="5">PPM LISTING - <?=date('F', mktime(0, 0, 0, $month, 10))?> <?=$year?> - <?php echo $this->session->userdata('usersessn');?>  ( <?php if ($this->input->get('grp') == ''){echo 'ALL'; }else{ echo 'Group '.$this->input->get('grp');} ?> )</td>
+			<td colspan="5"><?=($filby == 'RI') ? 'RI' : 'PPM' ?> LISTING - <?=date('F', mktime(0, 0, 0, $month, 10))?> <?=$year?> - <?php echo $this->session->userdata('usersessn');?>  ( <?php if ($this->input->get('grp') == ''){echo 'ALL'; }else{ echo 'Group '.$this->input->get('grp');} ?> )</td>
 		</tr>
 	</table>
 	<table class="tftable" border="1" style="text-align:center;">
 		<tr>
 			<th rowspan=2>No</th>
-			<th rowspan=2 style="width:7%;">PPM Scheduled Date</th>
-			<th rowspan=2 style="width:12%;">PPM Work Order</th>
+			<th rowspan=2 style="width:7%;"><?=($filby == 'RI') ? 'RI' : 'PPM' ?> Scheduled Date</th>
+			<th rowspan=2 style="width:12%;"><?=($filby == 'RI') ? 'RI' : 'PPM' ?> Work Order</th>
 			<th rowspan=2 style="width:5%;">Asset No</th>	
 			<th rowspan=2 style="width:30%;">Equipment Name</th>
 			<th rowspan=2>UDP</th>
@@ -287,11 +288,11 @@ header('Content-Disposition: attachment; filename='.$filename);
 				<td><?= ($row->v_ptest) ? $row->v_ptest : 'N/A' ?></td>
 				<!--<td></td>-->
 				<td style="height: 52px;">
-				<?php if (($row->v_summary) ? $row->v_summary : 'N/A' != "N/A"){ ?>
+				<?php if (($row->v_summary) ? str_replace("N/A","",$row->v_summary) : 'N/A' != "N/A"){ ?>
 				<div style="overflow: hidden; text-overflow: ellipsis; height: 42px; overflow: hidden; text-overflow: ellipsis;">
 				<?php }?>
-				<?php  if ($row->v_summary == " ") {echo "N/A";}else{echo $row->v_summary;} ?>
-				<?php if (($row->v_summary) ? $row->v_summary : 'N/A' != "N/A"){ ?>
+				<?php  if ($row->v_summary == " ") {echo "N/A";}else{echo str_replace("N/A","",$row->v_summary);} ?>
+				<?php if (($row->v_summary) ? str_replace("N/A","",$row->v_summary) : 'N/A' != "N/A"){ ?>
 				</div>
 				<?php }?>
 				</td>
@@ -313,7 +314,7 @@ header('Content-Disposition: attachment; filename='.$filename);
 		<td valign="top" colspan="2"><hr color="black" size="1Px"></td>
 	</tr>
 	<tr>
-		<td width="50%">PPM LISTING - Scheduled - <?=date('F', mktime(0, 0, 0, $month, 10))?> <?=$year?><br><i>Computer Generated - CAMSIS</i><!--<i>Computer Generated - APBESys</i>--></td>
+		<td width="50%"><?=($filby == 'RI') ? 'RI' : 'PPM' ?> LISTING - Scheduled - <?=date('F', mktime(0, 0, 0, $month, 10))?> <?=$year?><br><i>Computer Generated - CAMSIS</i><!--<i>Computer Generated - APBESys</i>--></td>
 		<td width="50%" align="right"></td>
 	</tr>
 </table>

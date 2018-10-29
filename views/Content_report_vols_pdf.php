@@ -8,14 +8,14 @@
 	<body>
 	<table class="rport-header" >
 		<tr>
-			<td colspan="5"><h3>PPM LISTING - <?=date('F', mktime(0, 0, 0, $month, 10))?> <?=$year?> - <?php echo $this->session->userdata('usersessn');?>  ( <?php if ($this->input->get('grp') == ''){echo 'ALL'; }else{ echo 'Group '.$this->input->get('grp');} ?> )</h3></td>
+			<td colspan="5"><h3><?=($filby == 'RI') ? 'RI' : 'PPM' ?> LISTING - <?=date('F', mktime(0, 0, 0, $month, 10))?> <?=$year?> - <?php echo $this->session->userdata('usersessn');?>  ( <?php if ($this->input->get('grp') == ''){echo 'ALL'; }else{ echo 'Group '.$this->input->get('grp');} ?> )</h3></td>
 		</tr>
 	</table>
 	<table class="tftable" border="1" style="text-align:center;width:100%; font-size:7px;" cellpadding="5" cellspacing="0">
 		<tr>
 			<th rowspan="2" style="width:19px;">No</th>
-			<th rowspan="2">PPM Scheduled Date</th>
-			<th rowspan="2">PPM Work Order</th>
+			<th rowspan="2"><?=($filby == 'RI') ? 'RI' : 'PPM' ?> Scheduled Date</th>
+			<th rowspan="2"><?=($filby == 'RI') ? 'RI' : 'PPM' ?> Work Order</th>
 			<th rowspan="2">Asset No</th>	
 			<th rowspan="2" style="width:8%;">Equipment Name</th>
 			<th rowspan="2">UDP</th>
