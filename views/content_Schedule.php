@@ -117,6 +117,7 @@
 				</td>
 			</tr>
 			<?php  } ?>
+			
 			<?php  if (!in_array("contentcontroller/report_vols", $chkers)) { ?>
 			<tr class="<?php  $number++; echo evenodd($number); ?>">
 				<td colspan="4">
@@ -124,7 +125,20 @@
 				</td>
 			</tr>
 			<?php  } ?>
-			
+			<?php  if (!in_array("contentcontroller/report_ppmwos", $chkers)) { ?><!--RI-->
+			<tr class="<?php  $number++; echo evenodd($number); ?>">
+				<td colspan="4">
+					<?php echo anchor ('contentcontroller/report_ppmwos?m='.$month.'&y='.$year.'&filby=RI&grp='.$this->input->get('grp'), '<img src="'. base_url() .'images/user.png" alt="" class="ui-icon"/>&nbsp;&nbsp;&nbsp;&nbsp;RI Work Order Summary'); ?>
+				</td>
+			</tr>
+			<?php  } ?>
+			<?php  if (!in_array("contentcontroller/report_vols", $chkers)) { ?><!--RI-->
+			<tr class="<?php  $number++; echo evenodd($number); ?>">
+				<td colspan="4">
+					<?php echo anchor ('contentcontroller/report_vols?m='.$month.'&y='.$year.'&filby=RI&stat=fbfb&resch=nt&grp='.$this->input->get('grp'), '<img src="'. base_url() .'images/user.png" alt="" class="ui-icon"/>&nbsp;&nbsp;&nbsp;&nbsp;RI Work Order Listing'); ?>
+				</td>
+			</tr>
+			<?php  } ?>
 			
 			<?php  if (!in_array("contentcontroller/report_ppmwosf", $chkers)) { ?>
 			<tr class="<?php  $number++; echo evenodd($number); ?>">

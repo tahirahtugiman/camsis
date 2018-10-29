@@ -44,7 +44,7 @@ foreach ($array as $list) {
 						min: 0,
 						title: {
 							<?php if ($this->uri->slash_segment(1) .$this->uri->slash_segment(2) == 'contentcontroller/report_ppmwos/'){?>
-								text: 'PPM Work Order'
+								text: '<?=($filby == 'RI') ? 'RI' : 'PPM' ?> Work Order'
 							<?php }elseif ($this->uri->slash_segment(1) .$this->uri->slash_segment(2) == 'contentcontroller/report_reqwos/') {?>
 								text: 'Request Work Order'
 							<?php }elseif ($this->uri->slash_segment(1) .$this->uri->slash_segment(2) == 'contentcontroller/report_cwos/') {?>
@@ -71,7 +71,7 @@ foreach ($array as $list) {
 					<?php if ($this->uri->slash_segment(1) .$this->uri->slash_segment(2) == 'contentcontroller/report_ppmwos/'){?>
 
 					series: [{
-						name: 'Total PPM Work Order',
+						name: 'Total <?=($filby == 'RI') ? 'RI' : 'PPM' ?> Work Order',
 						data: [<?php if ($ppmsum[0]->total == 0) { echo "0"; } else {echo $ppmsum[0]->total;} ?>],
 						stack: '1'
 					}, {

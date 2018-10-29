@@ -55,10 +55,12 @@ class wo_visitplus_update_ctrl extends CI_Controller{
 	$this->form_validation->set_rules('n_Emin','End Minutes','trim|required|callback_time_check['.$params.']');
 	$this->form_validation->set_rules('n_Type_of_Work','Type of Work','trim|required');
 	$this->form_validation->set_rules('n_Action_Taken','Action Taken','trim|required');
+	if (($this->input->post('chkbox') == 'ON')&&(substr($this->input->post('wrk_ord'),3,2) != 'A2')){
 	$this->form_validation->set_rules('V_parttotal','Start Time','callback_date_check['.$paramsdt2.']');
 
 	//$this->form_validation->set_rules('n_rschDate','Reschedule Date','trim');
 	$this->form_validation->set_rules('n_rschDate','Reschedule Date','trim|callback_date_check2['.$this->input->post('n_rschDate').']');
+	}
 	$this->form_validation->set_rules('n_rschReason','Reason','trim');
 	$this->form_validation->set_rules('n_rschReason1','Reason1','trim');
 	$this->form_validation->set_rules('n_rschAuth','Reschedule Authorised','trim');

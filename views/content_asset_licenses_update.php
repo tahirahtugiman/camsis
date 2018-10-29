@@ -10,7 +10,7 @@
 				<td class="ui-header-new" colspan="2"><b><?php echo $this->input->post('liccd'); ?></b></td>
 				<?php } ?>
 				<?php if ($this->input->post('liccd') == '') { ?>
-				<td class="ui-header-new" colspan="2"><b>New License</b></td>
+				<td class="ui-header-new" colspan="2"><b>New License </b></td>
 				<?php } ?>
 			</tr>
 			<tr><td colspan="2"><span style="color:red;"><?php echo validation_errors(); ?></span></td></tr>
@@ -53,8 +53,8 @@
 				<td><textarea name="n_Category_Description" id="n_Category_Description" class="input n_com"><?php echo set_value('n_Category_Description', isset($lic[0]->v_LicenceCategoryDesc) == TRUE ? $lic[0]->v_LicenceCategoryDesc : 'N/A')?></textarea></td>
 			</tr>
 			
-			<tr id="tester"style="display:<?php if (isset($lic[0]->v_IdentificationType) == 'Personnel') { echo "none" ;}?>"><td colspan="3" class="ui-bottom-border-color" style="font-weight: bold;">License Representative</td></tr>			
-			<tr id="tester1" style="display:<?php if (isset($lic[0]->v_IdentificationType) == 'Personnel') { echo "none" ;}?>">
+			<tr id="tester"style="display:<?php if (isset($lic[0]->v_IdentificationType) && $lic[0]->v_IdentificationType == 'Personnel') { echo "none" ;} else {echo "";}?>"><td colspan="3" class="ui-bottom-border-color" style="font-weight: bold;">License Representative</td></tr>			
+			<tr id="tester1" style="display:<?php if (isset($lic[0]->v_IdentificationType) && $lic[0]->v_IdentificationType == 'Personnel') { echo "none" ;}else {echo "";}?>">
 				<td class="td-assest">Tester Name   :  </td>
 				<td><input type="text" name="n_tester" id="n_tester" value="<?php echo set_value('n_tester',isset($lic[0]->v_TesterName) ? $lic[0]->v_TesterName : 'N/A')?>" class="form-control-button2 n_wi-date" style=""></td>
 			</tr>
@@ -74,22 +74,22 @@
 			</tr>
 			<!--location-->
 			
-			<tr id="loc1" style="display: <?php if (isset($lic[0]->v_IdentificationType) == 'Personnel') { echo "" ;} else{ echo "none" ;}?>">
+			<tr id="loc1" style="display: <?php if (isset($lic[0]->v_IdentificationType) && $lic[0]->v_IdentificationType == 'Personnel') { echo "" ;} else{ echo "none" ;}?>">
 			<td colspan="3" class="ui-bottom-border-color" style="font-weight: bold;">Location</td>
 			</tr>
-			<tr id="loc2" style="display: <?php if (isset($lic[0]->v_IdentificationType) == 'Personnel') { echo "" ;} else{ echo "none" ;}?>">
+			<tr id="loc2" style="display: <?php if (isset($lic[0]->v_IdentificationType) && $lic[0]->v_IdentificationType == 'Personnel') { echo "" ;} else{ echo "none" ;}?>">
 			<td class="td-assest">User Department :   </td>
 			<td><input type="text" id="n_user_department" name="n_user_department" value="<?php echo set_value('n_user_department', isset($loc[0]->v_UserDeptCode) == TRUE ? $loc[0]->v_UserDeptCode : '')?>"  class="form-control-button2 n_user_d" readonly> <span class="icon-windows" onclick="fCalllocation()" ></td>
 			</tr>
-			<tr id="loc3" style="display: <?php if (isset($lic[0]->v_IdentificationType) == 'Personnel') { echo "" ;} else{ echo "none" ;}?>">
+			<tr id="loc3" style="display: <?php if (isset($lic[0]->v_IdentificationType) && $lic[0]->v_IdentificationType == 'Personnel') { echo "" ;} else{ echo "none" ;}?>">
 			<td class="td-assest">&nbsp; </td>
 			<td><input type="text" id="n_user_department1" name="n_user_department1" value="<?php echo set_value('n_user_department1', isset($loc[0]->v_userdeptdesc) == TRUE ? $loc[0]->v_userdeptdesc : '')?>" class="form-control-button n_user_d"  readonly></td>
 			</tr>
-			<tr id="loc4" style="display: <?php if (isset($lic[0]->v_IdentificationType) == 'Personnel') { echo "" ;} else{ echo "none" ;}?>">
+			<tr id="loc4" style="display: <?php if (isset($lic[0]->v_IdentificationType) && $lic[0]->v_IdentificationType == 'Personnel') { echo "" ;} else{ echo "none" ;}?>">
 			<td class="td-assest">Location : </td>
 			<td><input type="text" id="n_location" name="n_location" value="<?php echo set_value('n_location', isset($loc[0]->V_location_code) == TRUE ? $loc[0]->V_location_code : '')?>" class="form-control-button n_user_d" readonly></td>
 			</tr>
-			<tr id="loc5" style="display: <?php if (isset($lic[0]->v_IdentificationType) == 'Personnel') { echo "" ;} else{ echo "none" ;}?>">
+			<tr id="loc5" style="display: <?php if (isset($lic[0]->v_IdentificationType) && $lic[0]->v_IdentificationType == 'Personnel') { echo "" ;} else{ echo "none" ;}?>">
 			<td class="td-assest">&nbsp; </td>
 			<td><input type="text" id="n_location2" name="n_location1" value="<?php echo set_value('n_location1', isset($loc[0]->v_Location_Name) == TRUE ? $loc[0]->v_Location_Name : '')?>" class="form-control-button n_user_d" readonly></td>
 			</tr>

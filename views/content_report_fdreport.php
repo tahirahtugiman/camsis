@@ -61,7 +61,7 @@ function doSomething(a){
 			<td colspan="5" style="font-size:12px;"><b><?php if ($a == 'FES') echo "Fes Daily Report"?><?php if ($a == 'BES') echo "Bes Daily Report"?><br/>Date :</b> <?php if ($this->input->get('ex') == 'excel'){?><?=$date?><?php } else {?><input type="text" id="date0" name="jobdate" value="<?=$date?>" style="width:25%;" onchange="javascript: submit()" class="inputdate"/><?php } ?> <span style="font-size:7px;">*Data taken at 4:00pm</span></td>
 		</tr>
 	</table>
-</form>	
+</form>
 	<table class="tftable" border="1" style="text-align:center; width:80%;" align="center">
 		<tr style="text-align:center;font-weight:bold;">
 			<th colspan="2">Item</th>
@@ -93,7 +93,7 @@ function doSomething(a){
 			<?php $rdA5 = (isset($record[0]->rd_A5) ? $record[0]->rd_A5 : 0 )?>
 			<td><?= ($rdA5 > 0) ? anchor('contentcontroller/report_fdreport2?jobdate='.$date.'&x=1'.'&v=5',$rdA5) : 0 ?></td>
 			<?php $rdA6 = (isset($record[0]->rd_A6) ? $record[0]->rd_A6 : 0 )?>
-			<td><?= ($rdA6 > 0) ? anchor('contentcontroller/report_fdreport2?jobdate='.$date.'&x=1'.'&v=6',$rdA6) : 0 ?></td>   
+			<td><?= ($rdA6 > 0) ? anchor('contentcontroller/report_fdreport2?jobdate='.$date.'&x=1'.'&v=6',$rdA6) : 0 ?></td>
 			<?php $rdA7 = (isset($record[0]->rd_A7) ? $record[0]->rd_A7 : 0 )?>
 			<td><?= ($rdA7 > 0) ? anchor('contentcontroller/report_fdreport2?jobdate='.$date.'&x=1'.'&v=7',$rdA7) : 0 ?></td>
 			<?php $rdA8 = (isset($record[0]->rd_A8) ? $record[0]->rd_A8 : 0 )?>
@@ -392,7 +392,7 @@ function doSomething(a){
 			<?php $t_o4 = (isset($recoutstanding[0]->m4_A1) ? $recoutstanding[0]->m4_A1 : 0) + (isset($recoutstanding[0]->m4_A2) ? $recoutstanding[0]->m4_A2 : 0) + (isset($recoutstanding[0]->m4_A3) ? $recoutstanding[0]->m4_A3 : 0) + (isset($recoutstanding[0]->m4_A4) ? $recoutstanding[0]->m4_A4 : 0) + (isset($recoutstanding[0]->m4_A5) ? $recoutstanding[0]->m4_A5 : 0) + (isset($recoutstanding[0]->m4_A6) ? $recoutstanding[0]->m4_A6 : 0) + (isset($recoutstanding[0]->m4_A7) ? $recoutstanding[0]->m4_A7 : 0) + (isset($recoutstanding[0]->m4_A8) ? $recoutstanding[0]->m4_A8 : 0) + (isset($recoutstanding[0]->m4_A9) ? $recoutstanding[0]->m4_A9 : 0) + (isset($recoutstanding[0]->m4_A10) ? $recoutstanding[0]->m4_A10 : 0) ?>
 			<td><?= ($t_o4 > 0) ? anchor('contentcontroller/report_fdreport2?jobdate='.$date.'&x=12',$t_o4) : 0 ?></td>
 		</tr>
-		
+
 		<!--baru edit -->
 		<tr style="text-align:center;">
 			<td>2.5</td>
@@ -401,13 +401,13 @@ function doSomething(a){
 			<td><?= ($m5A1 > 0) ? anchor('contentcontroller/report_fdreport2?jobdate='.$date.'&x=13'.'&v=1',$m5A1) : 0 ?></td>
 			<?php $m5A2 = (isset($recoutstanding[0]->m5_A2) ? $recoutstanding[0]->m5_A2 : 0 )?>
 			<td><?= ($m5A2 > 0) ? anchor('contentcontroller/report_fdreport2?jobdate='.$date.'&x=13'.'&v=2',$m5A2) : 0 ?></td>
-			<?php $m5A3 = (isset($recoutstanding[0]->m5_A3) ? $recoutstanding[0]->m5_A3 : 0 )?>		
+			<?php $m5A3 = (isset($recoutstanding[0]->m5_A3) ? $recoutstanding[0]->m5_A3 : 0 )?>
 			<td><?= ($m5A3 > 0) ? anchor('contentcontroller/report_fdreport2?jobdate='.$date.'&x=13'.'&v=3',$m5A3) : 0 ?></td>
-			<?php $m5A4 = (isset($recoutstanding[0]->m5_A4) ? $recoutstanding[0]->m5_A4 : 0 )?>	
+			<?php $m5A4 = (isset($recoutstanding[0]->m5_A4) ? $recoutstanding[0]->m5_A4 : 0 )?>
 			<td><?= ($m5A4 > 0) ? anchor('contentcontroller/report_fdreport2?jobdate='.$date.'&x=13'.'&v=4',$m5A4) : 0 ?></td>
-			<?php $m5A5 = (isset($recoutstanding[0]->m5_A5) ? $recoutstanding[0]->m5_A5 : 0 )?>	
+			<?php $m5A5 = (isset($recoutstanding[0]->m5_A5) ? $recoutstanding[0]->m5_A5 : 0 )?>
 			<td><?= ($m5A5 > 0) ? anchor('contentcontroller/report_fdreport2?jobdate='.$date.'&x=13'.'&v=5',$m5A5) : 0 ?></td>
-			<?php $m5A6 = (isset($recoutstanding[0]->m5_A6) ? $recoutstanding[0]->m5_A6 : 0 )?>	
+			<?php $m5A6 = (isset($recoutstanding[0]->m5_A6) ? $recoutstanding[0]->m5_A6 : 0 )?>
 			<td><?= ($m5A6 > 0) ? anchor('contentcontroller/report_fdreport2?jobdate='.$date.'&x=13'.'&v=6',$m5A6) : 0 ?></td>
 			<?php $m5A7 = (isset($recoutstanding[0]->m5_A7) ? $recoutstanding[0]->m5_A7 : 0 )?>
 			<td><?= ($m5A7 > 0) ? anchor('contentcontroller/report_fdreport2?jobdate='.$date.'&x=13'.'&v=7',$m5A7) : 0 ?></td>
@@ -508,9 +508,9 @@ function doSomething(a){
 			<td valign="top">SALASIAH ABD AZIZ</td>
 		</tr>
 		<tr>
-			
+
 		</tr>
-		
+
 		<tr>
 		  <td style="border-bottom:1px solid black; width:150px;padding-top:10px;"></td>
 			<td style="border-bottom:1px solid black; width:150px;padding-top:10px;"></td>
@@ -519,10 +519,10 @@ function doSomething(a){
 	<?php } elseif ($this->session->userdata('usersess') == "FES") { ?>
 	<table class="" style="width:80%;font-size:12px; margin-top:10px;" align="center" border="0">
 		<tr>
-			<td rowspan="5" valign="top">Submitted by :</td>
+			<td rowspan="8" valign="top">Submitted by :</td>
 			<td>1) MOHAMMAD HAFIZ BIN DIN</td>
-			<td rowspan="5" style="width:7%;"></td>
-			<td rowspan="5" valign="top">Acknowledged by :</td>
+			<td rowspan="8" style="width:7%;"></td>
+			<td rowspan="8" valign="top">Acknowledged by :</td>
 			<td valign="top">MOHD SANUSI ABDULLAH</td>
 		</tr>
 		<tr>
@@ -534,6 +534,15 @@ function doSomething(a){
 		</tr>
 		<tr>
 			<td>4) MURSYIDUL AZIM BIN MAZLAN</td>
+		</tr>
+		<tr>
+			<td>5) MOHD KAMAL BIN MOHD YUSOF</td>
+		</tr>
+		<tr>
+			<td>6) MOHD SULAIMAN BIN AB RAZAK</td>
+		</tr>
+		<tr>
+			<td>7) MOHD SYAUFI BIN MOHD HUSIN</td>
 		</tr>
 		<tr>
 			<td style="border-bottom:1px solid black; width:150px;padding-top:10px;"></td>

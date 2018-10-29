@@ -10,7 +10,7 @@
 				<tr>
 					<td valign="" rowspan="" style="width:5%;"><img src="<?php echo base_url(); ?>images/logo.png" style="width:120px; height:80px;"/></td>
 					<td valign=""><span style="font-weight:bold;">Advance Pact Sdn Bhd (412168-V) </span><br /><span style="font-weight:bold; color:blue;">IIUM Medical Centre</span></td>
-					<td ></td>
+					<td valign="" rowspan="" style="width:5%;"><img src="<?php echo base_url(); ?>images/penmedic2.png" style="width:131px; height:auto;"/></td>
 				</tr>
 				<tr>
 					<td valign="top" colspan="2">
