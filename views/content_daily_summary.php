@@ -147,7 +147,7 @@ if ($this->input->get('ex') == 'excel'){
 			</tr>
 			<tr >
 				<td class="ui-desk-style-table">
-					<div id="constrainer" style="height: 55%;">
+					<div id="constrainer">
 						<div class="scrolltable1">
 							<table class="ui-float-asset-reg">
 								<tr>
@@ -158,10 +158,10 @@ if ($this->input->get('ex') == 'excel'){
 									<!--<th rowspan="2">Insufficient Consumables</th>-->
 								</tr>
 								<tr>
-								    <td>Not Done</td>
-									<td>Not to Schedule</td>
-									<td>Not Done</td>
-									<td>Not to Schedule</td>
+								    <th style="position: sticky; top: 22px;">Not Done</th>
+									<th style="position: sticky; top: 22px;">Not to Schedule</th>
+									<th style="position: sticky;top: 22px;">Not Done</th>
+									<th style="position: sticky;top: 22px;">Not to Schedule</th>
 								</tr>
 								<?php
 								$tc_yellow = 0;
@@ -437,7 +437,7 @@ if ($this->input->get('ex') == 'excel'){
 		}
 		.ui-float-asset-reg tr th{
 			border:1px solid black;
-			/*background:white;*/
+			background:white;
 		}
 		.ui-float-asset-reg tr td{
 			border:1px solid black;
@@ -456,8 +456,9 @@ if ($this->input->get('ex') == 'excel'){
 			margin-right:auto;
 		}
 		@media print{
-			th{
+			.ui-float-asset-reg tr th{
 				border:1px solid black;
+				background-color: transparent;
 			}
 		}
 	</style>
