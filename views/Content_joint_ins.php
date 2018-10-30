@@ -155,23 +155,25 @@
 						<td>
 							<?php echo anchor ('contentcontroller/joint_ins?en=JISBMI&dept='.$list['Dept_Code'].'&hosp='.$list['hospital_code'].'&month='.$fmonth.'&year='.$fyear,isset($list['v_UserDeptDesc']) ? $list['v_UserDeptDesc'] : ''); ?>
 						</td>
-						<?php if ($deptlist) { ?>
-							<?php if (in_array($list['Dept_Code'],$deptlist)) { ?>
-								<?php foreach ($locdet as $dcaloc): ?>
-									<?php if ($dcaloc->v_UserDeptCode == $list['Dept_Code']){ ?>
-						<td><?=isset($dcaloc->totalloc) ? $dcaloc->totalloc : ''?></td>
-									<?php } ?>
-								<?php endforeach; ?>
-							<?php } ?>
-						<?php } else { ?>
-							<td>0</td>
-						<?php } ?>
-						<td><?=isset($list['totalloc']) ? $list['totalloc'] : ''?></td>
-						<td><?=isset($list['Satisfactory']) ? $list['Satisfactory'] : ''?></td>
-						<td><?=isset($list['Unstatisfactory']) ? $list['Unstatisfactory'] : ''?></td>
-						<td><?=isset($list['Not_Applicable']) ? $list['Not_Applicable'] : ''?></td>
-						<?php $total = $list['Satisfactory'] + $list['Unstatisfactory']; ?>
-						<td><?=$total?></td>
+						<td>
+							<?php if ($deptlist) {
+								if (in_array($list['Dept_Code'],$deptlist)) {
+									foreach ($locdet as $dcaloc):
+										if ($dcaloc->v_UserDeptCode == $list['Dept_Code']){ ?>
+											<?=isset($dcaloc->totalloc) ? $dcaloc->totalloc : '';
+										}
+									endforeach;
+								}
+							} else {
+								echo 0;
+							}?>
+						</td>
+						<td><?=isset($list['totalloc']) ? $list['totalloc'] : '';?></td>
+						<td><?=isset($list['Satisfactory']) ? $list['Satisfactory'] : '';?></td>
+						<td><?=isset($list['Unstatisfactory']) ? $list['Unstatisfactory'] : '';?></td>
+						<td><?=isset($list['Not_Applicable']) ? $list['Not_Applicable'] : '';?></td>
+						<?php $total = (($list['Satisfactory']) ? $list['Satisfactory'] : 0) + (($list['Unstatisfactory']) ? $list['Unstatisfactory'] : 0); ?>
+						<td><?=$total;?></td>
 					</tr>
 					<?php endforeach; ?>
 				</table>
