@@ -35,7 +35,84 @@ $newDate = date("Y-m-d", strtotime($date)); ?>
 </form>
 </div>
 <?php } ?>
+
+<?php if ($this->input->get('ex') == ''){ ?>
+	<?php $numrow = 1; foreach($t_record as $row):?>
+	<?php if ($numrow==1 OR $numrow%14==1) { ?>
 <div class="m-div">
+	<table class="rport-header">
+		<tr>
+			<td colspan="5">PROCUREMENT TRACKING REPORT <?=date('F', mktime(0, 0, 0, $month, 10))?> <?=$year?> - <?php echo $this->session->userdata('usersessn');?></td>
+		</tr>
+	</table>
+	<table class="tftable" border="1" style="text-align:center; width:100%;" align="left">
+		
+		<tr style="text-align:center;font-weight:bold;">
+				<th>NO</th>
+				<th>SERVICE</th>
+				<th>REQUEST WORK ORDER NO</th>
+				<th>DATE</th>
+				<th>MONTH WORK ORDER</th>
+				<th>MRIN DATE RCVD</th>
+				<th>MONTH MRIN</th>
+				<th>MRIN NO</th>
+				<th>SP/TP/STOCK</th>
+				<th>ITEM CODE</th>
+				<th>DESCRIPTION</th>
+				<th>PART NUMBER</th>
+				<th>QTY REQUEST</th>
+				<th>QTY APPROVED</th>
+			</tr>
+		
+				<?php } ?>
+<?php echo ($numrow%2==0) ? '<tr class="ui-color-color-color">' : '<tr>'; ?>				
+			<!--<tr style="text-align:center;">-->
+				<td><?= $numrow ?></td>
+				<td><?=($row->service_code) ? $row->service_code : 'N/A' ?></td>
+				<td><?=($row->WorkOfOrder) ? $row->WorkOfOrder : 'N/A' ?></td>
+				<td><?=isset($row->WorkOrderDate) ? date("d-m-Y",strtotime($row->WorkOrderDate)) : ''?></td></td>
+				<td><?=isset($row->WorkOrderDate) ? date("M-d",strtotime($row->WorkOrderDate)) : ''?></td>
+				<td><?=isset($row->DateCreated) ? date("d/m/Y",strtotime($row->DateCreated)) : ''?></td>
+				<td><?=isset($row->DateCreated) ? date("M-d",strtotime($row->DateCreated)) : ''?></td>
+				<td><?=($row->MIRNcode) ? $row->MIRNcode : 'N/A' ?></td>
+				<td><?=($row->stocstatus) ? $row->stocstatus : '' ?></td>
+				<td><?=($row->ItemCode) ? $row->ItemCode : 'N/A' ?></td>
+				<td><?=($row->Comments) ? $row->Comments : 'N/A' ?></td>
+				<td><?=($row->PartNumber) ? $row->PartNumber : 'N/A' ?></td>
+				<td><?=($row->QtyReq) ? $row->QtyReq : 'N/A' ?></td>
+				<td><?=($row->QtyReqfx) ? $row->QtyReqfx : 'N/A' ?></td>
+			</tr>
+<?php $numrow++; ?>
+		<?php //if (($numrow-1)%13==0) {
+				if ((($numrow-1)%14==0) || (($numrow-1)== count($t_record))) {
+		?>
+	</table>
+	
+</div>
+
+<?php if (($this->input->get('ex') == '') or ($this->input->get('none') == 'closed')){?>
+	<table width="99%" border="0">
+		<tr>
+			<td valign="top" colspan="2"><hr color="black" size="1Px"></td>
+		</tr>
+		<tr>
+			<td width="50%">MONTHLY PROCUREMENT TRACKING REPORT <?=date('F', mktime(0, 0, 0, $month, 10))?> <?=$year?><br><i>Computer Generated - CAMSIS</i></td>
+			<td width="50%" align="right"></td>
+		</tr>
+	</table>
+</div>
+<?php if (($this->input->get('ex') == '') or ($this->input->get('none') == 'closed')){?>
+<?php include 'content_footerprint.php';?>
+<?php } ?>
+<div class="StartNewPage" id="breakpage"><span id="pagebreak">Page Break</span></div>
+<?php } ?>
+<?php } ?>
+
+<?php endforeach;?>
+
+		<?php }else{ ?>
+		
+		<div class="m-div">
 	<table class="rport-header">
 		<tr>
 			<td colspan="5">PROCUREMENT TRACKING REPORT <?=date('F', mktime(0, 0, 0, $month, 10))?> <?=$year?> - <?php echo $this->session->userdata('usersessn');?></td>
@@ -81,19 +158,5 @@ $newDate = date("Y-m-d", strtotime($date)); ?>
 	</table>
 	
 </div>
-<?php if (($this->input->get('ex') == '') or ($this->input->get('none') == 'closed')){?>
-	<table width="99%" border="0">
-		<tr>
-			<td valign="top" colspan="2"><hr color="black" size="1Px"></td>
-		</tr>
-		<tr>
-			<td width="50%">MONTHLY PROCUREMENT TRACKING REPORT <?=date('F', mktime(0, 0, 0, $month, 10))?> <?=$year?><br><i>Computer Generated - CAMSIS</i></td>
-			<td width="50%" align="right"></td>
-		</tr>
-	</table>
-</div>
-<?php if (($this->input->get('ex') == '') or ($this->input->get('none') == 'closed')){?>
-<?php include 'content_footerprint.php';?>
-<?php } ?>
-<div class="StartNewPage" id="breakpage"><span id="pagebreak">Page Break</span></div>
-<?php } ?>
+
+		<?php } ?>
