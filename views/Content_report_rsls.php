@@ -35,7 +35,7 @@ if ($this->input->get('ex') == 'excel'){
 	</div>
 </div>
 
-<div id="constrainer" style="height: 55%;">
+<div id="constrainer" style="height: 45%;">
 	<div class="scrolltable1">
 		<table class="header-alr" border="1" style="text-align:center; font-size: 12px;">
 		<?php } ?>

@@ -91,7 +91,7 @@
 				</table>
 
 				<?php if( !$this->input->get("none") ){?>
-				<div id="constrainer" style="height: 55%; margin-top: 55px;">
+				<div id="constrainer" style="height: 40%; margin-top: 55px;">
 					<div class="scrolltable1">
 				<?php } ?>
 				<table class="tftable" border="1" style="text-align:center; width:70%;" align="center">
@@ -136,7 +136,7 @@
 				</table>
 
 				<?php if( !$this->input->get("none") ){?>
-				<div id="constrainer" style="height: 55%; margin-top: 55px;">
+				<div id="constrainer" style="height: 33%; margin-top: 55px;">
 					<div class="scrolltable1">
 				<?php } ?>
 				<table class="tftable" border="1" style="text-align:center; width:70%;" align="center">
@@ -193,7 +193,7 @@
 				</table>
 
 				<?php if( !$this->input->get("none") ){?>
-				<div id="constrainer" style="height: 55%;">
+				<div id="constrainer" style="height: 33%;">
 					<div class="scrolltable1">
 				<?php } ?>
 						<table class="tftable" border="1" style="text-align:center; width:70%;" align="center">
@@ -234,7 +234,7 @@
 				</table>
 
 				<?php if( !$this->input->get("none") ){?>
-				<div id="constrainer" style="height: 55%; margin-top: 55px;">
+				<div id="constrainer" style="height: 33%; margin-top: 55px;">
 					<div class="scrolltable1">
 				<?php } ?>
 				<table class="tftable" border="1" style="text-align:center; width:70%;" align="center">
@@ -318,7 +318,7 @@
 		</div>
 
 		<?php if( !$this->input->get("none") ){?>
-		<div id="constrainer" style="height: 55%; margin-top: 55px;">
+		<div id="constrainer" style="height: 33%; margin-top: 55px;">
 			<div class="scrolltable1">
 		<?php } ?>
 		<table class="tftable" border="1" style="text-align:center; width:70%;" align="center">

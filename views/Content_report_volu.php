@@ -683,7 +683,7 @@ $locationone = "0";
 							</tr>
 					</table>
 
-					<div id="constrainer" style="height: 55%;">
+					<div id="constrainer" style="height: 40%;">
 						<div class="scrolltable1">
 							<table class="tftable tbl-go" border="1" style="text-align:center;">
 								<tr>

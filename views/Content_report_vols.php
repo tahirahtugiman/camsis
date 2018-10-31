@@ -10,7 +10,8 @@ if ($this->input->get('ex') == 'excel'){
 	<?php include 'content_btp.php';?>
 	<div id="Instruction" class="pr-printer">
     	<div class="header-pr"><?=($filby == 'RI') ? 'RI' : 'PPM' ?> Listing Scheduled</div>
-    	<button onclick="javascript:myFunction('report_vols?m=<?=$month?>&y=<?=$year?>&stat=<?php echo $this->input->get('stat');?>&resch=<?php echo$this->input->get('resch');?>&grp=<?=$this->input->get('grp');?>&none=closed');" class="btn-button btn-primary-button">PRINT</button>
+    	<!-- <button onclick="javascript:myFunction('report_vols?m=<?=$month?>&y=<?=$year?>&stat=<?=$this->input->get('stat');?>&resch=<?=$this->input->get('resch');?>&grp=<?=$this->input->get('grp');?>&none=closed');" class="btn-button btn-primary-button">PRINT</button> -->
+    	<button onclick="javascript:myFunction('report_vols?m=<?=$month?>&y=<?=$year?>&stat=<?=$this->input->get('stat');?>&resch=<?=$this->input->get('resch');?>&grp=<?=$this->input->get('grp');?>&filby=<?=$this->input->get('filby');?>&none=closed');" class="btn-button btn-primary-button">PRINT</button>
     	<!--<button onclick="javascript:myFunction('report_vols?m=<?=$month?>&y=<?=$year?>&stat=<?php echo $this->input->get('stat');?>&resch=<?php echo$this->input->get('resch');?>&grp=<?=$this->input->get('grp');?>');" class="btn-button btn-primary-button">PRINT</button>-->
     	<!--<button onclick="javascript:myFunction('report_vols?m=12&y=2016&stat=fbfb&resch=nt&grp=');" class="btn-button btn-primary-button">PRINT</button>-->
     	<button type="cancel" class="btn-button btn-primary-button" onclick="location.href = '<?php echo $btp ;?>';">CANCEL</button>
@@ -368,7 +369,7 @@ if ($this->input->get('ex') == 'excel'){
 					<td colspan="5"><?=($filby == 'RI') ? 'RI' : 'PPM' ?> LISTING - <?=date('F', mktime(0, 0, 0, $month, 10))?> <?=$year?> - <?php echo $this->session->userdata('usersessn');?>  ( <?php if ($this->input->get('grp') == ''){echo 'ALL'; }else{ echo 'Group '.$this->input->get('grp');} ?> )</td>
 				</tr>
 			</table>
-			<div id="constrainer" style="height: 55%;">
+			<div id="constrainer" style="height: 45%;">
 				<div class="scrolltable1">
 					<table class="tftable" border="1" style="text-align:center;">
 						<tr>

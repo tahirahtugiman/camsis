@@ -335,7 +335,7 @@ $locationone = "0";
 							<?php } ?>
 						</tr>
 					</table>
-					<div id="constrainer" style="height: 55%;">
+					<div id="constrainer" style="height: 45%;">
 						<div class="scrolltable1">
 							<table class="tftable tbl-go" border="1" style="text-align:center;">
 								<tr>
