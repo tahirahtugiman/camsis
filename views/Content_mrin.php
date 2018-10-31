@@ -1,11 +1,3 @@
-<style>
-.td-desk2{
- 	display: inline-block;
-	font-weight: bold;
-	font-size: 14px;
-	padding-left: 80px;	
-}
-</style>
 <div class="ui-middle-screen">
 	<div class="div-p"></div>
 	<div class="main-box">
@@ -23,8 +15,16 @@
 	<div class="content-workorder">
 		<table class="ui-content-middle-menu-workorder" border="0" height="" align="center">
 			<?php 
-			$procument = $this->input->get('tab');
+			// $procument = $this->input->get('tab');
+			$procument = $mrintype;
+			if ($procument == 0) {
+				$procument = 3;
+			} elseif ($procument == 3) {
+				$procument = 0;
+			}
 
+			if( $tab!='' ) $procument = $tab;
+			// echo $procument;die;
 			switch ($procument) {
 				case "1":
 					$tulis = "Approved MRIN";
@@ -37,7 +37,7 @@
 				break;
 				default:
 					$tulis = "Pending MRIN";
-			} 
+			}
 			?>
 			<?php include 'content_pro_tab.php';?>
 			<tr class="ui-color-desk desk2">
@@ -48,12 +48,12 @@
 					<table width="100%" class="ui-content-middle-menu-desk">
 						<tr style="background:#B3130A;">
 							<td width="3%" height="30px">							
-								<a href="?pro=mrin&tab=<?=$this->input->get('tab') ?>&y=<?= $year-1?>&m=<?= $month?>">
+								<a href="?pro=mrin&tab=<?=($tab!='') ? $tab : $this->input->get('tab') ?>&y=<?= $year-1?>&m=<?= $month?>">
 									<img src="<?php echo base_url(); ?>images/arrow-left2.png" alt="" class="ui-img-icon"/>
 								</a>
 							</td>
 							<td width="3%">
-								<a href="?pro=mrin&tab=<?=$this->input->get('tab') ?>&y=<?= ($month-1 == 0) ? $year-1 :$year?>&m=<?= ($month-1 == 0) ? 12 :$month-1?>">
+								<a href="?pro=mrin&tab=<?=($tab!='') ? $tab : $this->input->get('tab') ?>&y=<?= ($month-1 == 0) ? $year-1 :$year?>&m=<?= ($month-1 == 0) ? 12 :$month-1?>">
 									<img src="<?php echo base_url(); ?>images/arrow-left.png" alt="" class="ui-img-icon"/>
 								</a>
 							</td>
@@ -81,6 +81,7 @@
 							<th >&nbsp;</th>
 							<th style="text-align:left;">MRIN Reference No</th>
 							<th >Work Order</th>
+							<th >Work Order Date</th>
 							<th >Asset</th>
 							<th >Status</th>
 							<th >Issue Date</th>
@@ -132,7 +133,8 @@
 								</a>
 							</td>
 							<td class="td-desk"><?=isset($row->WorkOfOrder) ? $row->WorkOfOrder : ''?></td>
-							<td class="td-desk"><?=isset($row->V_Asset_no) ? $row->V_Asset_no : ''?></td>
+							<td class="td-desk"><?=isset($row->wodate) ? date("d-m-Y",strtotime($row->wodate)) : ''?></td>
+							<td class="td-desk"><?=isset($row->Astag) ? $row->Astag : ''?></td>
 								<?php foreach($status as $stat){ ?>
 									<?php
 										$s_Proc = "";
@@ -156,8 +158,8 @@
 							<td class="" align="left">
 								<a rel="nofollow" title="Manager : <?=$s_AM?> <?php if ($s_AM != "Pending") { ?> ON <?=isset($row->DateApproval) ? date("d/m/Y H:i:s",strtotime($row->DateApproval)) : ''?>  <?php } ?> &#13;Procument : <?=$s_Proc?> <?php if ($s_Proc != "Pending") { ?> ON <?=isset($row->DateApprovalx) ? date("d/m/Y H:i:s",strtotime($row->DateApprovalx)) : ''?> &#13; <?=isset($row->DateApprovalxx) ? date("d/m/Y H:i:s",strtotime($row->DateApprovalxx)) : ''?>  
 								<?php } ?>">
-									<span class="td-desk2">
-										Manager : <?=$s_AM?> <br>Procument : <?=$s_Proc?>
+									<span class="td-desk3">
+										Manager : <?=$s_AM?> <!-- <br>Procument : <?=$s_Proc?> -->
 									</span>
 								</a>
 							</td>
@@ -169,7 +171,11 @@
 						<?php endforeach; ?>
 						<?php } else { ?>
 						<tr align="center" style="height:200px; background:white;">
+							<?php if($msg_nodata!=''){?>
+							<td colspan="7" class="default-NO"><?=$msg_nodata;?></td>
+							<?php }else{ ?>
 							<td colspan="7" class="default-NO">NO <?php if($tulis == "All MRIN" ){ echo "MRIN";}else{ echo $tulis;}?> FOUND FOR <?=date('F', mktime(0, 0, 0, $month, 10))?> <?=$year?></td>
+							<?php } ?>
 						</tr>
 						<?php } ?>
 					</table>
@@ -255,7 +261,7 @@
 									<a rel="nofollow" title="Manager : <?=$s_AM?> <?php if ($s_AM != "Pending") { ?> ON <?=isset($row->DateApproval) ? date("d/m/Y H:i:s",strtotime($row->DateApproval)) : ''?>  <?php } ?> &#13;Procument : <?=$s_Proc?> <?php if ($s_Proc != "Pending") { ?> ON <?=isset($row->DateApprovalx) ? date("d/m/Y H:i:s",strtotime($row->DateApprovalx)) : ''?> &#13; <?=isset($row->DateApprovalxx) ? date("d/m/Y H:i:s",strtotime($row->DateApprovalxx)) : ''?>  
 									<?php } ?>">
 										<span>
-											Manager : <?=$s_AM?> <br>Procument : <?=$s_Proc?>
+											Manager : <?=$s_AM?> <!-- <br>Procument : <?=$s_Proc?> -->
 										</span>
 									</a>
 								</td>
@@ -270,7 +276,7 @@
 								<td>Remark</td>
 								<td class="td-desk">: <?=isset($row->Commentsx) ? $row->Commentsx : ''?></td>
 							</tr>
-								<?php endforeach;?>
+								<?php $rownum++;endforeach;?>
 							<?php }else{?>
 								<tr align="center" style="height:200px; background:white;">
 									<td colspan="2" class="default-NO">NO <?php if($tulis == "All MRIN" ){ echo "MRIN";}else{ echo $tulis;}?> FOUND FOR <?=date('F', mktime(0, 0, 0, $month, 10))?> <?=$year?></td>

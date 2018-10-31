@@ -1054,7 +1054,7 @@ ORDER BY r.D_date, r.D_time
     		  $bystak = " AND left(a.v_tag_no,6) = 'IIUM E'"; }
 
     		  $this->db->distinct();
-          $this->db->select('a.V_Location_code, s.v_Wrkordstatus, s.v_WrkOrdNo AS sv_wrkordno, s.v_Asset_no AS sv_asset_no, s.v_Month AS sv_month, s.v_HospitalCode AS sv_hospitalcode, s.d_DueDt AS sd_duedt, s.v_jobtype AS sv_jobtype, s.v_year AS sv_year, s.v_ServiceCode AS sv_servicecode, a.V_Tag_no AS av_tag_no, a.V_User_Dept_code AS av_user_dept_code, a.V_Asset_name AS av_asset_name, b.v_stest, b.v_ptest, b.d_DateDone, CONCAT(c.v_ActionTaken,REPLACE(CONCAT(IFNULL(s.v_Remarks, ""), " ", ifnull(b.v_summary, "")),c.v_ActionTaken,"")) as v_summary, b.d_last_resch_date, c.d_Date, IFNULL(s.d_Reschdt,c.d_Reschdt) AS d_Reschdt, d.v_UserDeptDesc,a.v_asset_grp', FALSE);
+               $this->db->select('a.V_Location_code, s.v_Wrkordstatus, s.v_WrkOrdNo AS sv_wrkordno, s.v_Asset_no AS sv_asset_no, s.v_Month AS sv_month, s.v_HospitalCode AS sv_hospitalcode, s.d_DueDt AS sd_duedt, s.v_jobtype AS sv_jobtype, s.v_year AS sv_year, s.v_ServiceCode AS sv_servicecode, a.V_Tag_no AS av_tag_no, a.V_User_Dept_code AS av_user_dept_code, a.V_Asset_name AS av_asset_name, b.v_stest, b.v_ptest, b.d_DateDone, CONCAT(c.v_ActionTaken,REPLACE(CONCAT(IFNULL(s.v_Remarks, ""), " ", ifnull(b.v_summary, "")),c.v_ActionTaken,"")) as v_summary, b.d_last_resch_date, c.d_Date, IFNULL(s.d_Reschdt,c.d_Reschdt) AS d_Reschdt, d.v_UserDeptDesc,a.v_asset_grp', FALSE);
     			//$this->db->select('a.V_Location_code, s.v_Wrkordstatus, s.v_WrkOrdNo AS sv_wrkordno, s.v_Asset_no AS sv_asset_no, s.v_Month AS sv_month, s.v_HospitalCode AS sv_hospitalcode, s.d_DueDt AS sd_duedt, s.v_jobtype AS sv_jobtype, s.v_year AS sv_year, s.v_ServiceCode AS sv_servicecode, a.V_Tag_no AS av_tag_no, a.V_User_Dept_code AS av_user_dept_code, a.V_Asset_name AS av_asset_name, b.v_stest, b.v_ptest, b.d_DateDone, CONCAT(IFNULL(c.v_ReschReason, c.v_ActionTaken),CONCAT(IFNULL(s.v_Remarks, ""), " ", ifnull(b.v_summary, ""))) AS v_summary, b.d_last_resch_date, c.d_Date, IFNULL(s.d_Reschdt,c.d_Reschdt) AS d_Reschdt, d.v_UserDeptDesc,a.v_asset_grp', FALSE);
     			//$this->db->select('a.V_Location_code, s.v_Wrkordstatus, s.v_WrkOrdNo AS sv_wrkordno, s.v_Asset_no AS sv_asset_no, s.v_Month AS sv_month, s.v_HospitalCode AS sv_hospitalcode, s.d_DueDt AS sd_duedt, s.v_jobtype AS sv_jobtype, s.v_year AS sv_year, s.v_ServiceCode AS sv_servicecode, a.V_Tag_no AS av_tag_no, a.V_User_Dept_code AS av_user_dept_code, a.V_Asset_name AS av_asset_name, b.v_stest, b.v_ptest, b.d_DateDone, b.v_summary, b.d_last_resch_date, b.d_DateDone AS d_Date, IFNULL(s.d_Reschdt,b.d_last_resch_date) AS d_Reschdt, d.v_UserDeptDesc,a.v_asset_grp', FALSE);
     			$this->db->from('pmis2_egm_schconfirmmon s');
@@ -2401,8 +2401,9 @@ return $query->result();
 			return $query->result();
 		}
 		function poprequest_ppm($hosp,$y,$m){
+		
 			$this->db->select('s.v_WrkOrdNo,s.n_StartWk,s.d_Reschdt,s.v_jobtype,s.d_DueDt,s.d_exactdate,s.v_closeddate,s.v_closedtime,s.v_Asset_no,s.v_Wrkordstatus,a.V_User_Dept_code,a.V_Asset_no AS Expr1');
-			$this->db->select('a.V_Tag_no,a.V_Serial_no,a.V_Asset_name,a.V_Manufacturer,a.V_Brandname,a.V_Model_no,b.V_PO_date,b.N_Cost');//,DATEDIFF(b.D_commission,CURDATE()) AS Ages
+			$this->db->select('a.V_Tag_no,a.V_Serial_no,a.V_Asset_name,a.V_Manufacturer,a.V_Brandname,a.V_Model_no,b.V_PO_date,b.N_Cost');
 			$this->db->from('pmis2_egm_schconfirmmon s');
 			$this->db->join('pmis2_egm_assetregistration a','s.v_HospitalCode = a.V_Hospitalcode AND s.v_Asset_no = a.V_Asset_no','inner');
 			$this->db->join('pmis2_egm_assetreg_general b','a.V_Hospitalcode = b.V_Hospital_code AND a.V_Asset_no = b.V_Asset_no','inner');
@@ -2412,7 +2413,7 @@ return $query->result();
 			$this->db->where('YEAR(s.d_DueDt)',$y);
 			$this->db->where('MONTH(s.d_DueDt)',$m);
 			//$this->db->where('MONTH(s.d_DueDt)','01');//test
-			//$query = $this->db->get();
+			$query = $this->db->get();
 			//echo $this->db->last_query();
 			//exit();
 			return $query->result();
@@ -4534,7 +4535,7 @@ ORDER BY r.D_date, r.D_time
   	function mrinlist($month,$year,$type,$kelas, $search){
   		//echo "nilai kelas : " . $kelas . " type : " . $type;
   		$inter = (int)$month;
-  		$this->db->select('m.*,IFNULL(s.V_Asset_no,p.v_Asset_no) AS V_Asset_no,st.Status, IFNULL(IFNULL(IFNULL(ApprCommentsxx,ApprCommentsx),ApprComments),Comments) AS Commentsx',FALSE);
+  		$this->db->select('m.*,IFNULL(s.V_Asset_no,p.v_Asset_no) AS V_Asset_no,st.Status, IFNULL(IFNULL(IFNULL(ApprCommentsxx,ApprCommentsx),ApprComments),Comments) AS Commentsx,IFNULL(s.D_date,p.d_StartDt) as wodate,(SELECT V_Tag_no FROM pmis2_egm_assetregistration WHERE V_Asset_no=s.V_Asset_no OR V_Asset_no=p.V_Asset_no LIMIT 1) as Astag',FALSE);
   		$this->db->from('tbl_materialreq m');
   		$this->db->join('pmis2_egm_service_request s','m.WorkOfOrder = s.V_Request_no AND s.V_actionflag <> "D"','left outer');
   		$this->db->join('pmis2_egm_schconfirmmon p','m.WorkOfOrder = p.v_WrkOrdNo AND p.v_Actionflag <> "D"','left outer');
@@ -5693,6 +5694,20 @@ echo $this->db->last_query();
 		$query_result = $query->result();
 		return $query_result;
 	}
+	
+	function wo_tracking($from,$to){
+        $this->db->select("r.service_code,r.WorkOfOrder,r.WorkOrderDate,r.DateCreated,m.MIRNcode,m.ItemCode,r.Comments,m.QtyReq,m.QtyReqfx, (CASE WHEN Who_Del = 'store' THEN 'STOCK' ELSE NULL END) as stocstatus,i.PartNumber");
+        $this->db->from("tbl_mirn_comp m");
+        $this->db->join("tbl_materialreq r", "m.MIRNcode=r.DocReferenceNo", "inner join");
+        $this->db->join("tbl_invitem i", "m.ItemCode=i.ItemCode", "inner join");
+        $this->db->where('r.DateCreated >=',$from);
+		$this->db->where('r.DateCreated <=',$to);
+        //$this->db->group_by("wo.V_request_no");
+        $query = $this->db->get();
+        $query_result = $query->result();
+		//echo $this->db->last_query();exit;
+        return $query_result;
+      }
 	
 
 
