@@ -768,7 +768,7 @@ ORDER BY r.D_date, r.D_time
 		}
 */
 		function rpt_volu($month,$year,$pilih='',$reqtype,$broughtfwd,$grpsel,$bystak="",$tag,$cm,$limab,$a_bfwd="",$fon="",$resch=""){
-/*      echo $bystak;
+   /*   echo $reqtype;
 	 exit(); */
             if ($bystak == "IIUM C") {
 			$this->db->where('left(g.v_tag_no,6)', 'IIUM C');
@@ -789,7 +789,6 @@ ORDER BY r.D_date, r.D_time
       $this->db->select("g.V_Asset_name, e.v_location_name, r.v_location_code, r.V_hospitalcode, r.closedby, r.D_date, r.D_time, r.V_Request_no, r.V_Asset_no, r.V_summary AS ReqSummary, r.V_User_dept_code, r.V_requestor, r.V_request_status, r.v_closeddate, r.v_closedtime, w.V_Wrn_end_code, a.v_summary, g.v_tag_no, d.v_UserDeptDesc, DATEDIFF(IFNULL(r.v_closeddate,'".$this->dater(3,$month,$year)."'),r.D_date) + 1 AS DiffDate,r.V_request_type,g.v_asset_grp,jr.d_Date,jr.v_Time,jr.v_Personal1, IFNULL((select v_ActionTaken from pmis2_emg_jobvisit1 where v_WrkOrdNo = r.V_Request_no order by n_Visit desc limit 1),r.v_summary) as v_ActionTaken,g.V_Asset_WG_code, IFNULL(dt.ori_wo,'none') AS linker,jv.d_Date AS schedule_d, jv.d_Reschdt AS dtresch", false);
 
       }else{
-
 			$this->db->select("g.V_Asset_name, e.v_location_name, r.v_location_code, r.V_hospitalcode, r.closedby, r.D_date, r.D_time, r.V_Request_no, r.V_Asset_no, r.V_summary AS ReqSummary, r.V_User_dept_code, r.V_requestor, r.V_request_status, r.v_closeddate, r.v_closedtime, w.V_Wrn_end_code, a.v_summary, g.v_tag_no, d.v_UserDeptDesc, CASE WHEN r.V_request_status = 'C' AND r.v_closeddate >= '".$year."-".$month."-08 23:59:59' AND r.v_closeddate < '".$this->dater(2,$month,$year)." 23:59:59' THEN DATEDIFF(r.v_closeddate, '".$year."-".$month."-09 23:59:59')+1 WHEN r.V_request_status = 'C' AND r.v_closeddate < DATE_ADD('".$year."-".$month."-08 23:59:59', INTERVAL 1 MONTH) THEN DATEDIFF(r.v_closeddate, r.D_date)+1 WHEN r.V_request_status <> 'C' AND DAY(LAST_DAY(".$this->db->escape($year."-".$month."-01").")) > DATEDIFF(now(), r.D_date) THEN DATEDIFF( now(),r.D_date)+1 ELSE DAY(LAST_DAY(".$this->db->escape($year."-".$month."-01").")) END AS DiffDate,r.V_request_type,g.v_asset_grp,jr.d_Date,jr.v_Time,jr.v_Personal1,jr.v_ActionTaken,g.V_Asset_WG_code, IFNULL(dt.ori_wo,'none') AS linker, jv.d_Date AS schedule_d, jv.d_Reschdt AS dtresch", false);
 			}
 			$this->db->from('pmis2_egm_service_request r');
@@ -3562,32 +3561,25 @@ function broughtfwd($month,$year){
 	$dn = 15;
 	$de = 5;
 	}
-	//$this->db->select("TIMESTAMPDIFF(MONTH, d_date, IFNULL(v_closeddate,now())) AS month, SUM(CASE WHEN v_request_status <> 'C' THEN 1 ELSE 0 END) AS notcomp,  SUM(CASE WHEN v_request_status = 'C' THEN 1 ELSE 0 END) AS comp"); $this->db->where('r.D_date >= ',$this->dater(1,$month,$year));
-				//$this->db->where('r.D_date <= ',$this->dater(2,$month,$year).'  23:59:59');
+
 	$this->db->select("TIMESTAMPDIFF(MONTH, CASE WHEN d_date BETWEEN concat(concat(year(d_date),'-'),concat(month(d_date)),'-08 23:59:59') AND DATE_ADD(concat(concat(year(d_date),'-'),concat(month(d_date)),'-09 23:59:59'), INTERVAL 1 MONTH) THEN concat(concat(year(d_date),'-'),concat(month(d_date)),'-08 23:59:59') ELSE DATE_SUB(concat(concat(year(d_date),'-'),concat(month(d_date)),'-08 23:59:59'), INTERVAL 1 MONTH) end,  DATE_ADD(concat(concat(year(now()),'-'),concat(month(now())),'-09 00:00:00'), INTERVAL 1 MONTH)) AS month, SUM(CASE WHEN v_request_status <> 'C' THEN 1 ELSE 0 END) AS notcomp,  SUM(CASE WHEN v_request_status = 'C' THEN 1 ELSE 0 END) AS comp, SUM(CASE WHEN v_request_status = 'C' AND v_closeddate >= ".$this->db->escape($this->dater(1,$month,$year))." AND v_closeddate <= ".$this->db->escape($this->dater(2,$month,$year).'  23:59:59')." THEN 1 ELSE 0 END) as monthcomp", false);
 	$this->db->from('pmis2_egm_service_request');
 	$this->db->where('V_servicecode', $this->session->userdata('usersess'));
-	//$this->db->where('TIMESTAMPDIFF(MONTH, d_date, IFNULL(v_closeddate,now())) > 0');
 	$this->db->where("TIMESTAMPDIFF(MONTH, CASE WHEN d_date BETWEEN concat(concat(year(d_date),'-'),concat(month(d_date)),'-08 23:59:59') AND DATE_ADD(concat(concat(year(d_date),'-'),concat(month(d_date)),'-09 23:59:59'), INTERVAL 1 MONTH) THEN concat(concat(year(d_date),'-'),concat(month(d_date)),'-08 23:59:59') ELSE DATE_SUB(concat(concat(year(d_date),'-'),concat(month(d_date)),'-08 23:59:59'), INTERVAL 1 MONTH) end,  DATE_ADD(concat(concat(year(now()),'-'),concat(month(now())),'-09 00:00:00'), INTERVAL 1 MONTH)) > ","0", false);
 	$this->db->where('V_actionflag <> ', 'D');
 	$this->db->where('V_request_type !=','A2');
-	//$this->db->where('MONTH(d_date) <=',$month);
-	//$this->db->where('YEAR(d_date) <=',$year);
-	//$this->db->where('d_date <=', $this->dater(1,$month,$year).'  23:59:59');
+
 	$this->db->where('d_date <=', $year.'-'.$month.'-08  23:59:59');
-	//$this->db->group_by('TIMESTAMPDIFF(MONTH, d_date, IFNULL(v_closeddate,now()))');
-	//$this->db->group_by("TIMESTAMPDIFF(MONTH, CASE WHEN d_date BETWEEN concat(concat(year(d_date),'-'),concat(month(d_date)),'-08 23:59:59') AND concat(concat(year(d_date),'-'),concat(month(d_date))+1,'-09 23:59:59') THEN concat(concat(year(d_date),'-'),concat(month(d_date)),'-08 23:59:59') ELSE DATE_SUB(concat(concat(year(d_date),'-'),concat(month(d_date)),'-08 23:59:59'), INTERVAL 1 MONTH) end, IFNULL(v_closeddate, concat(concat(year(now()),'-'),concat(month(now()))+1,'-09 00:00:00')))", "asc",  false);
 	$this->db->group_by('month');
 	$this->db->having("SUM(CASE WHEN v_request_status <> 'C' THEN 1 ELSE 0 END) > ",  0);
         if (!function_exists('toArray')) {
 	function toArray($obj)
 	{
-$obj = (array) $obj;//cast to array, optional
-return $obj['path'];
+     $obj = (array) $obj;//cast to array, optional
+     return $obj['path'];
 	}
         }
-	$idArray = array_map('toArray', $this->session->userdata('accessr'));//$this->session->userdata('v_UserName')
-	//if ((in_array("contentcontroller/Schedule(main)", $idArray)) && ($this->session->userdata('Ser_Code')=="IIUM")) {
+	$idArray = array_map('toArray', $this->session->userdata('accessr'));
 	if ((in_array("contentcontroller/Schedule(main)", $idArray)) && (in_array("useriium", $idArray))) {
 	$this->db->where('V_request_type <> ', 'A9');
 		}
@@ -5708,6 +5700,47 @@ echo $this->db->last_query();
 		//echo $this->db->last_query();exit;
         return $query_result;
       }
+	  
+	  function wo10_rpt($month,$year){
+	if ($this->session->userdata('usersess') == "FES") {
+	$dn = 180;
+	$de = 30;
+	} elseif ($this->session->userdata('usersess') == "BES") {
+	$dn = 120;
+	$de = 30;
+	} else {
+	$dn = 15;
+	$de = 5;
+	}
+
+	$this->db->select("TIMESTAMPDIFF(MONTH, CASE WHEN d_date BETWEEN concat(concat(year(d_date),'-'),concat(month(d_date)),'-08 23:59:59') AND DATE_ADD(concat(concat(year(d_date),'-'),concat(month(d_date)),'-09 23:59:59'), INTERVAL 1 MONTH) THEN concat(concat(year(d_date),'-'),concat(month(d_date)),'-08 23:59:59') ELSE DATE_SUB(concat(concat(year(d_date),'-'),concat(month(d_date)),'-08 23:59:59'), INTERVAL 1 MONTH) end,  DATE_ADD(concat(concat(year(now()),'-'),concat(month(now())),'-09 00:00:00'), INTERVAL 1 MONTH)) AS month,SUM(CASE WHEN v_request_status <> 'C' THEN 1 ELSE 0 END) AS notcomp,SUM(CASE WHEN v_request_status = 'C' THEN 1 ELSE 0 END) AS comp,SUM(CASE WHEN v_request_status = 'C' AND v_closeddate >= ".$this->db->escape($this->dater(1,$month,$year))." AND v_closeddate <= ".$this->db->escape($this->dater(2,$month,$year).'  23:59:59')." THEN 1 ELSE 0 END) as monthcomp", false);
+	$this->db->from('pmis2_egm_service_request');
+	$this->db->where('V_servicecode', $this->session->userdata('usersess'));
+	$this->db->where("TIMESTAMPDIFF(MONTH, CASE WHEN d_date BETWEEN concat(concat(year(d_date),'-'),concat(month(d_date)),'-08 23:59:59') AND DATE_ADD(concat(concat(year(d_date),'-'),concat(month(d_date)),'-09 23:59:59'), INTERVAL 1 MONTH) THEN concat(concat(year(d_date),'-'),concat(month(d_date)),'-08 23:59:59') ELSE DATE_SUB(concat(concat(year(d_date),'-'),concat(month(d_date)),'-08 23:59:59'), INTERVAL 1 MONTH) end,  DATE_ADD(concat(concat(year(now()),'-'),concat(month(now())),'-09 00:00:00'), INTERVAL 1 MONTH)) > ","0", false);
+	$this->db->where('V_actionflag <> ', 'D');
+	$this->db->where('V_request_type','A10');
+
+	$this->db->where('d_date <=', $year.'-'.$month.'-08  23:59:59');
+	$this->db->group_by('month');
+	$this->db->having("SUM(CASE WHEN v_request_status <> 'C' THEN 1 ELSE 0 END) > ",  0);
+        if (!function_exists('toArray')) {
+	function toArray($obj)
+	{
+     $obj = (array) $obj;//cast to array, optional
+     return $obj['path'];
+	}
+        }
+	$idArray = array_map('toArray', $this->session->userdata('accessr'));
+	if ((in_array("contentcontroller/Schedule(main)", $idArray)) && (in_array("useriium", $idArray))) {
+	$this->db->where('V_request_type <> ', 'A9');
+		}
+	$query = $this->db->get();
+	//echo $this->db->last_query();
+	//exit();
+
+	$query_result = $query->result();
+	return $query_result;
+}
 	
 
 

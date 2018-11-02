@@ -612,7 +612,13 @@
 				</td>
 			</tr>
 			<?php  } ?>
-			
+			<?php if (!in_array("contentcontroller/woa10_report", $chkers)) { ?>
+			<tr class="<?php  $number++; echo evenodd($number); ?>">
+				<td colspan="4">
+					<?php echo anchor ('contentcontroller/woa10_report?m='.$month.'&y='.$year.'&stat=fbfb&resch=nt&grp='.$this->input->get('grp'), '<img src="'. base_url() .'images/user.png" alt="" class="ui-icon"/>&nbsp;&nbsp;&nbsp;&nbsp;Work Order A10 Summary Report'); ?>
+				</td>
+			</tr>
+			<?php  } ?>
 			<tr class="ui-header-new" style="height:2px;">
 				<td align="center" colspan="7">
 				</td>

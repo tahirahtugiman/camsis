@@ -3741,6 +3741,7 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("Content_report_rmc", $data);
 	}
 	public function report_volu(){
+	
 	  //echo 'nilai : '.$this->input->post('wrty-status');
                 $pilape = "";
 		if ($this->input->get('serv') == "ele"){
@@ -3770,6 +3771,15 @@ class Contentcontroller extends CI_Controller {
 					$data['bfwd'][] = $row->month;
 				}
 			}
+		}elseif ($data['tag'] == 'totala10'){		
+          $data['records'] = $this->display_model->wo10_rpt($data['month'],$data['year']);
+			//$data['bfwd'] = array();
+			foreach ($data['records'] as $row){
+				if (($row->notcomp != 0) && ($row->comp != 0)){
+					$data['bfwd'][] = $row->month;
+				}
+			}
+				
 		}
 		$data['record'] = $this->display_model->rpt_volu($data['month'],$data['year'],$this->input->get('stat'),$data['reqtype'],$this->input->get('broughtfwd'),$data['grpsel'],$pilape,$data['tag'],$data['cm'],$data['limab'],$data['bfwd'],"",$data['fon']);
 
@@ -3802,6 +3812,8 @@ class Contentcontroller extends CI_Controller {
 		}
 	}
 	public function report_vols(){
+		 //exit();
+	//exit();
 		$data['filby'] = $this->input->get('filby');
 	    $this->load->model("display_model");
 		$data['fon']= ($this->input->get('fon')) ? $this->input->get('fon') : "";
@@ -3997,7 +4009,7 @@ class Contentcontroller extends CI_Controller {
 	}
 
 	public function report_ppmwos(){
-
+   
 	  $this->load->model("display_model");
 		$data['records'] = $this->display_model->list_hospinfo();
 		$data['fon']= ($this->input->get('fon')) ? $this->input->get('fon') : "";
@@ -4044,7 +4056,7 @@ class Contentcontroller extends CI_Controller {
 			
 		}
 
-	  $this ->load->view("headprinter");
+	    $this ->load->view("headprinter");
 		if ($this->input->get('filby') == 'RI')
 		{
 		$this ->load->view("Content_report_riwos", $data);	
@@ -8439,6 +8451,7 @@ public function print_kewpa(){
 
 
 	public function report_rcmbulk(){
+		
 		isset($_REQUEST['n_startdate']) ? $data['startdate'] = $_REQUEST['n_startdate'] : $data['startdate'] = "";
 		isset($_REQUEST['n_enddate']) ? $data['enddate'] = $_REQUEST['n_enddate'] : $data['enddate'] = "";
 		isset($_REQUEST['data_file']) ? $data['datafile'] = $_REQUEST['data_file'] : $data['datafile'] = "";
@@ -8515,35 +8528,17 @@ public function rcm_fdreport2(){
 	  $this ->load->view("headprinter");
 	  $this ->load->view("Content_report_riwos.php", $data);
 	}
-/*     public function ri_vols(){
-	  $this->load->model("display_model");
-		$data['fon']= ($this->input->get('fon')) ? $this->input->get('fon') : "";
-		$data['records'] = $this->display_model->list_hospinfo();
+
+	public function woa10_report(){
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
-		$data['grpsel']= $this->input->get('grp') ? $this->input->get('grp') : '';
-                $pilape = "";
-		if ($this->input->get('serv') == "ele"){
-		$pilape = "IIUM E";
-		} elseif ($this->input->get('serv') == "mec"){
-		$pilape = "IIUM M";
-		} elseif ($this->input->get('serv') == "civ"){
-		$pilape = "IIUM C";
-		}
-
-		$data['record'] = $this->display_model->rpt_vols($data['month'],$data['year'], $this->input->get('stat'), $this->input->get('resch'),$data['grpsel'],$pilape,$data['fon']);
-		$data['tag'] = '';
-		$data['cm']= '';
-		$data['limab']= '0';
-
-                if($this->input->get('pdf') == 1){
-		$this ->load->view("Content_report_vols_pdf", $data);
-		}else{
+		$this->load->model('display_model');
+		$data['records'] = $this->display_model->wo10_rpt($data['month'],$data['year']);
+		//print_r($data['records']);
+		//exit();
 		$this ->load->view("headprinter");
-		$this ->load->view("Content_report_vols", $data);
-		}
-
-	} */	
+		$this ->load->view("Content_woa10sr.php", $data);
+	}
 
 }
 ?>
