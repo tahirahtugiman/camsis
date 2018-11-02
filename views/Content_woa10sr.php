@@ -1,6 +1,6 @@
 <?php
 if ($this->input->get('ex') == 'excel'){
-$filename ="Unscheduled Brought Forward Work Order Summary".date('F', mktime(0, 0, 0, $month, 10)) .$year.".xls";
+$filename ="Work Order A10 Summary Report".date('F', mktime(0, 0, 0, $month, 10)) .$year.".xls";
 header('Content-type: application/ms-excel');
 header('Content-Disposition: attachment; filename='.$filename);
 }
@@ -9,10 +9,10 @@ header('Content-Disposition: attachment; filename='.$filename);
 <?php include 'content_btp.php';?>
 <div id="Instruction" class="pr-printer">
     <div class="header-pr">Work Order A10 Summary Report</div>
-    <button onclick="javascript:myFunction('broughtfwd?m=<?=$month?>&y=<?=$year?>&none=closed&ex=<?=$this->input->get('none');?>&stat=<?=$this->input->get('stat');?>');" class="btn-button btn-primary-button">PRINT</button>
+    <button onclick="javascript:myFunction('woa10_report?m=<?=$month?>&y=<?=$year?>&none=closed&ex=<?=$this->input->get('none');?>&stat=<?=$this->input->get('stat');?>');" class="btn-button btn-primary-button">PRINT</button>
     <button type="cancel" class="btn-button btn-primary-button" onclick="location.href = '<?php echo $btp ;?>';">CANCEL</button>
 	<?php if (($this->input->get('ex') == '') or ($this->input->get('none') == '')){?>
-	<a href="<?php echo base_url();?>index.php/contentcontroller/broughtfwd?m=<?=$this->input->get('m');?>&y=<?=$this->input->get('y');?>&ex=excel&none=close&stat=<?=$this->input->get('stat');?>" style="float:right; margin-right:40px;"><img src="<?php echo base_url();?>images/excel.png" style="width:40px; height:38px; position:absolute;" title="export to excel"></a>
+	<a href="<?php echo base_url();?>index.php/contentcontroller/woa10_report?m=<?=$this->input->get('m');?>&y=<?=$this->input->get('y');?>&ex=excel&none=close&stat=<?=$this->input->get('stat');?>" style="float:right; margin-right:40px;"><img src="<?php echo base_url();?>images/excel.png" style="width:40px; height:38px; position:absolute;" title="export to excel"></a>
 	<?php } ?>
 </div>
 <?php } ?>
