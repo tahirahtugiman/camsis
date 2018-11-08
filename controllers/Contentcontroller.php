@@ -8526,7 +8526,7 @@ public function rcm_fdreport2(){
 		}
 
 	  $this ->load->view("headprinter");
-	  $this ->load->view("Content_report_riwos.php", $data);
+	  $this ->load->view("Content_report_riwos", $data);
 	}
 
 	public function woa10_report(){
@@ -8537,7 +8537,60 @@ public function rcm_fdreport2(){
 		//print_r($data['records']);
 		//exit();
 		$this ->load->view("headprinter");
-		$this ->load->view("Content_woa10sr.php", $data);
+		$this ->load->view("Content_woa10sr", $data);
+	}
+	
+		public function join_unstfy_rpt(){
+		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");
+		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
+	    $this->load->model('get_model');
+	/* 	$start = $bulan = strtotime("-5 month",strtotime('2018-'.$data['month'].'-09'));
+        $end = strtotime('2018-'.$data['month'].'-08');
+		while($bulan < $end) { 
+		$bulan = strtotime("+1 month", $bulan);
+		$b = $test[date('n', $bulan)] = date('m', $bulan);
+	 */
+		//echo "<pre>";
+		//print_r($data['records']);
+		//}
+		
+		$data['jic'] = array();
+		$data['jic'][] = new stdClass();
+		$data['jic'][0]->Flr = 0;
+		$data['jic'][0]->WallDoor = 0;
+		$data['jic'][0]->Ceiling = 0;
+		$data['jic'][0]->Windows = 0;
+		$data['jic'][0]->Fixtures = 0;
+		$data['jic'][0]->FurnitureFitting = 0;
+
+
+	    $data['records'] = $this->get_model->get_unsatisfy($data['month'],$data['year'],$this->input->get('dept'));
+		foreach ($data['records'] as $key => $row) {
+	    if ($row->Job_Items == 'Floor'){
+			$data['jic'][0]->Flr = $row->Unstatisfactory;		
+		}
+        if ($row->Job_Items == 'Wall Door'){
+			$data['jic'][0]->WallDoor = $row->Unstatisfactory;		
+		}
+        if ($row->Job_Items == 'Ceiling'){
+			$data['jic'][0]->Ceiling = $row->Unstatisfactory;		
+		}
+        if ($row->Job_Items == 'Windows'){
+			$data['jic'][0]->Windows = $row->Unstatisfactory;		
+		}
+        if ($row->Job_Items == 'Fixtures'){
+			$data['jic'][0]->Fixtures = $row->Unstatisfactory;		
+		}
+        if ($row->Job_Items == 'Furniture Fitting'){
+			$data['jic'][0]->FurnitureFitting = $row->Unstatisfactory;		
+		}		
+		//echo "<pre>";
+		//print_r($row);	
+		}	
+		/* echo "<pre>";
+		print_r($data['records']); */
+		$this ->load->view("headprinter");
+		$this ->load->view("Content_unstfy_rpt", $data);
 	}
 
 }

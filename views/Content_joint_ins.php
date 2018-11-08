@@ -156,7 +156,7 @@
 					<?php } ?>
 					<td><?=isset($list['totalloc']) ? $list['totalloc'] : ''?></td>
 					<td><?=isset($list['Satisfactory']) ? $list['Satisfactory'] : ''?></td>
-					<td><?=isset($list['Unstatisfactory']) ? $list['Unstatisfactory'] : ''?></td>
+					<td><?=isset($list['Unstatisfactory']) && ($list['Unstatisfactory']) <> 0 ? anchor ('contentcontroller/join_unstfy_rpt?m='.$month.'&y='.$year.'&dept='.$list['Dept_Code'],''.$list['Unstatisfactory'].'') : ''?></td>
 					<td><?=isset($list['Not_Applicable']) ? $list['Not_Applicable'] : ''?></td>
 					<?php $total = $list['Satisfactory'] + $list['Unstatisfactory']; ?>
 					<td><?=$total?></td>
