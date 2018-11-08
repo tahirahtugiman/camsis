@@ -10,7 +10,7 @@ header('Content-Disposition: attachment; filename='.$filename);
 <div id="Instruction" class="pr-printer">
     <div class="header-pr">Total Joint Inspections (Unsatisfactory)</div>
     <button onclick="javascript:myFunction('join_unstfy_rpt?m=<?=$month?>&y=<?=$year?>&dept=<?=$this->input->get('dept')?>&none=closed&ex=<?=$this->input->get('none');?>');" class="btn-button btn-primary-button">PRINT</button>
-    <button type="cancel" class="btn-button btn-primary-button" onclick="location.href = '<?php echo $btp ;?>';">CANCEL</button>
+    <button type="cancel" class="btn-button btn-primary-button" onclick="location.href = '<?php echo base_url();?>index.php/contentcontroller/joint_ins?en=JISFH&hosp=<?=$records[0]->hospital_code;?>&month=<?=$this->input->get('m');?>&year=<?=$this->input->get('y');?>';">CANCEL</button>
 	<?php if (($this->input->get('ex') == '') or ($this->input->get('none') == '')){?>
 	<a href="<?php echo base_url();?>index.php/contentcontroller/join_unstfy_rpt?m=<?=$this->input->get('m');?>&y=<?=$this->input->get('y');?>&dept=<?=$this->input->get('dept')?>&ex=excel&none=close" style="float:right; margin-right:40px;"><img src="<?php echo base_url();?>images/excel.png" style="width:40px; height:38px; position:absolute;" title="export to excel"></a>
 	<?php } ?>
