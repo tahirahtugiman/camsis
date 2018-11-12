@@ -150,9 +150,9 @@ header('Content-Disposition: attachment; filename='.$filename);
 				  </tr>
 				  <tr>
 				    <td>Not Done</td>
-					<td>Not to Schedule</td>
+					<td>Done</td>
 					<td>Not Done</td>
-					<td>Not to Schedule</td>
+					<td>Done</td>
 				  </tr>
 				  <?php
 				  $tc_yellow = 0;
@@ -173,28 +173,35 @@ header('Content-Disposition: attachment; filename='.$filename);
 				    <?php if ($loc->v_UserDeptCode == $list->Dept_Code){ ?>
 					<td><?=isset($loc->totalloc) ? $loc->totalloc : ''?></td>
 					<?php $totalloc += $loc->totalloc ?>
+				
+					<td><?=isset($list->not_dc) ? $list->not_dc : ''?></td>
+					<?php
+					$done1= isset($loc->totalloc) ? ($loc->totalloc - $list->not_dc) : '';
+					$done2 = isset($list->not_wc) ? ($loc->totalloc - $list->not_wc) : '';
+					?>
+					<td><?=$done1?></td>
+					<td><?=isset($list->not_wc) ? $list->not_wc : '';?></td>
+					<td><?=$done2?></td>
 					<?php } ?>
 					<?php } ?>
-					<td><?=isset($list->Cleansing_red) ? $list->Cleansing_red : ''?></td>
-					<td><?=isset($list->Cleansing_yellow) ? $list->Cleansing_yellow : ''?></td>
-					<td><?=isset($list->Waste_red) ? $list->Waste_red : ''?></td>
-					<td><?=isset($list->Waste_yellow) ? $list->Waste_yellow : ''?></td>
 					<!--<td>2</td>-->
 				  </tr>
 				  <?php
-				  	$tc_yellow += $list->Cleansing_yellow;
-				  	$tc_red += $list->Cleansing_red;
-				  	$tw_yellow += $list->Waste_yellow;
-				  	$tw_red += $list->Waste_red
+				  	//$tc_yellow += $list->Cleansing_yellow;
+				  	$tc_yellow += $done2;
+				  	$tc_red += $list->not_dc;
+				  	//$tw_yellow += $list->Waste_yellow;
+				  	$tw_yellow += $done1;
+				  	$tw_red += $list->not_wc
 				  ?>
 				<?php endforeach; ?>
 				  <tr>
 				    <td style="font-weight:bold;">Grand Total</td>
 					<td><?=$totalloc?></td>
 					<td><?=$tc_red?></td>
-					<td><?=$tc_yellow?></td>
-					<td><?=$tw_red?></td>
 					<td><?=$tw_yellow?></td>
+					<td><?=$tw_red?></td>
+					<td><?=$tc_yellow?></td>
 					<!--<td>2</td>-->
 				  </tr>
 				 </table>

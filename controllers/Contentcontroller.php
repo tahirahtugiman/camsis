@@ -7298,11 +7298,14 @@ public function assethistory(){
 
 			$data['recordhosp'] = $this->get_model->deptlist($data['fmonth'],$data['fyear'],$data['hosp']);
 			if ($data['recordhosp']) {
-				foreach ($data['recordhosp'] as $row){
+				foreach ($data['recordhosp'] as $key=> $row){
+				$data['recordhosp'][$key]->not_dc = $row->Cleansing_yellow + $row->Cleansing_red;
+				$data['recordhosp'][$key]->not_wc = $row->Waste_yellow + $row->Waste_red;
 				$data['deptlist'][] = $row->Dept_Code;
 				}
 				$data['locdet'] = $this->get_model->locdet($data['deptlist'],$data['hosp']);
 			}
+			//echo "<pre>";
 			//print_r($data['locdet']);
 			//exit();
 		}
