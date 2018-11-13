@@ -41,18 +41,23 @@ class ajaxspw extends CI_Controller {
 	public function keluardata(){
 	$this->load->model("get_model");
 	$data['records'] = $this->get_model->get_sch_spw($this->input->post('dept_code'),$this->input->post('loc_code'),$this->input->post('month'),$this->input->post('year'));
+	$data['records2'] = $this->get_model->monthplan2($this->input->post('year'),$this->input->post('month'),$this->input->post('dept_code'));
+	$tes = array();
+	$tes2 = array();
 	$i = 1;
+	$x = 1;
+	$xno = 0;
 	$numberid = 0;
     $dept = $this->input->post('dept_code');
 	$loc = $this->input->post('loc_code');
 	$m = $this->input->post('month');
 	$y = $this->input->post('year');
-	
-	
+
 		foreach ($data['records'] as $row){
 		$numberid++;
+		$xno = $x++;
 		$id = $row->id;
-		
+	    $tes2[]=$row->work_scope;
 	echo "<tr>";
 	echo "<td contenteditable='true'>".$i++."</td>";
 	echo "<td class='jom_".$numberid."' contenteditable='true' >".$row->work_scope."</td>";
@@ -180,7 +185,41 @@ var loc = '".$loc."';
 	";	
 		
 	}
-	
+				if($data['records2'] ){
+
+	for ($it = 1; $it <= $xno; $it++) {
+//echo $i;
+$tes[] = $it;
+}
+
+  foreach ($data['records2'] as  $index => $row2){
+
+
+  //echo "The number is".$i;
+  
+if(in_array($row2->scope_name, $tes2))
+{continue;}
+
+/* elseif($index == 2 && $row2->Work_Code == 'HD')
+{continue;}  */
+
+	echo '<tr>
+				<td>'.$i++.'</td>
+				<td class="test_0">'.$row2->scope_name.'</td>
+				<td contenteditable="false"></td>
+				<td contenteditable="false"></td>
+				<td contenteditable="false"></td>
+				<td contenteditable="false"></td>
+				<td contenteditable="false"></td>
+				<td contenteditable="false"></td>
+			</tr>';
+
+		
+		// if ($i > (9) && ) break;
+				}
+
+	}	
+
 	echo '<tr>
 				<td>'.$i.'</td>
 				<td class="jom_0" contenteditable="true"></td>
@@ -190,8 +229,48 @@ var loc = '".$loc."';
 				<td contenteditable="false"></td>
 				<td contenteditable="false"></td>
 				<td contenteditable="false"></td>
-			</tr>';
-			
+			</tr>';	
+   	
+	
+		echo "<script>
+				var timeout = null;
+	   	$('.test_0').click(function(){
+var worksscope = $(this).text();
+var id = 'NULL';
+var dept = '".$dept."';
+var loc = '".$loc."';
+var m = '".$m."';
+var y = '".$y."';
+   clearTimeout(timeout);
+
+    // Make a new timeout set to go off in 800ms
+    timeout = setTimeout(function () {
+   $.post('".base_url('index.php/ajaxspw/masukdata')."',
+        {
+          worksscope: worksscope,
+           id: id,
+           dept : dept,
+           loc : loc,
+           month :m,
+           year :y		   
+        },
+        function(data,status){
+	
+         //alert(id);    
+		
+		//alert(worksscope);
+          
+		fetch_data(dept,loc,m,y);
+        });	
+	}, 500);
+	
+	
+   });
+</script>	
+	";
+	
+	
+	
 				echo "<script>
 				var timeout = null;
 	   	$('.jom_0').on('input',function() {

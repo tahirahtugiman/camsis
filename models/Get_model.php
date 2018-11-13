@@ -2106,10 +2106,14 @@ function assetimage(){
 }
 
 function monthplan($year,$month){
-	$this->db->select('*');
+	$this->db->select('*,CAST(Date AS UNSIGNED) as dated');
 	$this->db->from('set_monthly_planner');
 	$this->db->where('Year',$year);
 	$this->db->where('Month',$month);
+	//$this->db->where('Dept_Code','WGS2');
+	//$this->db->where('Work_Code !=','');
+	//$this->db->where('Month',$month);
+	$this->db->order_by('dated');
 	$query = $this->db->get();
 	//echo $this->db->last_query();
 	//exit();
@@ -3979,6 +3983,35 @@ function get_unsatisfy($month,$year,$dept){
 	//echo $this->db->last_query();
 	//exit();
 	return $query->result();
+}
+
+function monthplan2($year,$month,$dept){
+	//$query  = "";
+/*    $this->db->query("SET @a:=0;");
+ $query= $this->db->query("SELECT a.*,@a:=@a+1 as total FROM (SELECT *, (CASE WHEN  Work_Code = 'HD' THEN 'HIGH DUSTING' WHEN Work_Code = 'GC' THEN 'GEMS CLEANING' WHEN Work_Code = 'CS' THEN 'CARPET SHAMPOO' WHEN Work_Code = 'SC' THEN 'SCRUBBING' WHEN Work_Code = 'BF' THEN 'BUFFING' ELSE NULL END) as scope_name,CAST(Date AS UNSIGNED) AS Dated
+FROM set_monthly_planner WHERE Year = '".$year."'  AND Month = '".$month."' AND Dept_Code = '".$dept."' AND Work_Code != ''
+GROUP BY Work_Code ORDER BY Dated)a");
+
+     $query_result1 = $query->result();
+	//$query_result = $new_query->result();
+	return $query_result1;
+	
+	 */
+	$this->db->select("*,(CASE WHEN  Work_Code = 'HD' THEN 'HIGH DUSTING' WHEN Work_Code = 'GC' THEN 'GEMS CLEANING' WHEN Work_Code = 'CS' THEN 'CARPET SHAMPOO' WHEN Work_Code = 'SC' THEN 'SCRUBBING' WHEN Work_Code = 'BF' THEN 'BUFFING' ELSE NULL END) as scope_name,CAST(Date AS UNSIGNED) as dated");
+	$this->db->from('set_monthly_planner');
+	$this->db->where('Year',$year);
+	$this->db->where('Month',$month);
+	$this->db->where('Dept_Code',$dept);
+	$this->db->where('Work_Code !=','');	
+	$this->db->group_by('Work_Code');
+	$this->db->order_by('dated');
+	$query = $this->db->get();
+	//echo $this->db->last_query();
+	//exit();
+	$query_result = $query->result();
+	return $query_result;
+	
+	
 }
 
 }
