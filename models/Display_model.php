@@ -4145,7 +4145,12 @@ function sumrq_y($month,$year,$reqtype,$grpsel,$bystak="")
 		 //$this->db->or_like('sr.V_summary', 'fitting');
 		 $this->db->where("(sr.V_summary LIKE '%furniture%' OR sr.V_summary LIKE '%perabot%' OR sr.V_summary LIKE '%kemasan%' OR sr.V_summary LIKE '%fitting%')", NULL, FALSE);
 		 } else {
-		 	 $this->db->where('sr.V_request_type',$reqtype);
+		 if($reqtype=='ALL'){
+			 $test=array('A1','A2','A3','A4','A5','A6','A7','A8','A9','A10');
+		 	$this->db->where_in('sr.V_request_type',$test);
+		 }else{
+			$this->db->where('sr.V_request_type',$reqtype); 
+		 }
 			 }
 		}
 
@@ -4208,7 +4213,7 @@ ORDER BY r.D_date, r.D_time
 			$this->db->join('pmis2_egm_assetreg_general w','r.V_Asset_no = w.V_Asset_no AND r.V_hospitalcode = w.V_Hospital_code', 'left outer');
 			$this->db->join('pmis2_egm_jobdonedet a',"a.v_Wrkordno = r.V_Request_no AND a.v_HospitalCode = r.V_hospitalcode AND a.v_Actionflag <> 'D'", 'left outer');
 			$this->db->join('pmis2_sa_userdept d','r.V_User_dept_code = d.v_UserDeptCode','left');
-			$this->db->join('pmis2_egm_assetlocation e','r.v_location_code = e.v_location_code','left outer');
+			$this->db->join('pmis2_egm_assetlocation e','r.v_location_code = e.v_location_code AND e.V_Actionflag = "D"','left outer');
 			$this->db->join('pmis2_emg_jobresponse jr',"r.V_Request_no = jr.v_WrkOrdNo",'left outer');
 			$this->db->join('pmis2_egm_sharedowntime dt',"r.V_Request_no = dt.ori_wo",'left outer');
 			$this->db->where('r.V_servicecode', $this->session->userdata('usersess'));
@@ -4249,7 +4254,12 @@ ORDER BY r.D_date, r.D_time
 				 //$this->db->or_like('sr.V_summary', 'fitting');
 				 $this->db->where("(r.V_summary LIKE '%furniture%' OR r.V_summary LIKE '%perabot%' OR r.V_summary LIKE '%kemasan%' OR r.V_summary LIKE '%fitting%')", NULL, FALSE);
 				 } else {
-				 	 $this->db->where('r.V_request_type',$reqtype);
+				 	  if($reqtype=='ALL'){
+			 $test=array('A1','A2','A3','A4','A5','A6','A7','A8','A9','A10');
+		 	$this->db->where_in('r.V_request_type',$test);
+		 }else{
+			$this->db->where('r.V_request_type',$reqtype); 
+		 }
 					 }
 			}
 			/*if ($broughtfwd <> ''){
@@ -4262,8 +4272,17 @@ ORDER BY r.D_date, r.D_time
 			//else{
 			//$this->db->where('r.d_date >=', $this->dater(1,1,$year));
 			//$this->db->where('r.d_date <=', $this->dater(2,12,$year).'  23:59:59');
-			$this->db->where('r.d_date >=', $this->dater(1,$month,$year));
-			$this->db->where('r.d_date <=', $this->dater(2,$month,$year).'  23:59:59');
+			
+			
+			/*   if($reqtype=='ALL'){ */
+				$this->db->where('r.d_date >=', $this->dater(1,1,$year));
+	            $this->db->where('r.d_date <=', $this->dater(2,12,$year).'  23:59:59');
+			/*   }else{
+				  
+				$this->db->where('r.d_date >=', $this->dater(1,$month,$year));
+			$this->db->where('r.d_date <=', $this->dater(2,$month,$year).'  23:59:59');  
+				  
+			  } */
 			//}
 			$this->db->where('r.V_hospitalcode',$this->session->userdata('hosp_code'));
 			if ($grpsel <> ''){
@@ -5673,8 +5692,8 @@ echo $this->db->last_query();
         $this->db->from("tbl_mirn_comp m");
         $this->db->join("tbl_materialreq r", "m.MIRNcode=r.DocReferenceNo", "inner join");
         $this->db->join("tbl_invitem i", "m.ItemCode=i.ItemCode", "inner join");
-		$this->db->join('pmis2_egm_service_request s','r.WorkOfOrder = s.V_Request_no AND s.V_actionflag <> "D"','inner outer');
-  		$this->db->join('pmis2_egm_schconfirmmon p','r.WorkOfOrder = p.v_WrkOrdNo AND p.v_Actionflag <> "D"','inner outer');
+		$this->db->join('pmis2_egm_service_request s','r.WorkOfOrder = s.V_Request_no AND s.V_actionflag <> "D"','left outer');
+  		$this->db->join('pmis2_egm_schconfirmmon p','r.WorkOfOrder = p.v_WrkOrdNo AND p.v_Actionflag <> "D"','left outer');
         $this->db->where('r.DateCreated >=',$from);
 		$this->db->where('r.DateCreated <=',$to);
         //$this->db->group_by("wo.V_request_no");

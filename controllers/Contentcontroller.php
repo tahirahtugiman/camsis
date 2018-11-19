@@ -1938,6 +1938,7 @@ class Contentcontroller extends CI_Controller {
 		$data['datacount'] = count($data['asset_images']);
 		//echo '<br> nilai asset vo';
 		$data['assetppm'] = $this->get_model->assetppmlist($data['assetn']);
+		print_r($data['assetppm']);
 		$this ->load->view("head");
 		$this ->load->view("left",$data);
 		$this ->load->view("content_assetupdate",$data);
@@ -8119,7 +8120,7 @@ public function pop_fail(){
 		//$data['complntsum'] = $this->display_model->sumcomplnt($data['month'],$data['year']);
 
 
-                if ($this->session->userdata('usersess') == 'FES') {
+        if ($this->session->userdata('usersess') == 'FES') {
 		$data['rqcivil'] = $this->display_model->sumrq_y($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'),"IIUM C");
 		$data['rqmech'] = $this->display_model->sumrq_y($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'),"IIUM M");
 		$data['rqelec'] = $this->display_model->sumrq_y($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'),"IIUM E");

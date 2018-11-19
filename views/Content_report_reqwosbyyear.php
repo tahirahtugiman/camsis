@@ -58,7 +58,8 @@ function barchart(a,b,c,d,e){
 			'FUR' => 'Furniture / Fitting - Related Report'
 		 ); } else {
 		 		$req_type = array(
-			'A1' => 'A1 - Breakdown Maintenance (BM)',
+			'ALL' => 'ALL',	
+			'A1' => 'A1 - Breakdown Maintenance (BM)',			
 			'A2' => 'A2 - Schedule Corrective Maintenance (SCM)',
 			'A3' => 'A3 - Corrective Maintenance (CM)',
 			'A4' => 'A4 - User Requests',
