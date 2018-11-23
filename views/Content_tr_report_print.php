@@ -198,7 +198,22 @@ $newDate = date("Y-m-d", strtotime($date)); ?>
 				<td><?=($row->MIRNcode) ? $row->MIRNcode : 'N/A' ?></td>
 				<td><?=($row->stocstatus) ? $row->stocstatus : '' ?></td>
 				<td><?=($row->ItemCode) ? $row->ItemCode : 'N/A' ?></td>
-				<td><?=($row->Comments) ? $row->Comments : 'N/A' ?></td>
+				<td width="20%"><?php
+				$i=1;
+				if($row->comment2){
+				foreach($row->comment2 as $row2){
+				echo $i."-&nbsp;";	
+				//echo "Item Code : ".$row2->ItemCode."&nbsp;";	
+				echo $row2->ItemName."&nbsp;";	
+				//echo "Qty Required : ".$row2->Qty."&nbsp;";	
+				//echo "AM Approved Qty : ".$row2->QtyReq."&nbsp;";	
+				echo "<br>";
+                     $i++;				
+				}
+				}else {				
+				echo $row->Comments;	
+				}
+				?></td>
 				<td><?=($row->PartNumber) ? $row->PartNumber : 'N/A' ?></td>
 				<td><?=($row->QtyReq) ? $row->QtyReq : 'N/A' ?></td>
 				<td><?=($row->QtyReqfx) ? $row->QtyReqfx : 'N/A' ?></td>
