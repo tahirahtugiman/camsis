@@ -67,18 +67,17 @@ class Procurement extends CI_Controller {
 				$data['comrec'] = $this->display_model->comrec($this->input->get('mrinno'));
 				$data['attrec'] = $this->display_model->attrec($this->input->get('mrinno'));
 				$data['user'] = $this->display_model->user_class($this->session->userdata('v_UserName'));
-				//print_r($data['record']);
-				//exit();
+			
 				$this ->load->view("Content_mrin_procure",$data);
 			}elseif ($this->input->get('pro') == 'pending'){
 				$this->load->model('display_model');
 				$data['record'] = $this->display_model->mrindet($this->input->get('mrinno'));
 				$data['itemrec'] = $this->display_model->itemdet($this->input->get('mrinno'));
 				$data['comrec'] = $this->display_model->comrec($this->input->get('mrinno'));
-				print_r($data['itemrec']);
+				//print_r($data['itemrec']);
 				if (!($data['itemrec'])) {
 				//echo "ade data";
-				redirect('Procurement?pro=mrin');
+				//redirect('Procurement?pro=mrin');
 				}
 				$data['attrec'] = $this->display_model->attrec($this->input->get('mrinno'));
 				$data['user'] = $this->display_model->user_class($this->session->userdata('v_UserName'));
@@ -516,6 +515,8 @@ class Procurement extends CI_Controller {
 		$data['from']= ($this->input->get('from') <> 0) ? $this->input->get('from') : date("Y-m-d");
 		$data['to']= ($this->input->get('to') <> 0) ? $this->input->get('to') : date("Y-m-d");
 		$this->load->model("display_model");
+		$data['t_record'] = $this->display_model->wo_tracking($data['from'], $data['to']);
+		
 		$this ->load->view("headprinter");
 		if ($this->input->get('pr') == 'rs'){
 			$this ->load->view("Content_rs_report_print",$data);
@@ -527,9 +528,15 @@ class Procurement extends CI_Controller {
 			$data['record'] = $this->display_model->wo_no_mrin($data['year'], $data['month']);
 			$this ->load->view("Content_wo_report_print",$data);
 		}elseif ($this->input->get('pr') == 'tr'){
-			$data['t_record'] = $this->display_model->wo_tracking($data['from'], $data['to']);
-			$this ->load->view("Content_tr_report_print.php",$data);
+			foreach($data['t_record'] as $key=>$row){		  
+		   $data['itemrec'] = $this->display_model->itemdet($row->MIRNcode);
+		   $data['t_record'][$key]->comment2=$data['itemrec'];
 		}
+			}
+			//echo "<pre>";
+//print_r($data['t_record']);			
+			$this ->load->view("Content_tr_report_print.php",$data);
+		
 	}
 	public function e_request(){
 		//echo "lalalalalalla masuk";

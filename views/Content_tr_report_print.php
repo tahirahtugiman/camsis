@@ -36,9 +36,7 @@ $newDate = date("Y-m-d", strtotime($date)); ?>
 </div>
 <?php } ?>
 
-<?php if ($this->input->get('ex') == ''){ ?>
-	<?php $numrow = 1; foreach($t_record as $row):?>
-	<?php if ($numrow==1 OR $numrow%14==1) { ?>
+<?php  if (empty($t_record)) {?>
 <div class="m-div">
 	<table class="rport-header">
 		<tr>
@@ -63,6 +61,41 @@ $newDate = date("Y-m-d", strtotime($date)); ?>
 				<th>QTY REQUEST</th>
 				<th>QTY APPROVED</th>
 			</tr>
+          <tr>
+			<td colspan="14" style="height:100px;"><span style="color:red;">NO RECORDS FOUND.</span></td>
+		</tr>
+	</table>
+</div>
+<?php } ?>
+
+
+<?php if ($this->input->get('ex') == ''){ ?>
+	<?php $numrow = 1; foreach($t_record as $row):?>
+	<?php if ($numrow==1 OR $numrow%25==1) { ?>
+<div class="m-div">
+	<table class="rport-header">
+		<tr>
+			<td colspan="5">PROCUREMENT TRACKING REPORT <?=date('F', mktime(0, 0, 0, $month, 10))?> <?=$year?> - <?php echo $this->session->userdata('usersessn');?></td>
+		</tr>
+	</table>
+	<table class="tftable" border="1" style="text-align:center; width:100%;" align="left">
+		
+		<tr style="text-align:center;font-weight:bold;">
+				<th>NO</th>
+				<th>SERVICE</th>
+				<th>REQUEST WORK ORDER NO</th>
+				<th>DATE</th>
+				<th>MONTH WORK ORDER</th>
+				<th>MRIN DATE RCVD</th>
+				<th>MONTH MRIN</th>
+				<th>MRIN NO</th>
+				<th>SP/TP/STOCK</th>
+				<th>ITEM CODE</th>
+				<th>ITEM DESCRIPTION</th>
+				<th>PART NUMBER</th>
+				<th>QTY REQUEST</th>
+				<th>QTY APPROVED</th>
+			</tr>
 		
 				<?php } ?>
 <?php echo ($numrow%2==0) ? '<tr class="ui-color-color-color">' : '<tr>'; ?>				
@@ -77,14 +110,31 @@ $newDate = date("Y-m-d", strtotime($date)); ?>
 				<td><?=($row->MIRNcode) ? $row->MIRNcode : 'N/A' ?></td>
 				<td><?=($row->stocstatus) ? $row->stocstatus : '' ?></td>
 				<td><?=($row->ItemCode) ? $row->ItemCode : 'N/A' ?></td>
-				<td><?=($row->Comments) ? $row->Comments : 'N/A' ?></td>
+			
+				<!--<td><?=($row->Comments) ? $row->Comments : 'N/A' ?></td>-->
+				<td width="20%"><?php
+				$i=1;
+				if($row->comment2){
+				foreach($row->comment2 as $row2){
+				echo $i."-&nbsp;";	
+				//echo "Item Code : ".$row2->ItemCode."&nbsp;";	
+				echo $row2->ItemName."&nbsp;";	
+				//echo "Qty Required : ".$row2->Qty."&nbsp;";	
+				//echo "AM Approved Qty : ".$row2->QtyReq."&nbsp;";	
+				echo "<br>";
+                     $i++;				
+				}
+				}else {				
+				echo $row->Comments;	
+				}
+				?></td>
 				<td><?=($row->PartNumber) ? $row->PartNumber : 'N/A' ?></td>
 				<td><?=($row->QtyReq) ? $row->QtyReq : 'N/A' ?></td>
 				<td><?=($row->QtyReqfx) ? $row->QtyReqfx : 'N/A' ?></td>
 			</tr>
 <?php $numrow++; ?>
 		<?php //if (($numrow-1)%13==0) {
-				if ((($numrow-1)%14==0) || (($numrow-1)== count($t_record))) {
+				if ((($numrow-1)%25==0) || (($numrow-1)== count($t_record))) {
 		?>
 	</table>
 	
