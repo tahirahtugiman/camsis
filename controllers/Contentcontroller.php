@@ -5611,9 +5611,12 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("content_store_item_confirm");
 	}
 	public function pecodes(){
+
+		//exit();
+		$data['scby'] = ($this->input->post('scby')) ? $this->input->post('scby') : '';
 		$data['hosp'] = $this->input->get('hosp');
 		$this->load->model('display_model');
-		$data['record'] = $this->display_model->pecodes($data['hosp']);
+		$data['record'] = $this->display_model->pecodes($data['hosp'],$data['scby']);
 		$this ->load->view("head");
 		$this ->load->view("content_pop_pecodes",$data);
 	}
@@ -5645,15 +5648,20 @@ class Contentcontroller extends CI_Controller {
 	public function pop_requests(){
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
-		$data['wwo']= (!($this->input->get('wwo'))) || $this->input->get('wwo') == 1 ? 1 : 2;
+		//$data['wwo']= (!($this->input->get('wwo'))) || $this->input->get('wwo') == 1 ? 1 : 2;
+		$data['wwo']= ($this->input->get('wwo') <> '') ?  $this->input->get('wwo') : 1;
 		$data['s']= $this->input->get('s');
 		$data['hosp'] = $this->session->userdata('hosp_code');
 		$this->load->model('display_model');
 		if($data['wwo'] == 1){
 		$data['record'] = $this->display_model->poprequest_rcm($data['hosp'],$data['year'],$data['month'],$data['s']);
 		}
-		else{
+		elseif($data['wwo'] == 2){
 		$data['record'] = $this->display_model->poprequest_ppm($data['hosp'],$data['year'],$data['month']);
+		}
+		else{
+			//exit();
+		$data['record'] = $this->display_model->poprequest_mrin($data['hosp'],$data['year'],$data['month']);
 		}
 		$this ->load->view("head");
 		$this ->load->view("content_pop_requests",$data);

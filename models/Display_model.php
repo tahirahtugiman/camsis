@@ -2394,7 +2394,7 @@ return $query->result();
 			$this->db->where('MONTH(s.d_DueDt)',$m);
 			//$this->db->where('MONTH(s.d_DueDt)','01');//test
 			$query = $this->db->get();
-			//echo $this->db->last_query();
+			echo $this->db->last_query();
 			//exit();
 			return $query->result();
 		}
@@ -2411,12 +2411,15 @@ return $query->result();
 			//exit();
 			return $query->result();
 		}
-		function pecodes($hosp){
+		function pecodes($hosp,$cari=""){
 			$this->db->select('ItemCode,ItemName');
 			$this->db->from('tbl_invitem');
 			$this->db->where('ItemCode NOT IN (SELECT ItemCode FROM tbl_item_store_qty WHERE Hosp_code = "'.$hosp.'")', NULL, FALSE);
+			if ($cari <> ''){
+			$this->db->like('CONCAT_WS(" ",ItemName,ItemCode,PartNumber)', $cari, 'both'); 
+			}
 			$query = $this->db->get();
-			//echo $this->db->last_query();
+			echo $this->db->last_query();
 			//exit();
 			return $query->result();
 		}
@@ -2949,17 +2952,8 @@ function sumsat($month,$year,$grpsel)
 
 		function rpt_rsls($month,$year, $stat = "apo2",$expiring){
 
-			/*$this->db->select('v_CertificateNo, v_AgencyCode, v_LicenseCategoryCode, v_registrationno, v_Identification, v_StartDate, v_ExpiryDate, v_GradeID, v_Remarks');
-			$this->db->from('pmis2_egm_lnc_lincense_details');
-			$this->db->where('v_ServiceCode', $this->session->userdata('usersess'));
-			$this->db->where('v_actionflag <> ', 'D');
-			//$this->db->where('YEAR(d_date)', $year);
-			//$this->db->where('MONTH(d_date)', $month);
-			$this->db->where('v_hospitalcode',$this->session->userdata('hosp_code'));*/
-			//$this->db->select("A.v_CertificateNo, A.v_ServiceCode, A.v_AgencyCode, A.v_registrationno, A.v_LicenseCategoryCode, B.v_LicenceCategoryDesc, A.v_IdentificationType, A.v_Identification, A.v_RegistrationNo, A.v_StartDate, A.v_ExpiryDate, A.v_GradeID, A.v_Remarks, A.v_hospitalcode, A.v_key, A.CMIS_Action_Flag, A.d_timestamp,A.id,i.file_name,C.V_Location_code,l.v_Location_Name",FALSE);
-			$this->db->select("A.v_CertificateNo, A.v_ServiceCode, A.v_AgencyCode, A.v_registrationno, A.v_LicenseCategoryCode, B.v_LicenceCategoryDesc, A.v_IdentificationType, A.v_Identification, A.v_RegistrationNo, A.v_StartDate, A.v_ExpiryDate, A.v_GradeID, A.v_Remarks, A.v_hospitalcode, A.v_key, A.CMIS_Action_Flag, A.d_timestamp,A.id,i.file_name,IFNULL(l.v_Location_code,(SELECT v_Location_code FROM pmis2_egm_assetlocation WHERE V_Location_code = A.v_TesterName OR V_Location_code = A.v_Remarks  LIMIT 1)) as V_Location_code,
+		$this->db->select("A.v_CertificateNo, A.v_ServiceCode, A.v_AgencyCode, A.v_registrationno, A.v_LicenseCategoryCode, B.v_LicenceCategoryDesc, A.v_IdentificationType, A.v_Identification, A.v_RegistrationNo, A.v_StartDate, A.v_ExpiryDate, A.v_GradeID, A.v_Remarks, A.v_hospitalcode, A.v_key, A.CMIS_Action_Flag, A.d_timestamp,A.id,i.file_name,IFNULL(l.v_Location_code,(SELECT v_Location_code FROM pmis2_egm_assetlocation WHERE V_Location_code = A.v_TesterName OR V_Location_code = A.v_Remarks  LIMIT 1)) as V_Location_code,
             IFNULL(l.v_Location_Name,(SELECT v_Location_Name FROM pmis2_egm_assetlocation WHERE V_Location_code = A.v_TesterName OR V_Location_code = A.v_Remarks LIMIT 1)) as v_Location_Name",FALSE);
-			//SELECT (case when DWRate = 999 then (case when 500 <= 2000000 then 0.0075 * 100 else 0.0050 * 100 end) else DWRate end) as DWRate, PWRate, (case when DWRate = 999 then (case when 500 <= 2000000 then (500 * 0.0075) / 12 else (500 * 0.0050) / 12 end) else (500 * ( DWRate / 100)) / 12 end) as 'FeeDW', (500 * ( PWRate / 100) / 12) as 'FeePW'
 			$this->db->from('pmis2_egm_lnc_lincense_details A');
 			$this->db->join('pmis2_egm_lnc_license_category_code B','A.v_LicenseCategoryCode=B.v_LicenceCategoryCode');
 			$this->db->join("(SELECT
@@ -2978,34 +2972,25 @@ function sumsat($month,$year,$grpsel)
             AND (`b`.`v_actionflag` <> 'D'))
     GROUP BY `a`.`v_CertificateNo` , `a`.`v_RegistrationNo` , `a`.`v_LicenseCategoryCode`)`g`",'concat(concat(A.v_CertificateNo,A.v_RegistrationNo),A.v_ExpiryDate) = concat(concat(g.v_CertificateNo,g.v_RegistrationNo),g.v_ExpiryDate)');
 			$this->db->join('license_images i','A.id = i.licenses_no AND A.v_ServiceCode = service_code','left');
-			//$this->db->join('pmis2_egm_assetregistration C','A.v_key = C.V_Tag_no OR A.v_RegistrationNo = C.V_Tag_no','left outer');
 			$this->db->join('pmis2_egm_assetregistration C','A.v_key = C.V_Tag_no','left outer');
 			$this->db->join('pmis2_egm_assetlocation l','C.V_Location_code = l.V_location_code AND l.V_Actionflag <> "D" ','left outer');
-			//$this->db->join('pmis2_egm_assetlocation l','C.V_Location_code = l.V_location_code AND l.V_Actionflag <> "D"','left outer');
 			$this->db->where('A.v_ServiceCode =', $this->session->userdata('usersess'));
 			$this->db->where('A.v_HospitalCode =', $this->session->userdata('hosp_code'));
 			$this->db->where("year(A.v_ExpiryDate) >= ",$year-1);
-			//$this->db->where('A.v_StartDate < ', "DATE_ADD('".$this->dater(2,$month,$year)."', INTERVAL 10 DAY)"); //original
-			//$this->db->where('YEAR(A.v_StartDate) <=', $year);
-			//$this->db->where('MONTH(A.v_StartDate) <=', $month);
 			$this->db->where('A.v_ActionFlag <> ', 'D');
 			$this->db->where('B.v_ActionFlag <> ', 'D');
-			//$query = $this->db->get();
 			if ($stat == "ys") {
-			//$this->db->where("A.v_ExpiryDate > now()");
 			} elseif ($stat == "no")
 			{
-			//$this->db->where("A.v_ExpiryDate < now()");
-      $this->db->where('A.v_ExpiryDate < ', $this->dater(2,$month,$year));
-      //$this->db->where('A.v_ExpiryDate < ', "DATE_SUB('" .$this->dater(2,$month,$year) ."', INTERVAL 70 DAY)", false);
-			}
+	        $this->db->where('A.v_ExpiryDate < ', $this->dater(2,$month,$year));
+      		}
 			if ($expiring <> ''){
 				$this->db->where('TIMESTAMPDIFF(MONTH, now(), IFNULL(A.v_ExpiryDate,now())) =',$expiring);
-			}
+			}			
+			$this->db->group_by('A.v_CertificateNo,A.v_registrationno,A.v_LicenseCategoryCode');
 			$this->db->order_by("A.v_ExpiryDate", "asc");
-			$this->db->group_by('A.v_CertificateNo, A.v_RegistrationNo,A.v_LicenseCategoryCode');
 			$query = $this->db->get();
-			//echo $this->db->last_query();
+			echo $this->db->last_query();
 			//echo '<br>';
 			//exit();
 			$query_result = $query->result();
@@ -5698,9 +5683,10 @@ echo $this->db->last_query();
 		$this->db->where('r.DateCreated <=',$to);
         //$this->db->group_by("wo.V_request_no");
         $query = $this->db->get();
-        $query_result = $query->result();
+      
+		
 		//echo $this->db->last_query();exit;
-        return $query_result;
+        return $query->result();
       }
 	  
 	  function wo10_rpt($month,$year){
@@ -5744,7 +5730,26 @@ echo $this->db->last_query();
 	return $query_result;
 }
 	
-
+	function poprequest_mrin($hosp,$y,$m){
+	$this->db->select("r.service_code,r.WorkOfOrder,IFNULL(s.D_date,p.d_StartDt) as WorkOrderDate,r.DateCreated,m.MIRNcode,m.ItemCode,r.Comments,m.QtyReq,m.QtyReqfx, (CASE WHEN Who_Del = 'store' THEN 'STOCK' ELSE NULL END) as stocstatus,i.PartNumber");       	
+	$this->db->from("tbl_mirn_comp m");
+    $this->db->join("tbl_materialreq r", "m.MIRNcode=r.DocReferenceNo", "inner join");
+    $this->db->join("tbl_invitem i", "m.ItemCode=i.ItemCode", "inner join");
+    $this->db->join('pmis2_egm_service_request s','r.WorkOfOrder = s.V_Request_no AND s.V_actionflag <> "D"','left outer');
+    $this->db->join('pmis2_egm_schconfirmmon p','r.WorkOfOrder = p.v_WrkOrdNo AND p.v_Actionflag <> "D"','left outer');
+	//$this->db->join('pmis2_egm_assetregistration l','p.v_HospitalCode = l.V_Hospitalcode AND p.v_Asset_no = l.V_Asset_no','inner');
+	//$this->db->where('s.v_Actionflag <>','D');
+	$this->db->where('r.service_code',$this->session->userdata('usersess'));
+	//$this->db->where('s.v_HospitalCode',$hosp);
+	$this->db->where('YEAR(r.DateCreated)',$y);
+	$this->db->where('MONTH(r.DateCreated)',$m);
+	$this->db->where('r.ApprStatusIDxx',4);
+	$this->db->group_by('m.MIRNcode');
+	$query = $this->db->get();
+	echo $this->db->last_query();
+	//exit();
+	return $query->result();
+		}
 
 
 }
