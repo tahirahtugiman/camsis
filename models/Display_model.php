@@ -1034,8 +1034,6 @@ ORDER BY r.D_date, r.D_time
 
     function rpt_vols($month, $year, $stat = "apo2", $resch = "resch",$grpsel, $bystak="", $fon="",$filby=""){
  
-
-
                       if ($bystak == "IIUM C") {
     		  $bystak = " AND left(a.v_tag_no,6) = 'IIUM C'"; }
     	          elseif ($bystak == "IIUM M") {
@@ -2058,7 +2056,7 @@ return $query->result();
 
 			$this->db->where('a.siqppm_no',$ssiq);
 			}
-			elseif($ind_code == 'BES06'){
+			elseif($ind_code == 'FES06'){
 			$this->db->select('b.*');
 			$this->db->from('mis_qap_inc_assets$candidate a');
 			$this->db->join('mis_qap_work_orders$candidate b','a.asset_no = b.asset_no AND a.qap_period = b.qap_period','inner');
@@ -2125,7 +2123,8 @@ return $query->result();
 			$return[$row['ind_code']] = $row['ind_code'].' '.$row['ind_sdesc'];
 			}
 			}
-
+//echo $this->db->last_query();
+//exit();
         return $return;
 		}
 		function qap3_carqcdisp(){
@@ -2153,7 +2152,7 @@ return $query->result();
 			$this->db->where('e.v_ServiceCode','BES');
 			$this->db->where('m.service_code','BES');
 			$this->db->where('e.v_EffectiveDt_from <=',date('Y-m-d'));
-			$this->db->where('e.v_EffectiveDt_to +1 >',date('Y-m-d'));
+			$this->db->where('e.v_EffectiveDt_to +1 >',date('Y-m-d'),false);
 			$this->db->where('e.v_ActiveStatus','Y');
 			$this->db->where('m.new_asset_type',$typecode);
 			$this->db->limit(1);
@@ -2661,8 +2660,8 @@ return $query->result();
 			$this->db->where('IFNULL(sc.d_reschdt,d_DueDt) <=', $this->dater(2,$month,$year));
 			$query = $this->db->get();
 			//echo "dater : ".$this->dater(1,$month,$year);
-		    //echo $this->db->last_query();
-			//echo "<br>";
+		    echo $this->db->last_query();
+			echo "<br>";
 			//exit();
 
 			$query_result = $query->result();
@@ -5731,25 +5730,49 @@ echo $this->db->last_query();
 }
 	
 	function poprequest_mrin($hosp,$y,$m){
-	$this->db->select("r.service_code,r.WorkOfOrder,IFNULL(s.D_date,p.d_StartDt) as WorkOrderDate,r.DateCreated,m.MIRNcode,m.ItemCode,r.Comments,m.QtyReq,m.QtyReqfx, (CASE WHEN Who_Del = 'store' THEN 'STOCK' ELSE NULL END) as stocstatus,i.PartNumber");       	
+	$this->db->select("r.service_code,r.WorkOfOrder,IFNULL(s.D_date,p.d_StartDt) as WorkOrderDate,r.DateCreated,m.MIRNcode,m.ItemCode,r.Comments,m.QtyReq,m.QtyReqfx, (CASE WHEN Who_Del = 'store' THEN 'STOCK' ELSE NULL END) as stocstatus,i.PartNumber,IFNULL(c.Qty,0) AS Qtys");       	
 	$this->db->from("tbl_mirn_comp m");
     $this->db->join("tbl_materialreq r", "m.MIRNcode=r.DocReferenceNo", "inner join");
     $this->db->join("tbl_invitem i", "m.ItemCode=i.ItemCode", "inner join");
     $this->db->join('pmis2_egm_service_request s','r.WorkOfOrder = s.V_Request_no AND s.V_actionflag <> "D"','left outer');
     $this->db->join('pmis2_egm_schconfirmmon p','r.WorkOfOrder = p.v_WrkOrdNo AND p.v_Actionflag <> "D"','left outer');
-	//$this->db->join('pmis2_egm_assetregistration l','p.v_HospitalCode = l.V_Hospitalcode AND p.v_Asset_no = l.V_Asset_no','inner');
+	$this->db->join('tbl_item_store_qty c',"c.ItemCode = m.ItemCode AND c.Hosp_code = '".$hosp."'",'left outer');
 	//$this->db->where('s.v_Actionflag <>','D');
 	$this->db->where('r.service_code',$this->session->userdata('usersess'));
-	//$this->db->where('s.v_HospitalCode',$hosp);
+	$this->db->where('s.v_HospitalCode',$hosp);
 	$this->db->where('YEAR(r.DateCreated)',$y);
 	$this->db->where('MONTH(r.DateCreated)',$m);
 	$this->db->where('r.ApprStatusIDxx',4);
 	$this->db->group_by('m.MIRNcode');
 	$query = $this->db->get();
-	echo $this->db->last_query();
+	//echo $this->db->last_query();
 	//exit();
 	return $query->result();
 		}
+		
+	function rn_release(){
+        $this->db->select("*,(CASE WHEN shipment_type = 0 THEN 'Courier' 
+               WHEN shipment_type = 1 THEN 'By hand' ELSE 0 END) as sh_type,(CASE WHEN courier = 0 THEN 'Other' 
+               WHEN courier = 1 THEN 'ABX' WHEN courier = 2 THEN 'CityLink' WHEN courier = 3 THEN 'DHL' ELSE 0 END) as courier");
+	    $this->db->from("tbl_rn_release");
+        //$this->db->where('');
+        $query = $this->db->get();
+      
+		
+		//echo $this->db->last_query();exit;
+        return $query->result();
+      }
+
+function rephos($hosp){
+	$this->db->select('Rep');	
+	$this->db->from('tbl_hosp_rep');;
+	$this->db->where('Hosp_code',$hosp);
+	$query = $this->db->get();
+	//echo $this->db->last_query();
+	//exit();
+	$query_result = $query->result();
+	return $query_result;
+}	  
 
 
 }

@@ -47,7 +47,8 @@ class ajax extends CI_Controller {
     		}
 
 			$data['visitD'][$row->n_Visit] = date_format(new DateTime($row->d_Date), 'd-m-Y');
-			$data['d_Resc'][$row->n_Visit] = date_format(new DateTime($row->d_Reschdt), 'd-m-Y');
+			$data['d_Resc'][$row->n_Visit] = ($row->d_Reschdt) ? date_format(new DateTime($row->d_Reschdt), 'd-m-Y') : 'N/A';
+			//$data['d_Resc'][$row->n_Visit] = date_format(new DateTime($row->d_Reschdt), 'd-m-Y');
 			$data['P1time'][$row->n_Visit] = explode(':',$row->n_Hours1);
 			$data['P2time'][$row->n_Visit] = explode(':',$row->n_Hours2);
 			$data['P3time'][$row->n_Visit] = explode(':',$row->n_Hours3);
@@ -66,5 +67,34 @@ class ajax extends CI_Controller {
 			}
 		}
 		echo json_encode($data);
+	}
+	
+	public function itemrnt(){
+	
+    $this->load->model("get_model");
+	$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");
+	$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
+	$data['itemrn'] = $this->get_model->rl_mrin($this->input->get('hosp_code'),$data['year'],$data['month']);
+	$i=1;
+	
+	//print_r($data['itemrn']);
+	foreach($data['itemrn'] as $row){
+	echo "<tr>";
+	echo "<td>".$i++."</td>";
+	echo "<td><input type='hidden' name='itemcode[]' value=".$row->ItemCode.">".$row->ItemCode."</td>";
+	echo "<td>".$row->ItemName."</td>";
+	echo "<td><input type='hidden' name='mrincode[]' value=".$row->MIRNcode.">".$row->MIRNcode."</td>";
+	echo "<td>".$row->QtyReq."</td>";
+	echo "<td>".$row->Qtys."</td>";
+	echo "<td><input type='text' name='qty[]'></td>";
+    echo "</tr>";		
+	}
+	//exit();
+	}
+	
+	public function get_rep(){
+	  $this->load->model("display_model");
+	$rep = $this->display_model->rephos($this->input->get('hosp_code'));
+     echo $rep[0]->Rep;
 	}
 }

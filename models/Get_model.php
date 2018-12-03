@@ -799,7 +799,6 @@ $this->db->where('A.v_ServiceCode =', $this->session->userdata('usersess'));
 $this->db->where('v_HospitalCode =', $this->session->userdata('hosp_code'));
 $this->db->where('A.v_ActionFlag <> ', 'D');
 $this->db->where('B.v_ActionFlag <> ', 'D');
-
 $this->db->group_by('A.v_CertificateNo,A.v_RegistrationNo,A.v_Identification');
 
 $query = $this->db->get();
@@ -1581,7 +1580,7 @@ $query = $this->db->get();
 return $query->result();
 }
 function SIQsummary_siq($month,$year) {
-$this->db->select("SUM(CASE ind_code WHEN 'BES05' THEN 1 ELSE 0 END) AS ppm_siq, SUM(CASE ind_code WHEN 'BES06' THEN 1 ELSE 0 end) AS uptime_siq",FALSE);
+$this->db->select("SUM(CASE ind_code WHEN 'FES05' THEN 1 ELSE 0 END) AS ppm_siq, SUM(CASE ind_code WHEN 'FES06' THEN 1 ELSE 0 end) AS uptime_siq",FALSE);
 $this->db->from('mis_qap_siq_detail');
 $this->db->where('hosp_code',$this->session->userdata('hosp_code'));
 //	$this->db->where('hosp_code','MKA'); //for test
@@ -1702,7 +1701,7 @@ function qap3_asset_noSIQlim($year,$month,$limit,$start){
 	$this->db->order_by('uptime_pct,asset_no');
 	$this->db->limit($limit,$start);
 	$query = $this->db->get();
-	//echo $this->db->last_query();
+    //echo $this->db->last_query();
 	//exit();
 	return $query->result();
 }
@@ -1875,7 +1874,7 @@ function qap3_wo_Exclim($year,$month,$limit,$start){
 	return $query->result();
 }
 function qap3_actionnew($carid){
-	$this->db->select('sl_no +1 AS sl_no');
+	$this->db->select('sl_no +1 AS sl_no',false);
 	$this->db->from('mis_qap_car_detail');
 	$this->db->where('car_no',$carid);
 	$this->db->where('action_flag <>','D');
@@ -3348,6 +3347,7 @@ function assetppmlist($assetno){
 	$this->db->select('v_WrkOrdNo,d_StartDt,v_Asset_no');
 	$this->db->from('pmis2_egm_schconfirmmon');
 	$this->db->where('v_Asset_no ',$assetno);
+	$this->db->where('v_Actionflag <> ','D');
 	$this->db->order_by('d_StartDt','DESC');
 	$this->db->limit(1);
 	$query = $this->db->get();
@@ -3621,8 +3621,8 @@ function nextmrinnumber(){
 	$this->db->where('b.HospitalCode',$this->session->userdata('hosp_code'));
 	$this->db->where('a.Year',date('Y'));
 	$query = $this->db->get();
-	//echo $this->db->last_query();
-	//exit();
+	echo $this->db->last_query();
+	exit();
 	return $query->result();
 }
 
@@ -4013,6 +4013,93 @@ GROUP BY Work_Code ORDER BY Dated)a");
 	
 	
 }
+	function rl_mrin($hosp,$y,$m){
+	$this->db->select("i.ItemName,r.service_code,r.WorkOfOrder,IFNULL(s.D_date,p.d_StartDt) as WorkOrderDate,r.DateCreated,m.MIRNcode,m.ItemCode,r.Comments,m.QtyReq,m.QtyReqfx, (CASE WHEN Who_Del = 'store' THEN 'STOCK' ELSE NULL END) as stocstatus,i.PartNumber");       	
+	$this->db->from("tbl_mirn_comp m");
+    $this->db->join("tbl_materialreq r", "m.MIRNcode=r.DocReferenceNo", "inner join");
+    $this->db->join("tbl_invitem i", "m.ItemCode=i.ItemCode", "inner join");
+    $this->db->join('pmis2_egm_service_request s','r.WorkOfOrder = s.V_Request_no AND s.V_actionflag <> "D"','left outer');
+    $this->db->join('pmis2_egm_schconfirmmon p','r.WorkOfOrder = p.v_WrkOrdNo AND p.v_Actionflag <> "D"','left outer');
+	//$this->db->join('pmis2_egm_assetregistration l','p.v_HospitalCode = l.V_Hospitalcode AND p.v_Asset_no = l.V_Asset_no','inner');
+	//$this->db->where('s.v_Actionflag <>','D');
+	$this->db->where('r.service_code',$this->session->userdata('usersess'));
+	$this->db->where('s.v_HospitalCode',$hosp);
+	$this->db->where('YEAR(r.DateCreated)',$y);
+	//$this->db->where('MONTH(r.DateCreated)',$m);
+	$this->db->where('r.ApprStatusIDxx',4);
+	$this->db->group_by('m.MIRNcode');
+	$query = $this->db->get();
+	//echo $this->db->last_query();
+	//exit();
+	return $query->result();
+		}
+		
+	public function get_RNNO($to){ //buzlee
+			$from = $this->session->userdata("hosp_code");
+			//$to = "test";
+			$next_number = 1;
+			$year = str_split(date("Y"))[2].str_split(date("Y"))[3];
+			$query = $this->db->select("*")->from("tbl_rn_autono")->order_by("rn_next_no", "desc")->limit(1)->get()->result();
+			if( !empty($query) ){
+				foreach ($query as $row) {
+					$next_number = $row->rn_next_no;
+				}
+			}
+			$number = str_pad($next_number, 5, '0', STR_PAD_LEFT);
+			$res = "RN/$from/$to/$number/$year";
 
+			$val_tbl_rn_autono = array(
+					"rn_next_no" => $next_number+1,
+					"userid" => $this->session->userdata("v_UserName"),
+					"yearno" => date("Y")
+			);
+			$this->db->set("DT", "NOW()", false);
+			$this->db->insert("tbl_rn_autono", $val_tbl_rn_autono);
+
+			return $res;
+		}
+
+public function getrndetail($rn){
+	
+	//$this->db->select("a.*,(CASE WHEN a.shipment_type = 0 THEN 'Courier' WHEN a.shipment_type = 1 THEN 'By hand' ELSE 0 END) as sh_type,(CASE WHEN a.courier = 0 THEN 'Other' WHEN a.courier = 1 THEN 'ABX' WHEN a.courier = 2 THEN 'CityLink' WHEN a.courier = 3 THEN 'DHL' ELSE 0 END) as courier,b.Rep");
+	//$this->db->from('tbl_rn_release a');
+	//$this->db->join('tbl_hosp_rep b','b.Hosp_code=substring_index(substring_index(a.RN_No, '/', -3), '/', 1)');
+	//$this->db->where('RN_No',$rn);
+	$query = $this->db->query("SELECT 
+    `a`.*,
+    (CASE
+        WHEN a.shipment_type = 0 THEN 'Courier'
+        WHEN a.shipment_type = 1 THEN 'By hand'
+        ELSE 0
+    END) AS sh_type,
+    (CASE
+        WHEN a.courier = 0 THEN 'Other'
+        WHEN a.courier = 1 THEN 'ABX'
+        WHEN a.courier = 2 THEN 'CityLink'
+        WHEN a.courier = 3 THEN 'DHL'
+        ELSE 0
+    END) AS courier,
+   substring_index(substring_index(a.RN_No, '/', -3), '/', 1) as hosp,b.rep
+FROM
+    `tbl_rn_release` `a`
+JOIN
+`tbl_hosp_rep` `b` on b.Hosp_code=substring_index(substring_index(a.RN_No, '/', -3), '/', 1)
+WHERE
+    `RN_No` = '".$rn."'");
+	//$query = $this->db->get();
+	//echo $this->db->last_query();
+	//exit();
+	return $query->result();
+}		
+public function getrnitem($rn){
+	
+	$this->db->select('a.*,b.ItemName');
+	$this->db->from('tbl_rn_item a');
+	$this->db->join('tbl_invitem b','a.Item_code=b.ItemCode');
+	$this->db->where('RN_No',$rn);
+	$query = $this->db->get();
+	//echo $this->db->last_query();
+	return $query->result();
+}
 }
 ?>
