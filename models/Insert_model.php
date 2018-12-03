@@ -2409,7 +2409,7 @@ $insert_data = array(
 						 'radd' => $this->input->ip_address(),
 						 'rhost'=> $this->input->ip_address()
 						);
-$this->db->insert('whatrudoin', $insert_data);
+//$this->db->insert('whatrudoin', $insert_data);
 
 //echo $this->db->last_query();
 		
@@ -2723,6 +2723,20 @@ function ins_spw($insert_data){
 			/*  echo $this->db->last_query();
 			 exit(); */
 		}
+}
+
+function tbl_rn_item($insert_data){
+
+$this->db->insert('tbl_rn_item', $insert_data);
+
+
+}
+
+function tbl_rn_release($insert_data){
+$this->db->set("Date_Stamp", "NOW()", FALSE);
+$this->db->insert('tbl_rn_release', $insert_data);
+
+
 }
 
 }
