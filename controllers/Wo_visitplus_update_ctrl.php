@@ -75,6 +75,7 @@ class wo_visitplus_update_ctrl extends CI_Controller{
 	$this->form_validation->set_rules('chkbox','checkbox','trim');
 
 	if ($this->input->post('chkbox') == 'ON') {
+	
 		$this->form_validation->set_rules('n_performance_test','Performance Test','trim|required');
 		$this->form_validation->set_rules('n_safety_test','Safety Test','trim|required');
 		$this->form_validation->set_rules('n_safety_result','Safety Result','trim');
@@ -109,7 +110,12 @@ class wo_visitplus_update_ctrl extends CI_Controller{
 		}
 		else{
 		$this->form_validation->set_rules('QC_PPM','QC PPM','trim');
-		$this->form_validation->set_rules('n_QCUptime','QC Uptime','trim');
+		$incl = array('A1','A4');
+		if (in_array(substr($this->input->post('wrk_ord'),3,2), $incl)) {
+		$this->form_validation->set_rules('n_QCUptime','QC Uptime','trim|required');
+		}else{
+		$this->form_validation->set_rules('n_QCUptime','QC Uptime','trim');	
+		}
 		}
 
 		//if (substr($this->input->post('wrk_ord'),0,2) == 'PP'){
