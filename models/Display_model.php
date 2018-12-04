@@ -313,7 +313,7 @@
 			$this->db->where('s.v_Actionflag <>','D');
 			$this->db->where('s.v_ServiceCode = ',$this->session->userdata('usersess'));
 			$query = $this->db->get();
-			echo $this->db->last_query();
+			//echo $this->db->last_query();
 			//exit();
 			$query_result = $query->result();
 			return $query_result;
@@ -402,7 +402,7 @@
 		function jobclose_ppm($wrk_ord){
 			$this->db->select("jc.*,s.*, CONCAT(v_PersonalCode,'-',v_PersonalName) as userr", FALSE);
 			$this->db->from('pmis2_egm_jobdonedet jc');
-			$this->db->join('pmis2_egm_schconfirmmon s','s.v_WrkOrdNo = jc.v_Wrkordno');
+			$this->db->join('pmis2_egm_schconfirmmon s','s.v_WrkOrdNo = jc.v_Wrkordno AND jc.v_servicecode = s.v_ServiceCode');
 			$this->db->join('pmis2_sa_personal p','s.closedby = p.v_PersonalCode','left outer');
 			$this->db->where("s.v_ServiceCode = ",$this->session->userdata('usersess'));
 			$this->db->where('jc.v_Wrkordno',$wrk_ord);
@@ -1159,7 +1159,7 @@ ORDER BY r.D_date, r.D_time
     			$this->db->where('s.v_HospitalCode',$this->session->userdata('hosp_code'));
                             $this->db->order_by("s.d_DueDt", "asc");
     			$query = $this->db->get();
-    			echo $this->db->last_query();
+    			//echo $this->db->last_query();
     			//exit();
     			$query_result = $query->result();
     			return $query_result;
@@ -2465,10 +2465,13 @@ return $query->result();
 			//exit();
 			return $query->result();
 		}
-		function pecodes($hosp){
+		function pecodes($hosp,$cari=""){
 			$this->db->select('ItemCode,ItemName');
 			$this->db->from('tbl_invitem');
 			$this->db->where('ItemCode NOT IN (SELECT ItemCode FROM tbl_item_store_qty WHERE Hosp_code = "'.$hosp.'")', NULL, FALSE);
+			if ($cari <> ''){
+			$this->db->like('CONCAT_WS(" ",ItemName,ItemCode,PartNumber)', $cari, 'both');
+			}
 			$query = $this->db->get();
 			//echo $this->db->last_query();
 			//exit();
@@ -4205,7 +4208,13 @@ function sumrq_y($month,$year,$reqtype,$grpsel,$bystak="")
 		 //$this->db->or_like('sr.V_summary', 'fitting');
 		 $this->db->where("(sr.V_summary LIKE '%furniture%' OR sr.V_summary LIKE '%perabot%' OR sr.V_summary LIKE '%kemasan%' OR sr.V_summary LIKE '%fitting%')", NULL, FALSE);
 		 } else {
-		 	 $this->db->where('sr.V_request_type',$reqtype);
+		 	 //$this->db->where('sr.V_request_type',$reqtype);
+  		 if($reqtype=='ALL'){
+  			 $test=array('A1','A2','A3','A4','A5','A6','A7','A8','A9','A10');
+  		 	$this->db->where_in('sr.V_request_type',$test);
+  		 }else{
+  			$this->db->where('sr.V_request_type',$reqtype);
+  		 }
 			 }
 		}
 
@@ -4268,7 +4277,7 @@ ORDER BY r.D_date, r.D_time
 			$this->db->join('pmis2_egm_assetreg_general w','r.V_Asset_no = w.V_Asset_no AND r.V_hospitalcode = w.V_Hospital_code', 'left outer');
 			$this->db->join('pmis2_egm_jobdonedet a',"a.v_Wrkordno = r.V_Request_no AND a.v_HospitalCode = r.V_hospitalcode AND a.v_Actionflag <> 'D'", 'left outer');
 			$this->db->join('pmis2_sa_userdept d','r.V_User_dept_code = d.v_UserDeptCode','left');
-			$this->db->join('pmis2_egm_assetlocation e','r.v_location_code = e.v_location_code','left outer');
+			$this->db->join('pmis2_egm_assetlocation e','r.v_location_code = e.v_location_code AND e.V_Actionflag = "D"','left outer');
 			$this->db->join('pmis2_emg_jobresponse jr',"r.V_Request_no = jr.v_WrkOrdNo",'left outer');
 			$this->db->join('pmis2_egm_sharedowntime dt',"r.V_Request_no = dt.ori_wo",'left outer');
 			$this->db->where('r.V_servicecode', $this->session->userdata('usersess'));
@@ -4309,7 +4318,13 @@ ORDER BY r.D_date, r.D_time
 				 //$this->db->or_like('sr.V_summary', 'fitting');
 				 $this->db->where("(r.V_summary LIKE '%furniture%' OR r.V_summary LIKE '%perabot%' OR r.V_summary LIKE '%kemasan%' OR r.V_summary LIKE '%fitting%')", NULL, FALSE);
 				 } else {
-				 	 $this->db->where('r.V_request_type',$reqtype);
+				 	 //$this->db->where('r.V_request_type',$reqtype);
+           if($reqtype=='ALL'){
+      $test=array('A1','A2','A3','A4','A5','A6','A7','A8','A9','A10');
+     $this->db->where_in('r.V_request_type',$test);
+    }else{
+     $this->db->where('r.V_request_type',$reqtype);
+    }
 					 }
 			}
 			/*if ($broughtfwd <> ''){
@@ -4568,7 +4583,8 @@ ORDER BY r.D_date, r.D_time
   	function mrinlist($month,$year,$type,$kelas, $search){
   		//echo "nilai kelas : " . $kelas . " type : " . $type;
   		$inter = (int)$month;
-  		$this->db->select('m.*,IFNULL(s.V_Asset_no,p.v_Asset_no) AS V_Asset_no,st.Status, IFNULL(IFNULL(IFNULL(ApprCommentsxx,ApprCommentsx),ApprComments),Comments) AS Commentsx',FALSE);
+  		//$this->db->select('m.*,IFNULL(s.V_Asset_no,p.v_Asset_no) AS V_Asset_no,st.Status, IFNULL(IFNULL(IFNULL(ApprCommentsxx,ApprCommentsx),ApprComments),Comments) AS Commentsx',FALSE);
+      $this->db->select('m.*,IFNULL(s.V_Asset_no,p.v_Asset_no) AS V_Asset_no,st.Status, IFNULL(IFNULL(IFNULL(ApprCommentsxx,ApprCommentsx),ApprComments),Comments) AS Commentsx,IFNULL(s.D_date,p.d_StartDt) as wodate,(SELECT V_Tag_no FROM pmis2_egm_assetregistration WHERE V_Asset_no=s.V_Asset_no OR V_Asset_no=p.V_Asset_no LIMIT 1) as Astag',FALSE);
   		$this->db->from('tbl_materialreq m');
   		$this->db->join('pmis2_egm_service_request s','m.WorkOfOrder = s.V_Request_no AND s.V_actionflag <> "D"','left outer');
   		$this->db->join('pmis2_egm_schconfirmmon p','m.WorkOfOrder = p.v_WrkOrdNo AND p.v_Actionflag <> "D"','left outer');
@@ -5729,6 +5745,109 @@ echo $this->db->last_query();
 		$query_result = $query->result();
 		return $query_result;
 	}
+
+	function wo_tracking($from,$to){
+        $this->db->select("r.service_code,r.WorkOfOrder,IFNULL(s.D_date,p.d_StartDt) as WorkOrderDate,r.DateCreated,m.MIRNcode,m.ItemCode,r.Comments,m.QtyReq,m.QtyReqfx, (CASE WHEN Who_Del = 'store' THEN 'STOCK' ELSE NULL END) as stocstatus,i.PartNumber");
+        $this->db->from("tbl_mirn_comp m");
+        $this->db->join("tbl_materialreq r", "m.MIRNcode=r.DocReferenceNo", "inner join");
+        $this->db->join("tbl_invitem i", "m.ItemCode=i.ItemCode", "inner join");
+		    $this->db->join('pmis2_egm_service_request s','r.WorkOfOrder = s.V_Request_no AND s.V_actionflag <> "D"','left outer');
+  		  $this->db->join('pmis2_egm_schconfirmmon p','r.WorkOfOrder = p.v_WrkOrdNo AND p.v_Actionflag <> "D"','left outer');
+        $this->db->where('r.DateCreated >=',$from);
+		$this->db->where('r.DateCreated <=',$to);
+        //$this->db->group_by("wo.V_request_no");
+        $query = $this->db->get();
+        $query_result = $query->result();
+		//echo $this->db->last_query();exit;
+        return $query_result;
+      }
+
+	  function wo10_rpt($month,$year){
+	if ($this->session->userdata('usersess') == "FES") {
+	$dn = 180;
+	$de = 30;
+	} elseif ($this->session->userdata('usersess') == "BES") {
+	$dn = 120;
+	$de = 30;
+	} else {
+	$dn = 15;
+	$de = 5;
+	}
+
+	$this->db->select("TIMESTAMPDIFF(MONTH, CASE WHEN d_date BETWEEN concat(concat(year(d_date),'-'),concat(month(d_date)),'-08 23:59:59') AND DATE_ADD(concat(concat(year(d_date),'-'),concat(month(d_date)),'-09 23:59:59'), INTERVAL 1 MONTH) THEN concat(concat(year(d_date),'-'),concat(month(d_date)),'-08 23:59:59') ELSE DATE_SUB(concat(concat(year(d_date),'-'),concat(month(d_date)),'-08 23:59:59'), INTERVAL 1 MONTH) end,  DATE_ADD(concat(concat(year(now()),'-'),concat(month(now())),'-09 00:00:00'), INTERVAL 1 MONTH)) AS month,SUM(CASE WHEN v_request_status <> 'C' THEN 1 ELSE 0 END) AS notcomp,SUM(CASE WHEN v_request_status = 'C' THEN 1 ELSE 0 END) AS comp,SUM(CASE WHEN v_request_status = 'C' AND v_closeddate >= ".$this->db->escape($this->dater(1,$month,$year))." AND v_closeddate <= ".$this->db->escape($this->dater(2,$month,$year).'  23:59:59')." THEN 1 ELSE 0 END) as monthcomp", false);
+	$this->db->from('pmis2_egm_service_request');
+	$this->db->where('V_servicecode', $this->session->userdata('usersess'));
+	$this->db->where("TIMESTAMPDIFF(MONTH, CASE WHEN d_date BETWEEN concat(concat(year(d_date),'-'),concat(month(d_date)),'-08 23:59:59') AND DATE_ADD(concat(concat(year(d_date),'-'),concat(month(d_date)),'-09 23:59:59'), INTERVAL 1 MONTH) THEN concat(concat(year(d_date),'-'),concat(month(d_date)),'-08 23:59:59') ELSE DATE_SUB(concat(concat(year(d_date),'-'),concat(month(d_date)),'-08 23:59:59'), INTERVAL 1 MONTH) end,  DATE_ADD(concat(concat(year(now()),'-'),concat(month(now())),'-09 00:00:00'), INTERVAL 1 MONTH)) > ","0", false);
+	$this->db->where('V_actionflag <> ', 'D');
+	$this->db->where('V_request_type','A10');
+
+	$this->db->where('d_date <=', $year.'-'.$month.'-08  23:59:59');
+	$this->db->group_by('month');
+	$this->db->having("SUM(CASE WHEN v_request_status <> 'C' THEN 1 ELSE 0 END) > ",  0);
+        if (!function_exists('toArray')) {
+	function toArray($obj)
+	{
+     $obj = (array) $obj;//cast to array, optional
+     return $obj['path'];
+	}
+        }
+	$idArray = array_map('toArray', $this->session->userdata('accessr'));
+	if ((in_array("contentcontroller/Schedule(main)", $idArray)) && (in_array("useriium", $idArray))) {
+	$this->db->where('V_request_type <> ', 'A9');
+		}
+	$query = $this->db->get();
+	//echo $this->db->last_query();
+	//exit();
+
+	$query_result = $query->result();
+	return $query_result;
+}
+
+	function poprequest_mrin($hosp,$y,$m){
+	$this->db->select("r.service_code,r.WorkOfOrder,IFNULL(s.D_date,p.d_StartDt) as WorkOrderDate,r.DateCreated,m.MIRNcode,m.ItemCode,r.Comments,m.QtyReq,m.QtyReqfx, (CASE WHEN Who_Del = 'store' THEN 'STOCK' ELSE NULL END) as stocstatus,i.PartNumber");
+	$this->db->from("tbl_mirn_comp m");
+    $this->db->join("tbl_materialreq r", "m.MIRNcode=r.DocReferenceNo", "inner join");
+    $this->db->join("tbl_invitem i", "m.ItemCode=i.ItemCode", "inner join");
+    $this->db->join('pmis2_egm_service_request s','r.WorkOfOrder = s.V_Request_no AND s.V_actionflag <> "D"','left outer');
+    $this->db->join('pmis2_egm_schconfirmmon p','r.WorkOfOrder = p.v_WrkOrdNo AND p.v_Actionflag <> "D"','left outer');
+	//$this->db->join('pmis2_egm_assetregistration l','p.v_HospitalCode = l.V_Hospitalcode AND p.v_Asset_no = l.V_Asset_no','inner');
+	//$this->db->where('s.v_Actionflag <>','D');
+	$this->db->where('r.service_code',$this->session->userdata('usersess'));
+	//$this->db->where('s.v_HospitalCode',$hosp);
+	$this->db->where('YEAR(r.DateCreated)',$y);
+	$this->db->where('MONTH(r.DateCreated)',$m);
+	$this->db->where('r.ApprStatusIDxx',4);
+	$this->db->group_by('m.MIRNcode');
+	$query = $this->db->get();
+	//echo $this->db->last_query();
+	//exit();
+	return $query->result();
+		}
+	function rn_release(){
+        $this->db->select("*,(CASE WHEN shipment_type = 0 THEN 'Courier'
+               WHEN shipment_type = 1 THEN 'By hand' ELSE 0 END) as sh_type,(CASE WHEN courier = 0 THEN 'Other'
+               WHEN courier = 1 THEN 'ABX' WHEN courier = 2 THEN 'CityLink' WHEN courier = 3 THEN 'DHL' ELSE 0 END) as courier");
+	    $this->db->from("tbl_rn_release");
+        //$this->db->where('');
+        $query = $this->db->get();
+
+
+		//echo $this->db->last_query();exit;
+        return $query->result();
+      }
+
+function rephos($hosp){
+	$this->db->select('Rep');
+	$this->db->from('tbl_hosp_rep');;
+	$this->db->where('Hosp_code',$hosp);
+	$query = $this->db->get();
+	//echo $this->db->last_query();
+	//exit();
+	$query_result = $query->result();
+	return $query_result;
+}
+
+
 
 
 }

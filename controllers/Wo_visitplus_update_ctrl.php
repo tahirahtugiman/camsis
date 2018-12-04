@@ -159,8 +159,13 @@ class wo_visitplus_update_ctrl extends CI_Controller{
 		$this->form_validation->set_rules('n_QCUptime','QC Uptime','trim|required');
 		}
 		else{
-		$this->form_validation->set_rules('QC_PPM','QC PPM','trim');
-		$this->form_validation->set_rules('n_QCUptime','QC Uptime','trim');
+			$this->form_validation->set_rules('QC_PPM','QC PPM','trim');
+			$incl = array('A1','A4');
+			if (in_array(substr($this->input->post('wrk_ord'),3,2), $incl)) {
+			$this->form_validation->set_rules('n_QCUptime','QC Uptime','trim|required');
+			}else{
+			$this->form_validation->set_rules('n_QCUptime','QC Uptime','trim');
+			}
 		}
 
 		//if (substr($this->input->post('wrk_ord'),0,2) == 'PP'){

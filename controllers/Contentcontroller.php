@@ -363,6 +363,8 @@ class Contentcontroller extends CI_Controller {
 		$data['wrk_ord'] = $this->input->get('wrk_ord');
 		$this->load->model("display_model");
 		$data['record'] = $this->display_model->request_tab($data['wrk_ord']);
+		//$this->load->model('get_model');
+    //$data['ppm_wo']=$this->get_model->get_ppmgen('2018','IIUM','47');
 		$this ->load->view("head");
 		$this ->load->view("left");
 		$this ->load->view("Content_workorderlist",$data);
@@ -2920,7 +2922,7 @@ class Contentcontroller extends CI_Controller {
 		$data['validPeriod'] = $this->get_model->validPeriod(date('F',mktime(0, 0, 0, $data['month'], 10)),$data['year']);
 		!empty($data['validPeriod']) ? $data['validPeriod'] = 'true' : $data['validPeriod'] = 'false';
 
-		$data['limit'] = 10;
+		$data['limit'] = 300;
 		isset($_GET['numrow']) ? $data['numrow'] = $_GET['numrow'] : $data['numrow'] = 1;
 		isset($_GET['p']) ? $data['page'] = $_GET['p'] : $data['page'] = 1;
 		$data['start'] = ($data['page'] * $data['limit']) - $data['limit'];
@@ -3770,6 +3772,15 @@ class Contentcontroller extends CI_Controller {
 					$data['bfwd'][] = $row->month;
 				}
 			}
+		}elseif ($data['tag'] == 'totala10'){
+          $data['records'] = $this->display_model->wo10_rpt($data['month'],$data['year']);
+			//$data['bfwd'] = array();
+			foreach ($data['records'] as $row){
+				if (($row->notcomp != 0) && ($row->comp != 0)){
+					$data['bfwd'][] = $row->month;
+				}
+			}
+
 		}
 		$data['record'] = $this->display_model->rpt_volu($data['month'],$data['year'],$this->input->get('stat'),$data['reqtype'],$this->input->get('broughtfwd'),$data['grpsel'],$pilape,$data['tag'],$data['cm'],$data['limab'],$data['bfwd'],"",$data['fon']);
 
@@ -5585,9 +5596,10 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("content_store_item_confirm");
 	}
 	public function pecodes(){
+    $data['scby'] = ($this->input->post('scby')) ? $this->input->post('scby') : '';
 		$data['hosp'] = $this->input->get('hosp');
 		$this->load->model('display_model');
-		$data['record'] = $this->display_model->pecodes($data['hosp']);
+		$data['record'] = $this->display_model->pecodes($data['hosp'],$data['scby']);
 		$this ->load->view("head");
 		$this ->load->view("content_pop_pecodes",$data);
 	}
@@ -5617,17 +5629,22 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("content_pop_ustore_c");
 	}
 	public function pop_requests(){
-		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");
+    $data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
-		$data['wwo']= (!($this->input->get('wwo'))) || $this->input->get('wwo') == 1 ? 1 : 2;
+		//$data['wwo']= (!($this->input->get('wwo'))) || $this->input->get('wwo') == 1 ? 1 : 2;
+		$data['wwo']= ($this->input->get('wwo') <> '') ?  $this->input->get('wwo') : 1;
 		$data['s']= $this->input->get('s');
 		$data['hosp'] = $this->session->userdata('hosp_code');
 		$this->load->model('display_model');
 		if($data['wwo'] == 1){
 		$data['record'] = $this->display_model->poprequest_rcm($data['hosp'],$data['year'],$data['month'],$data['s']);
 		}
-		else{
+		elseif($data['wwo'] == 2){
 		$data['record'] = $this->display_model->poprequest_ppm($data['hosp'],$data['year'],$data['month']);
+		}
+		else{
+			//exit();
+		$data['record'] = $this->display_model->poprequest_mrin($data['hosp'],$data['year'],$data['month']);
 		}
 		$this ->load->view("head");
 		$this ->load->view("content_pop_requests",$data);
@@ -7273,7 +7290,12 @@ public function assethistory(){
 
 			$data['recordhosp'] = $this->get_model->deptlist($data['fmonth'],$data['fyear'],$data['hosp']);
 			if ($data['recordhosp']) {
-				foreach ($data['recordhosp'] as $row){
+				//foreach ($data['recordhosp'] as $row){
+				//$data['deptlist'][] = $row->Dept_Code;
+				//}
+        foreach ($data['recordhosp'] as $key=> $row){
+				$data['recordhosp'][$key]->not_dc = $row->Cleansing_yellow + $row->Cleansing_red;
+				$data['recordhosp'][$key]->not_wc = $row->Waste_yellow + $row->Waste_red;
 				$data['deptlist'][] = $row->Dept_Code;
 				}
 				$data['locdet'] = $this->get_model->locdet($data['deptlist'],$data['hosp']);
@@ -8474,6 +8496,70 @@ public function rcm_fdreport2(){
 		$data['record'] = $this->display_model->fdrepdet_rcm(date("Y-m-d",strtotime($data['date'])),$this->input->get('x'));
 		$this ->load->view("headprinter");
 		$this ->load->view("content_rcm_fdreport2.php",$data);
+	}
+
+	public function woa10_report(){
+		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");
+		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
+		$this->load->model('display_model');
+		$data['records'] = $this->display_model->wo10_rpt($data['month'],$data['year']);
+		//print_r($data['records']);
+		//exit();
+		$this ->load->view("headprinter");
+		$this ->load->view("Content_woa10sr.php", $data);
+	}
+
+		public function join_unstfy_rpt(){
+		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");
+		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
+	    $this->load->model('get_model');
+	/* 	$start = $bulan = strtotime("-5 month",strtotime('2018-'.$data['month'].'-09'));
+        $end = strtotime('2018-'.$data['month'].'-08');
+		while($bulan < $end) {
+		$bulan = strtotime("+1 month", $bulan);
+		$b = $test[date('n', $bulan)] = date('m', $bulan);
+	 */
+		//echo "<pre>";
+		//print_r($data['records']);
+		//}
+
+		$data['jic'] = array();
+		$data['jic'][] = new stdClass();
+		$data['jic'][0]->Flr = 0;
+		$data['jic'][0]->WallDoor = 0;
+		$data['jic'][0]->Ceiling = 0;
+		$data['jic'][0]->Windows = 0;
+		$data['jic'][0]->Fixtures = 0;
+		$data['jic'][0]->FurnitureFitting = 0;
+
+
+	    $data['records'] = $this->get_model->get_unsatisfy($data['month'],$data['year'],$this->input->get('dept'));
+		foreach ($data['records'] as $key => $row) {
+	    if ($row->Job_Items == 'Floor'){
+			$data['jic'][0]->Flr = $row->Unstatisfactory;
+		}
+        if ($row->Job_Items == 'Wall Door'){
+			$data['jic'][0]->WallDoor = $row->Unstatisfactory;
+		}
+        if ($row->Job_Items == 'Ceiling'){
+			$data['jic'][0]->Ceiling = $row->Unstatisfactory;
+		}
+        if ($row->Job_Items == 'Windows'){
+			$data['jic'][0]->Windows = $row->Unstatisfactory;
+		}
+        if ($row->Job_Items == 'Fixtures'){
+			$data['jic'][0]->Fixtures = $row->Unstatisfactory;
+		}
+        if ($row->Job_Items == 'Furniture Fitting'){
+			$data['jic'][0]->FurnitureFitting = $row->Unstatisfactory;
+		}
+		//echo "<pre>";
+		//print_r($row);
+		}
+		/* echo "<pre>";
+		print_r($data['records']); */
+		$this ->load->view("headprinter");
+		$this ->load->view("Content_unstfy_rpt", $data);
 	}
 
 }

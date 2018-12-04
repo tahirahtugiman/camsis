@@ -584,7 +584,11 @@ class Procurement extends CI_Controller {
 	public function pr_report(){
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
+		$data['from']= ($this->input->get('from') <> 0) ? $this->input->get('from') : date("Y-m-d");
+		$data['to']= ($this->input->get('to') <> 0) ? $this->input->get('to') : date("Y-m-d");
 		$this->load->model("display_model");
+		$data['t_record'] = $this->display_model->wo_tracking($data['from'], $data['to']);
+
 		$this ->load->view("headprinter");
 		if ($this->input->get('pr') == 'rs'){
 			$this ->load->view("Content_rs_report_print",$data);
@@ -595,7 +599,16 @@ class Procurement extends CI_Controller {
 		}elseif ($this->input->get('pr') == 'wo'){
 			$data['record'] = $this->display_model->wo_no_mrin($data['year'], $data['month']);
 			$this ->load->view("Content_wo_report_print",$data);
+		}elseif ($this->input->get('pr') == 'tr'){
+			foreach($data['t_record'] as $key=>$row){
+		   $data['itemrec'] = $this->display_model->itemdet($row->MIRNcode);
+		   $data['t_record'][$key]->comment2=$data['itemrec'];
 		}
+			}
+			//echo "<pre>";
+//print_r($data['t_record']);
+			$this ->load->view("Content_tr_report_print.php",$data);
+
 	}
 	public function e_request(){
 		//echo "lalalalalalla masuk";
@@ -867,12 +880,52 @@ class Procurement extends CI_Controller {
 	public function Release_note(){
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
+		$this->load->model('display_model');
+		$data['record'] = $this->display_model->rn_release();
+		//$data['itemrn'] = $this->display_model->poprequest_mrin('IIUM',2018,10);
+
 		$this ->load->view("head");
 		$this ->load->view("left");
 		if  ($this->input->get('pro') == 'new') {
+			$this->load->model('get_model');
+			$data['listh'] = $this->get_model->getHospital();
+		//$data['rephos'] = $this->display_model->pohosp();
 		$this ->load->view("Content_Release_note_newedit",$data);
 		}elseif ($this->input->get('pro') == 'edit'){
+		$this->load->model('get_model');
+		$data['rndet'] = $this->get_model->getrndetail($this->input->get("rn"));
+        $data['rnitem'] = $this->get_model->getrnitem($this->input->get("rn"));
 		$this ->load->view("Content_Release_note_newedit",$data);
+		}elseif ($this->input->get('pro') == 'save'){
+		$this->load->model('insert_model');
+		$this->load->model('get_model');
+        $rn_no = $this->get_model->get_RNNO($this->input->post("n_Area_list"));
+		if($this->input->post('itemcode')){
+		foreach($this->input->post('itemcode') as $key=>$row){
+      if ($this->input->post('qty['.$key.']') <> ''){
+	/*   echo "item = ".$key;
+	  echo "test = ".$this->input->post('itemcode['.$key.']');
+	  echo "mrin = ".$this->input->post('mrincode['.$key.']');
+	  echo "qty = ".$this->input->post('qty['.$key.']');
+      echo "<br>"; */
+	  $insert_data = array('RN_No'=>$rn_no,'MRIN_No'=>$this->input->post('mrincode['.$key.']'),'Item_code'=>$this->input->post('itemcode['.$key.']'),'Qty'=>$this->input->post('qty['.$key.']'));
+      $this->insert_model->tbl_rn_item($insert_data);
+	  }
+		}
+		  }
+	  $tbl_rn_release = array(
+						"RN_No" => $rn_no,
+						"User_Release" => $this->session->userdata("v_UserName"),
+						"rn_status" => $this->input->post("n_Status_list"),
+						"shipment_type" => $this->input->post("n_Shipment_list"),
+						"courier" => $this->input->post("n_Courier_list"),
+						"consignment_note" => $this->input->post("consignment_note"),
+						"consignment_date" => date('Y-m-d H:s:i', strtotime($this->input->post("consignment_date"))),
+						"accessories" => $this->input->post("accessories")
+			);
+
+		$this->insert_model->tbl_rn_release($tbl_rn_release);
+        redirect('/Procurement/Release_note');
 		}else{
 		$this ->load->view("Content_Release_note",$data);
 		}

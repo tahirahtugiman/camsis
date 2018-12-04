@@ -36,10 +36,10 @@
 			<tr class="ui-color-contents-style-1">
 				<td colspan="12" valign="top" align="center">
 					<div class="ui-left_web wrap">
-						<table class="ui-desk-style-table" style="color:black; background:white; text-align:center;" cellpadding="4" cellspacing="0" width="100%" border="0">	
+						<table class="ui-desk-style-table" style="color:black; background:white; text-align:center;" cellpadding="4" cellspacing="0" width="100%" border="0">
 	    					<tr class="ui-menu-color-header" style="color:white; font-weight:;">
 								<td>&nbsp;</td>
-								<td>Type Code </td>  
+								<td>Type Code </td>
 								<td>Work Order</td>
 								<td>Asset Number </td>
 								<td>Uptime SIQ </td>
@@ -61,7 +61,7 @@
 								</td>
 								<?php } ?>
 								<td>
-									<?php echo anchor ('contentcontroller/assetupdate?asstno='.$row->asset_no,''.$row->asset_no.'' ) ?>
+									<?php echo anchor ('contentcontroller/assetupdate?asstno='.$row->asset_no,''.$row->asset_tag.'' ) ?>
 								</td>
 								<td>
 									<?=!is_null($row->siquptime_no) ? "<span style=color:red;>".anchor ('contentcontroller/qap3_SIQ_Number_update?ssiq='.$row->siquptime_no.'&m='.$month.'&y='.$year,''."<span style=color:red;>".$row->siquptime_no."</span>".'' ).'<br> TRPI '.$row->trpi. ' Uptime '.number_format($row->uptime_pct,2)."</span>" : '' ?>
@@ -71,7 +71,7 @@
 									$ppm_agreeddate = strtotime($row->ppm_agreeddate);
 									if (strlen($completed_date) == 0){
 										$StatusPPM = "<span style=color:red;>".'PPM not completed'."</span>";
-									}elseif ($completed_date < $ppm_agreeddate){ 
+									}elseif ($completed_date < $ppm_agreeddate){
 										$StatusPPM = "<span style=color:red;>".'PPM completed past agreed date'."</span>";
 									}else{
 										$StatusPPM = '';
@@ -106,7 +106,7 @@
 					<div class="ui-left_mobile">
 						<table class="ui-mobile-table-desk" style="color:black; width:100%;">
 						<?php if ($validPeriod == 'true') { ?>
-							<?php $numrow=1; foreach($records as $row):?> 
+							<?php $numrow=1; foreach($records as $row):?>
 							<tr <?=($numrow % 2) == 1 ? 'class="ui-color-color-color"' : 'class="bg-grey2"'?>>
 								<td >No</td>
 								<td class="td-desk">: <?=$numrow?></td>
@@ -128,7 +128,7 @@
 								<?php } ?>
 							<tr <?=($numrow % 2) == 1 ? 'class="ui-color-color-color"' : 'class="bg-grey2"'?>>
 								<td>Asset Number</td>
-								<td class="td-desk">: <?php echo anchor ('contentcontroller/assetupdate?asstno='.$row->asset_no,''.$row->asset_no.'' ) ?></td>
+								<td class="td-desk">: <?php echo anchor ('contentcontroller/assetupdate?asstno='.$row->asset_no,''.$row->asset_tag.'' ) ?></td>
 							</tr>
 							<tr <?=($numrow % 2) == 1 ? 'class="ui-color-color-color"' : 'class="bg-grey2"'?>>
 								<td valign="top">Uptime SIQ </td>
@@ -138,13 +138,13 @@
 									<?php if (strtotime($row->completed_date) < strtotime($row->ppm_agreeddate)){
 										$StatusPPM = "<span style=color:red;>".'PPM completed past agreed date'."</span>";
 									}
-									elseif (strlen(strtotime($row->completed_date)) == 0){ 
+									elseif (strlen(strtotime($row->completed_date)) == 0){
 										$StatusPPM = "<span style=color:red;>".'PPM not completed'."</span>";
 									}
 								} ?>
 							<tr <?=($numrow % 2) == 1 ? 'class="ui-color-color-color"' : 'class="bg-grey2"'?>>
 								<td valign="top">PPM SIQ</td>
-								<td valign="top">: 
+								<td valign="top">:
 									<span style="display:inline-block; width:90%;">
 										<?=!is_null($row->siqppm_no) ? "<span style=color:red;>".anchor ('contentcontroller/qap3_SIQ_Number_update?ssiq='.$row->siqppm_no.'&m='.$month.'&y='.$year,''."<span style=color:red;>".$row->siquptime_no."</span>".'' ).'<br>'.$StatusPPM."</span>" : '' ?>
 									</span>

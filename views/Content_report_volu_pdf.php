@@ -63,7 +63,9 @@
 <table class="rport-header">
 		<tr>
 			<?php if ($this->input->get('req') == $req) {?>
-			<td colspan="4" valign="top"><h3><?php if ($this->input->get('broughtfwd') != ''){?>Unscheduled Brought Forward Work Order Details<?php }else{ ?>Work Order Report Listing<?php }?>- <?=date('F', mktime(0, 0, 0, $month, 10))?> <?=$year?> - <?php echo $this->session->userdata('usersessn');?>  ( <?php if (($this->input->get('req')) and (($this->input->get('grp') == '2') or ($this->input->get('grp') == '3'))){ echo 'Group'.$this->input->get('grp').','.$tulis; } elseif ($this->input->get('req')){echo $tulis; }elseif ($this->input->get('grp') == ''){ echo 'All';}else{ echo 'Group '.$this->input->get('grp');} ?> )</h3></td>
+			<td colspan="4" valign="top"><h3><?php if (($this->input->get('broughtfwd') != '')&&($req !='A10')){?>Unscheduled Brought Forward Work Order Details
+			<?php } elseif (($this->input->get('broughtfwd') != '') && ($req == 'A10')){?>Work Order A10 Summary Report
+			<?php }else{ ?>Work Order Report Listing<?php }?>- <?=date('F', mktime(0, 0, 0, $month, 10))?> <?=$year?> - <?php echo $this->session->userdata('usersessn');?>  ( <?php if (($this->input->get('req')) and (($this->input->get('grp') == '2') or ($this->input->get('grp') == '3'))){ echo 'Group'.$this->input->get('grp').','.$tulis; } elseif ($this->input->get('req')){echo $tulis; }elseif ($this->input->get('grp') == ''){ echo 'All';}else{ echo 'Group '.$this->input->get('grp');} ?> )</h3></td>
 			<?php } ?>
 		</tr>
 	</table>
@@ -100,7 +102,7 @@
 		</tr>
 		<?php  if (!empty($record)) {?>
 		<?php $numrow = 1; foreach($record as $row):?>
-			<?php echo ($numrow%2==0) ? '<tr class="ui-color-color-color">' : '<tr nobr="true">'; ?>
+			<?php echo ($numrow%2==0) ? '<tr class="ui-color-color-color" nobr="true">' : '<tr nobr="true">'; ?>
 
     		<td><?= $numrow ?></td>
 			<td><?= ($row->D_date) ?  date("d/m/Y",strtotime($row->D_date)) : 'N/A' ?></td>

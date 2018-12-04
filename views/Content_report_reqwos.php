@@ -33,11 +33,12 @@ function barchart(a,b,c,d,e){
 <?php } ?>
 <?php if (($this->input->get('ex') == '') or ($this->input->get('none') == 'closed')){?>
 <div id="Instruction" >
-<center>View List : 
+<center>View List :
 <form method="get" action="">
-		<?php 
+		<?php
+		//echo "lalalala : " . substr($this->session->userdata('v_UserName'),0,4).strtoupper(substr($this->session->userdata('v_UserName'),0,4));
 		$idArray = array_map('toArray', $this->session->userdata('accessr'));
-		if (!(in_array("contentcontroller/Schedule(main)", $idArray))) { 
+		if (!(in_array("contentcontroller/Schedule(main)", $idArray))) {
 			 if ($this->session->userdata('usersess')=="HKS") {
 			$req_type = array(
 			'' => 'All',
@@ -57,7 +58,9 @@ function barchart(a,b,c,d,e){
 			'W' => 'Window - Related Report',
 			'FIX' => 'Fixtures - Related Report',
 			'FUR' => 'Furniture / Fitting - Related Report'
-		 ); } else {
+		 );
+
+	 			} else {
 		 		$req_type = array(
 			'' => 'All',
 			'A1' => 'A1 - Breakdown Maintenance (BM)',
@@ -72,6 +75,9 @@ function barchart(a,b,c,d,e){
 			'A10' => 'A10 - Reimbursable Work'
 		 );
 		 }
+		 	if (strtoupper(substr($this->session->userdata('v_UserName'),0,4)) == "IIUM") {
+				unset($req_type['A9']);
+			}
 		?>
 		<?php echo form_dropdown('req', $req_type, set_value('req', $reqtype) , 'style="width: 300px;" id="cs_month"'); ?><br>
 
@@ -94,15 +100,15 @@ function barchart(a,b,c,d,e){
 		 );
 		?>
 		<?php echo form_dropdown('m', $month_list, set_value('m', $month) , 'style="width: 90px;" id="cs_month"'); ?>
-		
-		<?php 
+
+		<?php
 			for ($dyear = '2015';$dyear <= date("Y");$dyear++){
 				$year_list[$dyear] = $dyear;
 			}
 		?>
 		<?php echo form_dropdown('y', $year_list, set_value('y', $year) , 'style="width: 65px;" id="cs_year"'); ?>
 <input type="hidden" value="<?php echo set_value('grp', ($this->input->get('grp')) ? $this->input->get('grp') : ''); ?>" name="grp">
-<input type="hidden" value="<?php echo set_value('fon', ($this->input->get('fon')) ? $this->input->get('fon') : ''); ?>" name="fon"> 
+<input type="hidden" value="<?php echo set_value('fon', ($this->input->get('fon')) ? $this->input->get('fon') : ''); ?>" name="fon">
 <input type="submit" value="Apply" onchange="javascript: submit()"/></center>
 </form>
 </div>
@@ -144,7 +150,7 @@ function barchart(a,b,c,d,e){
 				break;
 			case "F":
 				$tulis = "Floor - Related Report";
-				break;	
+				break;
 			case "WD":
 				$tulis = "Wall / Door - Related Report";
 				break;
@@ -153,15 +159,15 @@ function barchart(a,b,c,d,e){
 				break;
 			case "W":
 				$tulis = "Window - Related Report";
-				break;	
+				break;
 			case "FIX":
 				$tulis = "Fixtures - Related Report";
 				break;
 			case "FUR":
 				$tulis = "Furniture / Fitting - Related Report";
-				break;					
+				break;
 			default:
-        $tulis = "All";	
+        $tulis = "All";
 				break;
 			} ?>
 			<?php if ($this->input->get('req') == $req) {?>
@@ -169,9 +175,9 @@ function barchart(a,b,c,d,e){
 			<?php } ?>
 		</tr>
 	</table>
-	
+
 	<table class="tftable" border="1" style="text-align:center; width:70%;" align="center">
-		
+
 		<tr style="text-align:center;font-weight:bold;">
 				<th>Period <?php if ($this->session->userdata('usersess') == 'FES'){ echo '/ Categories';}?></th>
 				<th>Total Work Order Request</th>
@@ -180,7 +186,7 @@ function barchart(a,b,c,d,e){
 				<th>Completed > 15 Days</th>
 				<th>Total Outstanding</th>
 			</tr>
-			
+
 			<?php if ($this->session->userdata('usersess') == 'FES'){ ?>
 				<tr style="text-align:center;">
 					<td>Electrical</td>

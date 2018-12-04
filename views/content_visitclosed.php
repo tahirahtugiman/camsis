@@ -183,6 +183,7 @@
 		<?php 
 		if ($this->session->userdata('usersess') == "HKS") {
 				$QC_list = array(
+				'' => 'Please Select',
 									'QH01' => 'QH1 Surface Stain',
 									'QH02' => 'QH2 Dust',
 									'QH03' => 'QH3 Litter',
@@ -200,7 +201,8 @@
 				);
 		} else {
 				$QC_list = array(
-									'QC01' => 'QC01 Equipment not made available',
+				'' => 'Please Select',
+				'QC01' => 'QC01 Equipment not made available',
 				'QC02' => 'QC02 Technical Personnel',
 				'QC03' => 'QC03 Delay closing of Work Order',
 				'QC04' => 'QC04 User Request',

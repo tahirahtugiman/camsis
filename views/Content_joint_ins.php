@@ -54,7 +54,7 @@
 											'12' => 'December'
 					);?>
 					<?php echo form_dropdown('m', $month_list, set_value('m', isset($record[0]->Month) ? $record[0]->Month : $fmonth) , 'style="width: 90px;" id="cs_month"'); ?>
-		
+
 					<?php for ($dyear = '2015';$dyear <= date("Y");$dyear++){
 						$year_list[$dyear] = $dyear;
 					}?>
@@ -81,9 +81,9 @@
 		</div>
 <?php } ?>
 		<div class="m-div">
-	
+
 <?php if($this->input->get('en') == 'JIS'){ ?>
-	
+
 			<table class="rport-header">
 				<tr>
 					<td colspan="5">Joint Inspection Summary <?= substr(date('M',mktime(0, 0, 0, $fmonth, 10)),0,3).' '.$year ?> - Housekeeping</td>
@@ -156,7 +156,7 @@
 					<?php } ?>
 					<td><?=isset($list['totalloc']) ? $list['totalloc'] : ''?></td>
 					<td><?=isset($list['Satisfactory']) ? $list['Satisfactory'] : ''?></td>
-					<td><?=isset($list['Unstatisfactory']) ? $list['Unstatisfactory'] : ''?></td>
+					<td><?=isset($list['Unstatisfactory']) && ($list['Unstatisfactory']) <> 0 ? anchor ('contentcontroller/join_unstfy_rpt?m='.$fmonth.'&y='.$fyear.'&dept='.$list['Dept_Code'],''.$list['Unstatisfactory'].'') : ''?></td>
 					<td><?=isset($list['Not_Applicable']) ? $list['Not_Applicable'] : ''?></td>
 					<?php $total = $list['Satisfactory'] + $list['Unstatisfactory']; ?>
 					<td><?=$total?></td>
@@ -224,7 +224,7 @@
 				</tr>
 				<?php foreach ($record as $ld): ?>
 				<tr>
-					<td><?=isset ($ld['Job_Date']) ? date("d-m-Y",strtotime($ld['Job_Date'])) : ''?></td> 
+					<td><?=isset ($ld['Job_Date']) ? date("d-m-Y",strtotime($ld['Job_Date'])) : ''?></td>
 					<!--<?php echo anchor ('contentcontroller/joint_ins?&en=JISJNum&date='.$ld->Job_Date.'&dept='.$ld->Dept_Code.'&hosp='.$ld->hospital_code.'&month='.$fmonth.'&year='.$fyear,isset ($ld->Job_Date) ? date("d-m-Y",strtotime($ld->Job_Date)) : ''); ?>-->
 					<td>
 						<?php echo anchor ('contentcontroller/joint_ins?&en=JISJNum&dept='.$ld['Dept_Code'].'&hosp='.$ld['hospital_code'].'&month='.$fmonth.'&year='.$fyear.'&jino='.$ld['ji_no'].'&date='.$ld['Job_Date'],isset($ld['ji_no']) ? $ld['ji_no'] : ''); ?>
@@ -247,7 +247,7 @@
 					<td colspan="5">Joint Inspection Summary <?= substr(date('M',mktime(0, 0, 0, $fmonth, 10)),0,3).' '.$year ?> - Housekeeping</td>
 				</tr>
 			</table>
-	
+
 			<table class="tftable" border="1" style="text-align:center; width:70%;" align="center">
 				<tr>
 					<th>Item</th>

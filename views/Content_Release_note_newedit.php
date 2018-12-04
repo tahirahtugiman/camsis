@@ -1,4 +1,4 @@
-<?php echo form_open('');?>
+<?php echo form_open('procurement/Release_note?pro=save');?>
 <div class="ui-middle-screen">
 	<div class="content-workorder">
 		<div class="div-p"></div>
@@ -29,12 +29,12 @@
 															<td style="padding:10px;" valign="top" class="ui-w">Status  :</td>
 														<?php if ($this->input->get('pro') == 'new' ){?>
 														<td style="padding:10px;" valign="top">
-															<?php 
+															<?php
 																$Status_list = array(
 																		  '0' => 'Submitted',
-															
+
 																	   );
-																 ?>   
+																 ?>
 															<?php echo form_dropdown('n_Status_list', $Status_list ,'', 'class="dropdown n_wi-date2" style="display:inline-block; width:100px; height:30px;"'); ?>
 															</td>
 														<?php }elseif ($this->input->get('pro') == 'edit' ){?>
@@ -50,35 +50,40 @@
 														</tr>
 														<tr>
 															<td style="padding:10px;" valign="top">Contact Person :  </td>
-															<td style="padding:10px;" valign="top"> nezam </td>
+															<td style="padding:10px;" valign="top"> <?=$this->session->userdata("v_UserName")?> </td>
 														</tr>
 														<tr>
 															<td style="padding:10px;" valign="top">Area  :  </td>
-															<td style="padding:10px;" valign="top"> Head Office (HQ) </td>
-														</tr>														
+															<td style="padding:10px;" valign="top"> <?=$this->session->userdata("hosp_code")?> </td>
+														</tr>
 														<tr>
 															<td style="padding-left:10px;" valign="top" colspan="2"><u>DELIVER TO</u>  </td>
 														</tr>
 														<tr>
 															<td style="padding:10px;" valign="top">Contact Person :  </td>
-															<td style="padding:10px;" valign="top"> nezam </td>
+																<?php if ($this->input->get('pro') == 'new' ){?>
+															<td style="padding:10px;" valign="top"><div id="deliv"></div> </td>
+																<?php }elseif ($this->input->get('pro') == 'edit' ){?>
+																<td style="padding:10px;" valign="top"> <?=$rndet[0]->rep;?>  </td>
+																<?php } ?>
 														</tr>
 														<tr>
 															<td style="padding:10px;" valign="top">Area  :  </td>
 															<?php if ($this->input->get('pro') == 'new' ){?>
 															<td style="padding:10px;" valign="top">
-															
-															<?php 
+
+															<?php
 																$Area_list = array(
-																		  '0' => 'IIUM',
-															
+																		  'IIUM' => 'IIUM',
+																		  'MKA' => 'MKA',
+
 																	   );
-																 ?>   
-															<?php echo form_dropdown('n_Area_list', $Area_list ,'', 'class="dropdown n_wi-date2" style="display:inline-block; width:100px; height:30px;"'); ?> </td>
+																 ?>
+															<?php echo form_dropdown('n_Area_list', $listh ,'', 'class="dropdown n_wi-date2"  onchange="getval(this.value);" style="display:inline-block; width:100px; height:30px;"'); ?> </td>
 															<?php }elseif ($this->input->get('pro') == 'edit' ){?>
-															<td style="padding:10px;" valign="top"> IIUM </td>
+															<td style="padding:10px;" valign="top"> <?=$rndet[0]->hosp;?> </td>
 															<?php } ?>
-														</tr>														
+														</tr>
 													</table>
 												</td>
 											</tr>
@@ -97,67 +102,71 @@
 														<tr>
 															<td style="padding:10px;" valign="top" class="ui-w">Shipment Type  :  </td>
 															<?php if ($this->input->get('pro') == 'new' ){?>
-															<td style="padding-left:10px;" valign="top"> 
-															<?php 
+															<td style="padding-left:10px;" valign="top">
+															<?php
 																$Shipment_list = array(
 																		  '0' => 'Courier',
 																		  '1' => 'By hand',
-															
+
 																	   );
-																 ?>   
+																 ?>
 															<?php echo form_dropdown('n_Shipment_list', $Shipment_list ,'', 'class="dropdown n_wi-date2" style="display:inline-block; width:100px; height:30px;"'); ?> </td>
 															<?php }elseif ($this->input->get('pro') == 'edit' ){?>
-															<td style="padding:10px;" valign="top"> Courier </td>
+															<td style="padding:10px;" valign="top"> <?=$rndet[0]->sh_type;?> </td>
 															<?php } ?>
-															
+
 														</tr>
 														<tr>
 															<td style="padding:10px;" valign="top">Courier Company  :  </td>
 															<?php if ($this->input->get('pro') == 'new' ){?>
-															<td style="padding-left:10px;" valign="top"> 
-															<?php 
+															<td style="padding-left:10px;" valign="top">
+															<?php
 																$Courier_list = array(
 																		  '0' => 'Other',
 																		  '1' => 'ABX',
 																		  '2' => 'CityLink',
 																		  '3' => 'DHL',
-															
+
 																	   );
-																 ?>   
+																 ?>
 															<?php echo form_dropdown('n_Courier_list', $Courier_list ,'', 'class="dropdown n_wi-date2" style="display:inline-block; width:100px; height:30px;"'); ?> </td>
 															<?php }elseif ($this->input->get('pro') == 'edit' ){?>
-															<td style="padding:10px;" valign="top"> Other </td>
+															<td style="padding:10px;" valign="top"> <?=$rndet[0]->courier;?> </td>
 															<?php } ?>
-															
+
 														</tr>
 														<tr>
 															<td style="padding:10px;" valign="top">Consignment Note :    </td>
 															<?php if ($this->input->get('pro') == 'new' ){?>
-															<td style="padding:10px;" valign="top"> <input type="text" name=""  value="" class="form-control-button2 n_wi-date2"></td>
+															<td style="padding:10px;" valign="top"> <input type="text" name="consignment_note"  value="" class="form-control-button2 n_wi-date2"></td>
 															<?php }elseif ($this->input->get('pro') == 'edit' ){?>
-															<td style="padding:10px;" valign="top"> N/A </td>
+															<td style="padding:10px;" valign="top"><?=$rndet[0]->consignment_note;?></td>
 															<?php } ?>
 														</tr>
 														<tr>
 															<td style="padding:10px;" valign="top">Consignment Date :    </td>
 															<?php if ($this->input->get('pro') == 'new' ){?>
-															<td style="padding:10px;" valign="top"> <input type="text" name=""  value="" id="date0" class="form-control-button2 n_wi-date2" readonly></td>
+															<td style="padding:10px;" valign="top"> <input type="text" name="consignment_date"  value="" id="date0" class="form-control-button2 n_wi-date2" readonly></td>
 															<?php }elseif ($this->input->get('pro') == 'edit' ){?>
-															<td style="padding:10px;" valign="top"> 	17/07/2012 </td>
+															<td style="padding:10px;" valign="top"> <?=date('d/m/Y',strtotime($rndet[0]->consignment_date));?></td>
 															<?php } ?>
 														</tr>
 														<tr>
 															<td style="padding-left:10px;" class="ui-w" valign="top">Accessories  :   </td>
-															<td style="padding-left:10px;" ><textarea class="Input n_com2" name="n_summary"></textarea></td>
-														</tr>														
+															<?php if ($this->input->get('pro') == 'new' ){?>
+														    <td style="padding-left:10px;" ><textarea class="Input n_com2" name="accessories"></textarea></td>
+															<?php }elseif ($this->input->get('pro') == 'edit' ){?>
+															<td style="padding-left:10px;" ><textarea class="Input n_com2" name="accessories"><?=$rndet[0]->accessories;?></textarea></td>
+															<?php } ?>
+														</tr>
 													</table>
 												</td>
-											</tr>						
+											</tr>
 										</table>
 									</div>
 								</div>
 							</td>
-						</tr>						
+						</tr>
 					</table>
 				</div>
 				<div class="middle_d">
@@ -170,8 +179,20 @@
 								<?php if ($this->input->get('pro') == 'new' ){?>
 								<table class="ui-content-form" style="color:black;" width="100%" border="0">
 									<tr>
-										<td style="padding:10px; width:15%;" valign="top">Item(s)   :   </td>
-										<td style="padding:10px;"></td>
+										<td  valign="top" style="text-align:right;">Item(s)   :   </td>
+										<td style="padding-top:30px;"><table class="wnctable" border="1" style="text-align:center;">
+									<tr>
+										<th>No</th>
+										<th>Item Code</th>
+										<th>Item Name</th>
+										<th>MRIN Ref No.</th>
+										<th>Qty Req</th>
+										<th>Qty In-Store</th>
+										<th>Qty Release</th>
+									</tr>
+									<tbody id="live_data">
+		</tbody>                   </tbody>
+								</table></td>
 									</tr>
 								</table>
 								<?php }elseif ($this->input->get('pro') == 'edit' ){?>
@@ -182,77 +203,21 @@
 										<th>Item Code</th>
 										<th>Item Name</th>
 										<th>MRIN Ref No.</th>
-										<th>Qty Req</th>
 										<th>Qty Release</th>
 									</tr>
+									<?=$i=1;foreach($rnitem as $row){;?>
 									<tr>
-										<td>1&nbsp;</td>
-										<td><b>SPO2-A00004</b></a>&nbsp;</td>
-										<td><b>Finger Sensor For Dolphine 2100</b></a>&nbsp;</td>
-										<td><b>MRIN/NJ/BPH/00004/2012</b></a>&nbsp;</td>
-										<td><b>1</b></a>&nbsp;</td>
-										<td class=""><b>1</b></a>&nbsp;</td>
+										<td><?=$i++;?></td>
+										<td><b><?=$row->Item_code;?></b></a>&nbsp;</td>
+										<td><b><?=$row->ItemName;?></b></a>&nbsp;</td>
+										<td><b><?=$row->MRIN_No;?></b></a>&nbsp;</td>
+										<td class=""><b><?=$row->Qty?></b></a>&nbsp;</td>
 									</tr>
-									<tr class="">
-										<td>2&nbsp;</td>
-										<td class=""><b>SPO2-A00004</b></a>&nbsp;</td>
-										<td class=""><b>Finger Sensor For Dolphine 2100</b></a>&nbsp;</td>
-										<td class=""><b>MRIN/NJ/BPH/00005/2012</b></a>&nbsp;</td>
-										<td class=""><b>1</b></a>&nbsp;</td>
-										<td class=""><b>1</b></a>&nbsp;</td>
-									</tr>
-									<tr class="">
-										<td>3&nbsp;</td>
-										<td class=""><b>SPO2-A00004</b></a>&nbsp;</td>
-										<td class=""><b>Finger Sensor For Dolphine 2100</b></a>&nbsp;</td>
-										<td class=""><b>MRIN/NJ/BPH/00006/2012</b></a>&nbsp;</td>
-										<td class=""><b>1</b></a>&nbsp;</td>
-										<td class=""><b>1</b></a>&nbsp;</td>
-									</tr>
-									<tr class="">
-										<td>4&nbsp;</td>
-										<td class=""><b>SPO2-A00041</b></a>&nbsp;</td>
-										<td class=""><b>Ext Cable for Nellcor EC-8/DEC-8</b></a>&nbsp;</td>
-										<td class=""><b>MRIN/NJ/BPH/00010/2012</b></a>&nbsp;</td>
-										<td class=""><b>1</b></a>&nbsp;</td>
-										<td class=""><b>1</b></a>&nbsp;</td>
-									</tr>
-									<tr class="">
-										<td>5&nbsp;</td>
-										<td class=""><b>SPO2-A00002</b></a>&nbsp;</td>
-										<td class=""><b>Finger Sensor Adult for Nellcor DS100 (9pin)</b></a>&nbsp;</td>
-										<td class=""><b>MRIN/NJ/BPH/00010/2012</b></a>&nbsp;</td>
-										<td class=""><b>1</b></a>&nbsp;</td>
-										<td class=""><b>1</b></a>&nbsp;</td>
-									</tr>
-									<tr class="">
-										<td>6&nbsp;</td>
-										<td class=""><b>SPO2-A00002</b></a>&nbsp;</td>
-										<td class=""><b>Finger Sensor Adult for Nellcor DS100 (9pin)</b></a>&nbsp;</td>
-										<td class=""><b>MRIN/NJ/BPH/00015/2012</b></a>&nbsp;</td>
-										<td class=""><b>1</b></a>&nbsp;</td>
-										<td class=""><b>1</b></a>&nbsp;</td>
-									</tr>
-									<tr class="">
-										<td>7&nbsp;</td>
-										<td class=""><b>HEATE-A00003</b></a>&nbsp;</td>
-										<td class=""><b>Temperature Probe MR858</b></a>&nbsp;</td>
-										<td class=""><b>MRIN/NJ/BPH/00026/2012</b></a>&nbsp;</td>
-										<td class=""><b>1</b></a>&nbsp;</td>
-										<td class=""><b>1</b></a>&nbsp;</td>
-									</tr>
-									<tr class="">
-										<td>8&nbsp;</td>
-										<td class=""><b>SPO2-A00040</b></a>&nbsp;</td>
-										<td class=""><b>Extansion Cable for Dolphine 1100</b></a>&nbsp;</td>
-										<td class=""><b>MRIN/NJ/BPH/00111/2012</b></a>&nbsp;</td>
-										<td class=""><b>1</b></a>&nbsp;</td>
-										<td class=""><b>1</b></a>&nbsp;</td>
-									</tr>
+									<?php } ?>
 								</table>
 								<?php } ?>
 							</td>
-						</tr>						
+						</tr>
 					</table>
 				</div>
 			</div>
@@ -285,3 +250,40 @@
 <?php include 'content_jv_popup.php';?>
 <?php echo form_close(); ?>
 </html>
+<script>
+	  $( document ).ready(function() {
+getval('IIUM');
+});
+
+function getval(sel)
+{
+	var h = sel;
+        $.ajax({
+                url:"<?php echo base_url('index.php/ajax/itemrnt'); ?>",
+                method:"POST",
+				data:{hosp_code:h},
+                dataType:"text",
+                success:function(data){
+                $('#live_data').html(data);
+			     getrep(h);
+                }
+           });
+
+}
+
+function getrep(sel)
+{
+	var h = sel;
+ $.ajax({
+                url:"<?php echo base_url('index.php/ajax/get_rep'); ?>",
+                method:"POST",
+				data:{hosp_code:h},
+                dataType:"text",
+                success:function(data){
+
+			   $('#deliv').text(data);
+                }
+           });
+}
+
+</script>

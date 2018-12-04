@@ -81,6 +81,7 @@
 							<th >&nbsp;</th>
 							<th style="text-align:left;">MRIN Reference No</th>
 							<th >Work Order</th>
+							<th >Work Order Date</th>
 							<th >Asset</th>
 							<th >Status</th>
 							<th >Issue Date</th>
@@ -132,7 +133,8 @@
 								</a>
 							</td>
 							<td class="td-desk"><?=isset($row->WorkOfOrder) ? $row->WorkOfOrder : ''?></td>
-							<td class="td-desk"><?=isset($row->V_Asset_no) ? $row->V_Asset_no : ''?></td>
+							<td class="td-desk"><?=isset($row->wodate) ? date("d-m-Y",strtotime($row->wodate)) : ''?></td>
+							<td class="td-desk"><?=isset($row->Astag) ? $row->Astag : ''?></td>
 								<?php foreach($status as $stat){ ?>
 									<?php
 										$s_Proc = "";

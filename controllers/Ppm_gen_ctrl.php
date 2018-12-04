@@ -8,13 +8,13 @@ class ppm_gen_ctrl extends CI_Controller {
 
 	function is_logged_in()
 	{
-		
+
 		$is_logged_in = $this->session->userdata('v_UserName');
-		
+
 		if(!isset($is_logged_in) || $is_logged_in !=TRUE)
 		redirect('logincontroller/index');
 	}
-	
+
   function index()
   { //echo "ini first";
 	  $nilaiwk = $_GET["wk"];
@@ -24,18 +24,18 @@ class ppm_gen_ctrl extends CI_Controller {
 		$nilaid = $_GET["d"];
 		$ndue = 6;
 		$data['year'] = $this ->get_year();
-		$data['y']= ($this->input->get('y') <> 0) ? $this->input->get('y') : 'NA';	
+		$data['y']= ($this->input->get('y') <> 0) ? $this->input->get('y') : 'NA';
 		$data['wk']= ($this->input->get('wk') <> 0) ?  $this->input->get('wk') : 'NA';
 		//$data['tajuk1'] = $nilaiy.' PPM WEEK '.$nilaiwk.' <br />(30 DEC 2013 - 05 JAN 2014)';
 		$data['tajuk1'] = $nilaiy.' PPM WEEK '.$nilaiwk;
 		//echo('nilai week : '.$nilaiwk.'</br>');
 		//echo('nilai year : '.$nilaiy.$this->session->userdata('hosp_code').'</br>');
-	  $this->load->model('get_model');	
-		
+	  $this->load->model('get_model');
+
 		if ($nilaiact <> '') {
 		//echo 'masuk act';
-		$this->load->model('get_seqno');	
-		//$data['service_apa'] = $this->loginModel->validate3();	
+		$this->load->model('get_seqno');
+		//$data['service_apa'] = $this->loginModel->validate3();
 		$RN=$this->get_seqno->funcGetAPBESYSNextSeqNo('P', $nilaiy);
 		$sFormat = $this->get_seqno->funcGetAPBESYSSeqNoFormat('P');
 		$sFormatP = $this->get_seqno->funcFormatAPBESYSSeqNo($sFormat, 'P', $RN, $nilaiy);
@@ -51,13 +51,17 @@ class ppm_gen_ctrl extends CI_Controller {
 		//if ($this->get_model->validate_schmon($nilaiwk, $this->session->userdata('hosp_code'), $nilaiy)) {
 		$xl = 0;
 		if ($this->get_model->check_assetri($value->v_Asset_no) && $nilaiact == "gen") {
-		$xl = 6;}
-		
+			if ($this->session->userdata('usersess') == "FES") {$xl = 6;}}
+
 		for ($x = 0; $x <= $xl; $x++) {
 		if (count($truker) == 0) {
-		$whatwono = ($xl == 6) ? str_replace("PPF", "RI", $this->get_seqno->funcFormatAPBESYSSeqNo($sFormat, 'P', $RN, $nilaiy)) : $this->get_seqno->funcFormatAPBESYSSeqNo($sFormat, 'P', $RN, $nilaiy);
+			if ($this->session->userdata('usersess') == "FES") {
+				$whatwono = ($xl == 6) ? str_replace("PPF", "RI", $this->get_seqno->funcFormatAPBESYSSeqNo($sFormat, 'P', $RN, $nilaiy)) : $this->get_seqno->funcFormatAPBESYSSeqNo($sFormat, 'P', $RN, $nilaiy);
+			} else {
+				$whatwono = ($xl == 6) ? str_replace("PPB", "RI/B", $this->get_seqno->funcFormatAPBESYSSeqNo($sFormat, 'P', $RN, $nilaiy)) : $this->get_seqno->funcFormatAPBESYSSeqNo($sFormat, 'P', $RN, $nilaiy);
+			}
 		$whatrmk = $this->get_seqno->getppmrmk($value->v_tag_no, $value->v_JobType);
-		
+
 		$insert_data = array(
 		'v_WrkOrdNo'=>$whatwono,
 	  'v_Asset_no'=>$value->v_Asset_no,
@@ -80,12 +84,12 @@ class ppm_gen_ctrl extends CI_Controller {
 		$this->load->model('insert_model');
 		$this->insert_model->ins_schcon($insert_data,TRUE);
 		$RN++;
-		
+
 		//print_r($value);
 		//exit();
     //$value['ppm_no']=$sFormatP;
 		$kumpulline[] = array("v_Asset_noe"=>$value->v_Asset_no, "v_asset_name"=>$value->v_asset_name, "v_JobType"=>$value->v_JobType, "v_user_dept_code"=>$value->v_user_dept_code, "v_location_code"=>$value->v_location_code, "wo"=>$insert_data['v_WrkOrdNo']);
-		
+
 		}
 		else {
 		//echo "<br>masuk klcc aaarrrr<br>";
@@ -94,19 +98,19 @@ class ppm_gen_ctrl extends CI_Controller {
 		}
 		} // loop for
 		//echo "<br>ini last";
-		
-		
+
+
 		}
-		$this->load->model('get_seqno');	
+		$this->load->model('get_seqno');
 		$this->get_seqno->funcSaveAPBESYSNextSeqNo('P',$RN,$nilaiy);
-		
+
 		//$data['ppm_wo'][0]['ppm_no']=$sFormatP;
 		//print_r($data['ppm_wo']);
 		//echo '</br>nilai rn :'.$RN. 'format : '. $sFormat . 'sFormatP : '.$sFormatP;
-		} 
+		}
 		else{
 		//echo "x masuk act";
-		$data['y']= ($this->input->get('y') <> 0) ? $this->input->get('y') : 'NA';	
+		$data['y']= ($this->input->get('y') <> 0) ? $this->input->get('y') : 'NA';
 		$data['wk']= ($this->input->get('wk') <> 0) ?  $this->input->get('wk') : 'NA';
 		$data['ppm_wo']=$this->get_model->get_ppmgen($nilaiy,$this->session->userdata('hosp_code'),$nilaiwk);
 		foreach ($data['ppm_wo'] as $value) {
@@ -123,11 +127,11 @@ class ppm_gen_ctrl extends CI_Controller {
 		//$data['ppm_wo']=$this->get_model->get_ppmgen($nilaiy,$this->session->userdata('hosp_code'),$nilaiwk);
 		}
 		}
-		
-		
+
+
 		}
 		 isset($kumpulline) ?  $data['ppm_list'] =$kumpulline : '';
-		 
+
 		//echo "<br>";
 		//print_r($data['ppm_list']);
 		//exit();
@@ -135,7 +139,7 @@ class ppm_gen_ctrl extends CI_Controller {
 		$this ->load->view("left");
 		$this ->load->view("Content_wo_ppmgen_week", $data);
   }
-	
+
 	function get_year()
 	{
 	 	if (isset($_REQUEST['y'])) {
@@ -147,7 +151,7 @@ class ppm_gen_ctrl extends CI_Controller {
 		}
 			$fyear = $theyear + 1;
 			$byear = $theyear - 1;
-			
+
 			if (isset($_REQUEST['wk'])) {
 			 //$thewk =  $_REQUEST["wk"];
 			 //echo 'sini';
@@ -172,13 +176,13 @@ class ppm_gen_ctrl extends CI_Controller {
 			}
 		} else {
 			 $thewk = date("Y");
-			 
+
 		}
 			//$fwk = $thewk + 1;
 			//$bwk = $thewk - 1;
-			
-	  $year_data = array( 
-		
+
+	  $year_data = array(
+
 		'theyear'=>$theyear,
 		'thebyear'=>$thebyear,
 		'thefyear'=>$thefyear,
@@ -190,49 +194,49 @@ class ppm_gen_ctrl extends CI_Controller {
 		);
 	return $year_data;
 	}
-	
-	function DateAdd($interval, $number, $date) { 
 
-    $date_time_array = getdate($date); 
-    $hours = $date_time_array['hours']; 
-    $minutes = $date_time_array['minutes']; 
-    $seconds = $date_time_array['seconds']; 
-    $month = $date_time_array['mon']; 
-    $day = $date_time_array['mday']; 
-    $year = $date_time_array['year']; 
+	function DateAdd($interval, $number, $date) {
 
-    switch ($interval) { 
-     
-        case 'yyyy': 
-            $year+=$number; 
-            break; 
-        case 'q': 
-            $year+=($number*3); 
-            break; 
-        case 'm': 
-            $month+=$number; 
-            break; 
-        case 'y': 
-        case 'd': 
-        case 'w': 
-            $day+=$number; 
-            break; 
-        case 'ww': 
-            $day+=($number*7); 
-            break; 
-        case 'h': 
-            $hours+=$number; 
-            break; 
-        case 'n': 
-            $minutes+=$number; 
-            break; 
-        case 's': 
-            $seconds+=$number;  
-            break;             
-    } 
-       $timestamp= mktime($hours,$minutes,$seconds,$month,$day,$year); 
-    return $timestamp; 
+    $date_time_array = getdate($date);
+    $hours = $date_time_array['hours'];
+    $minutes = $date_time_array['minutes'];
+    $seconds = $date_time_array['seconds'];
+    $month = $date_time_array['mon'];
+    $day = $date_time_array['mday'];
+    $year = $date_time_array['year'];
+
+    switch ($interval) {
+
+        case 'yyyy':
+            $year+=$number;
+            break;
+        case 'q':
+            $year+=($number*3);
+            break;
+        case 'm':
+            $month+=$number;
+            break;
+        case 'y':
+        case 'd':
+        case 'w':
+            $day+=$number;
+            break;
+        case 'ww':
+            $day+=($number*7);
+            break;
+        case 'h':
+            $hours+=$number;
+            break;
+        case 'n':
+            $minutes+=$number;
+            break;
+        case 's':
+            $seconds+=$number;
+            break;
+    }
+       $timestamp= mktime($hours,$minutes,$seconds,$month,$day,$year);
+    return $timestamp;
 }
-		
+
 }
 ?>

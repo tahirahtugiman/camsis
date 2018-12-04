@@ -16,7 +16,7 @@ function changeColor(elem, cellapo, job, dept, loc, user, monthyear, jobdate)
 					//alert(user);
 	}
 	else{
-	elem.className = "icon-green"; 
+	elem.className = "icon-green";
 	var color = elem.className
 	//window.location.href = "<?php echo site_url('dca_planner_sch_ctrl');?>?c=" + color + "&cell=" + cellapo + "&dept=" + dept + "&loc=" + loc + "&job=" + job + "&my=" + monthyear;
 					var xmlhttp = new XMLHttpRequest();
@@ -24,7 +24,7 @@ function changeColor(elem, cellapo, job, dept, loc, user, monthyear, jobdate)
 	        xmlhttp.send();
 	        		//alert(user);
 	}
-}*/	
+}*/
 //else{
 	if (elem.className == "icon-green") {
 	elem.className = "icon-yellow";
@@ -44,7 +44,7 @@ function changeColor(elem, cellapo, job, dept, loc, user, monthyear, jobdate)
 					//alert('masuk la');
 	}
 	else if (elem.className == "icon-red") {
-	elem.className = "icon-green"; 
+	elem.className = "icon-green";
 	var color = elem.className
 	//window.location.href = "<?php echo site_url('dca_planner_sch_ctrl/update_hks');?>?c=" + color + "&cell=" + cellapo + "&dept=" + dept + "&loc=" + loc + "&job=" + job + "&my=" + monthyear + "&date=" + jobdate;
 					var xmlhttp = new XMLHttpRequest();
@@ -58,8 +58,8 @@ function changeColor(elem, cellapo, job, dept, loc, user, monthyear, jobdate)
 }
 function changeNum(elem, cellapo, job, dept, loc, user, monthyear, jobdate, week)
 {
-
-	if (document.getElementById (cellapo).innerText == "1") {
+//alert('masuk cni'+document.getElementById (cellapo).innerText[0]+'lalalal');
+	if (document.getElementById (cellapo).innerText[0] == "1") {
 	var element = document.getElementById(cellapo);
 	element.innerHTML = "2";
 	var nocode = element.innerHTML;
@@ -68,7 +68,7 @@ function changeNum(elem, cellapo, job, dept, loc, user, monthyear, jobdate, week
 	        xmlhttp.open("GET", "<?php echo site_url('dca_planner_sch_ctrl/set_jic');?>?numcode=" + nocode + "&cell=" + cellapo + "&dept=" + dept + "&loc=" + loc + "&job=" + job + "&my=" + monthyear + "&date=" + jobdate + "&week=" + week, true);
 	       	xmlhttp.send();
 					//alert('masuk la');
-	}else if (document.getElementById (cellapo).innerText == "2") {
+	}else if (document.getElementById (cellapo).innerText[0] == "2") {
 	var element = document.getElementById(cellapo);
 	element.innerHTML = "3";
 	var nocode = element.innerHTML;
@@ -78,7 +78,7 @@ function changeNum(elem, cellapo, job, dept, loc, user, monthyear, jobdate, week
 	       	xmlhttp.send();
 					//alert('masuk la');
 	}
-	else if (document.getElementById (cellapo).innerText == "3") {
+	else if (document.getElementById (cellapo).innerText[0] == "3") {
 	var element = document.getElementById(cellapo);
 	element.innerHTML = "4";
 	var nocode = element.innerHTML;
@@ -88,7 +88,7 @@ function changeNum(elem, cellapo, job, dept, loc, user, monthyear, jobdate, week
 	        xmlhttp.send();
 					//alert('masuk la');
 	}
-	else if (document.getElementById (cellapo).innerText == "4") {
+	else if (document.getElementById (cellapo).innerText[0] == "4") {
 	var element = document.getElementById(cellapo);
 	element.innerHTML = "5";
 	var nocode = element.innerHTML;
@@ -98,7 +98,7 @@ function changeNum(elem, cellapo, job, dept, loc, user, monthyear, jobdate, week
 	        xmlhttp.send();
 					//alert('masuk la');
 	}
-	else if (document.getElementById (cellapo).innerText == "5") {
+	else if (document.getElementById (cellapo).innerText[0] == "5") {
 	var element = document.getElementById(cellapo);
 	element.innerHTML = "";
 	var nocode = element.innerHTML;
@@ -148,7 +148,7 @@ function changeNum(elem, cellapo, job, dept, loc, user, monthyear, jobdate, week
 						</tr>
 					</table>
 				</td>
-				<!--<td style="padding-left:5px; width:160px;"> 
+				<!--<td style="padding-left:5px; width:160px;">
 					<table class="tbl-wo" border="0" align="left">
 						<tr>
 							<td align="left"> Form No :</td>
@@ -595,11 +595,10 @@ function changeNum(elem, cellapo, job, dept, loc, user, monthyear, jobdate, week
 					7) Borang asal untuk Kontraktor dan salinan untuk hospital<br />(Original form for contractor and copy for hospital)
 				</td>
 			</tr>
-			
+
 		</table>
 		<table class="tbl-wo" border="0" align="">
 		<td style="" valign="top" align="right"><span style="font-size:7px; padding-left:30px;"><i>Copyright product of Advance Pact Sdn Bhd. All rights reserved.</i></span></td>
 		</table>
 	</div>
 	<div class="StartNewPage" id="breakpage"><span id="pagebreak">Page Break</span></div>
-	

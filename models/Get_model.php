@@ -1104,7 +1104,7 @@ $this->db->where('ppm.v_Actionflag <> ', 'D');
 $this->db->where('ppm.v_wrkordno = ', $wrkordno);
 $this->db->where('ar.V_Hospitalcode = ', $this->session->userdata('hosp_code'));
 */
-$this->db->select("distinct ppm.*, l.v_Location_Name, job.v_jobtype, job.v_weeksch, IFNULL(ar.V_Equip_code, job.v_checklistcode) AS v_checklistcode, dpt.v_userdeptdesc, ar.v_tag_no, ar.v_user_dept_code, ar.v_location_code, ar.v_model_no, ar.v_serial_no, ar.v_asset_no, am.v_checklistcode, ar.v_asset_name, m.new_asset_type, ag.V_Wrn_end_code, right(chklist.task_no, char_length(chklist.task_no)-6) AS TASKDESC FROM (`pmis2_egm_schconfirmmon` ppm) JOIN `pmis2_egm_assetregistration` ar ON `ppm`.`v_HospitalCode`=`ar`.`V_Hospitalcode` AND ppm.v_HospitalCode=ar.V_Hospitalcode AND ar.V_Asset_no=ppm.v_Asset_no AND ppm.v_Actionflag <> 'D' JOIN `pmis2_egm_assetreg_general` ag ON `ag`.`v_hospital_code` = `ar`.`v_hospitalcode` AND ag.v_asset_no = ar.v_asset_no JOIN `pmis2_egm_assetmaintenance` am ON `am`.`v_hospitalcode` = `ar`.`v_hospitalcode` AND am.v_assetno = ag.v_asset_no JOIN `pmis2_egm_assetlocation` l ON `ar`.`V_Location_code` = `l`.`V_location_code` AND ar.V_hospitalcode = l.v_hospitalcode JOIN `pmis2_sa_asset_mapping` m ON `m`.`old_asset_type` = `ar`.`v_equip_code` JOIN `pmis2_sa_userdept` dpt ON `ag`.`v_hospital_code` = `dpt`.`v_hospitalcode` AND ar.v_user_dept_code = dpt.v_userdeptcode JOIN `pmis2_egm_assetjobtype` job ON `ag`.`v_hospital_code` = `job`.`v_hospitalcode` AND ar.v_asset_no = job.v_asset_no AND ppm.v_jobtype = job.v_JobType AND ppm.v_year = job.v_Year LEFT OUTER JOIN `pmis2_egm_chklist` chklist ON left(`chklist`.`task_no` ,6) = job.v_ProcedureCode WHERE `ppm`.`v_Actionflag` <> 'D' AND `ppm`.`v_wrkordno` = '".$wrkordno."' AND `ar`.`V_Hospitalcode` = '".$this->session->userdata('hosp_code')."'", FALSE);
+$this->db->select("distinct ppm.*, l.v_Location_Name, job.v_jobtype, job.v_weeksch, IFNULL(ar.V_Equip_code, job.v_checklistcode) AS v_checklistcode, dpt.v_userdeptdesc, ar.v_tag_no, ar.v_user_dept_code, ar.v_location_code, ar.v_model_no, ar.v_serial_no, ar.v_asset_no, am.v_checklistcode, ar.v_asset_name, m.new_asset_type, ag.V_Wrn_end_code, right(chklist.task_no, char_length(chklist.task_no)-6) AS TASKDESC FROM (`pmis2_egm_schconfirmmon` ppm) JOIN `pmis2_egm_assetregistration` ar ON `ppm`.`v_HospitalCode`=`ar`.`V_Hospitalcode` AND ppm.v_HospitalCode=ar.V_Hospitalcode AND ar.V_Asset_no=ppm.v_Asset_no AND ppm.v_Actionflag <> 'D' JOIN `pmis2_egm_assetreg_general` ag ON `ag`.`v_hospital_code` = `ar`.`v_hospitalcode` AND ag.v_asset_no = ar.v_asset_no JOIN `pmis2_egm_assetmaintenance` am ON `am`.`v_hospitalcode` = `ar`.`v_hospitalcode` AND am.v_assetno = ag.v_asset_no JOIN `pmis2_egm_assetlocation` l ON `ar`.`V_Location_code` = `l`.`V_location_code` AND ar.V_hospitalcode = l.v_hospitalcode JOIN `pmis2_sa_asset_mapping` m ON `m`.`old_asset_type` = `ar`.`v_equip_code` JOIN `pmis2_sa_userdept` dpt ON `ag`.`v_hospital_code` = `dpt`.`v_hospitalcode` AND ar.v_user_dept_code = dpt.v_userdeptcode JOIN `pmis2_egm_assetjobtype` job ON `ag`.`v_hospital_code` = `job`.`v_hospitalcode` AND ar.v_asset_no = job.v_asset_no AND ppm.v_jobtype = job.v_JobType AND ppm.v_year = job.v_Year LEFT OUTER JOIN `pmis2_egm_chklist` chklist ON left(`chklist`.`task_no` ,6) = job.v_ProcedureCode WHERE `ppm`.`v_Actionflag` <> 'D' AND `ppm`.`v_wrkordno` = '".$wrkordno."' AND `ar`.`V_Hospitalcode` = '".$this->session->userdata('hosp_code')."' AND ppm.v_ServiceCode = '".$this->session->userdata('usersess')."'", FALSE);
 $query = $this->db->get();
 //echo "laalla".$query->DWRate;
 echo $this->db->last_query();
@@ -1760,7 +1760,7 @@ function qap3_wo($year,$month){
 	return $query->result();
 }
 function qap3_wolim($year,$month,$limit,$start){
-	$this->db->select('wo.*,a.trpi,a.uptime_pct');
+	$this->db->select('wo.*,a.trpi,a.uptime_pct,a.asset_tag');
 	$this->db->from('mis_qap_work_orders$candidate wo');
 	$this->db->join('mis_qap_inc_assets$candidate a','wo.asset_no = a.asset_no AND wo.qap_period = a.qap_period','left outer');
 	$this->db->where('wo.qap_period',$year.$month);
@@ -3344,6 +3344,7 @@ function assetppmlist($assetno){
 	$this->db->select('v_WrkOrdNo,d_StartDt,v_Asset_no');
 	$this->db->from('pmis2_egm_schconfirmmon');
 	$this->db->where('v_Asset_no ',$assetno);
+	$this->db->where('v_Actionflag <> ','D');
 	$this->db->order_by('d_StartDt','DESC');
 	$this->db->limit(1);
 	$query = $this->db->get();
@@ -3960,6 +3961,154 @@ $query = $this->db->get('pmis2_egm_assetlocation');
 //exit();
 return $query->result();
 
+}
+
+function get_unsatisfy($month,$year,$dept){
+	$this->db->select('s.Dept_Code,v_UserDeptDesc,s.Job_date,s.hospital_code,s.Job_Items,(SUM(CASE WHEN SUBSTRING(s.ji_no, - 8, 2) = "W1" AND s.Num_Code = "1" THEN 1 ELSE 0 END) + SUM(CASE WHEN SUBSTRING(s.ji_no, - 8, 2) = "W3" AND s.Num_Code = "1" THEN 1 ELSE 0 END)) AS Unstatisfactory',FALSE);
+	//$this->db->select('CASE WHEN Job_date >= DATE_FORMAT(Job_date,"%Y-%m-09") AND Job_date <= DATE_ADD(DATE_FORMAT(Job_date,"%Y-%m-08"), INTERVAL 1 MONTH) THEN MONTH(Job_date) ELSE MONTH(Job_date) - 1 END  as jd,hospital_code,Job_Items,(SUM(CASE WHEN SUBSTRING(ji_no, - 8, 2) = "W1" AND Num_Code = "1" THEN 1 ELSE 0 END)+SUM(CASE WHEN SUBSTRING(ji_no, - 8, 2) = "W3" AND Num_Code = "1" THEN 1 ELSE 0 END)) AS Unstatisfactory',FALSE);
+	$this->db->from('set_jic_scheduler s');
+	$this->db->join('pmis2_sa_userdept d','s.Dept_Code = d.v_UserDeptCode AND d.v_ActionFlag <> "D" AND s.hospital_code = d.v_HospitalCode');
+	//$this->db->where('Month',$month);
+	//$this->db->where('Year',$year);
+	//$this->db->where('Job_date >=', 'DATE_ADD(LAST_DAY(DATE_SUB("2018-09-02", INTERVAL 5 MONTH)), INTERVAL 9 DAY)');
+    $this->db->where('s.Job_date >=', $this->dater(1,$month,$year));
+	$this->db->where('s.Job_date <=', $this->dater(2,$month,$year));
+	$this->db->where('s.Dept_Code',$dept);
+	$this->db->where('s.hospital_code',$this->session->userdata('hosp_code'));
+	$this->db->group_by('s.Job_Items');
+	$query = $this->db->get();
+	//echo $this->db->last_query();
+	//exit();
+	return $query->result();
+}
+
+function monthplan2($year,$month,$dept){
+	//$query  = "";
+/*    $this->db->query("SET @a:=0;");
+ $query= $this->db->query("SELECT a.*,@a:=@a+1 as total FROM (SELECT *, (CASE WHEN  Work_Code = 'HD' THEN 'HIGH DUSTING' WHEN Work_Code = 'GC' THEN 'GEMS CLEANING' WHEN Work_Code = 'CS' THEN 'CARPET SHAMPOO' WHEN Work_Code = 'SC' THEN 'SCRUBBING' WHEN Work_Code = 'BF' THEN 'BUFFING' ELSE NULL END) as scope_name,CAST(Date AS UNSIGNED) AS Dated
+FROM set_monthly_planner WHERE Year = '".$year."'  AND Month = '".$month."' AND Dept_Code = '".$dept."' AND Work_Code != ''
+GROUP BY Work_Code ORDER BY Dated)a");
+
+     $query_result1 = $query->result();
+	//$query_result = $new_query->result();
+	return $query_result1;
+
+	 */
+	$this->db->select("*,(CASE WHEN  Work_Code = 'HD' THEN 'HIGH DUSTING' WHEN Work_Code = 'GC' THEN 'GEMS CLEANING' WHEN Work_Code = 'CS' THEN 'CARPET SHAMPOO' WHEN Work_Code = 'SC' THEN 'SCRUBBING' WHEN Work_Code = 'BF' THEN 'BUFFING' ELSE NULL END) as scope_name,CAST(Date AS UNSIGNED) as dated");
+	$this->db->from('set_monthly_planner');
+	$this->db->where('Year',$year);
+	$this->db->where('Month',$month);
+	$this->db->where('Dept_Code',$dept);
+	$this->db->where('Work_Code !=','');
+	$this->db->group_by('Work_Code');
+	$this->db->order_by('dated');
+	$query = $this->db->get();
+	//echo $this->db->last_query();
+	//exit();
+	$query_result = $query->result();
+	return $query_result;
+
+
+}
+	function rl_mrin($hosp,$y,$m){
+	$this->db->select("i.ItemName,r.service_code,r.WorkOfOrder,IFNULL(s.D_date,p.d_StartDt) as WorkOrderDate,r.DateCreated,m.MIRNcode,m.ItemCode,r.Comments,m.QtyReq,m.QtyReqfx, (CASE WHEN Who_Del = 'store' THEN 'STOCK' ELSE NULL END) as stocstatus,i.PartNumber");
+	$this->db->from("tbl_mirn_comp m");
+    $this->db->join("tbl_materialreq r", "m.MIRNcode=r.DocReferenceNo", "inner join");
+    $this->db->join("tbl_invitem i", "m.ItemCode=i.ItemCode", "inner join");
+    $this->db->join('pmis2_egm_service_request s','r.WorkOfOrder = s.V_Request_no AND s.V_actionflag <> "D"','left outer');
+    $this->db->join('pmis2_egm_schconfirmmon p','r.WorkOfOrder = p.v_WrkOrdNo AND p.v_Actionflag <> "D"','left outer');
+	//$this->db->join('pmis2_egm_assetregistration l','p.v_HospitalCode = l.V_Hospitalcode AND p.v_Asset_no = l.V_Asset_no','inner');
+	//$this->db->where('s.v_Actionflag <>','D');
+	$this->db->where('r.service_code',$this->session->userdata('usersess'));
+	$this->db->where('s.v_HospitalCode',$hosp);
+	$this->db->where('YEAR(r.DateCreated)',$y);
+	//$this->db->where('MONTH(r.DateCreated)',$m);
+	$this->db->where('r.ApprStatusIDxx',4);
+	$this->db->group_by('m.MIRNcode');
+	$query = $this->db->get();
+	//echo $this->db->last_query();
+	//exit();
+	return $query->result();
+		}
+
+public function get_RNNO($to){ //buzlee
+	$from = $this->session->userdata("hosp_code");
+	//$to = "test";
+	$next_number = 1;
+	$year = str_split(date("Y"))[2].str_split(date("Y"))[3];
+	$query = $this->db->select("*")->from("tbl_rn_autono")->order_by("rn_next_no", "desc")->limit(1)->get()->result();
+	if( !empty($query) ){
+		foreach ($query as $row) {
+			$next_number = $row->rn_next_no;
+		}
+	}
+	$number = str_pad($next_number, 5, '0', STR_PAD_LEFT);
+	$res = "RN/$from/$to/$number/$year";
+
+	$val_tbl_rn_autono = array(
+			"rn_next_no" => $next_number+1,
+			"userid" => $this->session->userdata("v_UserName"),
+			"yearno" => date("Y")
+	);
+	$this->db->set("DT", "NOW()", false);
+	$this->db->insert("tbl_rn_autono", $val_tbl_rn_autono);
+
+	return $res;
+}
+
+public function getrndetail($rn){
+
+//$this->db->select("a.*,(CASE WHEN a.shipment_type = 0 THEN 'Courier' WHEN a.shipment_type = 1 THEN 'By hand' ELSE 0 END) as sh_type,(CASE WHEN a.courier = 0 THEN 'Other' WHEN a.courier = 1 THEN 'ABX' WHEN a.courier = 2 THEN 'CityLink' WHEN a.courier = 3 THEN 'DHL' ELSE 0 END) as courier,b.Rep");
+//$this->db->from('tbl_rn_release a');
+//$this->db->join('tbl_hosp_rep b','b.Hosp_code=substring_index(substring_index(a.RN_No, '/', -3), '/', 1)');
+//$this->db->where('RN_No',$rn);
+$query = $this->db->query("SELECT
+`a`.*,
+(CASE
+		WHEN a.shipment_type = 0 THEN 'Courier'
+		WHEN a.shipment_type = 1 THEN 'By hand'
+		ELSE 0
+END) AS sh_type,
+(CASE
+		WHEN a.courier = 0 THEN 'Other'
+		WHEN a.courier = 1 THEN 'ABX'
+		WHEN a.courier = 2 THEN 'CityLink'
+		WHEN a.courier = 3 THEN 'DHL'
+		ELSE 0
+END) AS courier,
+substring_index(substring_index(a.RN_No, '/', -3), '/', 1) as hosp,b.rep
+FROM
+`tbl_rn_release` `a`
+JOIN
+`tbl_hosp_rep` `b` on b.Hosp_code=substring_index(substring_index(a.RN_No, '/', -3), '/', 1)
+WHERE
+`RN_No` = '".$rn."'");
+//$query = $this->db->get();
+//echo $this->db->last_query();
+//exit();
+return $query->result();
+}
+public function getrnitem($rn){
+
+$this->db->select('a.*,b.ItemName');
+$this->db->from('tbl_rn_item a');
+$this->db->join('tbl_invitem b','a.Item_code=b.ItemCode');
+$this->db->where('RN_No',$rn);
+$query = $this->db->get();
+//echo $this->db->last_query();
+return $query->result();
+}
+
+function getHospital(){
+
+	   $this->db->from('tbl_hosp_rep');
+    $query = $this->db->get();
+    foreach($query->result() as $row ){
+        //this sets the key to equal the value so that
+        //the pulldown array lists the same for each
+        $array[$row->Hosp_code] = $row->Hosp_code;
+    }
+    return $array;
 }
 
 }

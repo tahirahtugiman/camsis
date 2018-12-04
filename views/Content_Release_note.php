@@ -58,28 +58,23 @@
 							.ui-content-middle-menu-workorder2 tr td.td-desk a{ font-weight:bold; font-size:14px;}
 						</style>
 						<?php $numrow = 1; ?>
-							   			
+						<?php if($record) {?> 
+					    <?php foreach($record as $row){ ?>	   			
 						<tr align="center" <?= ($numrow%2==0) ?  'class="ui-color-color-color"' :  '' ?> >
 							<td class="td-desk"><?=$numrow++?></td>
-							<td class="td-desk" style="text-align:left;"><a href="<?php echo base_url();?>index.php/Procurement/Release_note?pro=edit">	RN/NJ/BPH/00002/12 </a></td>
-							<td class="td-desk">Courier </td>
-							<td class="td-desk">Others </td>
+							<td class="td-desk" style="text-align:left;"><a href="<?php echo base_url();?>index.php/Procurement/Release_note?pro=edit&rn=<?=$row->RN_No;?>">	<?=$row->RN_No;?> </a></td>
+							<td class="td-desk"><?=$row->sh_type;?> </td>
+							<td class="td-desk"><?=$row->courier;?> </td>
 							<td class="td-desk">Sent</td>
-							<td class="td-desk">17 Jul 2012 </td>
-							<td class="td-desk">17 Jul 2012 </td>
+							<td class="td-desk"><?=date('d M Y',strtotime($row->Date_Stamp));?></td>
+							<td class="td-desk"><?=date('d M Y',strtotime($row->consignment_date));?></td>
 						</tr>
-						<tr align="center" <?= ($numrow%2==0) ?  'class="ui-color-color-color"' :  '' ?> >
-							<td class="td-desk"><?=$numrow++?></td>
-							<td class="td-desk" style="text-align:left;"><a href="<?php echo base_url();?>index.php/Procurement/Release_note?pro=edit">	RN/MKA/JAS/00003/12 </a></td>
-							<td class="td-desk">Courier </td>
-							<td class="td-desk">Others </td>
-							<td class="td-desk">Sent</td>
-							<td class="td-desk">17 Jul 2012 </td>
-							<td class="td-desk">17 Jul 2012 </td>
-						</tr>					
+						<?php } ?>
+							<?php }else { ?>	
 							<tr align="center" style="height:200px; background:white;">
 							<td colspan="10" class="default-NO">NO RELEASE NOTE FOUND FOR <?=date('F', mktime(0, 0, 0, $month, 10))?> <?=$year?></td>
 						</tr>
+						<?php } ?>
 					</table>
 
 					<table class="ui-portrait" style="color:black;">
@@ -91,7 +86,7 @@
 							</tr>
 							<tr <?=($rownum % 2) == 1 ? 'class="ui-color-color-color"' : 'class="tr_color"'?>>
 								<td >RN Number</td>
-								<td class="td-desk">: <a href="<?php echo base_url();?>index.php/Procurement/Release_note?pro=edit">	RN/NJ/BPH/00002/12 </a></td>
+								<td class="td-desk">: <a href="<?php echo base_url();?>index.php/Procurement/Release_note?pro=edit">RN/NJ/BPH/00002/12 </a></td>
 							</tr>
 							<tr <?=($rownum % 2) == 1 ? 'class="ui-color-color-color"' : 'class="tr_color"'?>>
 								<td >Shipment Type</td>
