@@ -66,14 +66,41 @@ foreach ($array as $list) {
 								animation: false
 							<?php } ?>
 						},
+						  series: {
+      	dataLabels: { 
+          enabled: true, 
+          inside: false,
+          overflow: 'none',
+          crop: true,
+          shape: 'square',
+		 
+          //backgroundColor:'rgb(242, 242, 242)',
+          //borderColor: 'rgba(0,0,0,0.9)',
+          color: 'rgb(89, 89, 89)',
+          //borderWidth: .1,
+          //borderRadius: 5,
+          y: -15,
+          style: {
+          	fontFamily: 'Helvetica, sans-serif',
+          	fontSize: '10px',
+            fontWeight: 'normal',
+            textShadow: 'none'
+          },
+          formatter: function() {
+          	return '<strong>'+ Highcharts.numberFormat(this.y,0)+'</strong>';
+          }
+        }
+      }
 					},
+	
 
 					<?php if ($this->uri->slash_segment(1) .$this->uri->slash_segment(2) == 'contentcontroller/report_ppmwos/'){?>
 
 					series: [{
 						name: 'Total <?=($filby == 'RI') ? 'RI' : 'PPM' ?> Work Order',
 						data: [<?php if ($ppmsum[0]->total == 0) { echo "0"; } else {echo $ppmsum[0]->total;} ?>],
-						stack: '1'
+						stack: '1',
+					
 					}, {
 						name: 'Total Completed',
 						data: [<?php if ($ppmsum[0]->comp == 0) { echo "0"; } else {echo $ppmsum[0]->comp; } ?>],
