@@ -78,7 +78,7 @@ function barchart(a,b,c,d,e,f){
 				<th>Total PPM Work Order</th>
 				<th>Total Completed</th>
 				<!--<th>Total Rescheduled</th>-->
-				<th>Total Rescheduled Brought In</th>
+				<th>Total Rescheduled Brought In Current Month</th>
 				<th>Total Rescheduled Brought Out</th>
 				<th>Total Not Done</th>
 			</tr>
