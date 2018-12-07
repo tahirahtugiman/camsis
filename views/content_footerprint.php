@@ -107,7 +107,7 @@ foreach ($array as $list) {
 						stack: '2'
 					}
 					, {
-						name: 'Total Rescheduled Brought In',
+						name: 'Total Rescheduled Brought In Current Month',
 						data: [<?php if ($ppmsum[0]->resch == 0) { echo "0"; } else {echo $ppmsum[0]->resch;} ?>],
 						stack: '3'
 					}
