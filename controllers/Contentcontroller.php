@@ -363,6 +363,8 @@ class Contentcontroller extends CI_Controller {
 		$data['wrk_ord'] = $this->input->get('wrk_ord');
 		$this->load->model("display_model");
 		$data['record'] = $this->display_model->request_tab($data['wrk_ord']);
+		//$this->load->model('get_model');
+    //$data['ppm_wo']=$this->get_model->get_ppmgen('2018','IIUM','47');
 		$this ->load->view("head");
 		$this ->load->view("left");
 		$this ->load->view("Content_workorderlist",$data);
@@ -1938,7 +1940,6 @@ class Contentcontroller extends CI_Controller {
 		$data['datacount'] = count($data['asset_images']);
 		//echo '<br> nilai asset vo';
 		$data['assetppm'] = $this->get_model->assetppmlist($data['assetn']);
-		print_r($data['assetppm']);
 		$this ->load->view("head");
 		$this ->load->view("left",$data);
 		$this ->load->view("content_assetupdate",$data);
@@ -2921,7 +2922,7 @@ class Contentcontroller extends CI_Controller {
 		$data['validPeriod'] = $this->get_model->validPeriod(date('F',mktime(0, 0, 0, $data['month'], 10)),$data['year']);
 		!empty($data['validPeriod']) ? $data['validPeriod'] = 'true' : $data['validPeriod'] = 'false';
 
-		$data['limit'] = 10;
+		$data['limit'] = 300;
 		isset($_GET['numrow']) ? $data['numrow'] = $_GET['numrow'] : $data['numrow'] = 1;
 		isset($_GET['p']) ? $data['page'] = $_GET['p'] : $data['page'] = 1;
 		$data['start'] = ($data['page'] * $data['limit']) - $data['limit'];
@@ -3193,8 +3194,8 @@ class Contentcontroller extends CI_Controller {
 	  }
 	$insert_data = array(
 
-					'v_IdentificationType'=>$this->input->post('n_Identification_Type'),//freetext
-					'v_Identification'=>$this->input->post('n_Description'),//freetext
+					'v_IdentificationType'=>$this->input->post('n_Identification_Type'),
+					'v_Identification'=>$this->input->post('n_Description'),
 					'v_RegistrationNo'=>$this->input->post('n_Registration_Number'),
 					'v_StartDate'=>$this->input->post('n_Start_On'),
 					'v_ExpiryDate'=>$this->input->post('n_Expire_On'),
@@ -3204,9 +3205,9 @@ class Contentcontroller extends CI_Controller {
 					'v_Remarks'=>$this->input->post('n_Remarks'),
 					'v_actionflag'=>'U',
 					'd_timestamp'=>date('Y-m-d H:i:s'),
-					'v_Key'=>$this->input->post('n_Identification_Code'),//freetext
+					'v_Key'=>$this->input->post('n_Identification_Code'),
 					'v_CertificateNo'=>$this->input->post('n_Certificate_Number'),
-				   'v_TesterName' => $vtest//freetext
+				   'v_TesterName' => $vtest
 					//'v_TesterName' => $this->input->post('n_tester')
 
 		);
@@ -3742,7 +3743,6 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("Content_report_rmc", $data);
 	}
 	public function report_volu(){
-	
 	  //echo 'nilai : '.$this->input->post('wrty-status');
                 $pilape = "";
 		if ($this->input->get('serv') == "ele"){
@@ -3772,7 +3772,7 @@ class Contentcontroller extends CI_Controller {
 					$data['bfwd'][] = $row->month;
 				}
 			}
-		}elseif ($data['tag'] == 'totala10'){		
+		}elseif ($data['tag'] == 'totala10'){
           $data['records'] = $this->display_model->wo10_rpt($data['month'],$data['year']);
 			//$data['bfwd'] = array();
 			foreach ($data['records'] as $row){
@@ -3780,7 +3780,7 @@ class Contentcontroller extends CI_Controller {
 					$data['bfwd'][] = $row->month;
 				}
 			}
-				
+
 		}
 		$data['record'] = $this->display_model->rpt_volu($data['month'],$data['year'],$this->input->get('stat'),$data['reqtype'],$this->input->get('broughtfwd'),$data['grpsel'],$pilape,$data['tag'],$data['cm'],$data['limab'],$data['bfwd'],"",$data['fon']);
 
@@ -3813,15 +3813,13 @@ class Contentcontroller extends CI_Controller {
 		}
 	}
 	public function report_vols(){
-		 //exit();
-	//exit();
-		$data['filby'] = $this->input->get('filby');
-	    $this->load->model("display_model");
+	  $this->load->model("display_model");
 		$data['fon']= ($this->input->get('fon')) ? $this->input->get('fon') : "";
 		$data['records'] = $this->display_model->list_hospinfo();
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
 		$data['grpsel']= $this->input->get('grp') ? $this->input->get('grp') : '';
+    $data['filby'] = $this->input->get('filby');
                 $pilape = "";
 		if ($this->input->get('serv') == "ele"){
 		$pilape = "IIUM E";
@@ -3830,11 +3828,12 @@ class Contentcontroller extends CI_Controller {
 		} elseif ($this->input->get('serv') == "civ"){
 		$pilape = "IIUM C";
 		}
-        if ($this->input->get('filby') == 'RI'){ 
-		$data['record'] = $this->display_model->rpt_vols($data['month'],$data['year'], $this->input->get('stat'), $this->input->get('resch'),$data['grpsel'],$pilape,$data['fon'],"RI");
-		}else{
-		$data['record'] = $this->display_model->rpt_vols($data['month'],$data['year'], $this->input->get('stat'), $this->input->get('resch'),$data['grpsel'],$pilape,$data['fon']);
-        }
+		//echo "lalalalalla : " . $this->session->userdata('v_UserName');
+//		if ($this->session->userdata('v_UserName') == "mariana") {
+//		$data['record'] = $this->display_model->rpt_volsmar($data['month'],$data['year'], $this->input->get('stat'), $this->input->get('resch'),$data['grpsel'],$pilape);
+//		} else {
+		$data['record'] = $this->display_model->rpt_vols($data['month'],$data['year'], $this->input->get('stat'), $this->input->get('resch'),$data['grpsel'],$pilape,$data['fon'],$this->input->get('filby'));
+//		}
 		$data['reqtype'] = 'A2';
 		$data['tag'] = '';
 		$data['cm']= '';
@@ -3842,7 +3841,7 @@ class Contentcontroller extends CI_Controller {
 		//$data['recordrq'] = $this->display_model->rpt_volu($data['month'],$data['year'],$this->input->get('stat'),$data['reqtype'],$this->input->get('broughtfwd'),$data['grpsel'],$pilape,$data['tag'],$data['cm'],$data['limab']);
 		//$this ->load->view("headprinter");
 		//$this ->load->view("Content_report_vols", $data);
-        if($this->input->get('pdf') == 1){
+                if($this->input->get('pdf') == 1){
 		$this ->load->view("Content_report_vols_pdf", $data);
 		}else{
 		$this ->load->view("headprinter");
@@ -4010,60 +4009,46 @@ class Contentcontroller extends CI_Controller {
 	}
 
 	public function report_ppmwos(){
-   
+
 	  $this->load->model("display_model");
 		$data['records'] = $this->display_model->list_hospinfo();
 		$data['fon']= ($this->input->get('fon')) ? $this->input->get('fon') : "";
 		//echo "nilai fon : ".$data['fon'].":".$this->input->get('fon');
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
-		
-		if ($this->input->get('filby') == 'RI'){
-		$data['filby'] = $this->input->get('filby');	
-		$data['ppmsum'] = $this->display_model->sumppm($data['month'],$data['year'],$this->input->get('grp'),"",$data['fon'],"RI");
-		$data['reschout'] = $this->display_model->reschout($data['month'],$data['year'],$this->input->get('grp'),"","RI");
+		$data['filby'] = $this->input->get('filby');
+		$data['ppmsum'] = $this->display_model->sumppm($data['month'],$data['year'],$this->input->get('grp'),"",$data['fon'],$this->input->get('filby'));
+		$data['reschout'] = $this->display_model->reschout($data['month'],$data['year'],$this->input->get('grp'),"",$this->input->get('filby'));
 		$data['reqtype'] = 'A2';
 		$data['total'] = $this->display_model->sumpp_m($data['month'],$data['year'],'total');
 		$data['totale'] = $this->display_model->sumpp_m($data['month'],$data['year'],'totale');
 		$data['totalm'] = $this->display_model->sumpp_m($data['month'],$data['year'],'totalm');
 		$data['totalc'] = $this->display_model->sumpp_m($data['month'],$data['year'],'totalc');
-
-        if ($this->session->userdata('usersess') == 'FES') {
-		$data['ppmcivil'] = $this->display_model->sumppm($data['month'],$data['year'],$this->input->get('grp'),"IIUM C",$data['fon'],"RI");
-		$data['ppmmech'] = $this->display_model->sumppm($data['month'],$data['year'],$this->input->get('grp'),"IIUM M",$data['fon'],"RI");
-		$data['ppmelec'] = $this->display_model->sumppm($data['month'],$data['year'],$this->input->get('grp'),"IIUM E",$data['fon'],"RI");
-		$data['reschoutcivil'] = $this->display_model->reschout($data['month'],$data['year'],$this->input->get('grp'),"IIUM C","RI");
-		$data['reschoutmech'] = $this->display_model->reschout($data['month'],$data['year'],$this->input->get('grp'),"IIUM M","RI");
-		$data['reschoutlec'] = $this->display_model->reschout($data['month'],$data['year'],$this->input->get('grp'),"IIUM E","RI");
-		    }
-			
-        }else {
-		$data['ppmsum'] = $this->display_model->sumppm($data['month'],$data['year'],$this->input->get('grp'),"",$data['fon']);
-		$data['reschout'] = $this->display_model->reschout($data['month'],$data['year'],$this->input->get('grp'));
-		$data['reqtype'] = 'A2';
-		$data['total'] = $this->display_model->sumpp_m($data['month'],$data['year'],'total');
-		$data['totale'] = $this->display_model->sumpp_m($data['month'],$data['year'],'totale');
-		$data['totalm'] = $this->display_model->sumpp_m($data['month'],$data['year'],'totalm');
-		$data['totalc'] = $this->display_model->sumpp_m($data['month'],$data['year'],'totalc');
-
-        if ($this->session->userdata('usersess') == 'FES') {
-		$data['ppmcivil'] = $this->display_model->sumppm($data['month'],$data['year'],$this->input->get('grp'),"IIUM C",$data['fon']);
-		$data['ppmmech'] = $this->display_model->sumppm($data['month'],$data['year'],$this->input->get('grp'),"IIUM M",$data['fon']);
-		$data['ppmelec'] = $this->display_model->sumppm($data['month'],$data['year'],$this->input->get('grp'),"IIUM E",$data['fon']);
-		$data['reschoutcivil'] = $this->display_model->reschout($data['month'],$data['year'],$this->input->get('grp'),"IIUM C");
-		$data['reschoutmech'] = $this->display_model->reschout($data['month'],$data['year'],$this->input->get('grp'),"IIUM M");
-		$data['reschoutlec'] = $this->display_model->reschout($data['month'],$data['year'],$this->input->get('grp'),"IIUM E");
-		    }	
-			
+		//$data['rqsum'] = $this->display_model->sumrq($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'));
+                if ($this->session->userdata('usersess') == 'FES') {
+		$data['ppmcivil'] = $this->display_model->sumppm($data['month'],$data['year'],$this->input->get('grp'),"IIUM C",$data['fon'],$this->input->get('filby'));
+		$data['ppmmech'] = $this->display_model->sumppm($data['month'],$data['year'],$this->input->get('grp'),"IIUM M",$data['fon'],$this->input->get('filby'));
+		$data['ppmelec'] = $this->display_model->sumppm($data['month'],$data['year'],$this->input->get('grp'),"IIUM E",$data['fon'],$this->input->get('filby'));
+		$data['reschoutcivil'] = $this->display_model->reschout($data['month'],$data['year'],$this->input->get('grp'),"IIUM C",$this->input->get('filby'));
+		$data['reschoutmech'] = $this->display_model->reschout($data['month'],$data['year'],$this->input->get('grp'),"IIUM M",$this->input->get('filby'));
+		$data['reschoutlec'] = $this->display_model->reschout($data['month'],$data['year'],$this->input->get('grp'),"IIUM E",$this->input->get('filby'));
+		//$data['rqcivil'] = $this->display_model->sumrq($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'),"IIUM C");
+		//$data['rqmech'] = $this->display_model->sumrq($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'),"IIUM M");
+		//$data['rqelec'] = $this->display_model->sumrq($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'),"IIUM E");
 		}
+		//$data['rqsum'] = $this->display_model->sumrq($data['month'],$data['year']);
+		//$data['complntsum'] = $this->display_model->sumcomplnt($data['month'],$data['year']);
 
-	    $this ->load->view("headprinter");
-		if ($this->input->get('filby') == 'RI')
-		{
-		$this ->load->view("Content_report_riwos", $data);	
-		}else{
-		$this ->load->view("Content_report_ppmwos", $data);
-	    }
+	  $this ->load->view("headprinter");
+
+    if ($this->input->get('filby') == 'RI')
+  		{
+  		$this ->load->view("Content_report_riwos", $data);
+  		}else{
+  		$this ->load->view("Content_report_ppmwos", $data);
+  	    }
+		//$this ->load->view("Content_report_ppmsum", $data);
+		//$this ->load->view("Content_report_ppmwos", $data);
 	}
 
 	public function report_reqwos(){
@@ -5611,9 +5596,7 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("content_store_item_confirm");
 	}
 	public function pecodes(){
-
-		//exit();
-		$data['scby'] = ($this->input->post('scby')) ? $this->input->post('scby') : '';
+    $data['scby'] = ($this->input->post('scby')) ? $this->input->post('scby') : '';
 		$data['hosp'] = $this->input->get('hosp');
 		$this->load->model('display_model');
 		$data['record'] = $this->display_model->pecodes($data['hosp'],$data['scby']);
@@ -5646,7 +5629,7 @@ class Contentcontroller extends CI_Controller {
 		$this ->load->view("content_pop_ustore_c");
 	}
 	public function pop_requests(){
-		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");
+    $data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
 		//$data['wwo']= (!($this->input->get('wwo'))) || $this->input->get('wwo') == 1 ? 1 : 2;
 		$data['wwo']= ($this->input->get('wwo') <> '') ?  $this->input->get('wwo') : 1;
@@ -5814,9 +5797,10 @@ class Contentcontroller extends CI_Controller {
 		$data['latestvisit'] = $this->get_model->latestppmvisit($data['wrk_ord']);
 		$data['record'] = $this->display_model->visit1ppm_utab($data['wrk_ord'],$data['visit']);
 		$data['recordjob'] = $this->display_model->jobclose_ppm($data['wrk_ord']);
+		//print_r($data['recordjob']);
 		}
 		else{
-    $data['recordwo'] = $this->display_model->request_tab($data['wrk_ord']);
+        $data['recordwo'] = $this->display_model->request_tab($data['wrk_ord']);
 		$data['latestvisit'] = $this->get_model->latestvisit($data['wrk_ord']);
 		$data['record'] = $this->display_model->visit1_utab($data['wrk_ord'],$data['visit']);
 		$data['recordjob'] = $this->display_model->jobclose_tab($data['wrk_ord']);
@@ -7307,14 +7291,16 @@ public function assethistory(){
 
 			$data['recordhosp'] = $this->get_model->deptlist($data['fmonth'],$data['fyear'],$data['hosp']);
 			if ($data['recordhosp']) {
-				foreach ($data['recordhosp'] as $key=> $row){
+				//foreach ($data['recordhosp'] as $row){
+				//$data['deptlist'][] = $row->Dept_Code;
+				//}
+        foreach ($data['recordhosp'] as $key=> $row){
 				$data['recordhosp'][$key]->not_dc = $row->Cleansing_yellow + $row->Cleansing_red;
 				$data['recordhosp'][$key]->not_wc = $row->Waste_yellow + $row->Waste_red;
 				$data['deptlist'][] = $row->Dept_Code;
 				}
 				$data['locdet'] = $this->get_model->locdet($data['deptlist'],$data['hosp']);
 			}
-			//echo "<pre>";
 			//print_r($data['locdet']);
 			//exit();
 		}
@@ -8003,6 +7989,7 @@ public function pop_fail(){
 		//echo "lalalalala : ".$data['whatweek'][0]->maxwk;
 
 		$weektoshow = $data['whatweek'][0]->maxwk + 1;
+		//$weektoshow = 52;
 		//$data['theweek'] = $weektoshow;
 		//echo "<br>lalalalalazzzzz : ".$weektoshow;
 		$data['ppm_wo']=$this->get_model->get_ppmgenloc(date("Y"),$this->session->userdata('hosp_code'),$weektoshow);
@@ -8077,6 +8064,7 @@ public function pop_fail(){
 		$data['record'] = $this->display_model->fdreport(date("Y-m-d",strtotime($data['date'])));
 		$data['recoutstanding'] = $this->display_model->recoutstanding($month,$year);
 		$data['recppm'] = $this->display_model->recppm($month,$year);
+		$data['recrcm'] = $this->display_model->recrcm($month,$year);
 		$data['reccompday'] = $this->display_model->reccompday(date("Y-m-d",strtotime($data['date'])));
 		$data['fdr_mi'] = $this->display_model->fdr_mi(date("Y-m-d",strtotime($data['date'])));
 		//print_r($data['fdr_mi']);
@@ -8128,7 +8116,7 @@ public function pop_fail(){
 		//$data['complntsum'] = $this->display_model->sumcomplnt($data['month'],$data['year']);
 
 
-        if ($this->session->userdata('usersess') == 'FES') {
+                if ($this->session->userdata('usersess') == 'FES') {
 		$data['rqcivil'] = $this->display_model->sumrq_y($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'),"IIUM C");
 		$data['rqmech'] = $this->display_model->sumrq_y($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'),"IIUM M");
 		$data['rqelec'] = $this->display_model->sumrq_y($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'),"IIUM E");
@@ -8210,8 +8198,21 @@ public function pop_fail(){
 		$data['tag'] = '';
 		$data['cm']= '';
 		$data['limab']= '0';
+		if ($this->input->get('v') == 'fes'){
+			$data['date']= ($this->input->get('jobdate') <> 0) ? $this->input->get('jobdate') : date("d-m-Y");
+		if (strtotime($data['date']) >= strtotime(date("Y",strtotime($data['date'])).'-'.date("m",strtotime($data['date'])).'-09') && strtotime($data['date']) <= strtotime(date("Y",strtotime("+1 month",strtotime($data['date']))).'-'.date("m",strtotime("+1 month",strtotime($data['date']))).'-08')){
+			$month = date("m",strtotime($data['date']));
+			$year = date("Y",strtotime($data['date']));
+		} else {
+			$month = date("m",strtotime("-1 month",strtotime($data['date'])));
+			$year = date("Y",strtotime("-1 month",strtotime($data['date'])));
+		}	
+
+		$data['recordrq'] = $this->display_model->rcmvolu($month,$year,$this->input->get('req'));	
+		}else {
 		$data['recordrq'] = $this->display_model->rpt_volu($data['month'],$data['year'],$this->input->get('stat'),$data['reqtype'],$this->input->get('broughtfwd'),$data['grpsel'],$pilape,$data['tag'],$data['cm'],$data['limab'],"","",$this->input->get('resch'));
-		if($this->input->get('pdf') == 1){
+	    }
+     	if($this->input->get('pdf') == 1){
 		$this ->load->view("Content_report_A2_pdf", $data);
 		}else{
 		$this ->load->view("headprinter");
@@ -8463,7 +8464,6 @@ public function print_kewpa(){
 
 
 	public function report_rcmbulk(){
-		
 		isset($_REQUEST['n_startdate']) ? $data['startdate'] = $_REQUEST['n_startdate'] : $data['startdate'] = "";
 		isset($_REQUEST['n_enddate']) ? $data['enddate'] = $_REQUEST['n_enddate'] : $data['enddate'] = "";
 		isset($_REQUEST['data_file']) ? $data['datafile'] = $_REQUEST['data_file'] : $data['datafile'] = "";
@@ -8513,33 +8513,6 @@ public function rcm_fdreport2(){
 		$this ->load->view("headprinter");
 		$this ->load->view("content_rcm_fdreport2.php",$data);
 	}
-  public function rptri_wos(){
-
-	  $this->load->model("display_model");
-		$data['records'] = $this->display_model->list_hospinfo();
-		$data['fon']= ($this->input->get('fon')) ? $this->input->get('fon') : "";
-		//echo "nilai fon : ".$data['fon'].":".$this->input->get('fon');
-		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");
-		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
-		$data['risum'] = $this->display_model->sumri($data['month'],$data['year'],$this->input->get('grp'),"",$data['fon']);
-		$data['reschout'] = $this->display_model->ri_reschout($data['month'],$data['year'],$this->input->get('grp'));
-		$data['total'] = $this->display_model->sumpp_m($data['month'],$data['year'],'total');
-		$data['totale'] = $this->display_model->sumpp_m($data['month'],$data['year'],'totale');
-		$data['totalm'] = $this->display_model->sumpp_m($data['month'],$data['year'],'totalm');
-		$data['totalc'] = $this->display_model->sumpp_m($data['month'],$data['year'],'totalc');
-	
-        if ($this->session->userdata('usersess') == 'FES') {
-		$data['ricivil'] = $this->display_model->sumri($data['month'],$data['year'],$this->input->get('grp'),"IIUM C",$data['fon']);
-		$data['rimech'] = $this->display_model->sumri($data['month'],$data['year'],$this->input->get('grp'),"IIUM M",$data['fon']);
-		$data['rielec'] = $this->display_model->sumri($data['month'],$data['year'],$this->input->get('grp'),"IIUM E",$data['fon']);
-		$data['reschoutcivil'] = $this->display_model->ri_reschout($data['month'],$data['year'],$this->input->get('grp'),"IIUM C");
-		$data['reschoutmech'] = $this->display_model->ri_reschout($data['month'],$data['year'],$this->input->get('grp'),"IIUM M");
-		$data['reschoutlec'] = $this->display_model->ri_reschout($data['month'],$data['year'],$this->input->get('grp'),"IIUM E");
-		}
-
-	  $this ->load->view("headprinter");
-	  $this ->load->view("Content_report_riwos", $data);
-	}
 
 	public function woa10_report(){
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");
@@ -8549,23 +8522,23 @@ public function rcm_fdreport2(){
 		//print_r($data['records']);
 		//exit();
 		$this ->load->view("headprinter");
-		$this ->load->view("Content_woa10sr", $data);
+		$this ->load->view("Content_woa10sr.php", $data);
 	}
-	
+
 		public function join_unstfy_rpt(){
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
 	    $this->load->model('get_model');
 	/* 	$start = $bulan = strtotime("-5 month",strtotime('2018-'.$data['month'].'-09'));
         $end = strtotime('2018-'.$data['month'].'-08');
-		while($bulan < $end) { 
+		while($bulan < $end) {
 		$bulan = strtotime("+1 month", $bulan);
 		$b = $test[date('n', $bulan)] = date('m', $bulan);
 	 */
 		//echo "<pre>";
 		//print_r($data['records']);
 		//}
-		
+
 		$data['jic'] = array();
 		$data['jic'][] = new stdClass();
 		$data['jic'][0]->Flr = 0;
@@ -8579,30 +8552,51 @@ public function rcm_fdreport2(){
 	    $data['records'] = $this->get_model->get_unsatisfy($data['month'],$data['year'],$this->input->get('dept'));
 		foreach ($data['records'] as $key => $row) {
 	    if ($row->Job_Items == 'Floor'){
-			$data['jic'][0]->Flr = $row->Unstatisfactory;		
+			$data['jic'][0]->Flr = $row->Unstatisfactory;
 		}
         if ($row->Job_Items == 'Wall Door'){
-			$data['jic'][0]->WallDoor = $row->Unstatisfactory;		
+			$data['jic'][0]->WallDoor = $row->Unstatisfactory;
 		}
         if ($row->Job_Items == 'Ceiling'){
-			$data['jic'][0]->Ceiling = $row->Unstatisfactory;		
+			$data['jic'][0]->Ceiling = $row->Unstatisfactory;
 		}
         if ($row->Job_Items == 'Windows'){
-			$data['jic'][0]->Windows = $row->Unstatisfactory;		
+			$data['jic'][0]->Windows = $row->Unstatisfactory;
 		}
         if ($row->Job_Items == 'Fixtures'){
-			$data['jic'][0]->Fixtures = $row->Unstatisfactory;		
+			$data['jic'][0]->Fixtures = $row->Unstatisfactory;
 		}
         if ($row->Job_Items == 'Furniture Fitting'){
-			$data['jic'][0]->FurnitureFitting = $row->Unstatisfactory;		
-		}		
+			$data['jic'][0]->FurnitureFitting = $row->Unstatisfactory;
+		}
 		//echo "<pre>";
-		//print_r($row);	
-		}	
+		//print_r($row);
+		}
 		/* echo "<pre>";
 		print_r($data['records']); */
 		$this ->load->view("headprinter");
 		$this ->load->view("Content_unstfy_rpt", $data);
+	}
+	
+	public function scm_fdreport2(){
+
+		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");
+		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
+		$data['date']= ($this->input->get('jobdate') <> 0) ? $this->input->get('jobdate') : date("d-m-Y");
+		$data['report'] = 'A2';
+		if (strtotime($data['date']) >= strtotime(date("Y",strtotime($data['date'])).'-'.date("m",strtotime($data['date'])).'-09') && strtotime($data['date']) <= strtotime(date("Y",strtotime("+1 month",strtotime($data['date']))).'-'.date("m",strtotime("+1 month",strtotime($data['date']))).'-08')){
+			$month = date("m",strtotime($data['date']));
+			$year = date("Y",strtotime($data['date']));
+		} else {
+			$month = date("m",strtotime("-1 month",strtotime($data['date'])));
+			$year = date("Y",strtotime("-1 month",strtotime($data['date'])));
+		}
+
+		$this->load->model('display_model');
+		//$data['record'] = $this->display_model->fdrepdet_rcm(date("Y-m-d",strtotime($data['date'])),$this->input->get('x'));
+	    $data['record'] = $this->display_model->fdrepdet1(date("Y-m-d",strtotime($data['date'])),$this->input->get('x'),$this->input->get('v'));
+		$this ->load->view("headprinter");
+		$this ->load->view("content_rcm_fdreport2.php",$data);
 	}
 
 }
