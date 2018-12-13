@@ -33,11 +33,11 @@ function barchart(a,b,c,d,e){
 <?php } ?>
 <?php if (($this->input->get('ex') == '') or ($this->input->get('none') == 'closed')){?>
 <div id="Instruction" >
-<center>View List : 
+<center>View List :
 <form method="get" action="">
-		<?php 
+		<?php
 		$idArray = array_map('toArray', $this->session->userdata('accessr'));
-		if (!(in_array("contentcontroller/Schedule(main)", $idArray))) { 
+		if (!(in_array("contentcontroller/Schedule(main)", $idArray))) {
 			 if ($this->session->userdata('usersess')=="HKS") {
 			$req_type = array(
 			'A1' => 'A1 - Breakdown Maintenance (BM)',
@@ -58,8 +58,8 @@ function barchart(a,b,c,d,e){
 			'FUR' => 'Furniture / Fitting - Related Report'
 		 ); } else {
 		 		$req_type = array(
-			'ALL' => 'ALL',	
-			'A1' => 'A1 - Breakdown Maintenance (BM)',			
+			'ALL' => 'ALL',
+			'A1' => 'A1 - Breakdown Maintenance (BM)',
 			'A2' => 'A2 - Schedule Corrective Maintenance (SCM)',
 			'A3' => 'A3 - Corrective Maintenance (CM)',
 			'A4' => 'A4 - User Requests',
@@ -77,11 +77,30 @@ function barchart(a,b,c,d,e){
 		<?php } else {
 		$_POST['req'] = '';
 		}
+
+					$month_list = array(
+					'01' => 'January',
+					'02' => 'February',
+					'03' => 'March',
+					'04' => 'April',
+					'05' => 'May',
+					'06' => 'June',
+					'07' => 'July',
+					'08' => 'August',
+					'09' => 'September',
+					'10' => 'October',
+					'11' => 'November',
+					'12' => 'December'
+				 );
+				?> from
+				<?php echo form_dropdown('m', $month_list, $month , 'style="width: 90px;" id="cs_month"'); ?>
+		<?php
 			for ($dyear = '2015';$dyear <= date("Y");$dyear++){
 				$year_list[$dyear] = $dyear;
 			}
 		?>
 		<?php echo form_dropdown('y', $year_list, set_value('y', $year) , 'style="width: 65px;" id="cs_year"'); ?>
+
 <input type="hidden" value="<?php echo set_value('grp', ($this->input->get('grp')) ? $this->input->get('grp') : ''); ?>" name="grp">
 <input type="submit" value="Apply" onchange="javascript: submit()"/></center>
 </form>
@@ -121,7 +140,7 @@ function barchart(a,b,c,d,e){
 				break;
 			case "F":
 				$tulis = "Floor - Related Report";
-				break;	
+				break;
 			case "WD":
 				$tulis = "Wall / Door - Related Report";
 				break;
@@ -130,15 +149,15 @@ function barchart(a,b,c,d,e){
 				break;
 			case "W":
 				$tulis = "Window - Related Report";
-				break;	
+				break;
 			case "FIX":
 				$tulis = "Fixtures - Related Report";
 				break;
 			case "FUR":
 				$tulis = "Furniture / Fitting - Related Report";
-				break;					
+				break;
 			default:
-        $tulis = "A1 - Breakdown Maintenance (BM)";	
+        $tulis = "A1 - Breakdown Maintenance (BM)";
 				break;
 			} ?>
 			<?php if ($this->input->get('req') == $req) {?>
@@ -147,9 +166,9 @@ Work Order Report Summary By Year <?=$year?> - <?php echo $this->session->userda
 			<?php } ?>
 		</tr>
 	</table>
-	
+
 	<table class="tftable" border="1" style="text-align:center; width:70%;" align="center">
-		
+
 		<tr style="text-align:center;font-weight:bold;">
 				<th>Period <?php if ($this->session->userdata('usersess') == 'FES'){ echo '/ Categories';}?></th>
 				<th>Total Work Order Request</th>

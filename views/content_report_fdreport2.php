@@ -10,41 +10,41 @@ switch ($x) {
 		$tulis = "Completed for the day";
 		break;
 	case "3":
-		$tulis = "Out Standing for the day";
+		$tulis = "Outstanding for the day";
 		break;
 	case "4":
-		$tulis = "Accumulated Out Standing";
+		$tulis = "Accumulated Outstanding";
 		break;
 	case "5":
 		$tulis = "Accumulated completed";
 		break;
 	case "6":
-		$tulis = "Out Standing > 10days";
+		$tulis = "Outstanding > 10days";
 		break;
 	case "7":
-		$tulis = "Out Standing > 15days";
+		$tulis = "Outstanding > 15days";
 		break;
 	case "8":
 		$tulis = "Total of the month";
 		break;
 	case "9":
-		$tulis = "Out Standing 1 Month";
+		$tulis = "Outstanding 1 Month";
 		break;
 	case "10":
-		$tulis = "Out Standing 2 Month";
+		$tulis = "Outstanding 2 Month";
 		break;
 	case "11":
-		$tulis = "Out Standing 3 Month";
+		$tulis = "Outstanding 3 Month";
 		break;
 	case "12":
-		$tulis = "Out Standing 4 Month";
+		$tulis = "Outstanding 4 Month";
 		break;
 	case "13":
-		$tulis = "Out Standing > 5 Month";
+		$tulis = "Outstanding > 5 Month";
 		break;
 
 		case "14":
-		$tulis = "Total Out Standing";
+		$tulis = "Total Outstanding";
 		break;
 	default:
 		$tulis = "";
@@ -66,7 +66,7 @@ if ($this->input->get('ex') == 'excel'){
 		<button onclick="javascript:myFunction('report_fdreport2?jobdate=<?=$this->input->get('jobdate')?>&x=<?=$this->input->get('x')?>&v=<?=$this->input->get('v')?>&none=closed');" class="btn-button btn-primary-button">PRINT</button>
 		<button type="cancel" class="btn-button btn-primary-button" onclick="location.href = '<?php echo $btp ;?>';">CANCEL</button>
 		<?php if (($this->input->get('ex') == '') or ($this->input->get('none') == '')){?>
-			<a href="<?php echo base_url();?>index.php/contentcontroller/report_fdreport2?req=<?=$this->input->get('req');?>&jobdate=<?=$this->input->get('jobdate')?>&ex=excel&none=close&stat=<?=$this->input->get('stat');?>&resch=<?=$this->input->get('resch');?>&broughtfwd=<?=$this->input->get('broughtfwd');?>&x=<?=$this->input->get('x')?>&xxx=export&grp=<?=$this->input->get('grp');?>&serv=<?=$this->input->get('serv')?>" style="float:right; margin-right:40px;"><img src="<?php echo base_url();?>images/excel.png" style="width:40px; height:38px; position:absolute;" title="export to excel">
+			<a href="<?php echo base_url();?>index.php/contentcontroller/report_fdreport2?jobdate=<?=$this->input->get('jobdate')?>&x=<?=$this->input->get('x')?>&v=<?=$this->input->get('v')?>&ex=excel&none=close" style="float:right; margin-right:40px;"><img src="<?php echo base_url();?>images/excel.png" style="width:40px; height:38px; position:absolute;" title="export to excel">
 			</a>
 		<?php } ?>
 	</div>

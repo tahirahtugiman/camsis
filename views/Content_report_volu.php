@@ -171,7 +171,11 @@ $locationone = "0";
 										<!--<td><?=$row->DiffDate?></td>-->
 										<td><?= ($row->DiffDate) ? (($row->DiffDate > date('t', mktime(0, 0, 0, (int)$this->input->get('m'), 1, (int)$this->input->get('y')))) ? date('t', mktime(0, 0, 0, (int)$this->input->get('m'), 1, (int)$this->input->get('y'))) : $row->DiffDate) : '1' ?></td>
 									<?php } else { ?>
-										<td><?= (($row->V_request_type == "A10") || ($row->V_request_type == "A34") || ($row->v_tag_no == $assetone) || ($row->v_location_code == $locationone) || ($row->linker != "none")) ? '0' : $row->DiffDate ?></td>
+												<?php if($this->session->userdata('usersess') == 'BES'){ ?>
+							<!--line-->		<td><?= (($row->V_request_type == "A10") || ($row->V_request_type == "A34") || (($row->v_tag_no == $assetone) && ($row->v_location_code == $locationone)) || ($row->linker != "none")) ? '0' : $row->DiffDate ?></td>
+											<?php }else { ?>						
+											<td><?= (($row->V_request_type == "A10") || ($row->V_request_type == "A34") || ($row->v_tag_no == $assetone) || ($row->v_location_code == $locationone) || ($row->linker != "none")) ? '0' : $row->DiffDate ?></td>
+											<?php } ?>
 									<?php } ?>
 									<?php  if (($row->v_tag_no) && $row->v_tag_no != 'N/A') {$assetone = $row->v_tag_no;} else {$assetone = $numrow;}
 									if (($row->v_location_code) && $row->v_location_code != 'N/A') {$locationone = $row->v_location_code;} else {$locationone = $numrow;}
@@ -556,8 +560,12 @@ $locationone = "0";
 												<!--<td><?=$row->DiffDate?></td>-->
 											<td><?= ($row->DiffDate) ? (($row->DiffDate > date('t', mktime(0, 0, 0, (int)$this->input->get('m'), 1, (int)$this->input->get('y')))) ? date('t', mktime(0, 0, 0, (int)$this->input->get('m'), 1, (int)$this->input->get('y'))) : $row->DiffDate) : '1' ?></td>
 										<?php } else { ?>
+											<?php if($this->session->userdata('usersess') == 'BES'){ ?>
+							<!--line-->		<td><?= (($row->V_request_type == "A10") || ($row->V_request_type == "A34") || (($row->v_tag_no == $assetone) && ($row->v_location_code == $locationone)) || ($row->linker != "none")) ? '0' : $row->DiffDate ?></td>
+											<?php }else { ?>						
 											<td><?= (($row->V_request_type == "A10") || ($row->V_request_type == "A34") || ($row->v_tag_no == $assetone) || ($row->v_location_code == $locationone) || ($row->linker != "none")) ? '0' : $row->DiffDate ?></td>
-										<?php } ?>
+											<?php } ?>
+											<?php } ?>
 
 										<?php  if (($row->v_tag_no) && $row->v_tag_no != 'N/A') {$assetone = $row->v_tag_no;} else {$assetone = $numrow;}
 										if (($row->v_location_code) && $row->v_location_code != 'N/A') {$locationone = $row->v_location_code;} else {$locationone = $numrow;}
@@ -779,7 +787,11 @@ $locationone = "0";
 												<!--<td><?=$row->DiffDate?></td>-->
 												<td><?= ($row->DiffDate) ? (($row->DiffDate > date('t', mktime(0, 0, 0, (int)$this->input->get('m'), 1, (int)$this->input->get('y')))) ? date('t', mktime(0, 0, 0, (int)$this->input->get('m'), 1, (int)$this->input->get('y'))) : $row->DiffDate) : '1' ?></td>
 											<?php } else { ?>
-												<td><?= (($row->V_request_type == "A10") || ($row->V_request_type == "A34") || ($row->v_tag_no == $assetone) || ($row->v_location_code == $locationone) || ($row->linker != "none")) ? '0' : $row->DiffDate ?></td>
+											<?php if($this->session->userdata('usersess') == 'BES'){ ?>
+							<!--line-->		<td><?= (($row->V_request_type == "A10") || ($row->V_request_type == "A34") || (($row->v_tag_no == $assetone) && ($row->v_location_code == $locationone)) || ($row->linker != "none")) ? '0' : $row->DiffDate ?></td>
+											<?php }else { ?>						
+											<td><?= (($row->V_request_type == "A10") || ($row->V_request_type == "A34") || ($row->v_tag_no == $assetone) || ($row->v_location_code == $locationone) || ($row->linker != "none")) ? '0' : $row->DiffDate ?></td>
+											<?php } ?>
 											<?php } ?>
 
 											<?php  if (($row->v_tag_no) && $row->v_tag_no != 'N/A') {$assetone = $row->v_tag_no;} else {$assetone = $numrow;}

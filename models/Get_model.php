@@ -1104,7 +1104,7 @@ $this->db->where('ppm.v_Actionflag <> ', 'D');
 $this->db->where('ppm.v_wrkordno = ', $wrkordno);
 $this->db->where('ar.V_Hospitalcode = ', $this->session->userdata('hosp_code'));
 */
-$this->db->select("distinct ppm.*, l.v_Location_Name, job.v_jobtype, job.v_weeksch, IFNULL(ar.V_Equip_code, job.v_checklistcode) AS v_checklistcode, dpt.v_userdeptdesc, ar.v_tag_no, ar.v_user_dept_code, ar.v_location_code, ar.v_model_no, ar.v_serial_no, ar.v_asset_no, am.v_checklistcode, ar.v_asset_name, m.new_asset_type, ag.V_Wrn_end_code, right(chklist.task_no, char_length(chklist.task_no)-6) AS TASKDESC FROM (`pmis2_egm_schconfirmmon` ppm) JOIN `pmis2_egm_assetregistration` ar ON `ppm`.`v_HospitalCode`=`ar`.`V_Hospitalcode` AND ppm.v_HospitalCode=ar.V_Hospitalcode AND ar.V_Asset_no=ppm.v_Asset_no AND ppm.v_Actionflag <> 'D' JOIN `pmis2_egm_assetreg_general` ag ON `ag`.`v_hospital_code` = `ar`.`v_hospitalcode` AND ag.v_asset_no = ar.v_asset_no JOIN `pmis2_egm_assetmaintenance` am ON `am`.`v_hospitalcode` = `ar`.`v_hospitalcode` AND am.v_assetno = ag.v_asset_no JOIN `pmis2_egm_assetlocation` l ON `ar`.`V_Location_code` = `l`.`V_location_code` AND ar.V_hospitalcode = l.v_hospitalcode JOIN `pmis2_sa_asset_mapping` m ON `m`.`old_asset_type` = `ar`.`v_equip_code` JOIN `pmis2_sa_userdept` dpt ON `ag`.`v_hospital_code` = `dpt`.`v_hospitalcode` AND ar.v_user_dept_code = dpt.v_userdeptcode JOIN `pmis2_egm_assetjobtype` job ON `ag`.`v_hospital_code` = `job`.`v_hospitalcode` AND ar.v_asset_no = job.v_asset_no AND ppm.v_jobtype = job.v_JobType AND ppm.v_year = job.v_Year LEFT OUTER JOIN `pmis2_egm_chklist` chklist ON left(`chklist`.`task_no` ,6) = job.v_ProcedureCode WHERE `ppm`.`v_Actionflag` <> 'D' AND `ppm`.`v_wrkordno` = '".$wrkordno."' AND `ar`.`V_Hospitalcode` = '".$this->session->userdata('hosp_code')."' AND ppm.v_ServiceCode = '".$this->session->userdata('usersess')."'", FALSE);
+$this->db->select("distinct ppm.*, l.v_Location_Name, job.v_jobtype, job.v_weeksch, IFNULL(ar.V_Equip_code, job.v_checklistcode) AS v_checklistcode, dpt.v_userdeptdesc, ar.v_tag_no, ar.v_user_dept_code, ar.v_location_code, ar.v_model_no, ar.v_serial_no, ar.v_asset_no, am.v_checklistcode, ar.v_asset_name, m.new_asset_type, ag.V_Wrn_end_code, right(chklist.task_no, char_length(chklist.task_no)-6) AS TASKDESC FROM (`pmis2_egm_schconfirmmon` ppm) JOIN `pmis2_egm_assetregistration` ar ON `ppm`.`v_HospitalCode`=`ar`.`V_Hospitalcode` AND ppm.v_HospitalCode=ar.V_Hospitalcode AND ar.V_Asset_no=ppm.v_Asset_no AND ppm.v_Actionflag <> 'D' JOIN `pmis2_egm_assetreg_general` ag ON `ag`.`v_hospital_code` = `ar`.`v_hospitalcode` AND ag.v_asset_no = ar.v_asset_no JOIN `pmis2_egm_assetmaintenance` am ON `am`.`v_hospitalcode` = `ar`.`v_hospitalcode` AND am.v_assetno = ag.v_asset_no JOIN `pmis2_egm_assetlocation` l ON `ar`.`V_Location_code` = `l`.`V_location_code` AND ar.V_hospitalcode = l.v_hospitalcode JOIN `pmis2_sa_asset_mapping` m ON `m`.`old_asset_type` = `ar`.`v_equip_code` JOIN `pmis2_sa_userdept` dpt ON `ag`.`v_hospital_code` = `dpt`.`v_hospitalcode` AND ar.v_user_dept_code = dpt.v_userdeptcode JOIN `pmis2_egm_assetjobtype` job ON `ag`.`v_hospital_code` = `job`.`v_hospitalcode` AND ar.v_asset_no = job.v_asset_no AND ppm.v_jobtype = job.v_JobType AND ppm.v_year = job.v_Year LEFT OUTER JOIN `pmis2_egm_chklist` chklist ON left(`chklist`.`task_no` ,6) = job.v_ProcedureCode WHERE `ppm`.`v_Actionflag` <> 'D' AND `ppm`.`v_wrkordno` = '".$wrkordno."' AND `ar`.`V_Hospitalcode` = '".$this->session->userdata('hosp_code')."' AND ppm.v_ServiceCode = '".$this->session->userdata('usersess')."' ORDER BY RIGHT(chklist.task_no, char_length(chklist.task_no)-6) DESC", FALSE);
 $query = $this->db->get();
 //echo "laalla".$query->DWRate;
 echo $this->db->last_query();
@@ -3374,12 +3374,13 @@ function filebankseqno($type)
 	return $query->result();
 }
 
-function assetplanner($year){
+function assetplanner($year, $wasset='M'){
 	$this->db->select('j.v_Asset_no, r.V_Tag_no, j.v_JobType, j.v_Weeksch, j.v_Year, r.V_Asset_name, r.V_User_Dept_code,d.v_UserDeptDesc');
 	$this->db->from('pmis2_egm_assetjobtype j');
 	$this->db->join('pmis2_egm_assetregistration r','j.v_Asset_no = r.V_Asset_no AND j.v_HospitalCode = r.V_Hospitalcode');
 	$this->db->join('pmis2_sa_userdept d','r.V_User_Dept_code = d.v_UserDeptCode AND r.V_Hospitalcode = d.v_HospitalCode','left');
 	$this->db->where('j.v_Year',$year);
+	$this->db->where('left(r.V_Tag_no,6)', "IIUM ".$wasset);
 	$this->db->where('j.v_ActionFlag <>','D');
 	$this->db->where('r.V_Actionflag <>','D');
 	$this->db->where('d.v_ActionFlag <>','D');

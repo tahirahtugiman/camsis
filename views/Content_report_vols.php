@@ -28,8 +28,6 @@ if ($this->input->get('ex') == 'excel'){
 	</div>
 <?php } ?>
 
-
-
 <?php  if (empty($record)) {?>
 
 	<div class="menu" style="position:relative;">
@@ -156,11 +154,15 @@ if ($this->input->get('ex') == 'excel'){
 				<th>P</th>
 			</tr>
 			<?php $numrow = 1; ?>
-			<?php $numrowx = $numrow;?>
+			<?php $numrowx = $numrow; ?>
 			<?php foreach($record as $row):?>
 				<?php echo ($numrow%2==0) ? '<tr class="ui-color-color-color">' : '<tr>'; ?>
 					<td><?= $numrowx ?></td>
+				<?php if ($filby == 'RI') {?>
+					<td><?= ($row->sd_startdt) ? date("d/m/Y",strtotime($row->sd_startdt)) : 'N/A' ?></td>
+				<?php } else {?>
 					<td><?= ($row->sd_duedt) ? date("d/m/Y",strtotime($row->sd_duedt)) : 'N/A' ?></td>
+				<?php } ?>
 					<?php if  ($this->input->get('ex') != 'excel'){ ?>
 						<td><?=($row->sv_wrkordno) ? anchor ('contentcontroller/AssetRegis?wrk_ord='.$row->sv_wrkordno.'&assetno='.$row->sv_asset_no.'&m='.$this->input->get('m').'&y='.$this->input->get('y').'&stat='.$this->input->get('stat').'&resch='.$this->input->get('resch'),''.$row->sv_wrkordno.'' ) : 'N/A' ?></td>
 						<td><?=($row->sv_asset_no) && $row->sv_asset_no != 'N/A' ? anchor ('contentcontroller/AssetRegis?tab=Maintenance&assetno='.$row->sv_asset_no.'&m='.$this->input->get('m').'&y='.$this->input->get('y').'&stat='.$this->input->get('stat').'&resch='.$this->input->get('resch'),''.$row->av_tag_no.'' ) : 'N/A' ?></td>
@@ -177,7 +179,7 @@ if ($this->input->get('ex') == 'excel'){
 					<!--<td></td>-->
 					<td style="height: 52px;">
 						<?php if (($row->v_summary) ? str_replace("N/A","",$row->v_summary) : 'N/A' != "N/A"){ ?>
-							<div style="overflow: hidden; text-overflow: ellipsis; height: 42px; overflow: hidden; text-overflow: ellipsis;">
+								<div style="overflow: hidden; text-overflow: ellipsis; word-wrap:break-word;height:auto; text-overflow: ellipsis;">
 						<?php }?>
 						<?php  if ($row->v_summary == " ") {echo "N/A";}else{echo str_replace("N/A","",$row->v_summary);} ?>
 						<?php if (($row->v_summary) ? str_replace("N/A","",$row->v_summary) : 'N/A' != "N/A"){ ?>
@@ -196,7 +198,7 @@ if ($this->input->get('ex') == 'excel'){
 	<?php }elseif( $this->input->get("none")=="closed" ){ ?>
 
 		<?php $numrow = 1; foreach($record as $row):?>
-			<?php if ($numrow==1 OR $numrow%14==1) { ?>
+			<?php if ($numrow==1 OR $numrow%13==1) { ?>
 
 				<div class="menu" style="position:relative;">
 					<?php if (($this->input->get('ex') == '') or (1==0)){?>
@@ -245,7 +247,7 @@ if ($this->input->get('ex') == 'excel'){
 								<td colspan="5"><?=($filby == 'RI') ? 'RI' : 'PPM' ?> LISTING - <?=date('F', mktime(0, 0, 0, $month, 10))?> <?=$year?> - <?php echo $this->session->userdata('usersessn');?>  ( <?php if ($this->input->get('grp') == ''){echo 'ALL'; }else{ echo 'Group '.$this->input->get('grp');} ?> )</td>
 							</tr>
 						</table>
-						<table class="tftable" border="1" style="text-align:center;">
+						<table class="tftable" border="1" style="text-align:center;page-break-inside:auto">
 							<tr>
 								<th rowspan=2>No</th>
 								<th rowspan=2 style="width:7%;"><?=($filby == 'RI') ? 'RI' : 'PPM' ?> Scheduled Date</th>
@@ -256,7 +258,7 @@ if ($this->input->get('ex') == 'excel'){
 								<th rowspan=2>Freq</th>
 								<th rowspan=2>Status</th>
 								<th colspan=2>Test</th>
-								<th rowspan=2 style="width:17%;">Remark</th>
+								<th rowspan=2 style="width:50%;">Remark</th>
 								<th rowspan=2 style="width:7%;">Visit Date</th>
 								<th rowspan=2 style="width:7%;">Reschedule Date</th>
 								<th rowspan=2 style="width:7%;">Completion Date</th>
@@ -269,9 +271,14 @@ if ($this->input->get('ex') == 'excel'){
 							</tr>
 
 			<?php } ?>
-							<?php echo ($numrow%2==0) ? '<tr class="ui-color-color-color">' : '<tr>'; ?>
+							<?php echo ($numrow%2==0) ? '<tr class="ui-color-color-color" style="page-break-inside:avoid; page-break-after:auto ">' : '<tr style="page-break-inside:avoid; page-break-after:auto ">'; ?>
 								<td><?= $numrow ?></td>
-								<td><?= ($row->sd_duedt) ? date("d/m/Y",strtotime($row->sd_duedt)) : 'N/A' ?></td>
+
+								<?php if ($filby == 'RI') {?>
+									<td><?= ($row->sd_startdt) ? date("d/m/Y",strtotime($row->sd_startdt)) : 'N/A' ?></td>
+								<?php } else {?>
+									<td><?= ($row->sd_duedt) ? date("d/m/Y",strtotime($row->sd_duedt)) : 'N/A' ?></td>
+								<?php } ?>
 								<?php if  ($this->input->get('ex') != 'excel'){ ?>
 									<td><?=($row->sv_wrkordno) ? anchor ('contentcontroller/AssetRegis?wrk_ord='.$row->sv_wrkordno.'&assetno='.$row->sv_asset_no.'&m='.$this->input->get('m').'&y='.$this->input->get('y').'&stat='.$this->input->get('stat').'&resch='.$this->input->get('resch'),''.$row->sv_wrkordno.'' ) : 'N/A' ?></td>
 									<td><?=($row->sv_asset_no) && $row->sv_asset_no != 'N/A' ? anchor ('contentcontroller/AssetRegis?tab=Maintenance&assetno='.$row->sv_asset_no.'&m='.$this->input->get('m').'&y='.$this->input->get('y').'&stat='.$this->input->get('stat').'&resch='.$this->input->get('resch'),''.$row->av_tag_no.'' ) : 'N/A' ?></td>
@@ -288,7 +295,7 @@ if ($this->input->get('ex') == 'excel'){
 								<!--<td></td>-->
 								<td style="height: 52px;">
 									<?php if (($row->v_summary) ? str_replace("N/A","",$row->v_summary) : 'N/A' != "N/A"){ ?>
-										<div style="overflow: hidden; text-overflow: ellipsis; height: 42px; overflow: hidden; text-overflow: ellipsis;">
+					               <div style="word-wrap: break-word;height:auto;">
 									<?php }?>
 									<?php  if ($row->v_summary == " ") {echo "N/A";}else{echo str_replace("N/A","",$row->v_summary);} ?>
 									<?php if (($row->v_summary) ? str_replace("N/A","",$row->v_summary) : 'N/A' != "N/A"){ ?>
@@ -303,7 +310,7 @@ if ($this->input->get('ex') == 'excel'){
 							</tr>
 							<?php $numrow++; ?>
 							<?php //if (($numrow-1)%13==0) {
-							if ((($numrow-1)%14==0) || (($numrow-1)== count($record))) {?>
+							if ((($numrow-1)%13==0) || (($numrow-1)== count($record))) {?>
 						</table>
 					</div>
 					<?php if (($this->input->get('ex') == '') or (1==0)){?>
@@ -401,7 +408,12 @@ if ($this->input->get('ex') == 'excel'){
 							<?php $numrow = 1; foreach($record as $row):?>
 							<tr>
 								<td><?= $numrow ?></td>
-								<td><?= ($row->sd_duedt) ? date("d/m/Y",strtotime($row->sd_duedt)) : 'N/A' ?></td>
+
+								<?php if ($filby == 'RI') {?>
+									<td><?= ($row->sd_startdt) ? date("d/m/Y",strtotime($row->sd_startdt)) : 'N/A' ?></td>
+								<?php } else {?>
+								  <td><?= ($row->sd_duedt) ? date("d/m/Y",strtotime($row->sd_duedt)) : 'N/A' ?></td>
+								<?php } ?>
 								<?php if  ($this->input->get('ex') != 'excel'){ ?>
 									<td><?=($row->sv_wrkordno) ? anchor ('contentcontroller/AssetRegis?wrk_ord='.$row->sv_wrkordno.'&assetno='.$row->sv_asset_no.'&m='.$this->input->get('m').'&y='.$this->input->get('y').'&stat='.$this->input->get('stat').'&resch='.$this->input->get('resch'),''.$row->sv_wrkordno.'' ) : 'N/A' ?></td>
 									<td><?=($row->sv_asset_no) && $row->sv_asset_no != 'N/A' ? anchor ('contentcontroller/AssetRegis?tab=Maintenance&assetno='.$row->sv_asset_no.'&m='.$this->input->get('m').'&y='.$this->input->get('y').'&stat='.$this->input->get('stat').'&resch='.$this->input->get('resch'),''.$row->av_tag_no.'' ) : 'N/A' ?></td>
@@ -418,7 +430,7 @@ if ($this->input->get('ex') == 'excel'){
 								<!--<td></td>-->
 								<td style="height: 52px;">
 									<?php if (($row->v_summary) ? str_replace("N/A","",$row->v_summary) : 'N/A' != "N/A"){ ?>
-										<div style="overflow: hidden; text-overflow: ellipsis; height: 42px; overflow: hidden; text-overflow: ellipsis;">
+										<div style="overflow: hidden; text-overflow: ellipsis; word-wrap:break-word;height:auto; text-overflow: ellipsis;">
 									<?php }?>
 									<?php  if ($row->v_summary == " ") {echo "N/A";}else{echo str_replace("N/A","",$row->v_summary);} ?>
 									<?php if (($row->v_summary) ? str_replace("N/A","",$row->v_summary) : 'N/A' != "N/A"){ ?>

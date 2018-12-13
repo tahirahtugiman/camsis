@@ -116,7 +116,7 @@
 										<td class="FieldValue"><?=$asset_det[0]->V_Vendor_code?>&nbsp;<?=$asset_det[0]->v_vendorname?></td>
 									</tr>
 									<tr>
-										<td class="td-assest">Service Agent&nbsp;: </td>
+										<td class="td-assest">3rd Party Service Provider&nbsp;: </td>
 										<td><?=$asset_det[0]->V_Agent?></td>
 									</tr>									
 									<tr>

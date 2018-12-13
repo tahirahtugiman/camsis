@@ -1,4 +1,13 @@
+<?php echo form_open('ppm_planered?y='.$year); ?>
+
 <?php $col=1; for($i=1;$i<13;$i++){ $col += count($kalender[$i]); }$col=$col+5;?>
+<?php
+if ($this->input->get('ex') == 'excel'){
+	$filename = "PPM PLANNER " .$year.".xls";
+	header('Content-type: application/ms-excel');
+	header('Content-Disposition: attachment; filename='.$filename);
+}
+?>
 <div class="ui-middle-screen">
 	<div class="content-workorder">
 		<div class="div-p">&nbsp;</div>
@@ -9,7 +18,7 @@
 						<tr class="ui-color-contents-style-1" height="30px">
 							<td class="ui-header-new">
 								<b><span class="textmenu" style="float:left;">All Assets PPM Yearly Planner</span></b>
-								<?php 
+								<?php
 								if ($this->session->userdata('usersess') == 'FES'){
 									$mar = '3';
 								}else{
@@ -17,20 +26,21 @@
 								}
 								?>
 								<span class="textmenu1" style="float:right;padding-top:<?=$mar?>px;?>">
-									<a href="<?php echo base_url();?>index.php/contentcontroller/ppm_planer_export?act=exp&y=<?=$year;?>" style="float:right; margin-right:40px;">
+									<!--<a href="<?php echo base_url();?>index.php/contentcontroller/ppm_planer_export?act=exp&y=<?=$year;?>" style="float:right; margin-right:40px;">-->
+                  <a href="<?php echo base_url();?>index.php/ppm_planered?ex=excel&y=<?=$year;?>" style="float:right; margin-right:40px;">
 										<img src="<?php echo base_url();?>images/excel.png" style="width:30px; height:28px; position:absolute;" title="export to excel">
 									</a>
 								</span>
 								<?php if ($this->session->userdata('usersess') == 'FES'){?>
 								<span class="textmenu1" style="float:right;padding-top:0px;margin-right:5px">
-									<?php 
+									<?php
 										$fic_list = array(
-											'Engineering' => 'Engineering',
-											'Civil' => 'Civil',
-											'Electrical' => 'Electrical'
+											'M' => 'Mechanical',
+											'C' => 'Civil',
+											'E' => 'Electrical'
 										);
 									?>
-									<?php echo form_dropdown('fic', $fic_list, set_value('fic') , 'class="dropdown" style="width:150px;"'); ?>
+									<?php echo form_dropdown('fic', $fic_list, set_value('fic') , 'class="dropdown" style="width:150px;" onChange="this.form.submit()"'); ?>
 								</span>
 								<span class="textmenu1" style="float:right;padding-top:7px;margin-right:20px">
 									FACILITY GROUP :
@@ -62,7 +72,7 @@
 											</table>
 										</td>
 									</tr>
-								
+
 									<tr class="ui-menu-color-header" style="color:white;" align="center">
 										<td>Asset No</td>
 										<td>Asset Name</td>
@@ -83,7 +93,7 @@
 										<td width="8.33%" colspan="<?=count($kalender[11])?>">NOV</td>
 										<td width="8.33%" colspan="<?=count($kalender[12])?>">DEC</td>
 									</tr>
-					
+
 									<?php foreach ($records as $row) {?>
 									<tr class="" style="color:black; font-size:10px; background:white;" align="center">
 										<td><?=isset($row->V_Tag_no) ? $row->V_Tag_no : ''?></td>
@@ -96,7 +106,7 @@
 										<td <?= isset($weeksch) && in_array($i,$weeksch) ? 'bgcolor="##00FFFF"' : '' ?>><?=$i?></td>
 											<?php } ?>
 									</tr>
-									<?php } ?>															
+									<?php } ?>
 									<tr style="background:white;">
 										<td colspan="<?=$col;?>" height="150px" valign="bottom">
 											<!--<table style="color:black">
@@ -118,7 +128,7 @@
 									</tr>
 								</table>
 							</td>
-						</tr>	
+						</tr>
 					</table>
 				</div>
 			</div>

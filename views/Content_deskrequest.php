@@ -23,49 +23,49 @@
 									<table class="ui-content-form" width="100%" border="0">
 										<tr>
 											<td style="padding-left:10px; padding-top:5px;" valign="top" class="ui-w">Request Type:</td>
-											<td style="padding-left:10px; padding-top:5px;" valign="top">	
+											<td style="padding-left:10px; padding-top:5px;" valign="top">
 												<?php if ($this->session->userdata('usersess')=='HKS' OR $this->session->userdata('usersess')=='SEC') {?>
-												<input type="radio" id="radio-1-4" name="n_request_type" class="regular-radio" value="A4" <?php echo set_radio('n_request_type', 'A4'); ?>/>   
+												<input type="radio" id="radio-1-4" name="n_request_type" class="regular-radio" value="A4" <?php echo set_radio('n_request_type', 'A4'); ?>/>
 												<label for="radio-1-4"></label> A4 - User Requests<br>
-												<input type="radio" id="radio-1-5" name="n_request_type" class="regular-radio" value="A5" <?php echo set_radio('n_request_type', 'A5'); ?>/>   
+												<input type="radio" id="radio-1-5" name="n_request_type" class="regular-radio" value="A5" <?php echo set_radio('n_request_type', 'A5'); ?>/>
 												<label for="radio-1-5"></label> A5 - Investigation of Incidences<br>
-												<input type="radio" id="radio-1-7" name="n_request_type" class="regular-radio" value="A7" <?php echo set_radio('n_request_type', 'A7'); ?>/>   
+												<input type="radio" id="radio-1-7" name="n_request_type" class="regular-radio" value="A7" <?php echo set_radio('n_request_type', 'A7'); ?>/>
 												<label for="radio-1-7"></label> A7 - User Training<br>
-												<input type="radio" id="radio-1-9" name="n_request_type" class="regular-radio" value="A9" <?php echo set_radio('n_request_type', 'A9'); ?>/>   
+												<input type="radio" id="radio-1-9" name="n_request_type" class="regular-radio" value="A9" <?php echo set_radio('n_request_type', 'A9'); ?>/>
 												<label for="radio-1-9"></label> A9 - Internal Request<br>
-												<input type="radio" id="radio-1-10" name="n_request_type" class="regular-radio" value="A10" <?php echo set_radio('n_request_type', 'A10'); ?>/>   
+												<input type="radio" id="radio-1-10" name="n_request_type" class="regular-radio" value="A10" <?php echo set_radio('n_request_type', 'A10'); ?>/>
 												<label for="radio-1-10"></label> A10 - Reimbursable Work<br>
 												<?php } else { ?>
-												<input type="radio" id="radio-1-1" name="n_request_type" class="regular-radio" value="A1" <?php echo set_radio('n_request_type', 'A1',true); ?>/>   
+												<input type="radio" id="radio-1-1" name="n_request_type" class="regular-radio" value="A1" <?php echo set_radio('n_request_type', 'A1',true); ?>/>
 												<label for="radio-1-1"></label> A1 - Breakdown Maintenance (BM)<br>
-												<input type="radio" id="radio-1-2" name="n_request_type" class="regular-radio" value="A2" <?php echo set_radio('n_request_type', 'A2'); ?>/>   
+												<input type="radio" id="radio-1-2" name="n_request_type" class="regular-radio" value="A2" <?php echo set_radio('n_request_type', 'A2'); ?>/>
 												<label for="radio-1-2"></label> A2 - Schedule Corrective Maintenance (SCM)<br>
-												<input type="radio" id="radio-1-3" name="n_request_type" class="regular-radio" value="A3" <?php echo set_radio('n_request_type', 'A3'); ?>/>   
+												<input type="radio" id="radio-1-3" name="n_request_type" class="regular-radio" value="A3" <?php echo set_radio('n_request_type', 'A3'); ?>/>
 												<label for="radio-1-3"></label> A3 - Corrective Maintenance (CM)<br>
-												<input type="radio" id="radio-1-4" name="n_request_type" class="regular-radio" value="A4" <?php echo set_radio('n_request_type', 'A4'); ?>/>   
+												<input type="radio" id="radio-1-4" name="n_request_type" class="regular-radio" value="A4" <?php echo set_radio('n_request_type', 'A4'); ?>/>
 												<label for="radio-1-4"></label> A4 - User Requests<br>
-												<input type="radio" id="radio-1-5" name="n_request_type" class="regular-radio" value="A5" <?php echo set_radio('n_request_type', 'A5'); ?>/>   
+												<input type="radio" id="radio-1-5" name="n_request_type" class="regular-radio" value="A5" <?php echo set_radio('n_request_type', 'A5'); ?>/>
 												<label for="radio-1-5"></label> A5 - Investigation of Incidences<br>
-												<input type="radio" id="radio-1-6" name="n_request_type" class="regular-radio" value="A6" <?php echo set_radio('n_request_type', 'A6'); ?>/>   
+												<input type="radio" id="radio-1-6" name="n_request_type" class="regular-radio" value="A6" <?php echo set_radio('n_request_type', 'A6'); ?>/>
 												<label for="radio-1-6"></label> A6 - Technical Advice<br>
-												<input type="radio" id="radio-1-7" name="n_request_type" class="regular-radio" value="A7" <?php echo set_radio('n_request_type', 'A7'); ?>/>   
+												<input type="radio" id="radio-1-7" name="n_request_type" class="regular-radio" value="A7" <?php echo set_radio('n_request_type', 'A7'); ?>/>
 												<label for="radio-1-7"></label> A7 - User Training<br>
-												<input type="radio" id="radio-1-8" name="n_request_type" class="regular-radio" value="A8" <?php echo set_radio('n_request_type', 'A8'); ?>/>   
+												<input type="radio" id="radio-1-8" name="n_request_type" class="regular-radio" value="A8" <?php echo set_radio('n_request_type', 'A8'); ?>/>
 												<label for="radio-1-8"></label> A8 - Testing and Commissioning (T&C)<br>
-												<input type="radio" id="radio-1-9" name="n_request_type" class="regular-radio" value="A9" <?php echo set_radio('n_request_type', 'A9'); ?>/>   
+												<input type="radio" id="radio-1-9" name="n_request_type" class="regular-radio" value="A9" <?php echo set_radio('n_request_type', 'A9'); ?>/>
 												<label for="radio-1-9"></label> A9 - Internal Request<br>
-												<input type="radio" id="radio-1-10" name="n_request_type" class="regular-radio" value="A10" <?php echo set_radio('n_request_type', 'A10'); ?>/>   
+												<input type="radio" id="radio-1-10" name="n_request_type" class="regular-radio" value="A10" <?php echo set_radio('n_request_type', 'A10'); ?>/>
 												<label for="radio-1-10"></label> A10 - Reimbursable Work<br>
 												<?php } ?>
-												<!--<input type="radio" id="radio-1-8" name="n_request_type" class="regular-radio" value="A10" <?php echo set_radio('n_request_type', 'A10'); ?>/>   
+												<!--<input type="radio" id="radio-1-8" name="n_request_type" class="regular-radio" value="A10" <?php echo set_radio('n_request_type', 'A10'); ?>/>
 												<label for="radio-1-8"></label> A10 - Technical Advice<br>
-												<input type="radio" id="radio-1-9" name="n_request_type" class="regular-radio" value="A11" <?php echo set_radio('n_request_type', 'A11'); ?>/>   
+												<input type="radio" id="radio-1-9" name="n_request_type" class="regular-radio" value="A11" <?php echo set_radio('n_request_type', 'A11'); ?>/>
 												<label for="radio-1-9"></label> A11 - User Training<br>
-												<input type="radio" id="radio-1-10" name="n_request_type" class="regular-radio" value="A12" <?php echo set_radio('n_request_type', 'A12'); ?>/>   
+												<input type="radio" id="radio-1-10" name="n_request_type" class="regular-radio" value="A12" <?php echo set_radio('n_request_type', 'A12'); ?>/>
 												<label for="radio-1-10"></label> A12 - Testing and Commissioning (T&C)<br>
-												<input type="radio" id="radio-1-11" name="n_request_type" class="regular-radio" value="R1" <?php echo set_radio('n_request_type', 'R1'); ?>/>   
+												<input type="radio" id="radio-1-11" name="n_request_type" class="regular-radio" value="R1" <?php echo set_radio('n_request_type', 'R1'); ?>/>
 												<label for="radio-1-11"></label> R1 - Request for Yearly Planner<br>
-												<input type="radio" id="radio-1-12" name="n_request_type" class="regular-radio" value="R2" <?php echo set_radio('n_request_type', 'R2'); ?>/>   
+												<input type="radio" id="radio-1-12" name="n_request_type" class="regular-radio" value="R2" <?php echo set_radio('n_request_type', 'R2'); ?>/>
 												<label for="radio-1-12"></label> R2 - Internal Request<br>-->
 											</td>
 										</tr>
@@ -76,7 +76,7 @@
 										<tr>
 										<td style="padding-left:10px;" valign="top">Request&nbsp;Time&nbsp;:&nbsp;</td>
 				            <td style="padding-left:10px;" valign="top">
-										<?php 
+										<?php
 										$hour_list = array(
 															'0' => '0',
                   						'1' => '1',
@@ -104,8 +104,8 @@
                   				 		'23' => '23',
                 					 );
 										 ?>
-								        <?php echo form_dropdown('n_hour', $hour_list, set_value('n_hour',date('H')) , 'class="dropdown" style="width: 52px;"'); ?> 
-										<?php 
+								        <?php echo form_dropdown('n_hour', $hour_list, set_value('n_hour',date('H')) , 'class="dropdown" style="width: 52px;"'); ?>
+										<?php
 										$min_list = array(
 															'0' => '0',
                   						'1' => '1',
@@ -168,29 +168,29 @@
                   				 		'58' => '58',
                   				 		'59' => '59',
                 					 );
-										 ?>		
-		              			<?php echo form_dropdown('n_min', $min_list, set_value('n_min',date('i')) , 'class="dropdown" style="width: 52px;"'); ?> 
+										 ?>
+		              			<?php echo form_dropdown('n_min', $min_list, set_value('n_min',date('i')) , 'class="dropdown" style="width: 52px;"'); ?>
 											</td>
 										</tr>
 										<tr>
 											<td style="padding-left:10px;" valign="top">Priority :  </td>
-											<td style="padding-left:10px;" valign="top">	
-												<input type="radio" id="radio-1-13" name="n_priority" class="regular-radio" value="Normal" <?php echo set_radio('n_priority', 'Normal',TRUE); ?>/>   
+											<td style="padding-left:10px;" valign="top">
+												<input type="radio" id="radio-1-13" name="n_priority" class="regular-radio" value="Normal" <?php echo set_radio('n_priority', 'Normal',TRUE); ?>/>
 												<label for="radio-1-13"></label> Normal<br>
-												<input type="radio" id="radio-1-14" name="n_priority" class="regular-radio" value="Emergency" <?php echo set_radio('n_priority', 'Emergency'); ?>/>   
+												<input type="radio" id="radio-1-14" name="n_priority" class="regular-radio" value="Emergency" <?php echo set_radio('n_priority', 'Emergency'); ?>/>
 												<label for="radio-1-14"></label><span style="color:red;"> Emergency</span><br>
 											</td>
 										</tr>
 										<tr>
 											<td style="padding-left:10px;" valign="top">Summary : </td>
 											<td style="padding-left:10px;"><textarea class="Input n_com2" name="n_summary" cols="17" rows="6"><?php echo set_value('n_summary'); ?></textarea></td>
-										</tr>																																			
+										</tr>
 									</table>
 								</td>
 							</tr>
 					</table>
 				</div>
-				
+
 				<div class="middle_d">
 					<?php if ($this->session->userdata('usersess')=='BES' OR $this->session->userdata('usersess')=='FES') {?>
 					<table class="ui-content-form-reg">
@@ -215,10 +215,10 @@
 									<tr>
 										<td style="padding-left:10px;">Name :	 </td>
 										<td style="padding-left:10px;"><input type="text" id="n_name" name="n_name" value="<?php echo set_value('n_name'); ?>" class="form-control-button2 n_wi-date2" readonly></td>
-									</tr>																																																																	
+									</tr>
 								</table>
 							</td>
-						</tr>						
+						</tr>
 					</table>
 					<?php } ?>
 				</div>
@@ -239,35 +239,35 @@
 									</tr>
 									<tr>
 										<td style="padding-left:10px;" valign="top">Designation : </td>
-										<td style="padding-left:10px; padding-top:5px;" valign="top">	
-											<input type="radio" id="radio-1-15" name="n_designation" class="regular-radio" value = "Professor" <?php echo set_radio('n_designation', 'Professor', TRUE); ?>/>   
+										<td style="padding-left:10px; padding-top:5px;" valign="top">
+											<input type="radio" id="radio-1-15" name="n_designation" class="regular-radio" value = "Professor" <?php echo set_radio('n_designation', 'Professor', TRUE); ?>/>
 											<label for="radio-1-15"></label> Professor<br>
-											<input type="radio" id="radio-1-16" name="n_designation" class="regular-radio" value = "Doctor" <?php echo set_radio('n_designation', 'Doctor'); ?>/>   
+											<input type="radio" id="radio-1-16" name="n_designation" class="regular-radio" value = "Doctor" <?php echo set_radio('n_designation', 'Doctor'); ?>/>
 											<label for="radio-1-16"></label> Doctor<br>
-											<input type="radio" id="radio-1-17" name="n_designation" class="regular-radio" value = "Matron" <?php echo set_radio('n_designation', 'Matron'); ?>/>   
+											<input type="radio" id="radio-1-17" name="n_designation" class="regular-radio" value = "Matron" <?php echo set_radio('n_designation', 'Matron'); ?>/>
 											<label for="radio-1-17"></label> Matron<br>
-											<input type="radio" id="radio-1-18" name="n_designation" class="regular-radio" value = "Medical Assistant" <?php echo set_radio('n_designation', 'Medical Assistant'); ?>/>   
+											<input type="radio" id="radio-1-18" name="n_designation" class="regular-radio" value = "Medical Assistant" <?php echo set_radio('n_designation', 'Medical Assistant'); ?>/>
 											<label for="radio-1-18"></label> Medical Assistant<br>
-											<input type="radio" id="radio-1-19" name="n_designation" class="regular-radio" value = "IIUM Officer" <?php echo set_radio('n_designation', 'IIUM Officer'); ?>/>   
+											<input type="radio" id="radio-1-19" name="n_designation" class="regular-radio" value = "IIUM Officer" <?php echo set_radio('n_designation', 'IIUM Officer'); ?>/>
 											<label for="radio-1-19"></label> IIUM Officer<br>
-											<input type="radio" id="radio-1-20" name="n_designation" class="regular-radio" value = "Sister In-Charge" <?php echo set_radio('n_designation', 'Sister In-Charge'); ?>/>   
+											<input type="radio" id="radio-1-20" name="n_designation" class="regular-radio" value = "Sister In-Charge" <?php echo set_radio('n_designation', 'Sister In-Charge'); ?>/>
 											<label for="radio-1-20"></label> Sister In-Charge<br>
-											<input type="radio" id="radio-1-21" name="n_designation" class="regular-radio" value = "Sister On Duty" <?php echo set_radio('n_designation', 'Sister On Duty'); ?>/>   
+											<input type="radio" id="radio-1-21" name="n_designation" class="regular-radio" value = "Sister On Duty" <?php echo set_radio('n_designation', 'Sister On Duty'); ?>/>
 											<label for="radio-1-21"></label> Sister On Duty<br>
-											<input type="radio" id="radio-1-22" name="n_designation" class="regular-radio" value = "Specialist" <?php echo set_radio('n_designation', 'Specialist'); ?>/>   
+											<input type="radio" id="radio-1-22" name="n_designation" class="regular-radio" value = "Specialist" <?php echo set_radio('n_designation', 'Specialist'); ?>/>
 											<label for="radio-1-22"></label> Specialist<br>
-											<input type="radio" id="radio-1-23" name="n_designation" class="regular-radio" value = "Staff Nurse" <?php echo set_radio('n_designation', 'Staff Nurse'); ?>/>   
+											<input type="radio" id="radio-1-23" name="n_designation" class="regular-radio" value = "Staff Nurse" <?php echo set_radio('n_designation', 'Staff Nurse'); ?>/>
 											<label for="radio-1-23"></label> Staff Nurse<br>
-											<input type="radio" id="radio-1-24" name="n_designation" class="regular-radio" value = "Supervisor" <?php echo set_radio('n_designation', 'Supervisor'); ?>/>   
+											<input type="radio" id="radio-1-24" name="n_designation" class="regular-radio" value = "Supervisor" <?php echo set_radio('n_designation', 'Supervisor'); ?>/>
 											<label for="radio-1-24"></label> Supervisor<br>
-											<input type="radio" id="radio-1-25" name="n_designation" class="regular-radio" value = "PMSB" <?php echo set_radio('n_designation', 'PMSB'); ?>/>   
+											<input type="radio" id="radio-1-25" name="n_designation" class="regular-radio" value = "PMSB" <?php echo set_radio('n_designation', 'PMSB'); ?>/>
 											<label for="radio-1-25"></label> PMSB<br>
-											<input type="radio" id="radio-1-26" name="n_designation" class="regular-radio" value = "APFMS" <?php echo set_radio('n_designation', 'APFMS'); ?>/>   
+											<input type="radio" id="radio-1-26" name="n_designation" class="regular-radio" value = "APFMS" <?php echo set_radio('n_designation', 'APFMS'); ?>/>
 											<label for="radio-1-26"></label> APFMS<br>
-											<input type="radio" id="radio-1-27" name="n_designation" class="regular-radio" value = "APSB" <?php echo set_radio('n_designation', 'APSB'); ?>/>   
+											<input type="radio" id="radio-1-27" name="n_designation" class="regular-radio" value = "APSB" <?php echo set_radio('n_designation', 'APSB'); ?>/>
 											<label for="radio-1-27"></label> APSB
 										</td>
-									</tr>																																									
+									</tr>
 								</table>
 							</td>
 						</tr>
@@ -283,7 +283,7 @@
 								<table class="ui-content-form" width="100%" border="0">
 									<tr>
 										<td style="padding-left:10px;" class="ui-w">Phone Number :  </td>
-										<td style="padding-left:10px;" ><input type="text" name="n_phone_number" id="n_phone_number" value="<?php echo set_value('n_phone_number'); ?>" class="form-control-button n_wi-eq3" readonly> <span class="icon-windows" onclick="fpop_location_user()"></td>
+										<td style="padding-left:10px;" ><input type="text" name="n_phone_number" id="n_phone_number" value="<?php echo set_value('n_phone_number'); ?>" class="form-control-button n_wi-eq3" > <span class="icon-windows" onclick="fpop_location_user()"></td>
 									</tr>
 									<tr>
 										<td style="padding-left:10px;">User Department :   </td>
@@ -300,14 +300,14 @@
 									<tr>
 										<td style="padding-left:10px;">&nbsp; </td>
 										<td style="padding-left:10px;"><input type="text" id="n_location2" name="n_location1" value="<?php echo set_value('n_location1'); ?>" class="form-control-button n_wi-date2" readonly></td>
-									</tr>	
+									</tr>
 									<tr>
 										<td style="padding-left:10px;">Latest Work Order </td>
 										<td style="padding-left:10px;"><span class="icon-windows" onclick="rel()" value=""></span></td>
-									</tr>			
+									</tr>
 								</table>
 							</td>
-						</tr>					
+						</tr>
 					</table>
 				</div>
 				<div class="middle_d">
@@ -323,10 +323,10 @@
 										<td style="padding-left:10px;" >
 										<input type="checkbox" name="chkbox" value="ON" id ="checkbox" <?php echo set_checkbox('chkbox', 'ON'); ?>
 										</td>
-									</tr>																																																													
+									</tr>
 								</table>
 							</td>
-						</tr>						
+						</tr>
 					</table>
 				</div>
 			</div>

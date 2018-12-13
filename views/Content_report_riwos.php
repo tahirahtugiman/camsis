@@ -16,10 +16,10 @@ function barchart(a,b,c,d,e,f){
 <?php include 'content_btp.php';?>
 <div id="Instruction" class="pr-printer">
     <div class="header-pr"><?=($filby == 'RI') ? 'RI' : 'PPM' ?> Work Order Summary</div>
-    <button onclick="javascript:myFunction('report_ppmwos?m=<?=$month?>&y=<?=$year?>&none=closed&ex=ex&grp=<?=$this->input->get('grp');?>&fon=<?=$this->input->get('fon');?>');" class="btn-button btn-primary-button">PRINT</button>
+    <button onclick="javascript:myFunction('report_ppmwos?m=<?=$month?>&y=<?=$year?>&none=closed&ex=ex&filby=RI&grp=<?=$this->input->get('grp');?>&fon=<?=$this->input->get('fon');?>');" class="btn-button btn-primary-button">PRINT</button>
     <button type="cancel" class="btn-button btn-primary-button" onclick="location.href = '<?php echo $btp ;?>';">CANCEL</button>
 	<?php if (($this->input->get('ex') == '') or ($this->input->get('none') == '')){?>
-	<a href="<?php echo base_url();?>index.php/contentcontroller/report_ppmwos?m=<?=$month?>&y=<?=$year?>&ex=excel&none=close&grp=<?=$this->input->get('grp');?>&fon=<?=$this->input->get('fon');?>" style="float:right; margin-right:40px;"><img src="<?php echo base_url();?>images/excel.png" style="width:40px; height:38px; position:absolute;" title="export to excel"></a>
+	<a href="<?php echo base_url();?>index.php/contentcontroller/report_ppmwos?m=<?=$month?>&y=<?=$year?>&ex=excel&none=close&filby=RI&grp=<?=$this->input->get('grp');?>&fon=<?=$this->input->get('fon');?>" style="float:right; margin-right:40px;"><img src="<?php echo base_url();?>images/excel.png" style="width:40px; height:38px; position:absolute;" title="export to excel"></a>
 	<?php //if($this->session->userdata('v_UserName') == 'nezam') {?>
 	<span style="float:right; margin-right:90px;" onclick="barchart(<?php if ($ppmsum[0]->total == 0) { echo "0"; } else {echo $ppmsum[0]->total; }?>,<?php if ($ppmsum[0]->comp == 0) { echo "0"; } else {echo $ppmsum[0]->comp; }?>,<?php if ($ppmsum[0]->resch == 0) { echo "0"; } else {echo $ppmsum[0]->resch; }?>,<?php if ($ppmsum[0]->notcomp == 0) { echo "0"; } else {echo $ppmsum[0]->notcomp; }?>,'<?= substr(date('M',mktime(0, 0, 0, $month, 10)),0,3)?>',<?=$year?>)"><img src="<?php echo base_url();?>images/Bar-Chart-icon.png" style="width:40px; height:38px; position:absolute;" title="Bar Chart"></span>
 	<?php //} ?>
@@ -79,7 +79,7 @@ function barchart(a,b,c,d,e,f){
 				<th>Total <?=($filby == 'RI') ? 'RI' : 'PPM' ?> Work Order</th>
 				<th>Total Completed</th>
 				<!--<th>Total Rescheduled</th>-->
-				<th>Total Rescheduled Brought In</th>
+				<th>Total Rescheduled Brought In Current Month</th>
 				<th>Total Rescheduled Brought Out</th>
 				<th>Total Not Done</th>
 			</tr>
