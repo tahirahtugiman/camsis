@@ -3,7 +3,7 @@
 <?php $col=1; for($i=1;$i<13;$i++){ $col += count($kalender[$i]); }$col=$col+5;?>
 <?php
 if ($this->input->get('ex') == 'excel'){
-	$facility_group = empty($_REQUEST["fic"]) ? 'MECHANICAL' : '';
+	$facility_group = ($this->session->userdata('usersess') == 'FES' && empty($_REQUEST["fic"]) ) ? 'MECHANICAL' : '';
 	if( isset($_REQUEST['fic']) && $_REQUEST['fic']=='M' ){
 		$facility_group = 'MECHANICAL';
 	}elseif ( isset($_REQUEST['fic']) && $_REQUEST['fic']=='C' ) {
