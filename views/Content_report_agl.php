@@ -101,7 +101,7 @@ header('Content-Disposition: attachment; filename='.$filename);
 				<td width="20px"><?= $numrow ?></td>
 				<td width="70px"><?= ($row->new_asset_type) ? $row->new_asset_type : 'N/A' ?></td>
 				<td style="text-align:left;"><?= ($row->V_Asset_name) ? $row->V_Asset_name : 'N/A' ?></td>
-				<td width="80px"><?= ($row->assetcount) ? $row->assetcount : 'N/A' ?></td>
+				<td width="80px"><?= ($row->assetcount) ? anchor('contentcontroller/report_alr?dept=&group='.$row->new_asset_type,$row->assetcount) : 'N/A' ?></td>
 			</tr>
 			<?php $totalcount = $totalcount + $row->assetcount; $numrow++; ?>
 							<?php endforeach;?>
