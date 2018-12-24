@@ -799,6 +799,7 @@ $this->db->where('A.v_ServiceCode =', $this->session->userdata('usersess'));
 $this->db->where('v_HospitalCode =', $this->session->userdata('hosp_code'));
 $this->db->where('A.v_ActionFlag <> ', 'D');
 $this->db->where('B.v_ActionFlag <> ', 'D');
+
 $this->db->group_by('A.v_CertificateNo,A.v_RegistrationNo,A.v_Identification');
 
 $query = $this->db->get();
@@ -1103,7 +1104,7 @@ $this->db->where('ppm.v_Actionflag <> ', 'D');
 $this->db->where('ppm.v_wrkordno = ', $wrkordno);
 $this->db->where('ar.V_Hospitalcode = ', $this->session->userdata('hosp_code'));
 */
-$this->db->select("distinct ppm.*, l.v_Location_Name, job.v_jobtype, job.v_weeksch, IFNULL(ar.V_Equip_code, job.v_checklistcode) AS v_checklistcode, dpt.v_userdeptdesc, ar.v_tag_no, ar.v_user_dept_code, ar.v_location_code, ar.v_model_no, ar.v_serial_no, ar.v_asset_no, am.v_checklistcode, ar.v_asset_name, m.new_asset_type, ag.V_Wrn_end_code, right(chklist.task_no, char_length(chklist.task_no)-6) AS TASKDESC FROM (`pmis2_egm_schconfirmmon` ppm) JOIN `pmis2_egm_assetregistration` ar ON `ppm`.`v_HospitalCode`=`ar`.`V_Hospitalcode` AND ppm.v_HospitalCode=ar.V_Hospitalcode AND ar.V_Asset_no=ppm.v_Asset_no AND ppm.v_Actionflag <> 'D' JOIN `pmis2_egm_assetreg_general` ag ON `ag`.`v_hospital_code` = `ar`.`v_hospitalcode` AND ag.v_asset_no = ar.v_asset_no JOIN `pmis2_egm_assetmaintenance` am ON `am`.`v_hospitalcode` = `ar`.`v_hospitalcode` AND am.v_assetno = ag.v_asset_no JOIN `pmis2_egm_assetlocation` l ON `ar`.`V_Location_code` = `l`.`V_location_code` AND ar.V_hospitalcode = l.v_hospitalcode JOIN `pmis2_sa_asset_mapping` m ON `m`.`old_asset_type` = `ar`.`v_equip_code` JOIN `pmis2_sa_userdept` dpt ON `ag`.`v_hospital_code` = `dpt`.`v_hospitalcode` AND ar.v_user_dept_code = dpt.v_userdeptcode JOIN `pmis2_egm_assetjobtype` job ON `ag`.`v_hospital_code` = `job`.`v_hospitalcode` AND ar.v_asset_no = job.v_asset_no AND ppm.v_jobtype = job.v_JobType AND ppm.v_year = job.v_Year LEFT OUTER JOIN `pmis2_egm_chklist` chklist ON left(`chklist`.`task_no` ,6) = job.v_ProcedureCode WHERE `ppm`.`v_Actionflag` <> 'D' AND `ppm`.`v_wrkordno` = '".$wrkordno."' AND `ar`.`V_Hospitalcode` = '".$this->session->userdata('hosp_code')."'", FALSE);
+$this->db->select("distinct ppm.*, l.v_Location_Name, job.v_jobtype, job.v_weeksch, IFNULL(ar.V_Equip_code, job.v_checklistcode) AS v_checklistcode, dpt.v_userdeptdesc, ar.v_tag_no, ar.v_user_dept_code, ar.v_location_code, ar.v_model_no, ar.v_serial_no, ar.v_asset_no, am.v_checklistcode, ar.v_asset_name, m.new_asset_type, ag.V_Wrn_end_code, right(chklist.task_no, char_length(chklist.task_no)-6) AS TASKDESC FROM (`pmis2_egm_schconfirmmon` ppm) JOIN `pmis2_egm_assetregistration` ar ON `ppm`.`v_HospitalCode`=`ar`.`V_Hospitalcode` AND ppm.v_HospitalCode=ar.V_Hospitalcode AND ar.V_Asset_no=ppm.v_Asset_no AND ppm.v_Actionflag <> 'D' JOIN `pmis2_egm_assetreg_general` ag ON `ag`.`v_hospital_code` = `ar`.`v_hospitalcode` AND ag.v_asset_no = ar.v_asset_no JOIN `pmis2_egm_assetmaintenance` am ON `am`.`v_hospitalcode` = `ar`.`v_hospitalcode` AND am.v_assetno = ag.v_asset_no JOIN `pmis2_egm_assetlocation` l ON `ar`.`V_Location_code` = `l`.`V_location_code` AND ar.V_hospitalcode = l.v_hospitalcode JOIN `pmis2_sa_asset_mapping` m ON `m`.`old_asset_type` = `ar`.`v_equip_code` JOIN `pmis2_sa_userdept` dpt ON `ag`.`v_hospital_code` = `dpt`.`v_hospitalcode` AND ar.v_user_dept_code = dpt.v_userdeptcode JOIN `pmis2_egm_assetjobtype` job ON `ag`.`v_hospital_code` = `job`.`v_hospitalcode` AND ar.v_asset_no = job.v_asset_no AND ppm.v_jobtype = job.v_JobType AND ppm.v_year = job.v_Year LEFT OUTER JOIN `pmis2_egm_chklist` chklist ON left(`chklist`.`task_no` ,6) = job.v_ProcedureCode WHERE `ppm`.`v_Actionflag` <> 'D' AND `ppm`.`v_wrkordno` = '".$wrkordno."' AND `ar`.`V_Hospitalcode` = '".$this->session->userdata('hosp_code')."' AND ppm.v_ServiceCode = '".$this->session->userdata('usersess')."'", FALSE);
 $query = $this->db->get();
 //echo "laalla".$query->DWRate;
 echo $this->db->last_query();
@@ -1580,7 +1581,7 @@ $query = $this->db->get();
 return $query->result();
 }
 function SIQsummary_siq($month,$year) {
-$this->db->select("SUM(CASE ind_code WHEN 'FES05' THEN 1 ELSE 0 END) AS ppm_siq, SUM(CASE ind_code WHEN 'FES06' THEN 1 ELSE 0 end) AS uptime_siq",FALSE);
+$this->db->select("SUM(CASE ind_code WHEN 'BES05' THEN 1 ELSE 0 END) AS ppm_siq, SUM(CASE ind_code WHEN 'BES06' THEN 1 ELSE 0 end) AS uptime_siq",FALSE);
 $this->db->from('mis_qap_siq_detail');
 $this->db->where('hosp_code',$this->session->userdata('hosp_code'));
 //	$this->db->where('hosp_code','MKA'); //for test
@@ -1701,7 +1702,7 @@ function qap3_asset_noSIQlim($year,$month,$limit,$start){
 	$this->db->order_by('uptime_pct,asset_no');
 	$this->db->limit($limit,$start);
 	$query = $this->db->get();
-    //echo $this->db->last_query();
+	//echo $this->db->last_query();
 	//exit();
 	return $query->result();
 }
@@ -1759,7 +1760,7 @@ function qap3_wo($year,$month){
 	return $query->result();
 }
 function qap3_wolim($year,$month,$limit,$start){
-	$this->db->select('wo.*,a.trpi,a.uptime_pct');
+	$this->db->select('wo.*,a.trpi,a.uptime_pct,a.asset_tag');
 	$this->db->from('mis_qap_work_orders$candidate wo');
 	$this->db->join('mis_qap_inc_assets$candidate a','wo.asset_no = a.asset_no AND wo.qap_period = a.qap_period','left outer');
 	$this->db->where('wo.qap_period',$year.$month);
@@ -1874,7 +1875,7 @@ function qap3_wo_Exclim($year,$month,$limit,$start){
 	return $query->result();
 }
 function qap3_actionnew($carid){
-	$this->db->select('sl_no +1 AS sl_no',false);
+	$this->db->select('sl_no +1 AS sl_no');
 	$this->db->from('mis_qap_car_detail');
 	$this->db->where('car_no',$carid);
 	$this->db->where('action_flag <>','D');
@@ -2105,14 +2106,10 @@ function assetimage(){
 }
 
 function monthplan($year,$month){
-	$this->db->select('*,CAST(Date AS UNSIGNED) as dated');
+	$this->db->select('*');
 	$this->db->from('set_monthly_planner');
 	$this->db->where('Year',$year);
 	$this->db->where('Month',$month);
-	//$this->db->where('Dept_Code','WGS2');
-	//$this->db->where('Work_Code !=','');
-	//$this->db->where('Month',$month);
-	$this->db->order_by('dated');
 	$query = $this->db->get();
 	//echo $this->db->last_query();
 	//exit();
@@ -3570,12 +3567,13 @@ public function nexppmwk() {
 		 return $query->result();
 }
 
-function get_ppmgenloc($year, $hosp, $week)
+function get_ppmgenloc($year, $hosp, $week, $dept)
 {
 
 //$this->db->select('pmis2_sa_asset_mapping.new_asset_type, left(pmis2_sa_moh_asset_type.type_desc, 50)');
-$this->db->distinct();
-$this->db->select("jt.*, ar.v_tag_no, ar.v_asset_name, ar.v_user_dept_code, ar.v_location_code, am.v_assetstatus, am.v_assetcondition, am.v_assetvstatus, am.v_assetvstatus as ppm_no, lc.v_location_name ");
+//$this->db->distinct();
+$this->db->select("jt.*, sc.d_StartDt as ppmdt,ar.v_tag_no, ar.v_asset_name, ar.v_user_dept_code, ar.v_location_code, am.v_assetstatus, am.v_assetcondition, am.v_assetvstatus, am.v_assetvstatus as ppm_no, lc.v_location_name",false);
+#$this->db->select("");
 //$this->db->where('pmis2_sa_asset_mapping.old_asset_type = ', $typecd);
 //$this->db->where('jt.v_hospitalcode = ', $typecd);
 $this->db->where('ar.v_actionflag != ', 'D');
@@ -3584,18 +3582,35 @@ $this->db->where('am.v_actionflag != ', 'D');
 $this->db->where('jt.v_year = ', $year);
 $this->db->where('jt.v_hospitalcode = ', $hosp);
 $this->db->where('ar.V_service_code', $this->session->userdata('usersess'));
-//$this->db->where('jt.v_weeksch LIKE ', '%'.$week.',%');
-$this->db->where('jt.v_weeksch LIKE ', $week.',%');
-$this->db->or_where('jt.v_weeksch =', $week);
-$this->db->or_where('jt.v_weeksch LIKE ', '%,'.$week.',%');
-//$this->db->or_where('jt.v_weeksch LIKE ', '%,'.$week);
+if ($dept <> ''){
+$this->db->where('ar.v_user_dept_code', $dept);
+}
+$test=array();
+foreach ($week as $key=>$minggu){
+if ($key==0){
+$test[]= 'FIND_IN_SET('.$minggu.', `jt`.`v_weeksch`)';		
+}else{	
+$test[]= 'OR FIND_IN_SET('.$minggu.', `jt`.`v_weeksch`)';	
+}	
+}
+
+$text= str_replace('[','',str_replace(']','',str_replace('","',' ',json_encode($test))));
+
+$this->db->where('('.str_replace('"','',$text).')');
+$this->db->group_by('ar.v_tag_no,sc.v_Asset_no');
+//$this->db->l_in('jt.v_weeksch',$week);
+//$this->db->where('jt.v_weeksch LIKE ', $week.',%');
+//$this->db->or_where('jt.v_weeksch =', $week);
+//$this->db->or_where('jt.v_weeksch LIKE ', '%,'.$week.',%');
+
 $this->db->join('pmis2_egm_assetregistration ar',"jt.v_asset_no = ar.v_asset_no AND ar.V_service_code = '".$this->session->userdata('usersess')."' AND jt.v_actionflag != 'D' AND jt.v_year = '".$year."'");
 $this->db->join('pmis2_egm_assetmaintenance am','ar.v_asset_no = am.v_assetno AND ar.v_hospitalcode = am.v_hospitalcode');
 $this->db->join('pmis2_egm_assetlocation lc','lc.v_location_code = ar.v_location_code AND ar.v_hospitalcode = lc.v_hospitalcode');
+$this->db->join('(SELECT v_Asset_no, d_StartDt FROM pmis2_egm_schconfirmmon WHERE v_Actionflag <> "D" ORDER BY d_StartDt DESC) sc','sc.v_Asset_no=jt.v_asset_no','left outer');
 //    return $this->db->get('pmis2_sa_asset_mapping');
 $query = $this->db->get('pmis2_egm_assetjobtype jt');
 //echo "laalla".$query->DWRate;
-//echo $this->db->last_query();
+echo $this->db->last_query();
 //exit();
 return $query->result();
 
@@ -3621,8 +3636,8 @@ function nextmrinnumber(){
 	$this->db->where('b.HospitalCode',$this->session->userdata('hosp_code'));
 	$this->db->where('a.Year',date('Y'));
 	$query = $this->db->get();
-	echo $this->db->last_query();
-	exit();
+	//echo $this->db->last_query();
+	//exit();
 	return $query->result();
 }
 
@@ -3995,14 +4010,14 @@ GROUP BY Work_Code ORDER BY Dated)a");
      $query_result1 = $query->result();
 	//$query_result = $new_query->result();
 	return $query_result1;
-	
+
 	 */
 	$this->db->select("*,(CASE WHEN  Work_Code = 'HD' THEN 'HIGH DUSTING' WHEN Work_Code = 'GC' THEN 'GEMS CLEANING' WHEN Work_Code = 'CS' THEN 'CARPET SHAMPOO' WHEN Work_Code = 'SC' THEN 'SCRUBBING' WHEN Work_Code = 'BF' THEN 'BUFFING' ELSE NULL END) as scope_name,CAST(Date AS UNSIGNED) as dated");
 	$this->db->from('set_monthly_planner');
 	$this->db->where('Year',$year);
 	$this->db->where('Month',$month);
 	$this->db->where('Dept_Code',$dept);
-	$this->db->where('Work_Code !=','');	
+	$this->db->where('Work_Code !=','');
 	$this->db->group_by('Work_Code');
 	$this->db->order_by('dated');
 	$query = $this->db->get();
@@ -4010,11 +4025,11 @@ GROUP BY Work_Code ORDER BY Dated)a");
 	//exit();
 	$query_result = $query->result();
 	return $query_result;
-	
-	
+
+
 }
 	function rl_mrin($hosp,$y,$m){
-	$this->db->select("i.ItemName,r.service_code,r.WorkOfOrder,IFNULL(s.D_date,p.d_StartDt) as WorkOrderDate,r.DateCreated,m.MIRNcode,m.ItemCode,r.Comments,m.QtyReq,m.QtyReqfx, (CASE WHEN Who_Del = 'store' THEN 'STOCK' ELSE NULL END) as stocstatus,i.PartNumber");       	
+	$this->db->select("i.ItemName,r.service_code,r.WorkOfOrder,IFNULL(s.D_date,p.d_StartDt) as WorkOrderDate,r.DateCreated,m.MIRNcode,m.ItemCode,r.Comments,m.QtyReq,m.QtyReqfx, (CASE WHEN Who_Del = 'store' THEN 'STOCK' ELSE NULL END) as stocstatus,i.PartNumber");
 	$this->db->from("tbl_mirn_comp m");
     $this->db->join("tbl_materialreq r", "m.MIRNcode=r.DocReferenceNo", "inner join");
     $this->db->join("tbl_invitem i", "m.ItemCode=i.ItemCode", "inner join");
@@ -4033,73 +4048,486 @@ GROUP BY Work_Code ORDER BY Dated)a");
 	//exit();
 	return $query->result();
 		}
-		
-	public function get_RNNO($to){ //buzlee
-			$from = $this->session->userdata("hosp_code");
-			//$to = "test";
-			$next_number = 1;
-			$year = str_split(date("Y"))[2].str_split(date("Y"))[3];
-			$query = $this->db->select("*")->from("tbl_rn_autono")->order_by("rn_next_no", "desc")->limit(1)->get()->result();
-			if( !empty($query) ){
-				foreach ($query as $row) {
-					$next_number = $row->rn_next_no;
-				}
-			}
-			$number = str_pad($next_number, 5, '0', STR_PAD_LEFT);
-			$res = "RN/$from/$to/$number/$year";
 
-			$val_tbl_rn_autono = array(
-					"rn_next_no" => $next_number+1,
-					"userid" => $this->session->userdata("v_UserName"),
-					"yearno" => date("Y")
-			);
-			$this->db->set("DT", "NOW()", false);
-			$this->db->insert("tbl_rn_autono", $val_tbl_rn_autono);
-
-			return $res;
+public function get_RNNO($to){ //buzlee
+	$from = $this->session->userdata("hosp_code");
+	//$to = "test";
+	$next_number = 1;
+	$year = str_split(date("Y"))[2].str_split(date("Y"))[3];
+	$query = $this->db->select("*")->from("tbl_rn_autono")->order_by("rn_next_no", "desc")->limit(1)->get()->result();
+	if( !empty($query) ){
+		foreach ($query as $row) {
+			$next_number = $row->rn_next_no;
 		}
+	}
+	$number = str_pad($next_number, 5, '0', STR_PAD_LEFT);
+	$res = "RN/$from/$to/$number/$year";
+
+	$val_tbl_rn_autono = array(
+			"rn_next_no" => $next_number+1,
+			"userid" => $this->session->userdata("v_UserName"),
+			"yearno" => date("Y")
+	);
+	$this->db->set("DT", "NOW()", false);
+	$this->db->insert("tbl_rn_autono", $val_tbl_rn_autono);
+
+	return $res;
+}
 
 public function getrndetail($rn){
-	
-	//$this->db->select("a.*,(CASE WHEN a.shipment_type = 0 THEN 'Courier' WHEN a.shipment_type = 1 THEN 'By hand' ELSE 0 END) as sh_type,(CASE WHEN a.courier = 0 THEN 'Other' WHEN a.courier = 1 THEN 'ABX' WHEN a.courier = 2 THEN 'CityLink' WHEN a.courier = 3 THEN 'DHL' ELSE 0 END) as courier,b.Rep");
-	//$this->db->from('tbl_rn_release a');
-	//$this->db->join('tbl_hosp_rep b','b.Hosp_code=substring_index(substring_index(a.RN_No, '/', -3), '/', 1)');
-	//$this->db->where('RN_No',$rn);
-	$query = $this->db->query("SELECT 
-    `a`.*,
-    (CASE
-        WHEN a.shipment_type = 0 THEN 'Courier'
-        WHEN a.shipment_type = 1 THEN 'By hand'
-        ELSE 0
-    END) AS sh_type,
-    (CASE
-        WHEN a.courier = 0 THEN 'Other'
-        WHEN a.courier = 1 THEN 'ABX'
-        WHEN a.courier = 2 THEN 'CityLink'
-        WHEN a.courier = 3 THEN 'DHL'
-        ELSE 0
-    END) AS courier,
-   substring_index(substring_index(a.RN_No, '/', -3), '/', 1) as hosp,b.rep
+
+//$this->db->select("a.*,(CASE WHEN a.shipment_type = 0 THEN 'Courier' WHEN a.shipment_type = 1 THEN 'By hand' ELSE 0 END) as sh_type,(CASE WHEN a.courier = 0 THEN 'Other' WHEN a.courier = 1 THEN 'ABX' WHEN a.courier = 2 THEN 'CityLink' WHEN a.courier = 3 THEN 'DHL' ELSE 0 END) as courier,b.Rep");
+//$this->db->from('tbl_rn_release a');
+//$this->db->join('tbl_hosp_rep b','b.Hosp_code=substring_index(substring_index(a.RN_No, '/', -3), '/', 1)');
+//$this->db->where('RN_No',$rn);
+$query = $this->db->query("SELECT
+`a`.*,
+(CASE
+		WHEN a.shipment_type = 0 THEN 'Courier'
+		WHEN a.shipment_type = 1 THEN 'By hand'
+		ELSE 0
+END) AS sh_type,
+(CASE
+		WHEN a.courier = 0 THEN 'Other'
+		WHEN a.courier = 1 THEN 'ABX'
+		WHEN a.courier = 2 THEN 'CityLink'
+		WHEN a.courier = 3 THEN 'DHL'
+		ELSE 0
+END) AS courier,
+substring_index(substring_index(a.RN_No, '/', -3), '/', 1) as hosp,b.rep
 FROM
-    `tbl_rn_release` `a`
+`tbl_rn_release` `a`
 JOIN
 `tbl_hosp_rep` `b` on b.Hosp_code=substring_index(substring_index(a.RN_No, '/', -3), '/', 1)
 WHERE
-    `RN_No` = '".$rn."'");
-	//$query = $this->db->get();
-	//echo $this->db->last_query();
-	//exit();
-	return $query->result();
-}		
-public function getrnitem($rn){
-	
-	$this->db->select('a.*,b.ItemName');
-	$this->db->from('tbl_rn_item a');
-	$this->db->join('tbl_invitem b','a.Item_code=b.ItemCode');
-	$this->db->where('RN_No',$rn);
-	$query = $this->db->get();
-	//echo $this->db->last_query();
-	return $query->result();
+`RN_No` = '".$rn."'");
+//$query = $this->db->get();
+//echo $this->db->last_query();
+//exit();
+return $query->result();
 }
+public function getrnitem($rn){
+
+$this->db->select('a.*,b.ItemName');
+$this->db->from('tbl_rn_item a');
+$this->db->join('tbl_invitem b','a.Item_code=b.ItemCode');
+$this->db->where('RN_No',$rn);
+$query = $this->db->get();
+//echo $this->db->last_query();
+return $query->result();
+}
+
+function getHospital(){
+
+	   $this->db->from('tbl_hosp_rep');
+    $query = $this->db->get();
+    foreach($query->result() as $row ){
+        //this sets the key to equal the value so that
+        //the pulldown array lists the same for each
+        $array[$row->Hosp_code] = $row->Hosp_code;
+    }
+    return $array;
+}
+	function gen_cal($year)
+	{
+	$nakantarcal = array();
+	$theyear = $year;
+	
+	$nWeekNo = 1;	
+	//$nYear = $year['theyear'];
+	$nYear = $theyear;
+			$sPPMGenWk = array();
+			unset($sPPMGenWk);
+			
+					$sWeekDayx = jddayofweek(gregoriantojd(1,1,$nYear),0);
+					
+					/*if (($sWeekDayx <> "6") && ($sWeekDayx <> "7") && ($sWeekDayx <> "1")) {
+					//call subDisplayFirstWeek
+					
+					if ($sPPMGenWk[$nWeekNo-1] = "") {
+						 $sCellClass = "ppmgenTR";}
+					else {
+						 $sCellClass = "ppmgenTR1"; }
+					//echo "sCellClass" . $sCellClass;
+					}*/		
+					//$year = $_REQUEST['y'];
+					
+					if (isset($_REQUEST['y']) && $_REQUEST['y'] == "") {
+						 $sWeekDayJan1 = jddayofweek(gregoriantojd(1,1,date("Y")),0); }//<---WEEK START WITH MONTH 
+					else	{
+					   if (isset($_REQUEST['y'])) {
+						 //$theyear = "20" . $_REQUEST["y"];
+						 $theyear =  $_REQUEST["y"];
+						 } else {
+						 $theyear = date("Y");
+						 }
+						 $sWeekDayJan1 = jddayofweek(gregoriantojd(1,1,$theyear),0); }//<---WEEK START WITH MONTH 
+						 //echo "sWeekDayJan1:" . $sWeekDayJan1 . "theyear:" . $theyear;
+						 //exit();
+					switch ($sWeekDayJan1) { //<----DAH MALAS NAK PIKIR
+					case 0 :
+							 $nDay = 31;
+							 break;
+					case 1 :
+							 $nDay = 25;
+							 break;
+					case 2 :
+							 $nDay = 31;
+							 break;
+					case 3 :
+							 $nDay = 30;
+							 break;
+					case 4 :
+							 $nDay = 29;
+							 break;
+					case 5 :
+				 	 	 	 $nDay = 28;
+							 break;
+					case 6 :
+				 	 	 	 $nDay = 27;
+							 break;
+					case 7 :
+				 	 	 	 $nDay = 26;
+							 break;
+					}
+						//response.write "nday : " & nday
+				
+				
+				if ($nDay <> "25") { //to cater last week of december to be inserted in the following year
+	//echo '			<tr id="trweek' . $nWeekNo . '" class="' . $sCellClass . '">				<td class="ppmgenTDWk"><b>' . $nWeekNo . '</b></td>';
+				 //$kump = '<tr id="trweek1" class="ppmgenTR" align="center" style="color:black;">';
+				//$kump = $kump . ' ' .  '<td ><b>'.$nWeekNo.'</b></td>';	
+				$kump = $nWeekNo;	
+				$nCount = 1;
+
+					//tarikh harian
+				do {
+					/*if ($nDay == 1) {
+					 //echo '				<td class="ppmgenTD"><b>' . $nDay . ' JAN</b></td>' . PHP_EOL;
+					 $kump = $kump . ' ' .  '<td><b>'.$nDay. ' JAN</b></td>';
+					 }
+					 else {
+					 //echo '				<td class="ppmgenTD">' . $nDay . '</td>' . PHP_EOL; 
+					 $kump = $kump . ' ' .  '<td>'.$nDay. '</td>';
+					 }*/
+						
+					 if ($nDay == 31) {
+					 		$nDay = 1;}
+						else {
+							$nDay = $nDay + 1;}
+					 
+					 $nCount = $nCount + 1;
+				} while ($nCount <= 7);
+				//tarikh harian
+				if ($nDay == 1) {
+					 $nMonth = 1; }
+				else {
+					 $nMonth = 12; }
+					 
+					 
+				//$sGenIcon2 = '<img src="images/icoPPMCheck.gif">';
+				//$sGenIcon1 = '<a href="javascript:void(0);" onclick="javascript:fWeekToGeneratePPM('.$nWeekNo.',' . $nYear . ',1,1);"><img src="images/btn1Generate.gif" style="width:66px;height:19px;"></a>';
+				//$sCheckIcon = '<a href="javascript:void(0);" onclick="javascript:fWeekToCheckPPM('.$nWeekNo.',' . $nYear . ',1,1);"><img src="images/btn1Check.gif" style="width:66px;height:19px;"></a>';
+				
+				/*if ((isset($sPPMGenWk)) && ($sPPMGenWk[0] == "")) {
+					 //echo '				<td class="ppmgenTD">' . $sGenIcon1 . '</td>' . PHP_EOL .				'<td class="ppmgenTD" id="two1">' . $sCheckIcon . '</td>' . PHP_EOL;
+					 $kump = $kump . ' ' .  '<td id="three1"><a href="javascript:void(0);" onclick="javascript:fWeekToGeneratePPM('.$nWeekNo.',' . $nYear . ',1,1);"  class="btn-button btn-primary-button">GENERATED</a></td>';
+					 $kump = $kump . ' ' .  '<td id="two1"><a href="javascript:void(0);" onclick="javascript:fWeekToCheckPPM('.$nWeekNo.',' . $nYear . ',1,1);" class="btn-button btn-primary-button">CHECK</a></td>';
+					  }
+						else {
+				   //echo '				<td class="ppmgenTD">' . $sGenIcon2 . '</td>' . PHP_EOL . '<td class="ppmgenTD" id="two1">' . $sCheckIcon . '</td>' . PHP_EOL;
+					 $kump = $kump . ' ' .  '<td id="three1"><a href="javascript:void(0);" onclick="javascript:fWeekToGeneratePPM('.$nWeekNo.',' . $nYear . ',1,1);"  class="btn-button btn-primary-button">GENERATED</a></td>';
+					 $kump = $kump . ' ' .  '<td id="two1"><a href="javascript:void(0);" onclick="javascript:fWeekToCheckPPM('.$nWeekNo.',' . $nYear . ',1,1);" class="btn-button btn-primary-button">CHECK</a></td>';
+				}*/
+	
+				//$kump = $kump . ' ' .  "			</tr>" . PHP_EOL;
+	
+				$ddate = $nYear."-01-01";
+				$date = new DateTime($ddate);
+				$nzweek = $date->format("W");
+				
+				if ($nzweek == "01") {
+				$nWeekNo = $nWeekNo + 1;
+				$nakantarcal[] = $kump;
+				} 	
+			}
+	$nMonthx = 0;
+	$whatlastdayx = 0;
+	//$nWeekNo = 2;
+	for ($nMonth = 1; $nMonth <= 12; $nMonth++) {
+	unset($sDay);
+  $sDay = array();
+	unset($sDayx);
+  $sDayx = array();
+	//echo "nMonth $nMonth<br>";
+	//===KALO TAK START NGAN MONDAY, SKIP UNTIL 1ST MONDAY======
+	//$nMonth = 1;
+	//$nYear = 2014;
+	$sMagicNo = "2176543";
+	//$sWeekday1st = weekday("1 " & monthname(nMonth) & " " & nYear)
+	$sWeekday1st = jddayofweek(gregoriantojd($nMonth,1,$nYear),0);
+	$sFirstDay = substr($sMagicNo,$sWeekday1st,1);
+	//echo 'bfdibsdlifs : ' . $sFirstDay;
+	
+	//===1 HARIBULAN HARI APA?======
+	if ($sWeekday1st > 5) { 
+	 $sWeekDay = 0; }
+	else {
+	 $sWeekDay = $sWeekday1st;
+	}
+	
+	//===WHAT IS THE LAST DAY OF THE MONTH?======
+	$nLastDay = cal_days_in_month(CAL_GREGORIAN, $nMonth, $nYear);
+	$sLastDayofMonth = $nLastDay . "/" . $nMonth . "/" . $nYear;
+	//echo  "tgkfirstday" . $nLastDay . ":" . $sFirstDay . "::" . ($nLastDay - $sFirstDay) . "<br>";
+	
+	
+	for ($x = 0; $x <= $nLastDay - $sFirstDay; $x++) {
+	  $sDay[$x] = $sFirstDay + $x;
+		
+		if (($sDay[$x] == "1") || ($sDay[$x] == "0")) { 
+		$sDay[$x] = "<b>1 " . date('M', mktime(0, 0, 0, $nMonth, 10)) . "</b>";
+		}
+		
+		if (($nMonth == date("M")) && ($sDay[$x] == date("D")) && ($nYear == date("Y"))) { 
+			$sDay[$x] = $sDay[$x] . "<img src='images/icoToday.gif'>";
+		}
+		//for dayx
+		$sDayx[$x] = $sFirstDay + $x;
+		
+		if (($sDayx[$x] == "1") || ($sDayx[$x] == "0")) { 
+		$sDayx[$x] = "<b>1 " . date('M', mktime(0, 0, 0, $nMonth, 10)) . "</b>";
+		}
+		
+		if (($nMonth == date("M")) && ($sDayx[$x] == date("D")) && ($nYear == date("Y"))) { 
+			$sDayx[$x] = $sDayx[$x] . "<img src='images/icoToday.gif'>";
+		}
+		
+    //echo "The number is: $x <br>";
+  } 
+	
+	//===ISI CELL HUJUNG BULAN NGAN TARIKH BULAN DEPANYNYA======
+	$nLastCell = 0;
+	if (($x > 20) && ($x < 28)) {
+		$nLastCell = 27;}	
+	elseif (($x > 28) && ($x < 35)) {
+		$nLastCell = 34;}
+	elseif ($x > 34) {
+		$nLastCell = 41;}
+	
+	if ($nMonth == 12) {
+		$sNextMonth = " JAN " ;}
+	else {
+		$sNextMonth = " " . strtoupper(date('M', mktime(0, 0, 0, $nMonth + 1, 10)));		
+	}
+	//echo "nMonth $nMonth<br>";
+	if ($nMonth == 1) { //echo "nMonth dpt masuk<br>";
+	$sWeekDayx = jddayofweek(gregoriantojd($nMonth,1,$nYear),0); 
+	//echo "sWeekDayx $sWeekDayx<br>";
+	
+	if (($sWeekDayx <> "6") || ($sWeekDayx <> "7") || (sWeekDayx <> "1")) {//echo "masuka<br>";
+	if ($nLastCell > 0) {
+		$nCount = 1;
+		for ($nLoopCell = $x;  $nLoopCell <= $nLastCell; $nLoopCell++) {
+			if ($nCount == 1) { 
+				$sDay[$nLoopCell] = "<b>" . $nCount . $sNextMonth . "</b>";
+				$sDayx[$nLoopCell] = $nCount; }
+			else {
+				$sDay[$nLoopCell] = $nCount;
+				$sDayx[$nLoopCell] = $nCount;
+			}
+			$nCount = $nCount + 1;
+		}
+	}
+	}
+	}
+	else { 
+	if ($nLastCell > 0) {
+		$nCount = 1;
+		
+		for ($nLoopCell = $x;  $nLoopCell <= $nLastCell; $nLoopCell++) {
+			if ($nCount == 1) { 
+				$sDay[$nLoopCell] = "<b>" . $nCount . $sNextMonth . "</b>";
+				$sDayx[$nLoopCell] = $nCount; }
+			else {
+				$sDay[$nLoopCell] = $nCount;
+				$sDayx[$nLoopCell] = $nCount;
+			}
+			$nCount = $nCount + 1;
+	}
+	}
+	}
+	//echo "nLastCell $nLastCell sNextMonth $sNextMonth <br>";
+	//exit();
+	$nDayCount = 0;
+	//call subDisplayWeek
+	for ($x = 1; $x <= 6; $x++) {
+
+		if (($nDayCount + 6) < count($sDayx)) {
+		$whatlastday = $sDayx[$nDayCount + 6];}
+
+	if ($nMonth > $nMonthx) { $nMonthx = $nMonth;}
+	$nYearx = $nYear;
+
+if (is_numeric($whatlastday)) {
+$ininom = "Y";
+
+// True
+// Do something
+}
+else {
+$ininom = "N";
+//'whatlastday=cint(left(whatlastday,2))
+$whatlastday= substr($whatlastday,0,strlen(strpos($whatlastday,"T")));
+
+}
+
+
+	if ($whatlastday > 20) {
+	$whatlastdayx = $whatlastday;
+	}
+
+	if (($whatlastdayx > 20) && ($whatlastday < 10)) {
+	$nMonthx = $nMonthx + 1;
+	}
+
+		if ($nMonthx == 13) {
+		$nMonthx = 1;
+		$nYearx = $nYearx + 1;
+		}
+		
+	//$nWeek = df_ISOWeek(whatlastday & "/" & nMonthx & "/" & nYearx)
+	  if (checkdate ( $nMonthx , $whatlastday , $nYearx )) {
+        //$nWeek = DatePart("ww", dDate, vbMonday, vbFirstFourDays); 
+				$ddate = date('Y-m-d', strtotime($whatlastday."/".$nMonthx."/".$nYearx));
+				//$ddate = "2014-02-17";
+        $date = new DateTime($ddate);
+        $nWeek = $date->format("W");
+				}
+    else {
+        $nWeek = -1;
+    }
+			
+	$whatlastdayx = 0;
+	$nzddate = $nYear."-12-31";
+  $nzdate = new DateTime($nzddate);
+  $nzweek = $nzdate->format("W");
+	if ($nzweek == "01") {
+	$nzweek = 52;
+	} else {
+	$nzweek = 53;
+	}
+	
+	 //if (($nWeekNo > 52) && ($nWeek = 1)) { 
+	 if (($nWeekNo > $nzweek) && ($nWeek = 1)) {  
+	}
+	else {
+		//call subDisplayWeek
+//portion displayweek		
+if ($nDayCount < count($sDay)) {
+		if ($sDay[$nDayCount] <> "") {
+		//echo "masuk sday array";
+		$sDay[$nDayCount + 0] = str_replace("<img src='images/icoToday.gif'>", "", $sDay[$nDayCount + 0]);
+	 
+	
+	if (is_numeric($sDay[$nDayCount + 0])) {
+			$sDay1 = $sDay[$nDayCount + 0];
+			}
+	else {
+			$sDay1 = "1"; 
+			}
+			
+	
+//to disabled generate button on the said row
+		$sCheckIcon = '<a href="javascript:void(0);" onclick="javascript:fWeekToCheckPPM(' . $nWeekNo . ',' . $nYear . ',' . $sDay1 . ',' . $nMonth . ');"><img src="images/btn1Check.gif" style="width:66px;height:19px;"></a>';
+		$sGenIcon = "";
+		$sPPMGenWk = array();
+		$sPPMGenWk = array(
+		0 => "",
+		1 => "",
+		2 => "",
+		3 => "",
+		4 => "",
+		5 => "",
+		6 => "",
+		7 => "",
+		8 => "",
+		9 => "",
+		10 => "",
+		11 => "",
+		12 => "",
+		13 => "",
+		14 => "",
+		15 => "",
+		16 => "",
+		17 => "",
+		18 => "",
+		19 => "",
+		20 => "",
+		21 => "",
+		22 => "",
+		23 => "",
+		24 => "",
+		25 => "",
+		26 => "",
+		27 => "",
+		28 => "",
+		29 => "",
+		30 => "",
+		31 => "",
+		32 => "",
+		33 => "",
+		34 => "",
+		35 => "",
+		36 => "",
+		37 => "",
+		38 => "",
+		39 => "",
+		40 => "",
+		41 => "",
+		42 => "",
+		43 => "",
+		44 => "",
+		45 => "",
+		46 => "",
+		47 => "",
+		48 => "",
+		49 => "",
+		50 => "",
+		51 => "",
+		52 => "",
+		53 => "",
+		54 => "",);
+		
+			 if ($sPPMGenWk[$nWeekNo-1] == "") {
+			 		$sCellClass = "ppmgenTR";
+	
+					}
+			else {
+					$sCellClass = "ppmgenTR1";
+					$sGenIcon = '<img src="images/icoPPMCheck.gif">';
+			}
+		
+	
+
+				$kump = $nWeekNo;				
+	
+			$nakantarcal[$nMonth][] = $kump;
+			
+//''to disabled generate button on the said row
+//portion displayweek		
+		//echo "masuk " . $nWeekNo . $nDayCount . "nilaix $x <br>";
+		$nWeekNo = $nWeekNo + 1; 
+		$nDayCount = $nDayCount + 7;  
+	
+		}
+		}//end sday array if
+	
+	//echo "masuk smp tahap cni x KKKKKKKKKKKKKKKKKKKvvvvvvvv : $nWeek :";		
+	}
+}
+	 }
+	return $nakantarcal;
+	}
 }
 ?>

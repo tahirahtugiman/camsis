@@ -7997,10 +7997,11 @@ public function pop_fail(){
 
 	public function assetnextppm(){		
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");
+		$data['dept']= ($this->input->get('dept') <> '') ? $this->input->get('dept') : '';
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%d", $this->input->get('m')) : date("m");
 		$this->load->model('get_model');
-		$data['dept'] = $this->get_model->get_popdeptlist();
-		$data['whatweek'] = $this->get_model->nexppmwk();
+		$data['dept2'] = $this->get_model->get_popdeptlist();
+		//$data['whatweek'] = $this->get_model->nexppmwk();
 		$data['kalender'] =  $this->get_model->gen_cal($data['year'])[$data['month']];
 	    	
 		$data['kalender2'] = $this->get_model->gen_cal($data['year']);
