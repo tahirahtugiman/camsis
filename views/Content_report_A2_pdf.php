@@ -1,4 +1,29 @@
 <?php include 'pdf_head.php';?>
+<?php 
+$x=$this->input->get('req');
+switch ($x) {
+	case "A2plan":
+		$tulis = "Schedule Corrective Maintenance (SCM) Plan";
+		$tulis2= ' - '.date('F', mktime(0, 0, 0, $month, 10)).'&nbsp'.$year.' - FACILITY ENGINEERING SERVICES';
+		$tulis3='';
+		break;
+	case "A2com":
+		$tulis = "Schedule Corrective Maintenance (SCM) Completed";
+		$tulis2= ' - '.date('F', mktime(0, 0, 0, $month, 10)).'&nbsp'.$year.' - FACILITY ENGINEERING SERVICES';
+		$tulis3='';
+		break;
+	case "A2out":
+		$tulis = "Schedule Corrective Maintenance (SCM) Outstanding";
+		$tulis2= ' - '.date('F', mktime(0, 0, 0, $month, 10)).'&nbsp'.$year.' - FACILITY ENGINEERING SERVICES';
+		$tulis3='';
+		break;
+	default:
+		$tulis = "Schedule Corrective Maintenance (SCM) Listing";
+        $tulis2 = ' - '.date('F', mktime(0, 0, 0, $month, 10)).'&nbsp'.$year.' - FACILITY ENGINEERING SERVICES ( A2 - Schedule Corrective Maintenance (SCM) )'; 
+	    $tulis3 = 'Schedule Corrective Maintenance (SCM) Listing Work Order Status Report';
+		break;
+}
+?>
 	<html>
 	<head>
 		<style>.rport-header{padding-bottom:10px;}</style>
@@ -6,7 +31,7 @@
 	<body>
 		<table class="rport-header" >
 			<tr>
-				<td colspan="4" valign="top">A2 Work Order Report Listing- <?=date('F', mktime(0, 0, 0, $month, 10))?> <?=$year?> - FACILITY ENGINEERING SERVICES ( A2 - Schedule Corrective Maintenance (SCM) )</td>
+				<td colspan="4" valign="top"><?=$tulis.$tulis2;?></td>
 			</tr>
 		</table>
 

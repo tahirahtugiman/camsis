@@ -8062,6 +8062,7 @@ public function pop_fail(){
 		$data['record'] = $this->display_model->fdreport(date("Y-m-d",strtotime($data['date'])));
 		$data['recoutstanding'] = $this->display_model->recoutstanding($month,$year);
 		$data['recppm'] = $this->display_model->recppm($month,$year);
+		$data['recrcm'] = $this->display_model->recrcm($month,$year);
 		$data['reccompday'] = $this->display_model->reccompday(date("Y-m-d",strtotime($data['date'])));
 		$data['fdr_mi'] = $this->display_model->fdr_mi(date("Y-m-d",strtotime($data['date'])));
 		//print_r($data['fdr_mi']);
@@ -8106,7 +8107,7 @@ public function pop_fail(){
 		  $this->load->model("display_model");
 		$data['records'] = $this->display_model->list_hospinfo();
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");
-		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
+		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : "01";
 		$data['reqtype']= $this->input->get('req') ? $this->input->get('req') : 'A1';
 		//$data['ppmsum'] = $this->display_model->sumppm($data['month'],$data['year']);
 		$data['rqsum'] = $this->display_model->sumrq_y($data['month'],$data['year'],$data['reqtype'],$this->input->get('grp'));
@@ -8195,6 +8196,27 @@ public function pop_fail(){
 		$data['tag'] = '';
 		$data['cm']= '';
 		$data['limab']= '0';
+		if ($this->input->get('v') == 'fes'){
+			$data['date']= ($this->input->get('jobdate') <> 0) ? $this->input->get('jobdate') : date("d-m-Y");
+		if (strtotime($data['date']) >= strtotime(date("Y",strtotime($data['date'])).'-'.date("m",strtotime($data['date'])).'-09') && strtotime($data['date']) <= strtotime(date("Y",strtotime("+1 month",strtotime($data['date']))).'-'.date("m",strtotime("+1 month",strtotime($data['date']))).'-08')){
+			$month = date("m",strtotime($data['date']));
+			$year = date("Y",strtotime($data['date']));
+		} else {
+			$month = date("m",strtotime("-1 month",strtotime($data['date'])));
+			$year = date("Y",strtotime("-1 month",strtotime($data['date'])));
+		}
+
+		$data['recordrq'] = $this->display_model->rcmvolu($month,$year,$this->input->get('req'));
+		}else {
+		$data['recordrq'] = $this->display_model->rpt_volu($data['month'],$data['year'],$this->input->get('stat'),$data['reqtype'],$this->input->get('broughtfwd'),$data['grpsel'],$pilape,$data['tag'],$data['cm'],$data['limab'],"","",$this->input->get('resch'));
+	    }
+     	if($this->input->get('pdf') == 1){
+		$this ->load->view("Content_report_A2_pdf", $data);
+		}else{
+		$this ->load->view("headprinter");
+		$this ->load->view("Content_report_A2", $data);
+		}
+    /*
 		$data['recordrq'] = $this->display_model->rpt_volu($data['month'],$data['year'],$this->input->get('stat'),$data['reqtype'],$this->input->get('broughtfwd'),$data['grpsel'],$pilape,$data['tag'],$data['cm'],$data['limab'],"","",$this->input->get('resch'));
 		if($this->input->get('pdf') == 1){
 		$this ->load->view("Content_report_A2_pdf", $data);
@@ -8202,6 +8224,7 @@ public function pop_fail(){
 		$this ->load->view("headprinter");
 		$this ->load->view("Content_report_A2", $data);
 		}
+    */
 }
 
 	public function new_item (){

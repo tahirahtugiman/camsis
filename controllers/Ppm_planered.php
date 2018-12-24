@@ -5,7 +5,8 @@ class ppm_planered extends CI_Controller {
 	public function index()
 	{
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");
-    $data['wdiv'] = empty($_POST["fic"]) ? 'M' : $_POST["fic"];
+    //$data['wdiv'] = empty($_POST["fic"]) ? 'M' : $_POST["fic"];
+		$data['wdiv'] = empty($_REQUEST["fic"]) ? 'M' : $_REQUEST["fic"];
 		$this->load->model("get_model");
 		$data['records'] = $this->get_model->assetplanner($data['year'],$data['wdiv']);
 		//print_r($data['records']);
@@ -42,8 +43,10 @@ class ppm_planered extends CI_Controller {
 			$this ->load->view("ppm_planer_export",$data);
 		}
 		else{
-			$this ->load->view("head");
-		$this ->load->view("left",$data);
+			if( $this->input->get("ex")=="" ){
+				$this ->load->view("head");
+				$this ->load->view("left",$data);
+			}
 			$this ->load->view("content_asset_planered",$data);
 		}
 

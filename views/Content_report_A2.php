@@ -1,6 +1,31 @@
 <?php
+
+$x=$this->input->get('req');
+switch ($x) {
+	case "A2plan":
+		$tulis = "Schedule Corrective Maintenance (SCM) Plan";
+		$tulis2= ' - '.date('F', mktime(0, 0, 0, $month, 10)).'&nbsp'.$year.' - FACILITY ENGINEERING SERVICES';
+		$tulis3='';
+		break;
+	case "A2com":
+		$tulis = "Schedule Corrective Maintenance (SCM) Completed";
+		$tulis2= ' - '.date('F', mktime(0, 0, 0, $month, 10)).'&nbsp'.$year.' - FACILITY ENGINEERING SERVICES';
+		$tulis3='';
+		break;
+	case "A2out":
+		$tulis = "Schedule Corrective Maintenance (SCM) Outstanding";
+		$tulis2= ' - '.date('F', mktime(0, 0, 0, $month, 10)).'&nbsp'.$year.' - FACILITY ENGINEERING SERVICES';
+		$tulis3='';
+		break;
+	default:
+		$tulis = "Schedule Corrective Maintenance (SCM) Listing";
+        $tulis2 = ' - '.date('F', mktime(0, 0, 0, $month, 10)).'&nbsp'.$year.' - FACILITY ENGINEERING SERVICES ( A2 - Schedule Corrective Maintenance (SCM) )'; 
+	    $tulis3 = 'Schedule Corrective Maintenance (SCM) Listing Work Order Status Report';
+		break;
+}
+
 if ($this->input->get('ex') == 'excel'){
-	$filename ="Schedule Corrective Maintenance (SCM) Listing (".date('F', mktime(0, 0, 0, $month, 10)).")".$year.".xls";
+	$filename =$tulis." (".date('F', mktime(0, 0, 0, $month, 10)).")".$year.".xls";
 	header('Content-type: application/ms-excel');
 	header('Content-Disposition: attachment; filename='.$filename);
 }
@@ -8,16 +33,24 @@ if ($this->input->get('ex') == 'excel'){
 if ($this->input->get('ex') == ''){
 	include 'content_btp.php';?>
 	<div id="Instruction" class="pr-printer">
-		<div class="header-pr">Schedule Corrective Maintenance (SCM) Listing</div>
+		<div class="header-pr"><?=$tulis;?></div>
+		<?php if ($this->input->get('v') <> 'fes'){ ?>	
 		<button onclick="javascript:myFunction('report_a2?m=<?=$month?>&y=<?=$year?>&stat=<?php echo $this->input->get('stat');?>&resch=<?php echo$this->input->get('resch');?>&grp=<?=$this->input->get('grp');?>&none=closed');" class="btn-button btn-primary-button">PRINT</button>
-    	<!--<button onclick="javascript:myFunction('report_vols?m=<?=$month?>&y=<?=$year?>&stat=<?php echo $this->input->get('stat');?>&resch=<?php echo$this->input->get('resch');?>&grp=<?=$this->input->get('grp');?>');" class="btn-button btn-primary-button">PRINT</button>-->
-    	<!--<button onclick="javascript:myFunction('report_vols?m=12&y=2016&stat=fbfb&resch=nt&grp=');" class="btn-button btn-primary-button">PRINT</button>-->
 		<button type="cancel" class="btn-button btn-primary-button" onclick="location.href = '<?php echo $btp ;?>';">CANCEL</button>
 	<?php if (($this->input->get('ex') == '') or ($this->input->get('none') == '')){?>
 		<a href="<?php echo base_url();?>index.php/contentcontroller/report_a2?m=<?=$month?>&y=<?=$year?>&none=close&stat=<?php echo $this->input->get('stat');?>&resch=<?php echo $this->input->get('resch');?>&ex=excel&xxx=export&grp=<?=$this->input->get('grp');?>&btp=<?=$this->input->get('btp');?>" style="float:right; margin-right:40px;"><img src="<?php echo base_url();?>images/excel.png" style="width:40px; height:38px; position:absolute;" title="export to excel"></a>
 		<a href="<?php echo base_url();?>index.php/contentcontroller/report_a2?m=<?=$month?>&y=<?=$year?>&pdf=1&stat=<?php echo $this->input->get('stat');?>&resch=<?php echo $this->input->get('resch');?>&grp=<?=$this->input->get('grp');?>" style="float:right; margin-right:80px;"><img src="<?php echo base_url();?>images/pdf.png" style="width:40px; height:38px; position:absolute;" title="export to pdf"></a>
 	<?php } ?>
+		<?php }else { ?>
+		<button onclick="javascript:myFunction('report_a2?jobdate=<?php echo $this->input->get('jobdate');?>&req=<?php echo $this->input->get('req');?>&v=<?php echo $this->input->get('v');?>&none=closed');" class="btn-button btn-primary-button">PRINT</button>
+		<button type="cancel" class="btn-button btn-primary-button" onclick="location.href = '<?php echo $btp ;?>';">CANCEL</button>
+	<?php if (($this->input->get('ex') == '') or ($this->input->get('none') == '')){?>
+		<a href="<?php echo base_url();?>index.php/contentcontroller/report_a2?jobdate=<?=$this->input->get('jobdate');?>&req=<?php echo $this->input->get('req');?>&v=<?php echo $this->input->get('v');?>&none=close&ex=excel&xxx=export" style="float:right; margin-right:40px;"><img src="<?php echo base_url();?>images/excel.png" style="width:40px; height:38px; position:absolute;" title="export to excel"></a>
+		<a href="<?php echo base_url();?>index.php/contentcontroller/report_a2?jobdate=<?=$this->input->get('jobdate');?>&req=<?php echo $this->input->get('req');?>&v=<?php echo $this->input->get('v');?>&pdf=1" style="float:right; margin-right:80px;"><img src="<?php echo base_url();?>images/pdf.png" style="width:40px; height:38px; position:absolute;" title="export to pdf"></a>
+	<?php } ?>
+		<?php } ?>
 	</div>
+	
 <?php } ?>
 
 
@@ -120,7 +153,7 @@ if ($this->input->get('ex') == ''){
 
 		<table class="rport-header">
 			<tr>
-				<td colspan="5">Schedule Corrective Maintenance (SCM) LISTING - <?=date('F', mktime(0, 0, 0, $month, 10))?> <?=$year?> - <?php echo $this->session->userdata('usersessn');?> ( <?php if ($this->input->get('grp') == ''){echo 'ALL'; }else{ echo 'Group '.$this->input->get('grp');} ?> )</td>
+				<td colspan="5"><?=$tulis.$tulis2;?></td>
 			</tr>
 		</table>
 		<table class="tftable" border="1" style="text-align:center;">
@@ -325,7 +358,7 @@ if ($this->input->get('ex') == ''){
 				<div class="m-div">
 					<table class="rport-header">
 						<tr>
-			  				<td colspan="4" valign="top">Schedule Corrective Maintenance (SCM) Report Listing- <?=date('F', mktime(0, 0, 0, $month, 10))?> <?=$year?> - FACILITY ENGINEERING SERVICES ( A2 - Schedule Corrective Maintenance (SCM) )</td>
+			  				<td colspan="4" valign="top"><?=$tulis.$tulis2?></td><!--print version-->
 					<?php if (false) {?>
 							<td colspan="4" valign="top">
 								<?php if ($this->input->get('broughtfwd') != ''){?>
@@ -349,21 +382,21 @@ if ($this->input->get('ex') == ''){
 					</table>
 					<table class="tftable tbl-go" border="1" style="text-align:center;">
 						<tr>
-							<th rowspan=2 style="width:2%;">No</th>
+							<th rowspan=2 width="4%">No</th>
 							<th rowspan=2 style="width:7%;">Work Order Date</th>
 							<th rowspan=2 style="width:12%;">A2 Work Order</th>
 							<th rowspan=2 style="width:5%;">Asset No</th>	
-							<th rowspan=2 style="width:20%;">Equipment Name</th>
-							<th rowspan=2 style="width:2%;">UDP</th>
-							<th rowspan=2 style="width:2%;">Status</th>
+							<th rowspan=2 style="width:7%;">Equipment Name</th>
+							<th rowspan=2 style="width:4%;">UDP</th>
+							<th rowspan=2 style="width:4%;">Status</th>
 							<th colspan=2 style="width:5%;">Test</th>
-							<th rowspan=2 style="width:5%;">Schedule Date</th>
-							<th rowspan=2 style="width:17%;">Remark</th>
+							<th rowspan=2 style="width:7%;">Schedule Date</th>
+							<th rowspan=2 style="width:20%;">Remark</th>
 							<!--<th rowspan=2 style="width:7%;">Schedule Date</th>-->
 							<th rowspan=2 style="width:7%;">Reschedule Date</th>
 							<th rowspan=2 style="width:7%;">Complete Date</th>
-							<th rowspan=2 style="width:12%;">Deparment (Location Code)</th>
-							<th rowspan=2>Asset Group</th>
+							<th rowspan=2 style="width:10%;">Deparment (Location Code)</th>
+							<th rowspan=2 style="width:5%;">Asset Group</th>
 						</tr>
 						<tr>
 							<th>S</th>
@@ -415,7 +448,7 @@ if ($this->input->get('ex') == ''){
 						<td valign="top" colspan="2"><hr color="black" size="1Px"></td>
 					</tr>
 					<tr>
-						<td width="50%">Schedule Corrective Maintenance (SCM) Listing Work Order Status Report<br><i>Computer Generated - CAMSIS</i></td>
+						<td width="50%"><?=$tulis3;?><br><i>Computer Generated - CAMSIS</i></td>
 						<td width="50%" align="right"></td>
 					</tr>
 				</table>
@@ -524,7 +557,7 @@ if ($this->input->get('ex') == ''){
 		<div class="m-div">
 			<table class="rport-header">
 				<tr>
-					<td colspan="4" valign="top">Schedule Corrective Maintenance (SCM) Report Listing- <?=date('F', mktime(0, 0, 0, $month, 10))?> <?=$year?> - FACILITY ENGINEERING SERVICES ( A2 - Schedule Corrective Maintenance (SCM) )</td>
+					<td colspan="4" valign="top"><?=$tulis.$tulis2?></td> <!--screen version-->
 					<?php if (false) {?>
 						<td colspan="4" valign="top">
 							<?php if ($this->input->get('broughtfwd') != ''){?>
@@ -620,7 +653,7 @@ if ($this->input->get('ex') == ''){
 					<td valign="top" colspan="2"><hr color="black" size="1Px"></td>
 				</tr>
 				<tr>
-					<td width="50%">Schedule Corrective Maintenance (SCM) Listing Work Order Status Report<br><i>Computer Generated - CAMSIS</i></td>
+					<td width="50%"><?=$tulis3;?><br><i>Computer Generated - CAMSIS</i></td>
 					<td width="50%" align="right"></td>
 				</tr>
 			</table>

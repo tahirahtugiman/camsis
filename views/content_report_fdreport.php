@@ -33,7 +33,7 @@ function doSomething(a){
 <div id="Instruction" class="pr-printer">
     <div class="header-pr"><?php if ($a == 'FES') echo "Fes Daily Report"?><?php if ($a == 'BES') echo "Bes Daily Report"?></div>
     <button onclick="javascript:doSomething(this);" value ="3" class="btn-button btn-primary-button">PRINT</button>
-    <!--<button onclick="javascript:myFunction('report_fdreport?jobdate=<?=$date?>&none=closed&ex=<?=$this->input->get('none');?>');" class="btn-button btn-primary-button">PRINT</button>-->
+
     <button type="cancel" class="btn-button btn-primary-button" onclick="location.href = '<?php base_url();?>Schedule?<?php echo '&m='.$this->input->get('m').'&y='.$this->input->get('y').'&grp='.$this->input->get('grp');?>';">CANCEL</button>
 	<?php if (($this->input->get('ex') == '') or ($this->input->get('none') == '')){?>
 	<a href="javascript:void(0);" onclick="javascript:doSomething(this);" value="1" style="float:right; margin-right:40px;"><img src="<?php echo base_url();?>images/excel.png" style="width:40px; height:38px; position:absolute;" title="export to excel"></a>
@@ -471,9 +471,9 @@ function doSomething(a){
 		<tr style="text-align:center;">
 			<td>3.3</td>
 			<td colspan="4">Scheduled Corrective Maintenance (SCM)</td>
-			<td></td>
-			<td colspan="3"></td>
-			<td colspan="4"></td>
+			<td><?=($recrcm[0]->rcmp > 0) ? anchor('contentcontroller/report_a2?jobdate='.$date.'&req=A2plan&v=fes',$recrcm[0]->rcmp) : 0?></td>
+			<td colspan="3"><?=($recrcm[0]->rcmc > 0) ? anchor('contentcontroller/report_a2?jobdate='.$date.'&req=A2com&v=fes',$recrcm[0]->rcmc) : 0?></td>
+			<td colspan="4"><?=($recrcm[0]->rcmo > 0) ? anchor('contentcontroller/report_a2?jobdate='.$date.'&req=A2out&v=fes',$recrcm[0]->rcmo) : 0?></td>
 		</tr>
 		<tr style="text-align:center;">
 			<td>4.0</td>
@@ -543,6 +543,9 @@ function doSomething(a){
 		</tr>
 		<tr>
 			<td>7) MOHD SYAUFI BIN MOHD HUSIN</td>
+		</tr>
+		<tr>
+			<td>8) MOHD JURIE @ MOHD JUNE B JUSUH</td>
 		</tr>
 		<tr>
 			<td style="border-bottom:1px solid black; width:150px;padding-top:10px;"></td>

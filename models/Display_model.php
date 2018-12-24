@@ -1328,7 +1328,8 @@ WHERE     (a.V_Actionflag <> 'D') AND (a.V_Hospitalcode = 'MER') AND (a.V_servic
 GROUP BY a.V_Equip_code, m.new_asset_type, a.V_Asset_name
 ORDER BY a.V_Asset_name
 		*/
-			$this->db->select('m.new_asset_type, a.V_Equip_code, f.v_Equip_Desc AS V_Asset_name , COUNT(a.V_Equip_code) AS assetcount');
+
+			$this->db->select('m.new_asset_type, a.V_Equip_code, f.v_Equip_Desc AS V_Asset_name , COUNT(distinct a.V_asset_no) AS assetcount');
 			$this->db->from('pmis2_egm_assetregistration a');
 			$this->db->join('pmis2_egm_assetreg_general b','a.V_Asset_no = b.V_Asset_no AND a.V_Hospitalcode = b.V_Hospital_code');
 			$this->db->join('pmis2_egm_assetmaintenance c','a.V_Asset_no = c.v_AssetNo AND a.V_Hospitalcode = c.v_Hospitalcode AND b.V_Asset_no = c.v_AssetNo AND b.V_Hospital_code = c.v_Hospitalcode');
@@ -6050,6 +6051,72 @@ function get_release_note($maklumat){
       //echo $this->db->last_query();
       //exit();
       return $query->result();
+        }
+
+        function recrcm($month,$year)
+        {
+        	$this->db->select("SUM(CASE WHEN sr.V_Request_no LIKE '%A2%' THEN 1 ELSE 0 END) AS rcmp,SUM(CASE WHEN sr.V_Request_no LIKE '%A2%' AND sr.V_request_status = 'C' THEN 1 ELSE 0 END) AS rcmc,SUM(CASE WHEN sr.V_Request_no LIKE '%A2%' AND sr.V_request_status <> 'C' THEN 1 ELSE 0 END) AS rcmo");
+        	$this->db->from('pmis2_egm_service_request sr');
+        	$this->db->join('pmis2_egm_assetregistration a','sr.V_Asset_no= a.V_Asset_no AND sr.V_hospitalcode = a.V_Hospitalcode ','left outer');
+        	$this->db->where('sr.V_actionflag <> ','D');
+        	$this->db->where('a.v_Actionflag <> ','D');
+        	$this->db->where('sr.V_servicecode = ',$this->session->userdata('usersess'));
+        	$this->db->where('sr.D_date >=', $this->dater(1,$month,$year));
+        	$this->db->where('sr.D_date <=', $this->dater(2,$month,$year));
+        	$query = $this->db->get();
+        	//echo $this->db->last_query();
+        	//exit();
+        	$query_result = $query->result();
+        	return $query_result;
+        }
+
+        function rcmvolu($month,$year,$req)
+        {
+          $this->db->select("g.V_Asset_name, e.v_location_name, r.v_location_code, r.V_hospitalcode, r.closedby, r.D_date, r.D_time, r.V_Request_no, r.V_Asset_no, r.V_summary AS ReqSummary, r.V_User_dept_code, r.V_requestor, r.V_request_status, r.v_closeddate, r.v_closedtime, w.V_Wrn_end_code, a.v_summary, g.v_tag_no, d.v_UserDeptDesc, CASE WHEN r.V_request_status = 'C' AND r.v_closeddate >= '".$year."-".$month."-08 23:59:59' AND r.v_closeddate < '".$this->dater(2,$month,$year)." 23:59:59' THEN DATEDIFF(r.v_closeddate, '".$year."-".$month."-09 23:59:59')+1 WHEN r.V_request_status = 'C' AND r.v_closeddate < DATE_ADD('".$year."-".$month."-08 23:59:59', INTERVAL 1 MONTH) THEN DATEDIFF(r.v_closeddate, r.D_date)+1 WHEN r.V_request_status <> 'C' AND DAY(LAST_DAY(".$this->db->escape($year."-".$month."-01").")) > DATEDIFF(now(), r.D_date) THEN DATEDIFF( now(),r.D_date)+1 ELSE DAY(LAST_DAY(".$this->db->escape($year."-".$month."-01").")) END AS DiffDate,r.V_request_type,g.v_asset_grp,jr.d_Date,jr.v_Time,jr.v_Personal1,jr.v_ActionTaken,g.V_Asset_WG_code, IFNULL(dt.ori_wo,'none') AS linker, jv.d_Date AS schedule_d, jv.d_Reschdt AS dtresch", false);
+          $this->db->from('pmis2_egm_service_request r');
+          $this->db->join('pmis2_egm_assetregistration g','r.v_Asset_no = g.V_Asset_no AND r.v_HospitalCode = g.V_Hospitalcode AND g.V_Actionflag <> "D"', 'left outer');
+          $this->db->join('pmis2_egm_assetreg_general w','r.V_Asset_no = w.V_Asset_no AND r.V_hospitalcode = w.V_Hospital_code AND w.V_ActionFlag <> "D"', 'left outer');
+          $this->db->join('pmis2_egm_jobdonedet a',"a.v_Wrkordno = r.V_Request_no AND a.v_HospitalCode = r.V_hospitalcode AND a.v_Actionflag <> 'D'", 'left outer');
+          $this->db->join('pmis2_sa_userdept d','r.V_User_dept_code = d.v_UserDeptCode','left');
+          $this->db->join('pmis2_egm_assetlocation e','r.v_location_code = e.v_location_code','left outer');
+          $this->db->join('pmis2_emg_jobresponse jr',"r.V_Request_no = jr.v_WrkOrdNo",'left outer');
+          $this->db->join('pmis2_egm_sharedowntime dt',"r.V_Request_no = dt.ori_wo",'left outer');
+          $this->db->join('pmis2_emg_jobvisit1 jv',"r.V_Request_no = jv.v_WrkOrdNo AND r.v_HospitalCode = jv.v_HospitalCode AND jv.v_Actionflag <> 'D'",'left outer');
+          $this->db->where('jv.n_visit', '1');
+          $this->db->where('r.V_servicecode', $this->session->userdata('usersess'));
+          $this->db->where('r.V_actionflag <> ', 'D');
+          $this->db->order_by("r.d_date, g.v_tag_no");
+          $this->db->where('r.V_hospitalcode',$this->session->userdata('hosp_code'));
+          $this->db->where('r.V_request_type','A2');
+          if($req=='A2com'){
+          $this->db->where('r.V_request_status =','C');
+          }elseif($req=='A2out'){
+          $this->db->where('r.V_request_status <>','C');
+          }
+
+          $this->db->where('r.D_date >=', $this->dater(1,$month,$year));
+          $this->db->where('r.D_date <=', $this->dater(2,$month,$year));
+         $this->db->order_by("r.d_date, g.v_tag_no");
+              if (!function_exists('toArray')) {
+        			function toArray($obj)
+        			{
+            	$obj = (array) $obj;//cast to array, optional
+            	return $obj['path'];
+        			}
+                                }
+        			$idArray = array_map('toArray', $this->session->userdata('accessr'));
+        			if ((in_array("contentcontroller/Schedule(main)", $idArray)) && (in_array("useriium", $idArray))) {
+        			$this->db->where('r.V_request_type <> ', 'A9');
+        	 		}
+
+        	$query = $this->db->get();
+        		  //echo $this->db->last_query();
+        			//exit();
+        			$query_result = $query->result();
+
+
+        			return $query_result;
+
         }
 
 }

@@ -18,11 +18,11 @@
 		<div class="div-p"></div>
 		<table width="98%" class="ui-content-middle-htd">
 		<?php if ($this->input->get('tab') == 'Maintenance' ){ ?>
-		
+
 			<tr class="ui-color-contents-style-1" height="40px">
 				<td colspan="0" class="ui-header-new"><span style="float: left; font-weight: bold;">Asset Register Detail for : <?=  $record[0]->V_Tag_no?></td>
 				<td class="ui-header-new" align="right" style="padding-right:5px" ><?php echo anchor ('contentcontroller/print_kewpa?asstno='.$this->input->get('assetno'), '<button class="btn-button btn-primary-button" style="background-color: #1ea92f;width:60%; height:33px;">Print Kew PA <span class="icon-printer" style="float:right; margin-top:-8px; margin-right:20px; font-size:30px;"></span></button>');?></td>
-				
+
 			</tr>
 			<tr >
 				<td colspan="2" class="ui-desk-style-table">
@@ -64,7 +64,7 @@
 					<td>Engine No</td>
 					<td><?=isset($row->v_engineno) ? $row->v_engineno : ''?></td>
 				  </tr>
-				  
+
 				  <tr>
 				    <td>Registration No</td>
 					<td><?=isset($row->v_registrationno) ? $row->v_registrationno : ''?></td>
@@ -201,8 +201,8 @@
 				  <?php //if (substr($this->input->get('wrk_ord'),0,2) != 'PP'){//pulaupinang?>
 				  <?php if ( !in_array(substr($this->input->get('wrk_ord'),0,2), array('PP','RI')) ){ ?><!-- buzz -->
 				  <tr>
-				    <td>Scheduled Date</td>
-					<td><?=isset($list->schedule_d) ? date("d-m-Y",strtotime($list->schedule_d)) : ''?></td>
+				    <td>Request Date</td>
+					<td><?=isset($list->schedule_d) ? date("d-m-Y H:i:s",strtotime($list->schedule_d)) : ''?></td>
 					<td>Verified By</td>
 					<td><?=isset($list->v_AcceptedBy) ? $list->v_AcceptedBy : ''?></td>
 				  </tr>
@@ -300,7 +300,7 @@
 					?>
 				    <td>Downtime(hrs)</td>
 					<td><?=$downtimehr != '' ? $downtimehr.' hours' : ''?></td>
-					
+
 					<td></td>
 					<td></td>
 				  </tr>
@@ -312,7 +312,7 @@
 					<td>Agreed Date</td>
 					<td><?=isset($list->d_Reschdt) ? date("d-m-Y",strtotime($list->d_Reschdt)) : isset($list->d_DueDt) ? date("d-m-Y",strtotime($list->d_DueDt)) : ''?></td>
 				  </tr>
-				  
+
 				  <tr>
 				    <td>Final Reschedule Date</td>
 					<td><?=isset($list->d_Reschdt) ? date("d-m-Y",strtotime($list->d_Reschdt)) : ''?></td>
@@ -347,7 +347,7 @@
 					<td><?=$downtimehr != '' ? $downtimehr.' hours' : ''?></td>
 				  </tr>
 				  <tr>
-				  	<?php 
+				  	<?php
 				  	isset($list->v_QCPPM) && $list->v_QCPPM != '0' ? $v_QCPPM = $list->v_QCPPM : $v_QCPPM = '';
 				  	switch ($v_QCPPM) {
 					case "QC01":
@@ -474,7 +474,7 @@
 					<td></td>
 				  </tr>
 				  <?php } ?>
-				  
+
 				  <tr>
 				    <td>Parts Cost(RM)</td>
 					<!-- <td><?=isset($list->parttotal) ? number_format($list->parttotal,2) : ''?></td> -->

@@ -2920,15 +2920,15 @@ function accessories($assetno){
 	return $query->result();
 }
 function wolist($assetno,$hosp,$servcode){
-$query = $this->db->query("SELECT `sr`.`V_Request_no`, `sr`.`D_date`, `sr`.`V_request_type`, `sr`.`v_closeddate`, `sr`.`V_request_status`, `sr`.`V_summary`, `jv`.`v_WrkOrdNo`, SUM(`jv`.`n_PartTotal`) as parttotal, SUM(`jv`.`n_Total1` + `jv`.`n_Total2` + `jv`.`n_Total3`) as labourtotal, IFNULL(TIMEDIFF(`sr`.`v_closeddate`, `sr`.`D_date`), 0) as downtime, `jv`.`v_ActionTaken`
+$query = $this->db->query("SELECT `sr`.`V_Request_no`, `sr`.`D_date`, `sr`.`V_request_type`, `sr`.`v_closeddate`, `sr`.`V_request_status`, `sr`.`V_summary`, `jv`.`v_WrkOrdNo`, SUM(`jv`.`n_PartTotal`) as parttotal, SUM(`jv`.`n_Total1` + `jv`.`n_Total2` + `jv`.`n_Total3`) as labourtotal, Round(TIMESTAMPDIFF(MINUTE, sr.D_date, ifnull(sr.v_closeddate,now()))/60,1) as downtime, `jv`.`v_ActionTaken`
 	FROM (`pmis2_egm_service_request` sr)
 	LEFT JOIN `pmis2_emg_jobvisit1` jv ON `sr`.`V_Request_no`=`jv`.`v_WrkOrdNo`
-	WHERE `sr`.`V_Asset_no` = ".$this->db->escape($assetno)." AND `sr`.`V_hospitalcode` = ".$this->db->escape($hosp)." AND `sr`.`V_servicecode` = ".$this->db->escape($servcode)." GROUP BY `sr`.`V_Request_no`
+	WHERE `sr`.`V_Asset_no` = ".$this->db->escape($assetno)." AND `sr`.`V_hospitalcode` = ".$this->db->escape($hosp)." AND `sr`.`V_servicecode` = ".$this->db->escape($servcode)." AND YEAR(sr.d_date) = YEAR(now())  GROUP BY `sr`.`V_Request_no`
 	UNION ALL
-	SELECT `sc`.`v_WrkOrdNo`, `sc`.`d_StartDt`, `sc`.`v_jobtype`, `sc`.`v_closeddate`, `sc`.`v_Wrkordstatus`, `sc`.`v_Remarks`, jv.v_WrkOrdNo, SUM(jv.n_PartTotal) as parttotal, SUM(jv.n_Total1 + jv.n_Total2 + jv.n_Total3) as labourtotal, IFNULL(TIMEDIFF(sc.v_closeddate, sc.d_StartDt), 0) as downtime, jv.v_ActionTaken
+	SELECT `sc`.`v_WrkOrdNo`, `sc`.`d_StartDt`, `sc`.`v_jobtype`, `sc`.`v_closeddate`, `sc`.`v_Wrkordstatus`, `sc`.`v_Remarks`, jv.v_WrkOrdNo, SUM(jv.n_PartTotal) as parttotal, SUM(jv.n_Total1 + jv.n_Total2 + jv.n_Total3) as labourtotal, round(sum(minute(TIMEDIFF(jv.v_etime, jv.v_time))) / 60,1) as downtime, jv.v_ActionTaken
 	FROM (`pmis2_egm_schconfirmmon` sc)
 	LEFT JOIN `pmis2_emg_jobvisit1` jv ON `sc`.`v_WrkOrdNo`=`jv`.`v_WrkOrdNo`
-	WHERE `sc`.`v_Asset_no` = ".$this->db->escape($assetno)." AND `sc`.`v_HospitalCode` = ".$this->db->escape($hosp)." AND `sc`.`v_ServiceCode` = ".$this->db->escape($servcode)." GROUP BY `sc`.`v_WrkOrdNo`
+	WHERE `sc`.`v_Asset_no` = ".$this->db->escape($assetno)." AND `sc`.`v_HospitalCode` = ".$this->db->escape($hosp)." AND `sc`.`v_ServiceCode` = ".$this->db->escape($servcode)." AND YEAR(sc.d_startdt) = YEAR(now()) GROUP BY `sc`.`v_WrkOrdNo`
 	");
 
 	/*$this->db->select('*,jv.v_WrkOrdNo,SUM(jv.n_PartTotal) as parttotal, SUM(jv.n_Total1 + jv.n_Total2 + jv.n_Total3) as labourtotal,IFNULL(TIMEDIFF(sc.v_closeddate,sc.d_StartDt),0) as downtime,jv.v_ActionTaken',FALSE);//,jv.v_WrkOrdNo
@@ -2945,7 +2945,8 @@ $query = $this->db->query("SELECT `sr`.`V_Request_no`, `sr`.`D_date`, `sr`.`V_re
 	return $query->result();
 }
 function wodet($wrk_ord,$assetno){
-	$this->db->select('sr.*,d.v_UserDeptDesc,l.v_Location_Name,r.V_Asset_name,jd.v_AcceptedBy,jd.V_ACCEPTED_Designation,jd.v_ptest,jd.v_stest,IFNULL(TIMEDIFF(sr.v_closeddate,sr.D_date),0) as downtime,jd.v_QCPPM,jd.v_QCuptime,SUM(jv.n_PartTotal) as parttotal, SUM(jv.n_Total1 + jv.n_Total2 + jv.n_Total3) as labourtotal,jv.v_ActionTaken,jv.d_Reschdt, r.v_tag_no,jv.d_Date AS schedule_d',FALSE);
+	//$this->db->select('sr.*,d.v_UserDeptDesc,l.v_Location_Name,r.V_Asset_name,jd.v_AcceptedBy,jd.V_ACCEPTED_Designation,jd.v_ptest,jd.v_stest,IFNULL(TIMEDIFF(sr.v_closeddate,sr.D_date),0) as downtime,jd.v_QCPPM,jd.v_QCuptime,SUM(jv.n_PartTotal) as parttotal, SUM(jv.n_Total1 + jv.n_Total2 + jv.n_Total3) as labourtotal,jv.v_ActionTaken,jv.d_Reschdt, r.v_tag_no,jv.d_Date AS schedule_d',FALSE);
+	$this->db->select('sr.*,d.v_UserDeptDesc,l.v_Location_Name,r.V_Asset_name,jd.v_AcceptedBy,jd.V_ACCEPTED_Designation,jd.v_ptest,jd.v_stest,Round(TIMESTAMPDIFF(MINUTE, sr.D_date, ifnull(sr.v_closeddate,now()))/60,1) as downtime,jd.v_QCPPM,jd.v_QCuptime,SUM(jv.n_PartTotal) as parttotal, SUM(jv.n_Total1 + jv.n_Total2 + jv.n_Total3) as labourtotal,jv.v_ActionTaken,jv.d_Reschdt, r.v_tag_no,jv.d_Date AS schedule_d',FALSE);
 	$this->db->from('pmis2_egm_service_request sr');
 	$this->db->join('pmis2_sa_userdept d','sr.V_User_dept_code = d.v_UserDeptCode AND sr.V_hospitalcode = d.v_HospitalCode','left');
 	$this->db->join('pmis2_egm_assetlocation l','sr.V_Location_code = l.V_location_code AND sr.V_hospitalcode = l.V_Hospitalcode','left');
@@ -2963,7 +2964,8 @@ function wodet($wrk_ord,$assetno){
 	return $query->result();
 }
 function ppmdet($wrk_ord,$assetno){
-	$this->db->select('sc.*, sc.v_Remarks AS V_summary,d.v_UserDeptDesc,l.v_Location_Name,r.V_Asset_name,jd.v_AcceptedBy,jd.V_ACCEPTED_Designation,jd.v_ptest,jd.v_stest,IFNULL(TIMEDIFF(sc.v_closeddate,sc.d_DueDt),0) as downtime,jd.v_QCPPM,jd.v_QCuptime,SUM(jv.n_PartTotal) as parttotal, SUM(jv.n_Total1 + jv.n_Total2 + jv.n_Total3) as labourtotal,jv.v_ActionTaken,jv.d_Reschdt, r.v_tag_no',FALSE);
+	//$this->db->select('sc.*, sc.v_Remarks AS V_summary,d.v_UserDeptDesc,l.v_Location_Name,r.V_Asset_name,jd.v_AcceptedBy,jd.V_ACCEPTED_Designation,jd.v_ptest,jd.v_stest,IFNULL(TIMEDIFF(sc.v_closeddate,sc.d_DueDt),0) as downtime,jd.v_QCPPM,jd.v_QCuptime,SUM(jv.n_PartTotal) as parttotal, SUM(jv.n_Total1 + jv.n_Total2 + jv.n_Total3) as labourtotal,jv.v_ActionTaken,jv.d_Reschdt, r.v_tag_no',FALSE);
+	$this->db->select('sc.*, sc.v_Remarks AS V_summary,d.v_UserDeptDesc,l.v_Location_Name,r.V_Asset_name,jd.v_AcceptedBy,jd.V_ACCEPTED_Designation,jd.v_ptest,jd.v_stest,round(sum(minute(TIMEDIFF(jv.v_etime, jv.v_time))) / 60,1) as downtime,jd.v_QCPPM,jd.v_QCuptime,SUM(jv.n_PartTotal) as parttotal, SUM(jv.n_Total1 + jv.n_Total2 + jv.n_Total3) as labourtotal,jv.v_ActionTaken,jv.d_Reschdt, r.v_tag_no',FALSE);
 	$this->db->from('pmis2_egm_schconfirmmon sc'); //,d.v_UserDeptDesc,l.v_Location_Name
 	//$this->db->join('pmis2_sa_userdept d','sc.V_User_dept_code = d.v_UserDeptCode AND sc.V_hospitalcode = d.v_HospitalCode','left');
 	//$this->db->join('pmis2_egm_assetlocation l','sc.V_Location_code = l.V_location_code AND sc.V_hospitalcode = l.V_Hospitalcode','left');
@@ -2978,7 +2980,7 @@ function ppmdet($wrk_ord,$assetno){
 	$this->db->where('sc.v_ServiceCode',$this->session->userdata('usersess'));
 	//$this->db->where('d.v_ActionFlag <> ', 'D');
 	$query = $this->db->get();
-	//echo $this->db->last_query();
+	echo $this->db->last_query();
 	//exit();
 	return $query->result();
 }
