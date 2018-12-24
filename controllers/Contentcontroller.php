@@ -4021,8 +4021,8 @@ class Contentcontroller extends CI_Controller {
 	  $this->load->model("display_model");
 		$data['records'] = $this->display_model->list_hospinfo();
 		$data['fon']= ($this->input->get('fon')) ? $this->input->get('fon') : "";
-		$data['from']= ($this->input->get('from') <> 0) ? $this->input->get('from') : date("Y-m-d");
-		$data['to']= ($this->input->get('to') <> 0) ? $this->input->get('to') : date("Y-m-d");
+		$data['from']= ($this->input->get('from') <> 0) ? $this->input->get('from') : $this->display_model->dater(1,date("m"),date("Y"));
+		$data['to']= ($this->input->get('to') <> 0) ? $this->input->get('to') : $this->display_model->dater(2,date("m"),date("Y"));
 		//echo "nilai fon : ".$data['fon'].":".$this->input->get('fon');
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
