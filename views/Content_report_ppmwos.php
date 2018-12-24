@@ -31,15 +31,14 @@ function barchart(a,b,c,d,e,f){
 <?php include 'content_headprint.php';?>
 <?php } ?>
 <?php if ($this->input->get('ex') == ''){?>
-<?php $date = date("Y-m-d");
-$newDate = date("Y-m-d", strtotime($date)); ?>  
+
 <div id="Instruction" >
 <center>View List : 
 <form method="get" action="">
  <label for="from">From</label>
-	<input type="date" name="from" id="from" value="<?=($from) ? $from : $newDate?>" class="form-control-button2 n_wi-date2">
+	<input type="date" name="from" id="from" value="<?=($from) ? $from : $from?>" class="form-control-button2 n_wi-date2">
 	<label for="to">To</label>
-	<input type="date" name="to" id="to" value="<?=($to) ? $to : $newDate?>" class="form-control-button2 n_wi-date2">
+	<input type="date" name="to" id="to" value="<?=($to) ? $to : $to?>" class="form-control-button2 n_wi-date2">
 <input type="hidden" value="<?php echo set_value('grp', ($this->input->get('grp')) ? $this->input->get('grp') : ''); ?>" name="grp"> 
 <input type="hidden" value="<?php echo set_value('fon', ($this->input->get('fon')) ? $this->input->get('fon') : ''); ?>" name="fon"> 
 <input type="submit" value="Apply" onchange="javascript: submit()"/></center>
