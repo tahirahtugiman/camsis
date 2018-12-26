@@ -15,11 +15,11 @@ if ($this->input->get('ex') == 'excel'){
 	<?php include 'content_btp.php';?>
 	<div id="Instruction" class="pr-printer">
 		<div class="header-pr"><?=($filby == 'RI') ? 'RI' : 'PPM' ?> Listing Scheduled</div>
-		<button onclick="javascript:myFunction('report_vols?m=<?=$month?>&y=<?=$year?>&stat=<?=$this->input->get('stat');?>&resch=<?=$this->input->get('resch');?>&grp=<?=$this->input->get('grp');?>&filby=<?=$this->input->get('filby');?>&none=closed');" class="btn-button btn-primary-button">PRINT</button>
+		<button onclick="javascript:myFunction('report_vols?from=<?=$from?>&to=<?=$to?>&stat=<?=$this->input->get('stat');?>&resch=<?=$this->input->get('resch');?>&grp=<?=$this->input->get('grp');?>&filby=<?=$this->input->get('filby');?>&serv=<?php echo $this->input->get('serv');?>&none=closed');" class="btn-button btn-primary-button">PRINT</button>
 		<button type="cancel" class="btn-button btn-primary-button" onclick="delco();location.href = '<?php echo $btp ;?>';">CANCEL</button>
 		<?php if (($this->input->get('ex') == '') or ($this->input->get('none') == '')){?>
-			<a href="<?php echo base_url();?>index.php/contentcontroller/report_vols?m=<?=$month?>&y=<?=$year?>&none=close&filby=<?=$filby?>&stat=<?php echo $this->input->get('stat');?>&resch=<?php echo $this->input->get('resch');?>&ex=excel&xxx=export&grp=<?=$this->input->get('grp');?>&btp=<?=$this->input->get('btp');?>" style="float:right; margin-right:40px;"><img src="<?php echo base_url();?>images/excel.png" style="width:40px; height:38px; position:absolute;" title="export to excel"></a>
-			<a href="<?php echo base_url();?>index.php/contentcontroller/report_vols?m=<?=$month?>&y=<?=$year?>&pdf=1&filby=<?=$filby?>&stat=<?php echo $this->input->get('stat');?>&resch=<?php echo $this->input->get('resch');?>&grp=<?=$this->input->get('grp');?>" style="float:right; margin-right:80px;"><img src="<?php echo base_url();?>images/pdf.png" style="width:40px; height:38px; position:absolute;" title="export to pdf"></a>
+			<a href="<?php echo base_url();?>index.php/contentcontroller/report_vols?from=<?=$from?>&to=<?=$to?>&none=close&filby=<?=$filby?>&stat=<?php echo $this->input->get('stat');?>&serv=<?php echo $this->input->get('serv');?>&resch=<?php echo $this->input->get('resch');?>&ex=excel&xxx=export&grp=<?=$this->input->get('grp');?>&btp=<?=$this->input->get('btp');?>" style="float:right; margin-right:40px;"><img src="<?php echo base_url();?>images/excel.png" style="width:40px; height:38px; position:absolute;" title="export to excel"></a>
+			<a href="<?php echo base_url();?>index.php/contentcontroller/report_vols?from=<?=$from?>&to=<?=$to?>&pdf=1&filby=<?=$filby?>&stat=<?php echo $this->input->get('stat');?>&resch=<?php echo $this->input->get('resch');?>&serv=<?php echo $this->input->get('serv');?>&grp=<?=$this->input->get('grp');?>" style="float:right; margin-right:80px;"><img src="<?php echo base_url();?>images/pdf.png" style="width:40px; height:38px; position:absolute;" title="export to pdf"></a>
 		<?php } ?>
 	</div>
 <?php } ?>
@@ -72,7 +72,7 @@ if ($this->input->get('ex') == 'excel'){
 
 			<table class="rport-header">
 				<tr>
-					<td colspan="5"><?=($filby == 'RI') ? 'RI' : 'PPM' ?> LISTING - <?=date('F', mktime(0, 0, 0, $month, 10))?> <?=$year?> - <?php echo $this->session->userdata('usersessn');?> ( <?php if ($this->input->get('grp') == ''){echo 'ALL'; }else{ echo 'Group '.$this->input->get('grp');} ?> )</td>
+					<td colspan="5"><?=($filby == 'RI') ? 'RI' : 'PPM' ?> LISTING - <?= ($this->input->get('y') <> 0) ? date('F', mktime(0, 0, 0, $month, 10)) : ''?> <?=$year?> - <?php echo $this->session->userdata('usersessn');?> ( <?php if ($this->input->get('grp') == ''){echo 'ALL'; }else{ echo 'Group '.$this->input->get('grp');} ?> )</td>
 				</tr>
 			</table>
 			<table class="tftable" border="1" style="text-align:center;">
@@ -124,7 +124,7 @@ if ($this->input->get('ex') == 'excel'){
 
 		<table class="rport-header">
 			<tr>
-				<td colspan="5"><?=($filby == 'RI') ? 'RI' : 'PPM' ?> LISTING - <?=date('F', mktime(0, 0, 0, $month, 10))?> <?=$year?> - <?php echo $this->session->userdata('usersessn');?> ( <?php if ($this->input->get('grp') == ''){echo 'ALL'; }else{ echo 'Group '.$this->input->get('grp');} ?> )</td>
+			    <td colspan="5"><?=($filby == 'RI') ? 'RI' : 'PPM' ?> LISTING - <?= ($this->input->get('y') <> 0) ? date('F', mktime(0, 0, 0, $month, 10)).' '.$year : '( '.date("d-m-Y", strtotime($from)).' To '.date("d-m-Y", strtotime($to)).' )'?> - <?php echo $this->session->userdata('usersessn');?>  ( <?php if ($this->input->get('grp') == ''){echo 'ALL'; }else{ echo 'Group '.$this->input->get('grp');} ?> )</td>
 			</tr>
 		</table>
 		<table class="tftable" border="1" style="text-align:center;">
@@ -240,7 +240,7 @@ if ($this->input->get('ex') == 'excel'){
 					<div class="m-div">
 						<table class="rport-header">
 							<tr>
-								<td colspan="5"><?=($filby == 'RI') ? 'RI' : 'PPM' ?> LISTING - <?=date('F', mktime(0, 0, 0, $month, 10))?> <?=$year?> - <?php echo $this->session->userdata('usersessn');?>  ( <?php if ($this->input->get('grp') == ''){echo 'ALL'; }else{ echo 'Group '.$this->input->get('grp');} ?> )</td>
+								<td colspan="5"><?=($filby == 'RI') ? 'RI' : 'PPM' ?> LISTING - <?= ($this->input->get('y') <> 0) ? date('F', mktime(0, 0, 0, $month, 10)).' '.$year : '( '.date("d-m-Y", strtotime($from)).' To '.date("d-m-Y", strtotime($to)).' )'?> - <?php echo $this->session->userdata('usersessn');?>  ( <?php if ($this->input->get('grp') == ''){echo 'ALL'; }else{ echo 'Group '.$this->input->get('grp');} ?> )</td>
 							</tr>
 						</table>
 						<table class="tftable" border="1" style="text-align:center;page-break-inside:auto">
@@ -373,7 +373,7 @@ if ($this->input->get('ex') == 'excel'){
 			<div class="m-div">
 				<table class="rport-header">
 					<tr>
-						<td colspan="5"><?=($filby == 'RI') ? 'RI' : 'PPM' ?> LISTING - <?=date('F', mktime(0, 0, 0, $month, 10))?> <?=$year?> - <?php echo $this->session->userdata('usersessn');?>  ( <?php if ($this->input->get('grp') == ''){echo 'ALL'; }else{ echo 'Group '.$this->input->get('grp');} ?> )</td>
+						<td colspan="5"><?=($filby == 'RI') ? 'RI' : 'PPM' ?> LISTING - <?= ($this->input->get('y') <> 0) ? date('F', mktime(0, 0, 0, $month, 10)).' '.$year : '( '.date("d-m-Y", strtotime($from)).' To '.date("d-m-Y", strtotime($to)).' )'?> - <?php echo $this->session->userdata('usersessn');?>  ( <?php if ($this->input->get('grp') == ''){echo 'ALL'; }else{ echo 'Group '.$this->input->get('grp');} ?> )</td>
 					</tr>
 				</table>
 				<div id="constrainer" style="height: 80%;">

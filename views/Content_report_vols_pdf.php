@@ -8,7 +8,7 @@
 	<body>
 	<table class="rport-header" >
 		<tr>
-			<td colspan="5"><h3><?=($filby == 'RI') ? 'RI' : 'PPM' ?> LISTING - <?=date('F', mktime(0, 0, 0, $month, 10))?> <?=$year?> - <?php echo $this->session->userdata('usersessn');?>  ( <?php if ($this->input->get('grp') == ''){echo 'ALL'; }else{ echo 'Group '.$this->input->get('grp');} ?> )</h3></td>
+		<td colspan="5"><?=($filby == 'RI') ? 'RI' : 'PPM' ?> LISTING - <?= ($this->input->get('y') <> 0) ? date('F', mktime(0, 0, 0, $month, 10)).' '.$year : '( '.date("d-m-Y", strtotime($from)).' To '.date("d-m-Y", strtotime($to)).' )'?> - <?php echo $this->session->userdata('usersessn');?>  ( <?php if ($this->input->get('grp') == ''){echo 'ALL'; }else{ echo 'Group '.$this->input->get('grp');} ?> )</td>
 		</tr>
 	</table>
 	<table class="tftable" border="1" style="text-align:center;width:100%; font-size:7px;" cellpadding="5" cellspacing="0">
@@ -60,38 +60,7 @@
 		</tr>	
 	<?php $numrow++; ?>
 	<?php endforeach;?>
-	<?php foreach($recordrq as $row):?>
-	<?php $numrowx = $numrow;?>
-	<?php echo ($numrowx%2==0) ? '<tr class="ui-color-color-color">' : '<tr>'; ?>
-	    					
-    		<td><?= $numrowx ?></td>
-			<td><?= ($row->D_date) ?  date("d/m/Y",strtotime($row->D_date)) : 'N/A' ?></td>
-			<td><?=($row->V_Request_no) ? anchor ('contentcontroller/AssetRegis?wrk_ord='.$row->V_Request_no.'&assetno='.$row->V_Asset_no.'&m='.$this->input->get('m').'&y='.$this->input->get('y').'&stat='.$this->input->get('stat').'&resch=fbfb&state='.$this->input->get('state'),''.$row->V_Request_no.'' ) : 'N/A' ?></td>
-			
-			<td><?=(($row->V_Asset_no) && $row->V_Asset_no != 'N/A') ? anchor ('contentcontroller/AssetRegis?tab=Maintenance&assetno='.$row->V_Asset_no.'&state='.$this->input->get('state'),''.$row->v_tag_no.'' ) : 'N/A' ?></td>			
-			<td><?= ($row->V_Asset_name) ? $row->V_Asset_name : 'N/A' ?></td>
-			<td><?= ($row->V_User_dept_code) ? $row->V_User_dept_code : 'N/A' ?></td>
-			<td><?= 'N/A' ?></td>
-			<td><?= ($row->V_request_status) ? $row->V_request_status : 'N/A' ?></td>
-			<td><?= 'N/A' ?></td>
-			<td><?= 'N/A' ?></td>
-			
-			
-			<td><?= ($row->v_closeddate) ? date("d/m/Y",strtotime($row->v_closeddate)) : 'N/A' ?></td>
-			<td><?= ($row->v_ActionTaken) ? $row->v_ActionTaken : 'N/A' ?></td>
-			<td><?= ($row->d_Date) ? date("d/m/Y",strtotime($row->d_Date)) : 'N/A' ?></td>
-			<td><?= 'N/A' ?></td>
-			
-			<td><?= ($row->v_UserDeptDesc) ? $row->v_location_name.' ('.$row->v_location_code.')' : 'N/A' ?></td>
-			<?php if ($this->input->get('broughtfwd') != '') { ?>
-			<td><?= ($row->V_Asset_WG_code) ? $row->V_Asset_WG_code : 'N/A' ?></td>
-			<?php } else { ?>
-			<td><?= ($row->v_asset_grp) ? $row->v_asset_grp : 'N/A' ?></td>
-			<?php } ?>
-  
-	        			</tr>
-								<?php $numrowx++; ?>
-	<?php endforeach;?>
+
 
 	</table>
 	</body>

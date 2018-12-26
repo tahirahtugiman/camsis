@@ -1,4 +1,4 @@
-<div class="divFooter ">
+<div class="divFooter">
 Copyright product of Advance Pact Sdn Bhd. All rights reserved.
 </div>
 <?php 
@@ -37,7 +37,7 @@ foreach ($array as $list) {
 						text: ''
 					},
 					 xAxis: {
-						categories: ['<?= substr(date('M',mktime(0, 0, 0, $month, 10)),0,3).' '.$year ?>']
+						categories: ['<?= date("d-m-Y", strtotime($from)).'-'.date("d-m-Y", strtotime($to)); ?>']
 					},
 					yAxis: {
 						allowDecimals: false,
@@ -98,7 +98,7 @@ foreach ($array as $list) {
 
 					series: [{
 						name: 'Total <?=($filby == 'RI') ? 'RI' : 'PPM' ?> Work Order',
-						data: [<?php if ($ppmsum[0]->total == 0) { echo "0"; } else {echo $ppmsum[0]->total;} ?>],
+						data: [<?php if ($ppmsum[0]->total == 0) { echo "0"; } else {echo $ppmsum[0]->total+$reschout[0]->reschout;} ?>],
 						stack: '1',
 					
 					}, {
@@ -107,7 +107,7 @@ foreach ($array as $list) {
 						stack: '2'
 					}
 					, {
-						name: 'Total Rescheduled Brought In Current Month',
+						name: 'Total Rescheduled Brought In',
 						data: [<?php if ($ppmsum[0]->resch == 0) { echo "0"; } else {echo $ppmsum[0]->resch;} ?>],
 						stack: '3'
 					}

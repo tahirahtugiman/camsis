@@ -1038,7 +1038,7 @@ ORDER BY r.D_date, r.D_time
 			return $query_result;
 		}
 
-    function rpt_vols($month, $year, $stat = "apo2", $resch = "resch",$grpsel, $bystak="", $fon="",$filby=""){
+    function rpt_vols($from, $to, $stat = "apo2", $resch = "resch",$grpsel, $bystak="", $fon="",$filby=""){
     		/*
     		SELECT     s.v_WrkOrdNo AS sv_wrkordno, s.v_Asset_no AS sv_asset_no, s.v_Month AS sv_month, s.v_HospitalCode AS sv_hospitalcode,
                           s.d_DueDt AS sd_duedt, s.v_jobtype AS sv_jobtype, s.v_year AS sv_year, s.v_ServiceCode AS sv_servicecode, a.V_Tag_no AS av_tag_no,
@@ -1125,7 +1125,8 @@ ORDER BY r.D_date, r.D_time
     			//$this->db->where("s.d_reschdt is not NULL AND s.v_wrkordstatus = 'AR'", NULL, FALSE);
     			//$this->db->where("s.d_reschdt is not NULL AND s.v_wrkordstatus = 'AR' AND IFNULL(s.d_reschdt,d_DueDt) > now()", NULL, FALSE);
     			//$this->db->where("s.d_reschdt is not NULL AND s.d_reschdt > '".$this->dater(2,$month,$year)."' ", NULL, FALSE);
-    			$this->db->where("s.d_reschdt is not NULL AND s.d_DueDt < '".$this->dater(1,$month,$year)."' ", NULL, FALSE);
+    			//$this->db->where("s.d_reschdt is not NULL AND s.d_DueDt < '".$this->dater(1,$month,$year)."' ", NULL, FALSE);
+              			$this->db->where("s.d_reschdt is not NULL AND s.d_DueDt < '".$from."' ", NULL, FALSE);
     			} elseif (($resch == "nt") && ($stat == "C"))
     			{
     			//$this->db->where("s.v_wrkordstatus = 'A' ", NULL, FALSE);
@@ -1140,7 +1141,8 @@ ORDER BY r.D_date, r.D_time
     			elseif (($resch == "nt") && ($stat == "E"))
     			{
     			//$this->db->where("s.v_wrkordstatus = 'A' ", NULL, FALSE);
-    			$this->db->where("s.d_reschdt is not NULL AND s.d_reschdt >= '".$this->dater(2,$month,$year)."'  ", NULL, FALSE);
+    			//$this->db->where("s.d_reschdt is not NULL AND s.d_reschdt >= '".$this->dater(2,$month,$year)."'  ", NULL, FALSE);
+    			$this->db->where("s.d_reschdt is not NULL AND s.d_reschdt >= '".$to."'  ", NULL, FALSE);
     			} else
     			{
     			$this->db->not_like('s.v_wrkordstatus', $stat);
@@ -1150,11 +1152,20 @@ ORDER BY r.D_date, r.D_time
     			//$this->db->where('YEAR(s.d_DueDt)', $year);
     			//$this->db->where('MONTH(s.d_DueDt)', $month);
     			if(($resch == "nt") && ($stat == "E")){
-    			$this->db->where('s.d_DueDt >=', $this->dater(1,$month,$year));
-    		     $this->db->where('s.d_DueDt <=', $this->dater(2,$month,$year));
+    			//$this->db->where('s.d_DueDt >=', $this->dater(1,$month,$year));
+    		  //   $this->db->where('s.d_DueDt <=', $this->dater(2,$month,$year));
+    			$this->db->where('s.d_DueDt >=', $from);
+    		     $this->db->where('s.d_DueDt <=', $to);
     			}else{
-    			$this->db->where('IFNULL(s.d_reschdt,s.d_DueDt) >=', $this->dater(1,$month,$year));
-    			$this->db->where('IFNULL(s.d_reschdt,s.d_DueDt) <=', $this->dater(2,$month,$year));
+    			//$this->db->where('IFNULL(s.d_reschdt,s.d_DueDt) >=', $this->dater(1,$month,$year));
+    			//$this->db->where('IFNULL(s.d_reschdt,s.d_DueDt) <=', $this->dater(2,$month,$year));
+          if (($resch == "nt") && ($stat == "total")){
+  				$this->db->where("(((s.v_wrkordstatus LIKE '%C%' OR LEFT (s.v_Wrkordstatus, 1) = 'A')AND IFNULL(s.d_reschdt, s.d_DueDt) >= '".$from."' AND IFNULL(s.d_reschdt, s.d_DueDt) <= '".$to."')
+                                   OR(`s`.`d_DueDt` >= '".$from."' AND `s`.`d_DueDt` <= '".$to."'))");
+  				}else{
+      			$this->db->where('IFNULL(s.d_reschdt,s.d_DueDt) >=', $from);
+      			$this->db->where('IFNULL(s.d_reschdt,s.d_DueDt) <=', $to);
+  				}
     			}
     			$this->db->where('s.v_HospitalCode',$this->session->userdata('hosp_code'));
                             $this->db->order_by("s.d_DueDt", "asc");
@@ -2677,7 +2688,7 @@ return $query->result();
 			return $query_result;
 		}
 
-		function sumppm($month,$year,$grpsel,$bystak = "",$fon = "",$filby="")
+		function sumppm($from,$to,$grpsel,$bystak = "",$fon = "",$filby="")
 		{//echo "nlailafonmodel : ".$fon;
 			if ($bystak == "IIUM C") {
 			$bystak = " AND left(a.v_tag_no,6) = 'IIUM C'"; }
@@ -2689,7 +2700,8 @@ return $query->result();
 			//$this->db->select("COUNT(*) as total, SUM(CASE WHEN sc.v_wrkordstatus = 'A'  THEN 1 ELSE 0 END) AS notcomp, SUM(CASE WHEN sc.v_wrkordstatus = 'C' OR sc.v_wrkordstatus = 'CR' THEN 1 ELSE 0 END) AS comp, SUM(CASE WHEN sc.d_reschdt is not NULL AND sc.v_wrkordstatus = 'AR' THEN 1 ELSE 0 END) AS resch");
 			//$this->db->select("COUNT(*) as total, SUM(CASE WHEN sc.v_wrkordstatus = 'A'  OR (sc.v_wrkordstatus = 'AR') THEN 1 ELSE 0 END) AS notcomp, SUM(CASE WHEN (sc.v_wrkordstatus = 'C' OR sc.v_wrkordstatus = 'CR') THEN 1 ELSE 0 END) AS comp, SUM(CASE WHEN sc.d_reschdt is not NULL THEN 1 ELSE 0 END) AS resch", FALSE);
 			if ($fon == "") {
-			$this->db->select("COUNT(*) as total, SUM(CASE WHEN sc.v_wrkordstatus = 'A'  OR (sc.v_wrkordstatus = 'AR') THEN 1 ELSE 0 END) AS notcomp, SUM(CASE WHEN (sc.v_wrkordstatus = 'C' OR sc.v_wrkordstatus = 'CR') THEN 1 ELSE 0 END) AS comp, SUM(CASE WHEN sc.d_reschdt is not NULL AND sc.d_DueDt < '".$this->dater(1,$month,$year)."' THEN 1 ELSE 0 END) AS resch", FALSE);
+			//$this->db->select("COUNT(*) as total, SUM(CASE WHEN sc.v_wrkordstatus = 'A'  OR (sc.v_wrkordstatus = 'AR') THEN 1 ELSE 0 END) AS notcomp, SUM(CASE WHEN (sc.v_wrkordstatus = 'C' OR sc.v_wrkordstatus = 'CR') THEN 1 ELSE 0 END) AS comp, SUM(CASE WHEN sc.d_reschdt is not NULL AND sc.d_DueDt < '".$this->dater(1,$month,$year)."' THEN 1 ELSE 0 END) AS resch", FALSE);
+			$this->db->select("COUNT(*) as total, SUM(CASE WHEN sc.v_wrkordstatus = 'A'  OR (sc.v_wrkordstatus = 'AR') THEN 1 ELSE 0 END) AS notcomp, SUM(CASE WHEN (sc.v_wrkordstatus = 'C' OR sc.v_wrkordstatus = 'CR') THEN 1 ELSE 0 END) AS comp, SUM(CASE WHEN sc.d_reschdt is not NULL AND sc.d_DueDt < '".$from."' THEN 1 ELSE 0 END) AS resch", FALSE);
       //$this->db->select("COUNT(*) as total, SUM(CASE WHEN sc.v_wrkordstatus = 'A'  OR (sc.v_wrkordstatus = 'AR') THEN 1 ELSE 0 END) AS notcomp, SUM(CASE WHEN (sc.v_wrkordstatus = 'C' OR sc.v_wrkordstatus = 'CR') THEN 1 ELSE 0 END) AS comp, SUM(CASE WHEN sc.d_reschdt is not NULL AND month(sc.d_reschdt) > month(d_startdt) THEN 1 ELSE 0 END) AS resch", FALSE);
 			} else {
 			//$this->db->select("COUNT(*) as total, SUM(CASE WHEN (sc.v_wrkordstatus = 'A' OR sc.v_wrkordstatus = 'AR') OR ((sc.v_wrkordstatus = 'C' OR sc.v_wrkordstatus = 'CR') AND sc.v_closeddate > '" . $this->daterfreeze(1,$month,$year) . "') THEN 1 ELSE 0 END) AS notcomp, SUM(CASE WHEN (sc.v_wrkordstatus = 'C' OR sc.v_wrkordstatus = 'CR') AND sc.v_closeddate <= '" . $this->daterfreeze(1,$month,$year) . "' THEN 1 ELSE 0 END) AS comp, SUM(CASE WHEN sc.d_reschdt is not NULL THEN 1 ELSE 0 END) AS resch", FALSE);
@@ -2712,8 +2724,10 @@ return $query->result();
 			//$this->db->where("year(d_startdt) = ",$year);
 			//$this->db->where('d_startdt >=', $this->dater(1,$month,$year));
 			//$this->db->where('d_startdt <=', $this->dater(2,$month,$year));
-			$this->db->where('IFNULL(sc.d_reschdt,d_DueDt) >=', $this->dater(1,$month,$year));
-			$this->db->where('IFNULL(sc.d_reschdt,d_DueDt) <=', $this->dater(2,$month,$year));
+			//$this->db->where('IFNULL(sc.d_reschdt,d_DueDt) >=', $this->dater(1,$month,$year));
+			//$this->db->where('IFNULL(sc.d_reschdt,d_DueDt) <=', $this->dater(2,$month,$year));
+      $this->db->where('IFNULL(sc.d_reschdt,d_DueDt) >=', $from);
+			$this->db->where('IFNULL(sc.d_reschdt,d_DueDt) <=', $to);
 			$query = $this->db->get();
 			//echo "dater : ".$this->dater(1,$month,$year);
 			//echo $this->db->last_query();
@@ -5510,7 +5524,7 @@ echo $this->db->last_query();
 
 		}
 
-		function reschout($month,$year,$grpsel,$bystak = "",$filby =""){
+		function reschout($from,$to,$grpsel,$bystak = "",$filby =""){
 
 		if ($bystak == "IIUM C") {
 			$bystak = " AND left(a.v_tag_no,6) = 'IIUM C'"; }
@@ -5520,7 +5534,8 @@ echo $this->db->last_query();
 			$bystak = " AND left(a.v_tag_no,6) = 'IIUM E'"; }
 
 		    //$this->db->select("SUM(CASE WHEN sc.d_reschdt is not NULL AND sc.v_wrkordstatus = 'AR' AND (IFNULL(sc.d_reschdt, d_DueDt) > now()) THEN 1 ELSE 0 END) AS reschout",FALSE);
-				$this->db->select("SUM(CASE WHEN sc.d_reschdt is not NULL AND sc.d_reschdt >= '".$this->dater(2,$month,$year)."' THEN 1 ELSE 0 END) AS reschout",FALSE);
+				//$this->db->select("SUM(CASE WHEN sc.d_reschdt is not NULL AND sc.d_reschdt >= '".$this->dater(2,$month,$year)."' THEN 1 ELSE 0 END) AS reschout",FALSE);
+        $this->db->select("SUM(CASE WHEN sc.d_reschdt is not NULL AND sc.d_reschdt >= '".$to."' THEN 1 ELSE 0 END) AS reschout",FALSE);
 			$this->db->from('pmis2_egm_schconfirmmon sc');
 			$this->db->join('pmis2_egm_assetregistration a','sc.v_Asset_no = a.V_Asset_no AND sc.v_HospitalCode = a.V_Hospitalcode '.$bystak,'left outer');
 			if($filby == 'RI'){
@@ -5537,8 +5552,10 @@ echo $this->db->last_query();
 		$this->db->where('a.v_asset_grp',$grpsel);
 		}
 
-	  $this->db->where('sc.d_DueDt >=', $this->dater(1,$month,$year));
-		$this->db->where('sc.d_DueDt <=', $this->dater(2,$month,$year));
+	  //$this->db->where('sc.d_DueDt >=', $this->dater(1,$month,$year));
+		//$this->db->where('sc.d_DueDt <=', $this->dater(2,$month,$year));
+    $this->db->where('sc.d_DueDt >=', $from);
+    $this->db->where('sc.d_DueDt <=', $to);
 
 		$query = $this->db->get();
 
