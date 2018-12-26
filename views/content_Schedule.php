@@ -544,7 +544,7 @@
 			<?php if (!in_array("contentcontroller/assetnextppm", $chkers)) { ?>
 			<tr class="<?php  $number++; echo evenodd($number); ?>">
 				<td colspan="4">
-					<?php echo anchor ('contentcontroller/assetnextppm?m='.$month.'&y='.$year,'<img src="'. base_url() .'images/user.png" alt="" class="ui-icon"/>&nbsp;&nbsp;&nbsp;&nbsp;Asset Next PPM'); ?>
+					<?php echo anchor ('contentcontroller/assetnextppm?m='.$month.'&y='.$year.'&dept=','<img src="'. base_url() .'images/user.png" alt="" class="ui-icon"/>&nbsp;&nbsp;&nbsp;&nbsp;Asset Next PPM'); ?>
 				</td>
 			</tr>
 			<?php  } ?>
