@@ -7999,30 +7999,63 @@ public function pop_fail(){
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");
 		$data['dept']= ($this->input->get('dept') <> '') ? $this->input->get('dept') : '';
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%d", $this->input->get('m')) : date("m");
+		
 		$this->load->model('get_model');
 		$data['dept2'] = $this->get_model->get_popdeptlist();
 		//$data['whatweek'] = $this->get_model->nexppmwk();
-		$data['kalender'] =  $this->get_model->gen_cal($data['year'])[$data['month']];
-	    	
-		$data['kalender2'] = $this->get_model->gen_cal($data['year']);
+		$data['kalender'] =  $this->get_model->gen_cal($data['year'])[$data['month']];	    	
+		//$data['kalender2'] = $this->get_model->gen_cal($data['year']);
+		$data['kalender_ajaib']=array();
+		
+		$bulang=array(1=>'JAN',2=>'FEB',3=>'MAR',4=>'APR',5=>'MEI',6=>'JUN',7=>'JUL',8=>'AUG',9=>'SEP',10=>'OCT',11=>'NOV',12=>'DEC');
+		$count=1;
+		foreach($bulang as $key=>$test){
+	
+		if($key >=$data['month'] && $count <= 5){
+	 		
+		$k=$count++;
+		$data['kalender_ajaib'][$k]['bulan']=$test;
+		$data['kalender_ajaib'][$k]['no_bulan']=$key;
+		$data['kalender_ajaib'][$k]['minggu']= $this->get_model->gen_cal($data['year'])[$key];;
+		
+		
+		}
+		  }	
+		
+		if ($count-1 < 5)
+		{
+		foreach($bulang as $key=>$test){
+	
+		if($key >=1 && $count <= 5){
+	 	$k=$count++;	
+		$data['kalender_ajaib'][$k]['bulan']=$test;
+		$data['kalender_ajaib'][$k]['no_bulan']=$key;
+		$data['kalender_ajaib'][$k]['minggu']= $this->get_model->gen_cal($data['year']+1)[$key];;
+		}
+		  }		
+		}
+		//echo "<pre>";
+		//print_r($data['kalender_ajaib']);
+		//echo count($data['kalender_ajaib'][5]['minggu']);
+	
 
-		$data['count'] = 0;
+		/* $data['count'] = 0;
 		foreach ($data['kalender2'] as $row){
 			$data['count'] += count($row);
-		}
+		} */
 		//print_r($data['kalender']);
 		//echo "lalalalala : ".$data['whatweek'][0]->maxwk;
 
 		//$weektoshow = $data['whatweek'][0]->maxwk + 1;
-		$weektoshow = 52;
+		//$weektoshow = 52;
 		//$data['theweek'] = $weektoshow;
 		//echo "<br>lalalalalazzzzz : ".$weektoshow;
 		$data['ppm_wo']=$this->get_model->get_ppmgenloc(date("Y"),$this->session->userdata('hosp_code'),$data['kalender'],$this->input->get('dept'));
 
-    $firstDayOfWeek = strtotime(date("Y")."W".str_pad($weektoshow,2,"0",STR_PAD_LEFT));
+    //$firstDayOfWeek = strtotime(date("Y")."W".str_pad($weektoshow,2,"0",STR_PAD_LEFT));
 
     //echo("The first day of week ".$weektoshow." of ".date("Y")." is ".date("d-m-Y",$firstDayOfWeek));
-		$data['theweek'] = date("d-m-Y",$firstDayOfWeek);
+		//$data['theweek'] = date("d-m-Y",$firstDayOfWeek);
 
 		if($this->input->get('pdf') == 1){
 		$this ->load->view("Content_report_assetnextppm_pdf", $data);

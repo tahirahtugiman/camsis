@@ -70,7 +70,14 @@
 		<div id="constrainer" style="height: 80%; width: 100%;">
 			<div class="scrolltable1">
 		<?php } ?>
-
+<table style="margin-bottom:5px;">
+<tr>
+<td bgcolor="#28a11b" width="3%"></td>
+<td width="10%"><b>Last PPM Schedule</b></td>
+<td bgcolor="#00FFFF" width="3%"></td>
+<td><b>Next PPM Schedule</b></td>
+</tr>
+</table>
 		<table class="tftable" border="1" style="text-align:center;">
 			<tr>
 				<th>No.</th>
@@ -92,28 +99,30 @@
 				<td><?= ($value->ppmdt) ? date("d/m/Y",strtotime($value->ppmdt)) : 'N/A' ?></td>
 				<td><table>
 				<tr><td width="8.33%" style="padding-top:3px; padding-bottom:3px;" class="ui-content-menu-desk-color">MONTH</td>
-
-										<td <?=($this->input->get('m')=='01') ? 'bgcolor="#fff600"' : ''?> width="8.33%" colspan="<?=count($kalender2[1])?>">JAN</td>
-										<td <?=($this->input->get('m')=='02') ? 'bgcolor="#fff600"' : ''?> width="8.33%" colspan="<?=count($kalender2[2])?>">FEB</td>
-										<td <?=($this->input->get('m')=='03') ? 'bgcolor="#fff600"' : ''?> width="8.33%" colspan="<?=count($kalender2[3])?>">MAR</td>
-										<td <?=($this->input->get('m')=='04') ? 'bgcolor="#fff600"' : ''?> width="8.33%" colspan="<?=count($kalender2[4])?>">APR</td>
-										<td <?=($this->input->get('m')=='05') ? 'bgcolor="#fff600"' : ''?> width="8.33%" colspan="<?=count($kalender2[5])?>">MEI</td>
-										<td <?=($this->input->get('m')=='06') ? 'bgcolor="#fff600"' : ''?> width="8.33%" colspan="<?=count($kalender2[6])?>">JUN</td>
-										<td <?=($this->input->get('m')=='07') ? 'bgcolor="#fff600"' : ''?> width="8.33%" colspan="<?=count($kalender2[7])?>">JUL</td>
-										<td <?=($this->input->get('m')=='08') ? 'bgcolor="#fff600"' : ''?> width="8.33%" colspan="<?=count($kalender2[8])?>">AUG</td>
-										<td <?=($this->input->get('m')=='09') ? 'bgcolor="#fff600"' : ''?> width="8.33%" colspan="<?=count($kalender2[9])?>">SEP</td>
-										<td <?=($this->input->get('m')=='10') ? 'bgcolor="#fff600"' : ''?> width="8.33%" colspan="<?=count($kalender2[10])?>">OCT</td>
-										<td <?=($this->input->get('m')=='11') ? 'bgcolor="#fff600"' : ''?> width="8.33%" colspan="<?=count($kalender2[11])?>">NOV</td>
-										<td <?=($this->input->get('m')=='12') ? 'bgcolor="#fff600"' : ''?> width="8.33%" colspan="<?=count($kalender2[12])?>">DEC</td></tr>
+                  
+				  <?php foreach($kalender_ajaib as $row) {?>
+				
+				 <td <?=($this->input->get('m')==$row['no_bulan']) ? 'bgcolor="#fff600"' : ''?> width="8.33%" colspan="<?=count($row['minggu'])?>"><?=$row['bulan']?></td>
+				  <?php } ?>
+				  </tr>
 					<tr>	<td width="8.33%" style="padding-top:3px; padding-bottom:3px; color:white;" class="ui-content-menu-desk-color">WEEK</td>
-											<?php $weeksch2 = explode(',',$value->v_Weeksch); ?>
-											<?php for ($i = 1; $i <= $count; $i++){ ?>
-											<?php if (isset($weeksch2) && in_array($i,$weeksch2)) {?>
-										<td bgcolor="##00FFFF"><?=$i?></td>
+					<?php $weeksch2 = explode(',',$value->v_Weeksch); ?>
+					<?php for ($i = 1; $i <= 5; $i++){ ?>
+					 <?php foreach($kalender_ajaib[$i]['minggu'] as $row) {?>
+					 	<?php if (isset($weeksch2) && in_array($row,$weeksch2)) {?>
+                          <?php if ($value->n_StartWk == $row) { ?>						
+										<td bgcolor="#28a11b"><?=$row?></td>
+						  <?php } else {?>			
+										<td bgcolor="##00FFFF"><?=$row?></td>
+						  <?php } ?>		
 											<?php } else { ?>
-											<td><?=$i?></td>
+											<td><?=$row?></td>
 											<?php } ?>
-											<?php } ?></tr>					
+					 <?php } ?>
+					<?php } ?>
+			
+					
+											</tr>					
 				</table></td>
 			
 				<!--<td><?=$theweek?></td>-->
