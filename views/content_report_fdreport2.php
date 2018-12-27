@@ -13,7 +13,7 @@ switch ($x) {
 		$tulis = "Outstanding for the day";
 		break;
 	case "4":
-		$tulis = "Accumulated outstanding";
+		$tulis = "Accumulated Outstanding";
 		break;
 	case "5":
 		$tulis = "Accumulated completed";
@@ -47,7 +47,7 @@ switch ($x) {
 		$tulis = "Total Outstanding";
 		break;
 	default:
-		$tulis = "";	
+		$tulis = "";
 		break;
 }
 
@@ -66,7 +66,7 @@ if ($this->input->get('ex') == 'excel'){
 		<button onclick="javascript:myFunction('report_fdreport2?jobdate=<?=$this->input->get('jobdate')?>&x=<?=$this->input->get('x')?>&v=<?=$this->input->get('v')?>&none=closed');" class="btn-button btn-primary-button">PRINT</button>
 		<button type="cancel" class="btn-button btn-primary-button" onclick="location.href = '<?php echo $btp ;?>';">CANCEL</button>
 		<?php if (($this->input->get('ex') == '') or ($this->input->get('none') == '')){?>
-			<a href="<?php echo base_url();?>index.php/contentcontroller/report_fdreport2?req=<?=$this->input->get('req');?>&jobdate=<?=$this->input->get('jobdate')?>&ex=excel&none=close&stat=<?=$this->input->get('stat');?>&resch=<?=$this->input->get('resch');?>&broughtfwd=<?=$this->input->get('broughtfwd');?>&x=<?=$this->input->get('x')?>&xxx=export&grp=<?=$this->input->get('grp');?>&serv=<?=$this->input->get('serv')?>" style="float:right; margin-right:40px;"><img src="<?php echo base_url();?>images/excel.png" style="width:40px; height:38px; position:absolute;" title="export to excel">
+			<a href="<?php echo base_url();?>index.php/contentcontroller/report_fdreport2?jobdate=<?=$this->input->get('jobdate')?>&x=<?=$this->input->get('x')?>&v=<?=$this->input->get('v')?>&ex=excel&none=close" style="float:right; margin-right:40px;"><img src="<?php echo base_url();?>images/excel.png" style="width:40px; height:38px; position:absolute;" title="export to excel">
 			</a>
 		<?php } ?>
 	</div>
@@ -86,14 +86,14 @@ if ($this->input->get('ex') == 'excel'){
 						<td colspan="4" valign="top"><?php echo $tulis;?> - <?=date('F', mktime(0, 0, 0, date('m',strtotime($this->input->get('jobdate'))), 10))?> <?=date('Y',strtotime($this->input->get('jobdate')))?> - <?php echo $this->session->userdata('usersessn');?></td>
 					</tr>
 				</table>
-			
+
 				<table class="tftable tbl-go" border="1" style="text-align:center;">
 					<tr>
 						<th>No</th>
 						<th <?php if($this->input->get('wid')== 1){ echo "style='width:30px;'";}?>>Date Req</th>
 						<th>Time Req</th>
 						<th>Request No</th>
-						<th>Asset No</th>				
+						<th>Asset No</th>
 						<th <?php if($this->input->get('wid')== 1){ echo "style='width:10%;'";}?>>Request Summary</th>
 						<th>ULC</th>
 						<th>Requestor<br>Name</th>
@@ -111,12 +111,12 @@ if ($this->input->get('ex') == 'excel'){
 							<th <?php if($this->input->get('wid')== 1){ echo "style='width:5%;'";}?>>Duration<br>of Repair (Days)</th>
 							<th <?php if($this->input->get('wid')== 1){ echo "style='width:10%;'";}?>>Respond Finding</th>
 						<?php } ?>
-						
+
 						<th <?php if($this->input->get('wid')== 1){ echo "style='width:10%;'";}?>>Dept/Loc</th>
 						<th><?php if($this->input->get('wid')== 1){ echo "grp";}else{ if($this->input->get('broughtfwd') != ''){echo "Work Order Group";} else{echo "Asset Group";}}?></th>
 					</tr>
 				<?php } ?>
-			
+
 					<tr>
 						<td><?=$numrow?></td>
 						<td><?=isset($row->D_date) ? date("d-m-Y",strtotime($row->D_date)) : 'N/A' ?></td>
@@ -161,7 +161,7 @@ if ($this->input->get('ex') == 'excel'){
 						<td width="50%" align="right"></td>
 					</tr>
 				</table>
-		
+
 				<div class="StartNewPage" id="breakpage"><span id="pagebreak">Page Break</span></div>
 			<?php } ?>
 		<?php } ?>
@@ -180,8 +180,8 @@ if ($this->input->get('ex') == 'excel'){
 				<td colspan="4" valign="top"><?php echo $tulis;?> - <?=date('F', mktime(0, 0, 0, date('m',strtotime($this->input->get('jobdate'))), 10))?> <?=date('Y',strtotime($this->input->get('jobdate')))?> - <?php echo $this->session->userdata('usersessn');?></td>
 			</tr>
 		</table>
-	
-		<div id="constrainer" style="height: 45%;">
+
+		<div id="constrainer" style="height: 63%;">
 			<div class="scrolltable1">
 				<table class="tftable tbl-go" border="1" style="text-align:center;">
 					<tr>
@@ -189,7 +189,7 @@ if ($this->input->get('ex') == 'excel'){
 						<th <?php if($this->input->get('wid')== 1){ echo "style='width:30px;'";}?>>Date Req</th>
 						<th>Time Req</th>
 						<th>Request No</th>
-						<th>Asset No</th>				
+						<th>Asset No</th>
 						<th <?php if($this->input->get('wid')== 1){ echo "style='width:10%;'";}?>>Request Summary</th>
 						<th>ULC</th>
 						<th>Requestor<br>Name</th>
@@ -207,11 +207,11 @@ if ($this->input->get('ex') == 'excel'){
 							<th <?php if($this->input->get('wid')== 1){ echo "style='width:5%;'";}?>>Duration<br>of Repair (Days)</th>
 							<th <?php if($this->input->get('wid')== 1){ echo "style='width:10%;'";}?>>Respond Finding</th>
 						<?php } ?>
-						
+
 						<th <?=($this->input->get('wid')== 1) ? "style='width:10%;'" : "";?> >Dept/Loc</th>
 						<th><?=(($this->input->get('wid')== 1) ? "grp" : (($this->input->get('broughtfwd') != '') ? "Work Order Group" : "Asset Group"));?></th>
 					</tr>
-			
+
 					<?php if( !empty($record) ){ ?>
 						<?php $numrow=1; foreach ($record as $row): ?>
 					<tr>
@@ -260,7 +260,7 @@ if ($this->input->get('ex') == 'excel'){
 						<td width="50%" align="right"></td>
 					</tr>
 				</table>
-		
+
 				<div class="StartNewPage" id="breakpage"><span id="pagebreak">Page Break</span></div>
 			<?php } ?>
 		</div>
