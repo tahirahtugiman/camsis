@@ -1,4 +1,5 @@
 <?php
+$none = ($this->input->get('none')) ? $this->input->get('none') : '' ;
 if ($this->input->get('ex') == 'excel'){
 	$filename ="Statutory & License Summary ".date('F', mktime(0, 0, 0, $month, 10)) .$year.".xls";
 	header('Content-type: application/ms-excel');
@@ -35,29 +36,29 @@ if ($this->input->get('ex') == 'excel'){
 	</div>
 </div>
 
-<div id="constrainer" style="height: 45%;">
+<div id="constrainer" style="height: 60%;">
 	<div class="scrolltable1">
-		<table class="header-alr" border="1" style="text-align:center; font-size: 12px;">
+		<table class="header-alr" border="1" style="text-align:center;font-size: 12px;page-break-inside:auto">
 		<?php } ?>
 			<tr>
 				<th>No</th>
-				<th>Certificate No</th>
-				<th>Agency Code</th>
+				<th style="<?=($none <> '') ? 'min-width:60px;' : '' ?>">Certificate No</th>
+				<th style="<?=($none <> '') ? 'min-width:50px;' : 'min-width:75px;' ?>">Agency Code</th>
 				<th>License Category Code</th>
-				<th>Asset No</th>	
+				<th style="<?=($none <> '') ? 'min-width:50px;' : 'min-width:75px;' ?>">Asset No</th>	
 				<th>Location</th>			
 				<th>Identification</th>
-				<th>Start Date</th>
-				<th>Expiry Date</th>
-				<th>Grade ID</th>
+				<th style="<?=($none <> '') ? 'min-width:50px;' : 'min-width:70px;' ?>">Start Date</th>
+				<th style="<?=($none <> '') ? 'min-width:50px;' : 'min-width:70px;' ?>">Expiry Date</th>
+				<th style="<?=($none <> '') ? 'min-width:50px;' : 'min-width:70px;' ?>">Grade ID</th>
 				<th>Remarks</th>
 				<th>Image</th>
 			</tr>
-			<tr style="text-align:center;"></tr>
+			<tr style="text-align:left;"></tr>
 			<?php $numrow = 1; ?>
 			<?php  if (!empty($record2) || !empty($record)) {?>
 				<?php  foreach($record2 as $row):?>
-					<?php echo ($numrow%2==0) ? '<tr class="ui-color-color-color">' : '<tr>'; ?>
+					<?php echo ($numrow%2==0) ? '<tr class="ui-color-color-color" style="text-align:left;page-break-inside:avoid; page-break-after:auto ">' : '<tr style="text-align:left;page-break-inside:avoid; page-break-after:auto">'; ?>
 
 				<td><span style="color:#0000FF;"><?= $numrow ?></span></td>
 				<td><span style="color:#0000FF;"><?= ($row->v_cert_no) ? $row->v_cert_no : 'N/A' ?></span></td>
@@ -78,7 +79,7 @@ if ($this->input->get('ex') == 'excel'){
 			<?php } ?>
 			<?php  if (!empty($record) || !empty($record2)) {?>
 				<?php  foreach($record as $row):?>
-			<?php echo ($numrow%2==0) ? '<tr class="ui-color-color-color">' : '<tr>'; ?>
+			<?php echo ($numrow%2==0) ? '<tr class="ui-color-color-color" style="text-align:left;page-break-inside:avoid; page-break-after:auto ">' : '<tr style="text-align:left;page-break-inside:avoid; page-break-after:auto ">'; ?>
 								
 				<td><span style="color:#0000FF;"><?= $numrow ?></span></td>
 				<td><span style="color:#0000FF;"><?= ($row->v_CertificateNo) ? $row->v_CertificateNo : 'N/A' ?></span></td>
@@ -121,8 +122,10 @@ if ($this->input->get('ex') == 'excel'){
 		</tr>
 	</table>
 </div>
-<?php if (($this->input->get('ex') == '') or ($this->input->get('none') == 'closed')){?>
+<?php if (($this->input->get('ex') == '') ){?>
+<?php if ($this->input->get('none') != 'closed') {?>
 	<?php include 'content_footerprint.php';?>
+<?php } ?>
 <?php } ?>
 <div class="StartNewPage" id="breakpage"><span id="pagebreak">Page Break</span></div>
 

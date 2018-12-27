@@ -30,7 +30,7 @@
 		</table>
 
 		<?php if( !$this->input->get("none") ){ ?>
-		<div id="constrainer" style="height: 40%; width: 100%;">
+		<div id="constrainer" style="height: 63%; width: 100%;">
 			<div class="scrolltable1">
 		<?php } ?>
 
