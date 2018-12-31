@@ -470,7 +470,7 @@ $y= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");
 $m= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
 $my = substr('0'.$m,-2).$y;
 
-$ignore = array('CP','CA','FES','LH','ME','SE','SRV','TCR','WS','BM','CH');
+$ignore = array('CP','CA','FES','LH','ME','SE','SRV','TCR','WS','BM','CH','CDR1','CDR2','NS','TPN','C&C','GICU','LDR','MD','PS');
 $this->db->distinct();
 $this->db->select('b.v_userdeptdesc, a.v_UserDeptCode, count(a.v_UserDeptCode) as Totalloc');
 $this->db->join('pmis2_sa_userdept b','b.v_hospitalcode = a.v_hospitalcode AND b.v_userdeptcode = a.v_UserDeptCode');
@@ -2111,7 +2111,7 @@ function monthplan($year,$month){
 	$this->db->where('Year',$year);
 	$this->db->where('Month',$month);
 	$query = $this->db->get();
-	//echo $this->db->last_query();
+	echo $this->db->last_query();
 	//exit();
 	$query_result = $query->result();
 	return $query_result;
@@ -3575,7 +3575,7 @@ function get_ppmgenloc($year, $hosp, $week, $dept)
 
 	//$this->db->select('pmis2_sa_asset_mapping.new_asset_type, left(pmis2_sa_moh_asset_type.type_desc, 50)');
 	//$this->db->distinct();
-	$this->db->select("(SELECT v_Weeksch FROM pmis2_egm_assetjobtype WHERE v_Asset_no=jt.v_Asset_no AND v_JobType=jt.v_JobType AND v_ActionFlag <> 'D' AND v_Year=year(sc.d_StartDt) LIMIT 1) as v_Weeksch,jt.v_JobType,sc.d_StartDt as ppmdt,sc.n_StartWk as wwk,ar.v_tag_no, ar.v_asset_name, ar.v_user_dept_code, ar.v_location_code, am.v_assetstatus, am.v_assetcondition, am.v_assetvstatus, am.v_assetvstatus as ppm_no, lc.v_location_name",false);
+	$this->db->select("(SELECT v_Weeksch FROM pmis2_egm_assetjobtype WHERE v_Asset_no=jt.v_Asset_no AND v_JobType=jt.v_JobType AND v_ActionFlag <> 'D' AND v_Year=year(sc.d_StartDt) LIMIT 1) as v_Weeksch,jt.v_JobType,sc.d_StartDt as ppmdt,sc.n_StartWk,ar.v_tag_no, ar.v_asset_name, ar.v_user_dept_code, ar.v_location_code, am.v_assetstatus, am.v_assetcondition, am.v_assetvstatus, am.v_assetvstatus as ppm_no, lc.v_location_name",false);
 	#$this->db->select("");
 	//$this->db->where('pmis2_sa_asset_mapping.old_asset_type = ', $typecd);
 	//$this->db->where('jt.v_hospitalcode = ', $typecd);
