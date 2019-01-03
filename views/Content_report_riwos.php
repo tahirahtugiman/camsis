@@ -13,13 +13,16 @@ function barchart(a,b,c,d,e,f){
 	Win.window.focus();
 }
 </script>
+
+
+
 <?php include 'content_btp.php';?>
 <div id="Instruction" class="pr-printer">
     <div class="header-pr"><?=($filby == 'RI') ? 'RI' : 'PPM' ?> Work Order Summary</div>
-    <button onclick="javascript:myFunction('report_ppmwos?from=<?=$from?>&to=<?=$to?>&none=closed&ex=ex&filby=RI&grp=<?=$this->input->get('grp');?>&fon=<?=$this->input->get('fon');?>');" class="btn-button btn-primary-button">PRINT</button>
+    <button onclick="javascript:myFunction('report_ppmwos?<?=$a?>&<?=$b?>&none=closed&ex=ex&filby=RI&grp=<?=$this->input->get('grp');?>&fon=<?=$this->input->get('fon');?>');" class="btn-button btn-primary-button">PRINT</button>
     <button type="cancel" class="btn-button btn-primary-button" onclick="location.href = '<?php echo $btp ;?>';">CANCEL</button>
 	<?php if (($this->input->get('ex') == '') or ($this->input->get('none') == '')){?>
-	<a href="<?php echo base_url();?>index.php/contentcontroller/report_ppmwos?from=<?=$from?>&to=<?=$to?>&ex=excel&none=close&filby=RI&grp=<?=$this->input->get('grp');?>&fon=<?=$this->input->get('fon');?>" style="float:right; margin-right:40px;"><img src="<?php echo base_url();?>images/excel.png" style="width:40px; height:38px; position:absolute;" title="export to excel"></a>
+	<a href="<?php echo base_url();?>index.php/contentcontroller/report_ppmwos?<?=$a?>&<?=$b?>&ex=excel&none=close&filby=RI&grp=<?=$this->input->get('grp');?>&fon=<?=$this->input->get('fon');?>" style="float:right; margin-right:40px;"><img src="<?php echo base_url();?>images/excel.png" style="width:40px; height:38px; position:absolute;" title="export to excel"></a>
 	<?php //if($this->session->userdata('v_UserName') == 'nezam') {?>
 	<span style="float:right; margin-right:90px;" onclick="barchart(<?php if ($ppmsum[0]->total == 0) { echo "0"; } else {echo $ppmsum[0]->total; }?>,<?php if ($ppmsum[0]->comp == 0) { echo "0"; } else {echo $ppmsum[0]->comp; }?>,<?php if ($ppmsum[0]->resch == 0) { echo "0"; } else {echo $ppmsum[0]->resch; }?>,<?php if ($ppmsum[0]->notcomp == 0) { echo "0"; } else {echo $ppmsum[0]->notcomp; }?>,'<?= substr(date('M',mktime(0, 0, 0, $month, 10)),0,3)?>',<?=$year?>)"><img src="<?php echo base_url();?>images/Bar-Chart-icon.png" style="width:40px; height:38px; position:absolute;" title="Bar Chart"></span>
 	<?php //} ?>
@@ -49,7 +52,11 @@ function barchart(a,b,c,d,e,f){
 <div class="m-div">
 	<table class="rport-header">
 		<tr>
+			<?php if($this->input->get('m')){ ?>
 			<td colspan="5"><?=($filby == 'RI') ? 'RI' : 'PPM' ?> Work Order Summary <?= substr(date('M',mktime(0, 0, 0, $month, 10)),0,3).' '.$year ?> - <?php echo $this->session->userdata('usersessn');?> ( <?php if ($this->input->get('grp') == ''){echo 'ALL'; }else{ echo 'Group '.$this->input->get('grp');} ?> ) <?php if ($this->input->get('fon') == ''){echo ''; }else{ echo '(Freeze)';} ?></td>
+		    <?php } else { ?>
+            <td colspan="5">RI Work Order Summary ( <?= date("d-m-Y", strtotime($from)).' To '.date("d-m-Y", strtotime($to)); ?> ) - <?php echo $this->session->userdata('usersessn');?> ( <?php if ($this->input->get('grp') == ''){echo 'ALL'; }else{ echo 'Group '.$this->input->get('grp');} ?> ) <?php if ($this->input->get('fon') == ''){echo ''; }else{ echo '(Freeze)';} ?></td>
+			<?php } ?>			
 		</tr>
 	</table>
 	
@@ -75,11 +82,11 @@ function barchart(a,b,c,d,e,f){
 			  <td><?= isset($totale[0]->TRBO) == TRUE ? $totale[0]->TRBO : '0'?></td>
 			  <td><?= isset($totale[0]->TND) == TRUE ? $totale[0]->TND : '0'?></td>
 					  <?php } else { ?>			
-			 <td><?php if (($ppmelec[0]->total + $reschoutlec[0]->reschout == 0)) { echo "0"; } else {echo anchor('contentcontroller/report_vols?from='.$from.'&to='.$to.'&filby=RI&stat=total&resch=nt&btp=1&grp='.$this->input->get('grp').'&serv=ele'.'&fon='.$this->input->get('fon'),$ppmelec[0]->total + $reschoutlec[0]->reschout);} ?></td>
-			  <td><?php if (($ppmelec[0]->comp == 0)) { echo "0"; } else {echo anchor('contentcontroller/report_vols?from='.$from.'&to='.$to.'&filby=RI&stat=A&resch=nt&btp=1&grp='.$this->input->get('grp').'&serv=ele'.'&fon='.$this->input->get('fon'),$ppmelec[0]->comp);} ?></td>
-			  <td><?php if ($ppmelec[0]->resch == 0) { echo "0"; } else {echo anchor('contentcontroller/report_vols?from='.$from.'&to='.$to.'&filby=RI&stat=A&resch=ys&btp=1&grp='.$this->input->get('grp').'&serv=ele'.'&fon='.$this->input->get('fon'),$ppmelec[0]->resch);} ?></td>
-			  <td><?php if ($reschoutlec[0]->reschout == 0) { echo "0"; } else {echo anchor('contentcontroller/report_vols?from='.$from.'&to='.$to.'&filby=RI&stat=E&resch=nt&btp=1&grp='.$this->input->get('grp').'&serv=ele'.'&fon='.$this->input->get('fon'),$reschoutlec[0]->reschout);} ?></td>
-			  <td><?php if (($ppmelec[0]->notcomp == 0)) { echo "0"; } else {echo anchor('contentcontroller/report_vols?from='.$from.'&to='.$to.'&filby=RI&stat=C&resch=nt&btp=1&grp='.$this->input->get('grp').'&serv=ele'.'&fon='.$this->input->get('fon'),$ppmelec[0]->notcomp);} ?></td>				
+			 <td><?php if (($ppmelec[0]->total + $reschoutlec[0]->reschout == 0)) { echo "0"; } else {echo anchor('contentcontroller/report_vols?'.$a.'&'.$b.'&filby=RI&stat=total&resch=nt&btp=1&grp='.$this->input->get('grp').'&serv=ele'.'&fon='.$this->input->get('fon'),$ppmelec[0]->total + $reschoutlec[0]->reschout);} ?></td>
+			  <td><?php if (($ppmelec[0]->comp == 0)) { echo "0"; } else {echo anchor('contentcontroller/report_vols?'.$a.'&'.$b.'&filby=RI&stat=A&resch=nt&btp=1&grp='.$this->input->get('grp').'&serv=ele'.'&fon='.$this->input->get('fon'),$ppmelec[0]->comp);} ?></td>
+			  <td><?php if ($ppmelec[0]->resch == 0) { echo "0"; } else {echo anchor('contentcontroller/report_vols?'.$a.'&'.$b.'&filby=RI&stat=A&resch=ys&btp=1&grp='.$this->input->get('grp').'&serv=ele'.'&fon='.$this->input->get('fon'),$ppmelec[0]->resch);} ?></td>
+			  <td><?php if ($reschoutlec[0]->reschout == 0) { echo "0"; } else {echo anchor('contentcontroller/report_vols?'.$a.'&'.$b.'&filby=RI&stat=E&resch=nt&btp=1&grp='.$this->input->get('grp').'&serv=ele'.'&fon='.$this->input->get('fon'),$reschoutlec[0]->reschout);} ?></td>
+			  <td><?php if (($ppmelec[0]->notcomp == 0)) { echo "0"; } else {echo anchor('contentcontroller/report_vols?'.$a.'&'.$b.'&filby=RI&stat=C&resch=nt&btp=1&grp='.$this->input->get('grp').'&serv=ele'.'&fon='.$this->input->get('fon'),$ppmelec[0]->notcomp);} ?></td>				
 				<?php } ?>	
 				</tr>
 				<tr style="text-align:center;">
@@ -91,11 +98,11 @@ function barchart(a,b,c,d,e,f){
 			  <td><?= isset($totalm[0]->TRBO) == TRUE ? $totalm[0]->TRBO : '0'?></td>
 			  <td><?= isset($totalm[0]->TND) == TRUE ? $totalm[0]->TND : '0'?></td>
             <?php } else { ?>				  
-			  <td><?php if (($ppmmech[0]->total + $reschoutmech[0]->reschout == 0)) { echo "0"; } else {echo anchor('contentcontroller/report_vols?from='.$from.'&to='.$to.'&filby=RI&stat=total&resch=nt&btp=1&grp='.$this->input->get('grp').'&serv=mec'.'&fon='.$this->input->get('fon'),$ppmmech[0]->total + $reschoutmech[0]->reschout);} ?></td>
-			  <td><?php if (($ppmmech[0]->comp == 0)) { echo "0"; } else {echo anchor('contentcontroller/report_vols?from='.$from.'&to='.$to.'&filby=RI&stat=A&resch=nt&btp=1&grp='.$this->input->get('grp').'&serv=mec'.'&fon='.$this->input->get('fon'),$ppmmech[0]->comp);} ?></td>
-			  <td><?php if ($ppmmech[0]->resch == 0) { echo "0"; } else {echo anchor('contentcontroller/report_vols?from='.$from.'&to='.$to.'&filby=RI&stat=A&resch=ys&btp=1&grp='.$this->input->get('grp').'&serv=mec'.'&fon='.$this->input->get('fon'),$ppmmech[0]->resch);} ?></td>
-			  <td><?php if ($reschoutmech[0]->reschout == 0) { echo "0"; } else {echo anchor('contentcontroller/report_vols?from='.$from.'&to='.$to.'&filby=RI&stat=E&resch=nt&btp=1&grp='.$this->input->get('grp').'&serv=mec'.'&fon='.$this->input->get('fon'),$reschoutmech[0]->reschout);} ?></td>
-			  <td><?php if (($ppmmech[0]->notcomp == 0)) { echo "0"; } else {echo anchor('contentcontroller/report_vols?from='.$from.'&to='.$to.'&filby=RI&stat=C&resch=nt&btp=1&grp='.$this->input->get('grp').'&serv=mec'.'&fon='.$this->input->get('fon'),$ppmmech[0]->notcomp);} ?></td>
+			  <td><?php if (($ppmmech[0]->total + $reschoutmech[0]->reschout == 0)) { echo "0"; } else {echo anchor('contentcontroller/report_vols?'.$a.'&'.$b.'&filby=RI&stat=total&resch=nt&btp=1&grp='.$this->input->get('grp').'&serv=mec'.'&fon='.$this->input->get('fon'),$ppmmech[0]->total + $reschoutmech[0]->reschout);} ?></td>
+			  <td><?php if (($ppmmech[0]->comp == 0)) { echo "0"; } else {echo anchor('contentcontroller/report_vols?'.$a.'&'.$b.'&filby=RI&stat=A&resch=nt&btp=1&grp='.$this->input->get('grp').'&serv=mec'.'&fon='.$this->input->get('fon'),$ppmmech[0]->comp);} ?></td>
+			  <td><?php if ($ppmmech[0]->resch == 0) { echo "0"; } else {echo anchor('contentcontroller/report_vols?'.$a.'&'.$b.'&filby=RI&stat=A&resch=ys&btp=1&grp='.$this->input->get('grp').'&serv=mec'.'&fon='.$this->input->get('fon'),$ppmmech[0]->resch);} ?></td>
+			  <td><?php if ($reschoutmech[0]->reschout == 0) { echo "0"; } else {echo anchor('contentcontroller/report_vols?'.$a.'&'.$b.'&filby=RI&stat=E&resch=nt&btp=1&grp='.$this->input->get('grp').'&serv=mec'.'&fon='.$this->input->get('fon'),$reschoutmech[0]->reschout);} ?></td>
+			  <td><?php if (($ppmmech[0]->notcomp == 0)) { echo "0"; } else {echo anchor('contentcontroller/report_vols?'.$a.'&'.$b.'&filby=RI&stat=C&resch=nt&btp=1&grp='.$this->input->get('grp').'&serv=mec'.'&fon='.$this->input->get('fon'),$ppmmech[0]->notcomp);} ?></td>
 				<?php } ?>	
 				</tr>
 				<tr style="text-align:center;">
@@ -107,16 +114,20 @@ function barchart(a,b,c,d,e,f){
 			  <td><?= isset($totalc[0]->TRBO) == TRUE ? $totalc[0]->TRBO : '0'?></td>
 			  <td><?= isset($totalc[0]->TND) == TRUE ? $totalc[0]->TND : '0'?></td>
 			   <?php } else { ?>	
-					<td><?php if (($ppmcivil[0]->total + $reschoutcivil[0]->reschout == 0)) { echo "0"; } else {echo anchor('contentcontroller/report_vols?from='.$from.'&to='.$to.'&filby=RI&stat=total&resch=nt&btp=1&grp='.$this->input->get('grp').'&serv=civ'.'&fon='.$this->input->get('fon'), $ppmcivil[0]->total + $reschoutcivil[0]->reschout);} ?></td>
-			  <td><?php if (($ppmcivil[0]->comp == 0)) { echo "0"; } else {echo anchor('contentcontroller/report_vols?from='.$from.'&to='.$to.'&filby=RI&stat=A&resch=nt&btp=1&grp='.$this->input->get('grp').'&serv=civ'.'&fon='.$this->input->get('fon'),$ppmcivil[0]->comp);} ?></td>
-			  <td><?php if ($ppmcivil[0]->resch == 0) { echo "0"; } else {echo anchor('contentcontroller/report_vols?from='.$from.'&to='.$to.'&filby=RI&stat=A&resch=ys&btp=1&grp='.$this->input->get('grp').'&serv=civ'.'&fon='.$this->input->get('fon'),$ppmcivil[0]->resch);} ?></td>
-			  <td><?php if ($reschoutcivil[0]->reschout == 0) { echo "0"; } else {echo anchor('contentcontroller/report_vols?from='.$from.'&to='.$to.'&filby=RI&stat=E&resch=nt&btp=1&grp='.$this->input->get('grp').'&serv=civ'.'&fon='.$this->input->get('fon'),$reschoutcivil[0]->reschout);} ?></td>
-			 <td><?php if (($ppmcivil[0]->notcomp == 0)) { echo "0"; } else {echo anchor('contentcontroller/report_vols?from='.$from.'&to='.$to.'&filby=RI&stat=C&resch=nt&btp=1&grp='.$this->input->get('grp').'&serv=civ'.'&fon='.$this->input->get('fon'),$ppmcivil[0]->notcomp);} ?></td>
+					<td><?php if (($ppmcivil[0]->total + $reschoutcivil[0]->reschout == 0)) { echo "0"; } else {echo anchor('contentcontroller/report_vols?'.$a.'&'.$b.'&filby=RI&stat=total&resch=nt&btp=1&grp='.$this->input->get('grp').'&serv=civ'.'&fon='.$this->input->get('fon'), $ppmcivil[0]->total + $reschoutcivil[0]->reschout);} ?></td>
+			  <td><?php if (($ppmcivil[0]->comp == 0)) { echo "0"; } else {echo anchor('contentcontroller/report_vols?'.$a.'&'.$b.'&filby=RI&stat=A&resch=nt&btp=1&grp='.$this->input->get('grp').'&serv=civ'.'&fon='.$this->input->get('fon'),$ppmcivil[0]->comp);} ?></td>
+			  <td><?php if ($ppmcivil[0]->resch == 0) { echo "0"; } else {echo anchor('contentcontroller/report_vols?'.$a.'&'.$b.'&filby=RI&stat=A&resch=ys&btp=1&grp='.$this->input->get('grp').'&serv=civ'.'&fon='.$this->input->get('fon'),$ppmcivil[0]->resch);} ?></td>
+			  <td><?php if ($reschoutcivil[0]->reschout == 0) { echo "0"; } else {echo anchor('contentcontroller/report_vols?'.$a.'&'.$b.'&filby=RI&stat=E&resch=nt&btp=1&grp='.$this->input->get('grp').'&serv=civ'.'&fon='.$this->input->get('fon'),$reschoutcivil[0]->reschout);} ?></td>
+			 <td><?php if (($ppmcivil[0]->notcomp == 0)) { echo "0"; } else {echo anchor('contentcontroller/report_vols?'.$a.'&'.$b.'&filby=RI&stat=C&resch=nt&btp=1&grp='.$this->input->get('grp').'&serv=civ'.'&fon='.$this->input->get('fon'),$ppmcivil[0]->notcomp);} ?></td>
 				<?php } ?>	
 				</tr>
 			<?php } ?>
 			<tr style="text-align:center;">
-				<td><?=date('F', mktime(0, 0, 0, $month, 10))?> <?=$year?></td>
+		    <?php if($this->input->get('m')){ ?>
+			<td><?=date('F', mktime(0, 0, 0, $month, 10))?> <?=$year?></td>
+			<?php } else { ?>
+			<td>(<?= date("d-m-Y", strtotime($from)).' To '.date("d-m-Y", strtotime($to)); ?>)</td>
+			<?php } ?>
 				<?php if  ($this->input->get('ex') != 'excel'){ ?>
 				<?php if (isset($total[0]->PeCat)){?>
 			  <td><?= isset($total[0]->TPPMWO) == TRUE ? $total[0]->TPPMWO : '0'?></td>
@@ -126,12 +137,12 @@ function barchart(a,b,c,d,e,f){
 			  <td><?= isset($total[0]->TND) == TRUE ? $total[0]->TND : '0'?></td>
 			  
 			  <?php } else { ?>
-				  <td><?php if (($ppmsum[0]->total + $reschout[0]->reschout == 0)) { echo "0"; } else {echo anchor('contentcontroller/report_vols?from='.$from.'&to='.$to.'&filby=RI&stat=total&resch=nt&btp=1&grp='.$this->input->get('grp').'&fon='.$this->input->get('fon'), $ppmsum[0]->total + $reschout[0]->reschout);} ?></td>
-				  <!--<td><?php if (($ppmsum[0]->total == 0)) { echo "0"; } else {echo anchor('contentcontroller/report_vols?from='.$from.'&to='.$to.'&filby=RI&stat=fbfb&resch=nt&grp=&btp=1'.$this->input->get('grp'),$ppmsum[0]->total);} ?></td>-->
-			  <td><?php if (($ppmsum[0]->comp == 0)) { echo "0"; } else {echo anchor('contentcontroller/report_vols?from='.$from.'&to='.$to.'&filby=RI&stat=A&resch=nt&btp=1&grp='.$this->input->get('grp').'&fon='.$this->input->get('fon'),$ppmsum[0]->comp);} ?></td>
-			  <td><?php if ($ppmsum[0]->resch == 0) { echo "0"; } else {echo anchor('contentcontroller/report_vols?from='.$from.'&to='.$to.'&filby=RI&stat=A&resch=ys&btp=1&grp='.$this->input->get('grp').'&fon='.$this->input->get('fon'),$ppmsum[0]->resch);} ?></td>
-			  <td><?php if (($reschout[0]->reschout == 0)) { echo "0"; } else {echo anchor('contentcontroller/report_vols?from='.$from.'&to='.$to.'&filby=RI&stat=E&resch=nt&btp=1&grp='.$this->input->get('grp').'&fon='.$this->input->get('fon'),$reschout[0]->reschout);} ?></td>
-			  <td><?php if (($ppmsum[0]->notcomp == 0)) { echo "0"; } else {echo anchor('contentcontroller/report_vols?from='.$from.'&to='.$to.'&filby=RI&stat=C&resch=nt&btp=1&grp='.$this->input->get('grp').'&fon='.$this->input->get('fon'),$ppmsum[0]->notcomp);} ?></td>		
+				  <td><?php if (($ppmsum[0]->total + $reschout[0]->reschout == 0)) { echo "0"; } else {echo anchor('contentcontroller/report_vols?'.$a.'&'.$b.'&filby=RI&stat=total&resch=nt&btp=1&grp='.$this->input->get('grp').'&fon='.$this->input->get('fon'), $ppmsum[0]->total + $reschout[0]->reschout);} ?></td>
+				  <!--<td><?php if (($ppmsum[0]->total == 0)) { echo "0"; } else {echo anchor('contentcontroller/report_vols?'.$a.'&'.$b.'&filby=RI&stat=fbfb&resch=nt&grp=&btp=1'.$this->input->get('grp'),$ppmsum[0]->total);} ?></td>-->
+			  <td><?php if (($ppmsum[0]->comp == 0)) { echo "0"; } else {echo anchor('contentcontroller/report_vols?'.$a.'&'.$b.'&filby=RI&stat=A&resch=nt&btp=1&grp='.$this->input->get('grp').'&fon='.$this->input->get('fon'),$ppmsum[0]->comp);} ?></td>
+			  <td><?php if ($ppmsum[0]->resch == 0) { echo "0"; } else {echo anchor('contentcontroller/report_vols?'.$a.'&'.$b.'&filby=RI&stat=A&resch=ys&btp=1&grp='.$this->input->get('grp').'&fon='.$this->input->get('fon'),$ppmsum[0]->resch);} ?></td>
+			  <td><?php if (($reschout[0]->reschout == 0)) { echo "0"; } else {echo anchor('contentcontroller/report_vols?'.$a.'&'.$b.'&filby=RI&stat=E&resch=nt&btp=1&grp='.$this->input->get('grp').'&fon='.$this->input->get('fon'),$reschout[0]->reschout);} ?></td>
+			  <td><?php if (($ppmsum[0]->notcomp == 0)) { echo "0"; } else {echo anchor('contentcontroller/report_vols?'.$a.'&'.$b.'&filby=RI&stat=C&resch=nt&btp=1&grp='.$this->input->get('grp').'&fon='.$this->input->get('fon'),$ppmsum[0]->notcomp);} ?></td>		
 			<?php } ?>
 
 				 <?php }else{ ?>

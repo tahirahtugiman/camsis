@@ -37,7 +37,7 @@ foreach ($array as $list) {
 						text: ''
 					},
 					 xAxis: {
-						categories: ['<?= date("d-m-Y", strtotime($from)).'-'.date("d-m-Y", strtotime($to)); ?>']
+						categories: ['<?= ($this->input->get('m')) ? date('F', mktime(0, 0, 0, $month, 10)).' '.$year : date("d-m-Y", strtotime($from)).'-'.date("d-m-Y", strtotime($to)); ?>']
 					},
 					yAxis: {
 						allowDecimals: false,
