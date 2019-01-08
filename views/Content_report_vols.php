@@ -155,7 +155,7 @@ if ($this->input->get('ex') == 'excel'){
 				<?php echo ($numrow%2==0) ? '<tr class="ui-color-color-color">' : '<tr>'; ?>
 					<td><?= $numrowx ?></td>
 				<?php if ($filby == 'RI') {?>
-					<td><?= ($row->sd_startdt) ? date("d/m/Y",strtotime($row->sd_startdt)) : 'N/A' ?></td>
+					<td><?= ($row->sd_duedt) ? date("d/m/Y",strtotime($row->sd_duedt)) : 'N/A' ?></td>
 				<?php } else {?>
 					<td><?= ($row->sd_duedt) ? date("d/m/Y",strtotime($row->sd_duedt)) : 'N/A' ?></td>
 				<?php } ?>
@@ -271,7 +271,7 @@ if ($this->input->get('ex') == 'excel'){
 								<td><?= $numrow ?></td>
 
 								<?php if ($filby == 'RI') {?>
-									<td><?= ($row->sd_startdt) ? date("d/m/Y",strtotime($row->sd_startdt)) : 'N/A' ?></td>
+									<td><?= ($row->sd_duedt) ? date("d/m/Y",strtotime($row->sd_duedt)) : 'N/A' ?></td>
 								<?php } else {?>
 									<td><?= ($row->sd_duedt) ? date("d/m/Y",strtotime($row->sd_duedt)) : 'N/A' ?></td>
 								<?php } ?>
@@ -407,7 +407,7 @@ if ($this->input->get('ex') == 'excel'){
 								<td><?= $numrow ?></td>
 
 								<?php if ($filby == 'RI') {?>
-									<td><?= ($row->sd_startdt) ? date("d/m/Y",strtotime($row->sd_startdt)) : 'N/A' ?></td>
+									<td><?= ($row->sd_duedt) ? date("d/m/Y",strtotime($row->sd_duedt)) : 'N/A' ?></td>
 								<?php } else {?>
 								  <td><?= ($row->sd_duedt) ? date("d/m/Y",strtotime($row->sd_duedt)) : 'N/A' ?></td>
 								<?php } ?>
