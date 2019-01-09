@@ -3547,12 +3547,15 @@ function jijic2dept($month,$year){
 }
 
 public function check_assetri($asset_no) {
-     $this->db->select('id');
+     $this->db->select('id, bil');
      $this->db->where('asset_no',$asset_no);
      $query = $this->db->get('pmis2_ri_list');
+		 $data1 = $query->result_array();
+		 //echo "nilaioooo : " .  $data[0]['bil'];
+		 //exit();
      $data = $query->row();
      if($query->num_rows() == 1) {
-         return true;
+         return $data1[0]['bil'];
      } else {
          return false;
      }
@@ -3572,9 +3575,10 @@ public function nexppmwk() {
 
 function get_ppmgenloc($year, $hosp, $week, $dept)
 {
+
 	//$this->db->select('pmis2_sa_asset_mapping.new_asset_type, left(pmis2_sa_moh_asset_type.type_desc, 50)');
 	//$this->db->distinct();
-	$this->db->select("jt.*, sc.d_StartDt as ppmdt,sc.n_StartWk,ar.v_tag_no, ar.v_asset_name, ar.v_user_dept_code, ar.v_location_code, am.v_assetstatus, am.v_assetcondition, am.v_assetvstatus, am.v_assetvstatus as ppm_no, lc.v_location_name",false);
+	$this->db->select("(SELECT v_Weeksch FROM pmis2_egm_assetjobtype WHERE v_Asset_no=jt.v_Asset_no AND v_JobType=jt.v_JobType AND v_ActionFlag <> 'D' AND v_Year=year(sc.d_StartDt) LIMIT 1) as v_Weeksch,jt.v_JobType,sc.d_StartDt as ppmdt,sc.n_StartWk,ar.v_tag_no, ar.v_asset_name, ar.v_user_dept_code, ar.v_location_code, am.v_assetstatus, am.v_assetcondition, am.v_assetvstatus, am.v_assetvstatus as ppm_no, lc.v_location_name",false);
 	#$this->db->select("");
 	//$this->db->where('pmis2_sa_asset_mapping.old_asset_type = ', $typecd);
 	//$this->db->where('jt.v_hospitalcode = ', $typecd);
@@ -3582,6 +3586,7 @@ function get_ppmgenloc($year, $hosp, $week, $dept)
 	$this->db->where('am.v_actionflag != ', 'D');
 	//$this->db->where('jt.v_actionflag != ', 'D');
 	$this->db->where('jt.v_year = ', $year);
+	//$this->db->where('year(sc.d_StartDt) = ', $year);
 	$this->db->where('jt.v_hospitalcode = ', $hosp);
 	$this->db->where('ar.V_service_code', $this->session->userdata('usersess'));
 	if ($dept <> ''){
@@ -3609,7 +3614,7 @@ function get_ppmgenloc($year, $hosp, $week, $dept)
 	$this->db->join('pmis2_egm_assetregistration ar',"jt.v_asset_no = ar.v_asset_no AND ar.V_service_code = '".$this->session->userdata('usersess')."' AND jt.v_actionflag != 'D' AND jt.v_year = '".$year."'");
 	$this->db->join('pmis2_egm_assetmaintenance am','ar.v_asset_no = am.v_assetno AND ar.v_hospitalcode = am.v_hospitalcode');
 	$this->db->join('pmis2_egm_assetlocation lc','lc.v_location_code = ar.v_location_code AND ar.v_hospitalcode = lc.v_hospitalcode');
-	$this->db->join('(SELECT v_Asset_no, d_StartDt,v_jobtype,n_StartWk FROM pmis2_egm_schconfirmmon WHERE v_Actionflag <> "D" ORDER BY d_StartDt DESC) sc','sc.v_Asset_no=jt.v_asset_no AND sc.v_jobtype=jt.v_JobType','left outer');
+	$this->db->join('(SELECT * FROM (SELECT v_Asset_no, d_StartDt, v_jobtype, n_StartWk FROM pmis2_egm_schconfirmmon WHERE v_Actionflag <> "D" ORDER BY d_StartDt DESC) a GROUP BY  a.v_jobtype,a.v_Asset_no) sc','sc.v_Asset_no=jt.v_asset_no AND sc.v_jobtype=jt.v_JobType','left outer');
 	//    return $this->db->get('pmis2_sa_asset_mapping');
 	$query = $this->db->get('pmis2_egm_assetjobtype jt');
 	//echo "laalla".$query->DWRate;

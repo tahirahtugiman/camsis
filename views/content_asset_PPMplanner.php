@@ -11,7 +11,8 @@
 							<td class="ui-header-new">
 								<b><span class="textmenu" style="float:left;">PPM Yearly Planner</span></b>
 								<span class="textmenu1" style="float:right;padding-top:0px;">
-									<?php echo anchor ("ppm_set?assetno=".$this->input->get('asstno')."&y=".date("Y")."&assetjt=".$ajobtype, '<button type="button" class="btn-button btn-primary-button">Update</button>'); ?>
+								<?php $tahun=($this->input->get('y')) ? $this->input->get('y') : date("Y")?>
+									<?php echo anchor ("ppm_set?assetno=".$this->input->get('asstno')."&y=".$tahun."&assetjt=".$ajobtype, '<button type="button" class="btn-button btn-primary-button">Update</button>'); ?>
 								</span>
 							</td>
 						</tr>

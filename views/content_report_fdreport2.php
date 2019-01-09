@@ -181,7 +181,7 @@ if ($this->input->get('ex') == 'excel'){
 			</tr>
 		</table>
 
-		<div id="constrainer" style="height: 45%;">
+		<div id="constrainer" style="height: 63%;">
 			<div class="scrolltable1">
 				<table class="tftable tbl-go" border="1" style="text-align:center;">
 					<tr>

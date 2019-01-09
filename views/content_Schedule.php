@@ -242,11 +242,12 @@
 			</tr>
 			<?php  } ?>
 			<?php  if (!in_array("contentcontroller/report_sls", $chkers)) { ?>
-			<tr class="<?php  $number++; echo evenodd($number); ?>">
-				<td colspan="4">
-					<?php echo anchor ('contentcontroller/report_sls?m='.$month.'&y='.$year.'&grp='.$this->input->get('grp'), '<img src="'. base_url() .'images/user.png" alt="" class="ui-icon"/>&nbsp;&nbsp;&nbsp;&nbsp;Statutory & License Summary'); ?>
-				</td>
-			</tr>
+				<?php $tabstatutoryname=($this->session->userdata('usersessn')=='HOUSEKEEPING') ? 'Chemical Approved List' : 'Statutory & License Summary';?>
+				<tr class="<?php  $number++; echo evenodd($number); ?>">
+					<td colspan="4">
+						<?php echo anchor ('contentcontroller/report_sls?m='.$month.'&y='.$year.'&grp='.$this->input->get('grp'), '<img src="'. base_url() .'images/user.png" alt="" class="ui-icon"/>&nbsp;&nbsp;&nbsp;&nbsp;'.$tabstatutoryname); ?>
+					</td>
+				</tr>
 			<?php  } ?>
 			<?php if (!in_array("contentcontroller/spare_part", $chkers)) { ?>
 			<tr class="<?php  $number++; echo evenodd($number); ?>">

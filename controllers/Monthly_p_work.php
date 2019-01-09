@@ -10,30 +10,31 @@ class monthly_p_work extends CI_Controller {
 	                //$this->load->model('test_ler');
 	//echo 'ade3';
 			$this->load->library('session');
-	//echo 'ade4';	
+	//echo 'ade4';
 			$this->is_logged_in();
 	//echo 'ade5';
-		
-		
+
+
 	}
-	
+
 		function is_logged_in()
 	{
-		
+
 		$is_logged_in = $this->session->userdata('v_UserName');
-		
+
 		if(!isset($is_logged_in) || $is_logged_in !=TRUE)
 		redirect('LoginController/index');
 	}
 	public function index(){
    		$this->load->model("get_model");
-		$data['dept'] = $this->get_model->get_poploclistb();
-		$data['count'] = count($data['dept']);
-		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");	
+		$data['dept'] = $this->get_model->get_poploclistb('ok');
+		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
+		//$data['dept'] = $this->get_model->deptlist($data['month'],$data['year'],'IIUM');
+		$data['count'] = count($data['dept']);
 		$data['records'] = $this->get_model->monthplan($data['year'],$data['month']);
 		$data['privilege'] = $this->get_model->monthplanpriv($this->session->userdata('v_UserName'));
-		
+
 		if(isset($data['records'])){
 			foreach ($data['records'] as $r){
 				if ($r->Color_Code == 'icon-green'){
@@ -51,7 +52,7 @@ class monthly_p_work extends CI_Controller {
 	}
 }
 /*$data['PWMP'] = $this->get_model->PWMP_period();
-		
+
     	foreach ($data['PWMP'] as $r){
     		$data['sn'] = explode('-',$r->Scheduler_Name);
     		$data['deptcode'][] = $data['sn'][0];
@@ -100,7 +101,7 @@ class monthly_p_work extends CI_Controller {
 	       			}
 	       			else{
 	       			$nextmdate = NULL;
-	       			$limitnmdate = NULL;	
+	       			$limitnmdate = NULL;
 	       			}
 				}
 				if ($data['month'] == date('m',strtotime($beginday)) AND $data['year'] == date('Y',strtotime($beginday))){
@@ -177,7 +178,7 @@ class monthly_p_work extends CI_Controller {
 				$begin = strtotime($beginday1);
 				$lastday = is_null($lastday) ? date("Y-m-t", strtotime($data['year'].'-'.$data['month'].'-01')) : $lastday;
 				$end   = strtotime($lastday) + $day;
-				
+
 				$datediff = ($end - $begin);
 				$weeks = floor($datediff / $day / 7);
 				$days  = $datediff / $day - $weeks * 7;
@@ -186,7 +187,7 @@ class monthly_p_work extends CI_Controller {
 				}
 
 				$mod = $out % $step;
-				
+
 				$t = $step - $mod;
 
 				if($t < 5) {
@@ -196,7 +197,7 @@ class monthly_p_work extends CI_Controller {
 					else{
 						$begining = strtotime(date('Y-m-d',strtotime("+".$step." weeks",$begin)));
 					}
-					
+
 					while ($begining <= $end){
 						$sundate = date("Y-m-d",$begining);
 						$wdate = strtotime($sundate) + $day;
@@ -277,14 +278,14 @@ class monthly_p_work extends CI_Controller {
 						$begin = strtotime(date('Y-m-d',strtotime("+1 months",$begin)));
 						$begining = $begin;
 					}
-					
+
 					while ($begining <= $end){
 						$year1 = date('Y', $begin);
 						$year2 = date('Y', $begining);
-						
+
 						$month1 = date('m', $begin);
 						$month2 = date('m', $begining);
-						
+
 						$diff = (($year2 - $year1) * 12) + ($month2 - $month1);
 						$t = $diff % $step;
 						if ($t==0){
@@ -297,7 +298,7 @@ class monthly_p_work extends CI_Controller {
 						}
 						$begining = strtotime(date('Y-m-d',strtotime("+1 months",$begining)));
 					}
-				}	
+				}
 				else{  //(Monthly_sel==2)
 					if (strtotime($schdata['Timestamp']) <= strtotime($startstamp)){
 						$begining = $begin;
@@ -311,10 +312,10 @@ class monthly_p_work extends CI_Controller {
 					while ($begining <= $end){
 							$year1 = date('Y', $begin);
 							$year2 = date('Y', $begining);
-							
+
 							$month1 = date('m', $begin);
 							$month2 = date('m', $begining);
-							
+
 							$diff = (($year2 - $year1) * 12) + ($month2 - $month1);
 							$t = $diff % $step;
 							if ($t==0){
@@ -373,9 +374,9 @@ class monthly_p_work extends CI_Controller {
 										            					$data['date'][$schdata['dept']][] = date('Y-m-d',$msdate);
 										            					}
 										            				}
-										            			} 	
+										            			}
 										            		}
-										            	$loop++;	
+										            	$loop++;
 									            		}
 									            	}
 								            		else{
@@ -436,7 +437,7 @@ class monthly_p_work extends CI_Controller {
 								            					$loop++;
 								            				}
 
-								            			}	
+								            			}
 								            		}
 								            	}
 								            $msdate += 86400; // +1 day
@@ -491,14 +492,14 @@ class monthly_p_work extends CI_Controller {
 		    		if($data['year'].'-'.$data['month'].'-'.$date==$d)
 		    		$data['d'.$date][$dd['dept']]=$d;
 
-		    	}	
+		    	}
 	    	}
 	    }
 		}*/
 
 		/*$beginday = date($data['year'].'-'.$data['month'].'-01');
 		$lastday  = date("Y-m-t", strtotime($beginday));
-		
+
 		$begin = strtotime($beginday);
     	$end   = strtotime($lastday);
 
@@ -519,7 +520,7 @@ class monthly_p_work extends CI_Controller {
 			            		//}
 			            		//echo $a;
 			            		//$a++;
-			            		
+
 		            		}
 		        if ($what_day == 3) { // 6 and 7 are weekend days
                 $weekends++;

@@ -50,15 +50,18 @@ class ppm_gen_ctrl extends CI_Controller {
 		//echo 'trukefalse : '.$truker;
 		//if ($this->get_model->validate_schmon($nilaiwk, $this->session->userdata('hosp_code'), $nilaiy)) {
 		$xl = 0;
-		if ($this->get_model->check_assetri($value->v_Asset_no) && $nilaiact == "gen") {
-			if ($this->session->userdata('usersess') == "FES") {$xl = 6;}}
+		$xlx = 0;
+		$xlx = $this->get_model->check_assetri($value->v_Asset_no);
+		//echo "nilai xlx : " . $xlx;
+		if (($xlx!=0) && ($nilaiact == "gen")) {
+			if ($this->session->userdata('usersess') == "FES") {$xl = $xlx-1;}}
 
 		for ($x = 0; $x <= $xl; $x++) {
 		if (count($truker) == 0) {
 			if ($this->session->userdata('usersess') == "FES") {
-				$whatwono = ($xl == 6) ? str_replace("PPF", "RI", $this->get_seqno->funcFormatAPBESYSSeqNo($sFormat, 'P', $RN, $nilaiy)) : $this->get_seqno->funcFormatAPBESYSSeqNo($sFormat, 'P', $RN, $nilaiy);
+				$whatwono = ($xlx > 0) ? str_replace("PPF", "RI", $this->get_seqno->funcFormatAPBESYSSeqNo($sFormat, 'P', $RN, $nilaiy)) : $this->get_seqno->funcFormatAPBESYSSeqNo($sFormat, 'P', $RN, $nilaiy);
 			} else {
-				$whatwono = ($xl == 6) ? str_replace("PPB", "RI/B", $this->get_seqno->funcFormatAPBESYSSeqNo($sFormat, 'P', $RN, $nilaiy)) : $this->get_seqno->funcFormatAPBESYSSeqNo($sFormat, 'P', $RN, $nilaiy);
+				$whatwono = ($xlx > 0) ? str_replace("PPB", "RI/B", $this->get_seqno->funcFormatAPBESYSSeqNo($sFormat, 'P', $RN, $nilaiy)) : $this->get_seqno->funcFormatAPBESYSSeqNo($sFormat, 'P', $RN, $nilaiy);
 			}
 		$whatrmk = $this->get_seqno->getppmrmk($value->v_tag_no, $value->v_JobType);
 
@@ -72,9 +75,11 @@ class ppm_gen_ctrl extends CI_Controller {
 		'v_HospitalCode'=>$this->session->userdata('hosp_code'),
 		'd_Timestamp'=>date('Y-m-d H:i:s'),
 		'v_Actionflag'=>'I',
-		'd_StartDt'=>$nilaiy.'-'.$nilaim.'-'.($nilaid+$x),
+		//'d_StartDt'=>$nilaiy.'-'.$nilaim.'-'.($nilaid+$x),
+		'd_StartDt'=>$nilaiy.'-'.$nilaim.'-'.($nilaid),
 		//'d_DueDt'=>strftime('Y-m-d',$this->DateAdd('d', $ndue, DateTime::createFromFormat('Y-m-d',$nilaiy.'-'.$nilaim.'-'.$nilaid))),date(format,timestamp);
-		'd_DueDt'=>date('Y-m-d', strtotime($nilaiy.'-'.$nilaim.'-'.($nilaid+$x). ' +'.$ndue.' days')),
+		//'d_DueDt'=>date('Y-m-d', strtotime($nilaiy.'-'.$nilaim.'-'.($nilaid+$x). ' +'.$ndue.' days')),
+		'd_DueDt'=>date('Y-m-d', strtotime($nilaiy.'-'.$nilaim.'-'.($nilaid). ' +'.$ndue.' days')),
 		'v_Wrkordstatus'=>'A',
 		'v_jobtype'=>$value->v_JobType,
 		'v_year'=>$nilaiy,

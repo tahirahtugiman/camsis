@@ -4017,9 +4017,9 @@ class Contentcontroller extends CI_Controller {
 	  $this->load->model("display_model");
 		$data['records'] = $this->display_model->list_hospinfo();
 		$data['fon']= ($this->input->get('fon')) ? $this->input->get('fon') : "";
-		$data['from']= ($this->input->get('from') <> 0) ? $this->input->get('from') : $this->display_model->dater(1,date("m"),date("Y"));
-		$data['to']= ($this->input->get('to') <> 0) ? $this->input->get('to') : $this->display_model->dater(2,date("m"),date("Y"));
-		//echo "nilai fon : ".$data['fon'].":".$this->input->get('fon');
+    $data['from']= ($this->input->get('from') <> 0) ? $this->input->get('from') : $this->display_model->dater(1,$this->input->get('m'),$this->input->get('y'));
+ 	  $data['to']= ($this->input->get('to') <> 0) ? $this->input->get('to') : $this->display_model->dater(2,$this->input->get('m'),$this->input->get('y'));
+ 	  //echo "nilai fon : ".$data['fon'].":".$this->input->get('fon');
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
 		$data['filby'] = $this->input->get('filby');
@@ -4052,6 +4052,15 @@ class Contentcontroller extends CI_Controller {
 		}
 		//$data['rqsum'] = $this->display_model->sumrq($data['month'],$data['year']);
 		//$data['complntsum'] = $this->display_model->sumcomplnt($data['month'],$data['year']);
+
+  	if($this->input->get('m')){
+      $data['a'] = 'm='.$data['month'];
+      $data['b'] = 'y='.$data['year'];
+      }else{
+      $data['a'] = 'from='.$data['from'];
+      $data['b'] = 'to='.$data['to'];
+      }
+
 
 	  $this ->load->view("headprinter");
 
@@ -4130,8 +4139,14 @@ class Contentcontroller extends CI_Controller {
 		//$data['complntsum'] = $this->display_model->sumcomplnt($data['month'],$data['year']);
 		$data['licsatsum'] = $this->display_model->sumlicsat($data['month'],$data['year']);
 		$data['satsum'] = $this->display_model->sumsat($data['month'],$data['year'],$this->input->get('grp'));
-	  $this ->load->view("headprinter");
-		$this ->load->view("Content_report_sls", $data);
+	  //$this ->load->view("headprinter");
+		//$this ->load->view("Content_report_sls", $data);
+    $this ->load->view("headprinter");
+		if( $this->session->userdata('usersessn')!='HOUSEKEEPING' ){
+			$this ->load->view("Content_report_sls", $data);
+		}else{
+			$this->load->view("Content_report_sls_hks", $data);
+		}
 	}
 
 	public function report_alr(){
@@ -7993,14 +8008,16 @@ public function pop_fail(){
 		$this ->load->view("content_report_visit_rpt",$data);
 	}
 
-	public function assetnextppm(){
+  public function assetnextppm(){
 		$data['year']= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");
 		$data['dept']= ($this->input->get('dept') <> '') ? $this->input->get('dept') : '';
 		$data['month']= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
+
 		$this->load->model('get_model');
-    $data['dept2'] = $this->get_model->get_popdeptlist();
+        $data['dept2'] = $this->get_model->get_popdeptlist();
 		//$data['whatweek'] = $this->get_model->nexppmwk();
-		$data['kalender'] =  $this->get_model->gen_cal($data['year'])[$data['month']];
+		$data['kalender'] =  $this->get_model->gen_cal($data['year'])[(int)$data['month']];
+		//print_r($data['month']);
 		//$data['kalender2'] = $this->get_model->gen_cal($data['year']);
 		$data['kalender_ajaib']=array();
 
@@ -8031,38 +8048,9 @@ public function pop_fail(){
 		}
 		  }
 		}
-		//$data['dept2'] = $this->get_model->get_popdeptlist();
-		//$data['whatweek'] = $this->get_model->nexppmwk();
-		//print_r($data['whatweek']);
-		//echo "lalalalala : ".$data['whatweek'][0]->maxwk;
 
-		//$weektoshow = $data['whatweek'][0]->maxwk + 1;
-		//$data['theweek'] = $weektoshow;
-		//echo "<br>lalalalalazzzzz : ".$weektoshow;
-		//$data['ppm_wo']=$this->get_model->get_ppmgenloc(date("Y"),$this->session->userdata('hosp_code'),$weektoshow);
-
-    //$firstDayOfWeek = strtotime(date("Y")."W".str_pad($weektoshow,2,"0",STR_PAD_LEFT));
-
-    //echo("The first day of week ".$weektoshow." of ".date("Y")." is ".date("d-m-Y",$firstDayOfWeek));
-		//$data['theweek'] = date("d-m-Y",$firstDayOfWeek);
-
-    //$data['count'] = 0;
-		//foreach ($data['kalender2'] as $row){
-		//	$data['count'] += count($row);
-		//}
-		//print_r($data['kalender']);
-		//echo "lalalalala : ".$data['whatweek'][0]->maxwk;
-
-		//$weektoshow = $data['whatweek'][0]->maxwk + 1;
-		//$weektoshow = 52;
-		//$data['theweek'] = $weektoshow;
-		//echo "<br>lalalalalazzzzz : ".$weektoshow;
 		$data['ppm_wo']=$this->get_model->get_ppmgenloc(date("Y"),$this->session->userdata('hosp_code'),$data['kalender'],$this->input->get('dept'));
 
-    //$firstDayOfWeek = strtotime(date("Y")."W".str_pad($weektoshow,2,"0",STR_PAD_LEFT));
-
-    //echo("The first day of week ".$weektoshow." of ".date("Y")." is ".date("d-m-Y",$firstDayOfWeek));
-		//$data['theweek'] = date("d-m-Y",$firstDayOfWeek);
 
 		if($this->input->get('pdf') == 1){
 		$this ->load->view("Content_report_assetnextppm_pdf", $data);
