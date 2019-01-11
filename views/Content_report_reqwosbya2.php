@@ -17,14 +17,23 @@ if ($this->input->get('ex') == 'excel'){
 	<?php include 'content_btp.php';?>
 	<div id="Instruction" class="pr-printer">
 	    <div class="header-pr">Schedule Corrective Maintenance (SCM) Report Summary By Year</div>
-    	<button onclick="javascript:myFunction('report_reqwosbyyear?m=<?=$month?>&y=<?=$year?>&none=closed&grp=<?=$this->input->get('grp');?>&req=<?=$this->input->get('req');?>');" class="btn-button btn-primary-button">PRINT</button>
-    	<button type="cancel" class="btn-button btn-primary-button" onclick="location.href = '<?php echo $btp ;?>';">CANCEL</button>
+		<?php if ($this->uri->segment(2)=='report_reqwosbya2') { ?>
+    	<button onclick="javascript:myFunction('report_reqwosbya2?m=<?=$month?>&y=<?=$year?>&none=closed');" class="btn-button btn-primary-button">PRINT</button>
+    	<?php } else { ?>
+		<button onclick="javascript:myFunction('report_reqwosbyyear?m=<?=$month?>&y=<?=$year?>&none=closed&grp=<?=$this->input->get('grp');?>&req=<?=$this->input->get('req');?>');" class="btn-button btn-primary-button">PRINT</button>
+    	<?php } ?>
+		<button type="cancel" class="btn-button btn-primary-button" onclick="location.href = '<?php echo $btp ;?>';">CANCEL</button>
 	<?php if (($this->input->get('ex') == '') or ($this->input->get('none') == '')){?>
-		<a href="<?php echo base_url();?>index.php/contentcontroller/report_reqwosbyyear?req=<?=$this->input->get('req');?>&m=<?=$this->input->get('m');?>&y=<?=$this->input->get('y');?>&ex=excel&none=close&grp=<?=$this->input->get('grp');?>" style="float:right; margin-right:40px;"><img src="<?php echo base_url();?>images/excel.png" style="width:40px; height:38px; position:absolute;" title="export to excel"></a>
-		<?php //if($this->session->userdata('v_UserName') == 'nezam') {?>
+	<?php if ($this->uri->segment(2)=='report_reqwosbya2') { ?>
+	<a href="<?php echo base_url();?>index.php/contentcontroller/report_reqwosbya2?&m=<?=$this->input->get('m');?>&y=<?=$this->input->get('y');?>&ex=excel&none=close&grp=<?=$this->input->get('grp');?>" style="float:right; margin-right:40px;"><img src="<?php echo base_url();?>images/excel.png" style="width:40px; height:38px; position:absolute;" title="export to excel"></a>
+	<?php } else { ?>	
+	<a href="<?php echo base_url();?>index.php/contentcontroller/report_reqwosbyyear?req=<?=$this->input->get('req');?>&m=<?=$this->input->get('m');?>&y=<?=$this->input->get('y');?>&ex=excel&none=close&grp=<?=$this->input->get('grp');?>" style="float:right; margin-right:40px;"><img src="<?php echo base_url();?>images/excel.png" style="width:40px; height:38px; position:absolute;" title="export to excel"></a>
+    <?php } ?>	
+	<?php //if($this->session->userdata('v_UserName') == 'nezam') {?>
 		<span style="float:right; margin-right:90px;" onclick="barchart(2,2,3,<?=$year?>)"><img src="<?php echo base_url();?>images/Bar-Chart-icon.png" style="width:40px; height:38px; position:absolute;" title="Bar Chart"></span>
 		<?php //} ?>
 	<?php } ?>
+	
 	</div>
 <?php } ?>
 	<div class="menu" style="position:relative;">
@@ -34,9 +43,9 @@ if ($this->input->get('ex') == 'excel'){
 <?php } ?>
 <?php if (($this->input->get('ex') == '') or ($this->input->get('none') == 'closed')){?>
 		<div id="Instruction" >
-			<center>View List : 
+			<center>View List :
 				<form method="get" action="">
-					<?php 
+					<?php
 					$month_list = array(
 						'01' => 'January',
 						'02' => 'February',
@@ -101,7 +110,7 @@ for ($dyear = '2015';$dyear <= date("Y");$dyear++){
 							break;
 						case "F":
 							$tulis = "Floor - Related Report";
-							break;	
+							break;
 						case "WD":
 							$tulis = "Wall / Door - Related Report";
 							break;
@@ -110,15 +119,15 @@ for ($dyear = '2015';$dyear <= date("Y");$dyear++){
 							break;
 						case "W":
 							$tulis = "Window - Related Report";
-							break;	
+							break;
 						case "FIX":
 							$tulis = "Fixtures - Related Report";
 							break;
 						case "FUR":
 							$tulis = "Furniture / Fitting - Related Report";
-							break;					
+							break;
 						default:
-							$tulis = "A1 - Breakdown Maintenance (BM)";	
+							$tulis = "A1 - Breakdown Maintenance (BM)";
 							break;
 					} ?>
 					<?php if ($this->input->get('req') == $req) {?>
@@ -126,9 +135,9 @@ for ($dyear = '2015';$dyear <= date("Y");$dyear++){
 					<?php } ?>
 				</tr>
 			</table>
-	
+
 			<table class="tftable" border="1" style="text-align:center; width:70%;" align="center">
-		
+
 				<tr style="text-align:center;font-weight:bold;">
 					<th>Period <?php if ($this->session->userdata('usersess') == 'FES'){ echo '/ Categories';}?></th>
 					<th>Total Work Order Request</th>
