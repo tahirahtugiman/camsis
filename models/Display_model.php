@@ -1039,6 +1039,8 @@ ORDER BY r.D_date, r.D_time
 		}
 
     function rpt_vols($from, $to, $stat = "apo2", $resch = "resch",$grpsel, $bystak="", $fon="",$filby=""){
+      $year= ($this->input->get('y') <> 0) ? $this->input->get('y') : date("Y");
+      $month= ($this->input->get('m') <> 0) ? sprintf("%02d", $this->input->get('m')) : date("m");
 
 
                       if ($bystak == "IIUM C") {
@@ -1049,7 +1051,7 @@ ORDER BY r.D_date, r.D_time
     		  $bystak = " AND left(a.v_tag_no,6) = 'IIUM E'"; }
 
     		  $this->db->distinct();
-              $this->db->select('a.V_Location_code, s.v_Wrkordstatus, s.v_WrkOrdNo AS sv_wrkordno, s.v_Asset_no AS sv_asset_no, s.v_Month AS sv_month, s.v_HospitalCode AS sv_hospitalcode, s.d_DueDt AS sd_duedt, s.d_StartDt AS sd_startdt, s.v_jobtype AS sv_jobtype, s.v_year AS sv_year, s.v_ServiceCode AS sv_servicecode, a.V_Tag_no AS av_tag_no, a.V_User_Dept_code AS av_user_dept_code, a.V_Asset_name AS av_asset_name, b.v_stest, b.v_ptest, b.d_DateDone, CONCAT(c.v_ActionTaken,REPLACE(CONCAT(IFNULL(s.v_Remarks, ""), " ", ifnull(b.v_summary, "")),c.v_ActionTaken,"")) as v_summary, b.d_last_resch_date, c.d_Date, IFNULL(s.d_Reschdt,c.d_Reschdt) AS d_Reschdt, d.v_UserDeptDesc,a.v_asset_grp', FALSE);   			
+              $this->db->select('a.V_Location_code, s.v_Wrkordstatus, s.v_WrkOrdNo AS sv_wrkordno, s.v_Asset_no AS sv_asset_no, s.v_Month AS sv_month, s.v_HospitalCode AS sv_hospitalcode, s.d_DueDt AS sd_duedt, s.d_StartDt AS sd_startdt, s.v_jobtype AS sv_jobtype, s.v_year AS sv_year, s.v_ServiceCode AS sv_servicecode, a.V_Tag_no AS av_tag_no, a.V_User_Dept_code AS av_user_dept_code, a.V_Asset_name AS av_asset_name, b.v_stest, b.v_ptest, b.d_DateDone, CONCAT(c.v_ActionTaken,REPLACE(CONCAT(IFNULL(s.v_Remarks, ""), " ", ifnull(b.v_summary, "")),c.v_ActionTaken,"")) as v_summary, b.d_last_resch_date, c.d_Date, IFNULL(s.d_Reschdt,c.d_Reschdt) AS d_Reschdt, d.v_UserDeptDesc,a.v_asset_grp', FALSE);
     			$this->db->from('pmis2_egm_schconfirmmon s');
     			$this->db->join('pmis2_egm_assetregistration a','s.v_Asset_no = a.V_Asset_no AND s.v_HospitalCode = a.V_Hospitalcode '.$bystak);
     			$this->db->join('pmis2_egm_jobdonedet b',"b.v_Wrkordno = s.v_WrkOrdNo AND b.v_HospitalCode = s.v_HospitalCode AND b.v_actionflag <> 'D'", 'left outer');
@@ -1069,7 +1071,7 @@ ORDER BY r.D_date, r.D_time
     			if ($grpsel <> ''){
     				$this->db->where('a.v_asset_grp',$grpsel);
     			}
-    
+
     			if (($resch == "nt") && ($stat == "A")) {
     			//$this->db->where("s.v_wrkordstatus LIKE '%C%'", NULL, FALSE);
     				 if ($fon == "") {
@@ -2674,7 +2676,7 @@ return $query->result();
 			if ($grpsel <> ''){
 				$this->db->where('a.v_asset_grp',$grpsel);
 			}
-		
+
             $this->db->where('IFNULL(sc.d_reschdt,d_DueDt) >=', $from);
 			$this->db->where('IFNULL(sc.d_reschdt,d_DueDt) <=', $to);
 			$query = $this->db->get();
